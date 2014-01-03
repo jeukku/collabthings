@@ -5,3 +5,5 @@ RemoteSystemsTempFiles
 .project
 .classpath
 .settings
+/bin
+/bi

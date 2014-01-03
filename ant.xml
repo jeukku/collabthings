@@ -1,0 +1,46 @@
+<project>
+    <property name="mvndir" value="." />
+
+	<condition property="isWindows">
+		<os family="windows" />
+	</condition>
+
+	<condition property="isLinux">
+		<os family="unix" />
+	</condition>
+
+	<target name="mvnwindows" if="isWindows">
+		<echo message="args ${args}" />
+
+		<script language="javascript">
+    		var before = project.getProperty("args");
+    		project.setProperty("logname", before.replaceAll("\:", "_").replaceAll(" ", "_"));
+		</script>
+
+		<echo message="args $args ../logs/${projectname}_${logname}.log" />
+		<exec  executable="cmd" dir="${mvndir}" output="../logs/${projectname}_${logname}.log" >
+			<arg value="/C mvn ${args}" />
+		</exec>
+	</target>
+
+	<target name="mvnlinux" if="isLinux">
+		<exec executable="mvn" dir="${mvndir}">
+			<arg value="${args}" />
+		</exec>
+	</target>
+
+
+	<target name="runmvn" depends="mvnwindows, mvnlinux">
+	</target>
+
+	<target name="deploy">
+		<ant target="runmvn">
+			<property name="args" value="install" />
+		</ant>	    
+	</target>
+
+	<target name="clean">
+		<deltree dir="bin" />
+	    <deltree dir="target" />
+	</target>
+</project>
