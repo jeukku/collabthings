@@ -21,25 +21,25 @@ import waazdoh.testing.ServiceMock;
 public class LOTTestCase extends TestCase {
 	private static final String LOCALURL = "http://localhost:8080/waazdoh";
 	//
-	private Set<LOTClient> clients = new HashSet<LOTClient>();
+	private Set<LOTEnvironment> clients = new HashSet<LOTEnvironment>();
 	MLogger log = MLogger.getLogger(this);
 	private int usercounter = 0;
 
-	protected LOTClient getNewClient() throws IOException, SAXException {
+	public LOTEnvironment getNewEnv() throws IOException, SAXException {
 		boolean bind = usercounter >= 0 ? true : false;
 		String username = "test_username_" + (usercounter++) + "@localhost";
-		return getNewClient(username, bind);
+		return getNewEnv(username, bind);
 	}
 
-	public LOTClient getNewClient(String email, boolean bind)
+	public LOTEnvironment getNewEnv(String email, boolean bind)
 			throws MalformedURLException, SAXException {
 		//
 		TestPreferences p = new TestPreferences(email);
 		MBinarySource binarysource = getBinarySource(p, bind);
-		LOTClient c = new LOTClient(p, binarysource, getTestService(p,
+		LOTEnvironment c = new LOTEnvironment(p, binarysource, getTestService(p,
 				binarysource));
 
-		boolean setsession = c.getWClient().setUsernameAndSession(email,
+		boolean setsession = c.getClient().setUsernameAndSession(email,
 				getSession(p));
 		if (setsession) {
 			clients.add(c);
@@ -54,7 +54,7 @@ public class LOTTestCase extends TestCase {
 				id = new MStringID();
 				p.set(appidparam, id.toString());
 			}
-			String session = c.getWClient().requestAppLogin(email, "testapp",
+			String session = c.getClient().requestAppLogin(email, "testapp",
 					id);
 			if (session != null) {
 				p.set("session", session);

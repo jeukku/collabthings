@@ -5,15 +5,17 @@ import waazdoh.client.WClient;
 import waazdoh.cutils.MPreferences;
 import waazdoh.service.CMService;
 
-public class LOTClient {
+public class LOTEnvironment {
+	public static final String VERSION = "0.0.1";
+	//
 	private WClient client;
 
-	public LOTClient(MPreferences p, MBinarySource binarysource,
+	public LOTEnvironment(MPreferences p, MBinarySource binarysource,
 			CMService service) {
 		client = new WClient(p, binarysource, service);
 	}
 
-	public WClient getWClient() {
+	public WClient getClient() {
 		return client;
 	}
 }
