@@ -6,7 +6,8 @@ import waazdoh.cutils.MPreferences;
 import waazdoh.service.CMService;
 
 public class LOTEnvironment {
-	public static final String VERSION = "0.0.1";
+	public final String version = "0.0.1";
+	public final String prefix = "LOT";
 	//
 	private WClient client;
 
@@ -17,5 +18,9 @@ public class LOTEnvironment {
 
 	public WClient getClient() {
 		return client;
+	}
+
+	public MBinarySource getBinarySource() {
+		return client.getBinarySource();
 	}
 }

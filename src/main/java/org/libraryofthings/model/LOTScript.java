@@ -15,11 +15,11 @@ public class LOTScript implements ServiceObjectData {
 	private String script;
 
 	public LOTScript(LOTEnvironment env) {
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.VERSION);
+		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
 	}
 
 	public LOTScript(LOTEnvironment env, MID id) {
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.VERSION);
+		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
 		o.load(id.getStringID());
 	}
 
@@ -47,5 +47,7 @@ public class LOTScript implements ServiceObjectData {
 	public String getScript() {
 		return script;
 	}
-
 }
+
+
+
