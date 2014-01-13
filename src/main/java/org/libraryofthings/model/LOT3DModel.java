@@ -9,7 +9,7 @@ import waazdoh.client.ServiceObjectData;
 import waazdoh.cutils.MID;
 import waazdoh.cutils.xml.JBean;
 
-public class LOT3DModel implements ServiceObjectData {
+public class LOT3DModel implements ServiceObjectData, LOTObject {
 	private static final String BEANNAME = "model3d";
 	private static final String NAME = "name";
 	private static final String BINARYID = "binaryid";
@@ -22,6 +22,7 @@ public class LOT3DModel implements ServiceObjectData {
 	public LOT3DModel(LOTEnvironment env) {
 		this.env = env;
 		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
+		newBinary();
 	}
 
 	public LOT3DModel(LOTEnvironment env, MID id) {
@@ -44,11 +45,22 @@ public class LOT3DModel implements ServiceObjectData {
 	@Override
 	public boolean parseBean(JBean bean) {
 		name = bean.getValue("name");
+		binaryid = new MBinaryID(bean.getIDValue(BINARYID));
+		//
 		return true;
 	}
 
 	public ServiceObject getServiceObject() {
 		return o;
+	}
+
+	@Override
+	public boolean isReady() {
+		if (getBinary() != null && getBinary().isReady()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public Binary getBinary() {
@@ -67,4 +79,14 @@ public class LOT3DModel implements ServiceObjectData {
 		return name;
 	}
 
+	public void newBinary() {
+		String comment = "LOT3DModel";
+		String extension = "bin";
+		binaryid = env.getBinarySource().newBinary(comment, extension).getID();
+	}
+
+	public void publish() {
+		o.publish();
+		getBinary().publish();
+	}
 }

@@ -7,8 +7,11 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.libraryofthings.model.LOTObject;
 import org.xml.sax.SAXException;
 
+import waazdoh.client.Binary;
+import waazdoh.client.MBinaryID;
 import waazdoh.client.MBinarySource;
 import waazdoh.client.rest.RestClient;
 import waazdoh.cp2p.impl.P2PBinarySource;
@@ -36,8 +39,8 @@ public class LOTTestCase extends TestCase {
 		//
 		TestPreferences p = new TestPreferences(email);
 		MBinarySource binarysource = getBinarySource(p, bind);
-		LOTEnvironment c = new LOTEnvironment(p, binarysource, getTestService(p,
-				binarysource));
+		LOTEnvironment c = new LOTEnvironment(p, binarysource, getTestService(
+				p, binarysource));
 
 		boolean setsession = c.getClient().setUsernameAndSession(email,
 				getSession(p));
@@ -54,8 +57,8 @@ public class LOTTestCase extends TestCase {
 				id = new MStringID();
 				p.set(appidparam, id.toString());
 			}
-			String session = c.getClient().requestAppLogin(email, "testapp",
-					id);
+			String session = c.getClient()
+					.requestAppLogin(email, "testapp", id);
 			if (session != null) {
 				p.set("session", session);
 			}
@@ -93,5 +96,24 @@ public class LOTTestCase extends TestCase {
 
 	public void testTrue() {
 		assertTrue(true);
+	}
+
+	public void waitObject(LOTObject obj) {
+		long st = System.currentTimeMillis();
+		while (!obj.isReady()) {
+			//
+			doWait(100);
+			if (System.currentTimeMillis() - st > 15000) {
+				throw new RuntimeException("Giving up");
+			}
+		}
+	}
+
+	private synchronized void doWait(int i) {
+		try {
+			wait(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

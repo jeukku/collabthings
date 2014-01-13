@@ -18,7 +18,7 @@ public class TestPreferences implements MPreferences {
 		}
 		if (prefs.get(MPreferences.LOCAL_PATH, "").equals("")) {
 			prefs.put(MPreferences.LOCAL_PATH, System.getProperty("user.home")
-					+ "/waazdoh/" + username + "/");
+					+ "/lot/" + username + "/");
 		}
 
 		prefs.putInt(MPreferences.NETWORK_MAX_DOWNLOADS, 8);
@@ -44,7 +44,7 @@ public class TestPreferences implements MPreferences {
 
 	public Preferences getPrefs() {
 		Preferences prefs = Preferences.userNodeForPackage(getClass()).node(
-				"test/" + username);
+				"lot_test/" + username);
 		return prefs;
 	}
 
