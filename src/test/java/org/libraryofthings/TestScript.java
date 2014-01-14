@@ -17,7 +17,8 @@ public class TestScript extends LOTTestCase {
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
-		LOTScript bs = new LOTScript(benv, s.getServiceObject().getID());
+		LOTScript bs = new LOTScript(benv, s.getServiceObject().getID()
+				.getStringID());
 		assertEquals(bs.getScript(), s.getScript());
 	}
 

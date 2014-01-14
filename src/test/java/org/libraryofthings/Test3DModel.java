@@ -17,7 +17,8 @@ public class Test3DModel extends LOTTestCase {
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
-		LOT3DModel bs = new LOT3DModel(benv, s.getServiceObject().getID());
+		LOT3DModel bs = new LOT3DModel(benv, s.getServiceObject().getID()
+				.getStringID());
 		assertEquals(s.getName(), bs.getName());
 	}
 
@@ -36,7 +37,8 @@ public class Test3DModel extends LOTTestCase {
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
-		LOT3DModel bs = new LOT3DModel(benv, s.getServiceObject().getID());
+		LOT3DModel bs = new LOT3DModel(benv, s.getServiceObject().getID()
+				.getStringID());
 		assertEquals(s.getName(), bs.getName());
 		//
 		waitObject(bs);
