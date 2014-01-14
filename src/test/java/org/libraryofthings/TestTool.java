@@ -1,0 +1,46 @@
+package org.libraryofthings;
+
+import java.io.IOException;
+
+import org.libraryofthings.model.LOTScript;
+import org.libraryofthings.model.LOTTool;
+import org.xml.sax.SAXException;
+
+public class TestTool extends LOTTestCase {
+
+	public void testSaveAndLoad() throws IOException, SAXException {
+		LOTEnvironment env = getNewEnv();
+		assertNotNull(env);
+		//
+		LOTTool t = new LOTTool(env);
+		t.setName("testing changing name");
+		assertTrue(t.getServiceObject().save());
+		//
+		LOTScript lotScript = new LOTScript(env);
+		t.addScript("test", lotScript);
+		lotScript.setScript("testing tool script");
+		//
+		t.newModel();
+		String testbinarydatastring = "TESTIBINARYDATA";
+		t.getModel().getBinary().add(new String(testbinarydatastring).getBytes());
+		//
+		t.save();
+		t.publish();
+		//
+		LOTEnvironment benv = getNewEnv();
+		assertNotNull(benv);
+		LOTTool btool = new LOTTool(benv, t.getServiceObject().getID()
+				.getStringID());
+		assertEquals(btool.getName(), t.getName());
+		waitObject(btool);
+		//
+		LOTScript bscript = btool.getScript("test");
+		assertNotNull(bscript);
+		assertEquals(lotScript.getScript(), bscript.getScript());
+		//
+		String sdata = new String(btool.getModel().getBinary().asByteBuffer());
+		assertEquals(testbinarydatastring, sdata);
+
+	}
+
+}
