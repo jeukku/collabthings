@@ -6,7 +6,7 @@ import waazdoh.client.Binary;
 import waazdoh.client.MBinaryID;
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.cutils.MID;
+import waazdoh.cutils.MStringID;
 import waazdoh.cutils.xml.JBean;
 
 public class LOT3DModel implements ServiceObjectData, LOTObject {
@@ -25,10 +25,10 @@ public class LOT3DModel implements ServiceObjectData, LOTObject {
 		newBinary();
 	}
 
-	public LOT3DModel(LOTEnvironment env, MID id) {
+	public LOT3DModel(LOTEnvironment env, MStringID id) {
 		this.env = env;
 		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
-		o.load(id.getStringID());
+		o.load(id);
 	}
 
 	@Override
@@ -88,5 +88,13 @@ public class LOT3DModel implements ServiceObjectData, LOTObject {
 	public void publish() {
 		o.publish();
 		getBinary().publish();
+	}
+
+	public void save() {
+		if (binaryid != null) {
+			getBinary().setReady();
+			getBinary().save();
+		}
+		getServiceObject().save();
 	}
 }
