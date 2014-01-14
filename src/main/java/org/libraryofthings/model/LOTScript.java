@@ -4,7 +4,7 @@ import org.libraryofthings.LOTEnvironment;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.cutils.MID;
+import waazdoh.cutils.MStringID;
 import waazdoh.cutils.xml.JBean;
 
 public class LOTScript implements ServiceObjectData {
@@ -18,9 +18,9 @@ public class LOTScript implements ServiceObjectData {
 		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
 	}
 
-	public LOTScript(LOTEnvironment env, MID id) {
+	public LOTScript(LOTEnvironment env, MStringID id) {
 		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
-		o.load(id.getStringID());
+		o.load(id);
 	}
 
 	@Override
@@ -48,6 +48,3 @@ public class LOTScript implements ServiceObjectData {
 		return script;
 	}
 }
-
-
-
