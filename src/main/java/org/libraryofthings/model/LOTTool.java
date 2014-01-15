@@ -38,7 +38,7 @@ public class LOTTool implements ServiceObjectData, LOTObject {
 	@Override
 	public JBean getBean() {
 		JBean b = o.getBean();
-		b.setBase64Value(VALUENAME_NAME, getName());
+		b.addValue(VALUENAME_NAME, getName());
 		if (model != null) {
 			b.addValue(VALUENAME_MODELID, model.getServiceObject().getID());
 		}
@@ -61,7 +61,7 @@ public class LOTTool implements ServiceObjectData, LOTObject {
 
 	@Override
 	public boolean parseBean(JBean bean) {
-		setName(bean.getBase64Value(VALUENAME_NAME));
+		setName(bean.getValue(VALUENAME_NAME));
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
 		if (modelid != null) {
 			model = new LOT3DModel(env, modelid);

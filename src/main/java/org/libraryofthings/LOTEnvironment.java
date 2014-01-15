@@ -10,10 +10,12 @@ public class LOTEnvironment {
 	public final String prefix = "LOT";
 	//
 	private WClient client;
+	private LOTObjectFactory factory;
 
 	public LOTEnvironment(MPreferences p, MBinarySource binarysource,
 			CMService service) {
 		client = new WClient(p, binarysource, service);
+		this.factory = new LOTObjectFactoryImPl(this);
 	}
 
 	public WClient getClient() {
@@ -22,5 +24,9 @@ public class LOTEnvironment {
 
 	public MBinarySource getBinarySource() {
 		return client.getBinarySource();
+	}
+
+	public LOTObjectFactory getObjectFactory() {
+		return factory;
 	}
 }
