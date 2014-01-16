@@ -13,7 +13,7 @@ import waazdoh.cutils.MStringID;
 import waazdoh.cutils.xml.JBean;
 
 public class LOTTool implements ServiceObjectData, LOTObject {
-	private static final String BEANNAME = "script";
+	private static final String BEANNAME = "tool";
 	private static final String VALUENAME_NAME = "value";
 	private static final String VALUENAME_MODELID = "model3did";
 	private static final String VALUENAME_SCRIPTS = "scripts";
