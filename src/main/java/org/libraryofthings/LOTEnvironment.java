@@ -15,7 +15,7 @@ public class LOTEnvironment {
 	public LOTEnvironment(MPreferences p, MBinarySource binarysource,
 			CMService service) {
 		client = new WClient(p, binarysource, service);
-		this.factory = new LOTObjectFactoryImPl(this);
+		this.factory = new LOTObjectFactoryImpl(this);
 	}
 
 	public WClient getClient() {
