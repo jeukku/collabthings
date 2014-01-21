@@ -1,8 +1,7 @@
 package org.libraryofthings.model;
 
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.RealVector;
 import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.math.LVector;
 
 import waazdoh.cutils.MStringID;
 import waazdoh.cutils.xml.JBean;
@@ -13,11 +12,12 @@ public class LOTSubPart {
 	 */
 	private final LOTPart parent;
 	private LOTPart part;
-	private RealVector p = new ArrayRealVector(3);
+	private final LVector p = new LVector();
+	private final LVector n = new LVector();
 
 	/**
 	 * @param parent
-	 * @param env 
+	 * @param env
 	 */
 	LOTSubPart(LOTPart parent, LOTEnvironment env) {
 		this.parent = parent;
@@ -35,5 +35,14 @@ public class LOTSubPart {
 
 	public void getBean(JBean bpart) {
 		bpart.addValue("id", part.getServiceObject().getID());
+	}
+
+	public void setPart(LOTPart part2) {
+		this.part = part2;
+	}
+
+	public void setOrientation(LVector location, LVector normal) {
+		this.p.set(location);
+		this.n.set(normal);
 	}
 }
