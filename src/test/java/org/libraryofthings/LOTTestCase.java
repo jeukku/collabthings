@@ -22,7 +22,6 @@ import waazdoh.service.CMService;
 import waazdoh.testing.ServiceMock;
 
 public class LOTTestCase extends TestCase {
-	private static final String LOCALURL = "http://localhost:8080/waazdoh";
 	//
 	private Set<LOTEnvironment> clients = new HashSet<LOTEnvironment>();
 	MLogger log = MLogger.getLogger(this);
@@ -80,18 +79,16 @@ public class LOTTestCase extends TestCase {
 
 	private CMService getTestService(TestPreferences p, MBinarySource source)
 			throws SAXException {
-		String osname = System.getProperty("os.name").toLowerCase();
-		if (osname.indexOf("linux") >= 0) {
-			String url = "http://localhost:8080/waazdoh";
-			try {
-				return new RestClient(url, source);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-				return null;
+		try {
+			RestClient client = new RestClient(p.get(MPreferences.SERVICE_URL),
+					source);
+			if (client.isConnected()) {
+				return client;
 			}
-		} else {
-			return new ServiceMock(source);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
 		}
+		return new ServiceMock(source);
 	}
 
 	public void testTrue() {
