@@ -14,7 +14,7 @@ public class TestPreferences implements MPreferences {
 		this.username = username;
 		Preferences prefs = getPrefs();
 		if (prefs.get(MPreferences.SERVICE_URL, "").equals("")) {
-			prefs.put(MPreferences.SERVICE_URL, "http://localhost:8080/waazdoh");
+			prefs.put(MPreferences.SERVICE_URL, "http://localhost:18099/waazdoh");
 		}
 		if (prefs.get(MPreferences.LOCAL_PATH, "").equals("")) {
 			prefs.put(MPreferences.LOCAL_PATH, System.getProperty("user.home")
