@@ -1,6 +1,7 @@
 package org.libraryofthings.model;
 
 import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.RunEnvironment;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -46,5 +47,10 @@ public class LOTScript implements ServiceObjectData {
 
 	public String getScript() {
 		return script;
+	}
+
+	public void run(RunEnvironment runenv) {
+		// TODO Auto-generated method stub
+		
 	}
 }
