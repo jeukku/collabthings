@@ -3,7 +3,7 @@ package org.libraryofthings.math;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
-public class LVector {
+public final class LVector {
 	private RealVector v = new ArrayRealVector(new double[3]);
 
 	public LVector(double x, double y, double z) {

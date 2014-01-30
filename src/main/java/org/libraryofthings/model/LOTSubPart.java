@@ -6,7 +6,7 @@ import org.libraryofthings.math.LVector;
 import waazdoh.cutils.MStringID;
 import waazdoh.cutils.xml.JBean;
 
-public class LOTSubPart {
+public final class LOTSubPart {
 	/**
 	 * 
 	 */

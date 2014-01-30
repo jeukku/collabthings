@@ -10,7 +10,7 @@ import waazdoh.client.ServiceObjectData;
 import waazdoh.cutils.MStringID;
 import waazdoh.cutils.xml.JBean;
 
-public class LOTTask implements ServiceObjectData {
+public final class LOTTask implements ServiceObjectData {
 	private static final String VALUE_NAME = "name";
 	private static final String BEANNAME = "task";
 	//

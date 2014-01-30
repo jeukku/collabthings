@@ -9,7 +9,7 @@ import waazdoh.client.ServiceObjectData;
 import waazdoh.cutils.MStringID;
 import waazdoh.cutils.xml.JBean;
 
-public class LOT3DModel implements ServiceObjectData, LOTObject {
+public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	private static final String BEANNAME = "model3d";
 	private static final String NAME = "name";
 	private static final String BINARYID = "binaryid";

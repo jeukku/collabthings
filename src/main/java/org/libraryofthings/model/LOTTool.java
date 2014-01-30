@@ -12,7 +12,7 @@ import waazdoh.client.ServiceObjectData;
 import waazdoh.cutils.MStringID;
 import waazdoh.cutils.xml.JBean;
 
-public class LOTTool implements ServiceObjectData, LOTObject {
+public final class LOTTool implements ServiceObjectData, LOTObject {
 	private static final String BEANNAME = "tool";
 	private static final String VALUENAME_NAME = "value";
 	private static final String VALUENAME_MODELID = "model3did";

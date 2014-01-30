@@ -6,7 +6,7 @@ import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.xml.sax.SAXException;
 
-public class TestTool extends LOTTestCase {
+public final class TestTool extends LOTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException {
 		LOTEnvironment env = getNewEnv();

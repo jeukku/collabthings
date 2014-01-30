@@ -6,7 +6,7 @@ import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
 import org.xml.sax.SAXException;
 
-public class TestPart extends LOTTestCase {
+public final class TestPart extends LOTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException {
 		LOTEnvironment env = getNewEnv();

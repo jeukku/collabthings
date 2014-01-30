@@ -8,7 +8,7 @@ import org.libraryofthings.model.LOTTask;
 
 import waazdoh.cutils.MStringID;
 
-public class LOTObjectFactoryImpl implements LOTObjectFactory {
+public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 
 	private LOTEnvironment env;
 	private List<LOTTask> tasks = new LinkedList<LOTTask>();

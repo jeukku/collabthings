@@ -5,7 +5,7 @@ import waazdoh.client.WClient;
 import waazdoh.cutils.MPreferences;
 import waazdoh.service.CMService;
 
-public class LOTEnvironment {
+public final class LOTEnvironment {
 	public final String version = "0.0.1";
 	public final String prefix = "LOT";
 	//

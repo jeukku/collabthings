@@ -11,7 +11,7 @@ import waazdoh.client.ServiceObjectData;
 import waazdoh.cutils.MStringID;
 import waazdoh.cutils.xml.JBean;
 
-public class LOTPart implements ServiceObjectData, LOTObject {
+public final class LOTPart implements ServiceObjectData, LOTObject {
 	private static final String BEANNAME = "part";
 	private static final String VALUENAME_NAME = "value";
 	private static final String VALUENAME_MODELID = "model3did";

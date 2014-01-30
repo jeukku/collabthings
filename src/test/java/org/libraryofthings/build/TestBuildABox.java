@@ -14,7 +14,7 @@ import org.xml.sax.SAXException;
 
 import waazdoh.cutils.MID;
 
-public class TestBuildABox extends LOTTestCase {
+public final class TestBuildABox extends LOTTestCase {
 
 	public void testBox() throws IOException, SAXException {
 		LOTEnvironment env = getNewEnv();

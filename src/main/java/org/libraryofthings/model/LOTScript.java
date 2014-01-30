@@ -8,7 +8,7 @@ import waazdoh.client.ServiceObjectData;
 import waazdoh.cutils.MStringID;
 import waazdoh.cutils.xml.JBean;
 
-public class LOTScript implements ServiceObjectData {
+public final class LOTScript implements ServiceObjectData {
 	private static final String SCRIPT = "value";
 	private static final String BEANNAME = "script";
 	//

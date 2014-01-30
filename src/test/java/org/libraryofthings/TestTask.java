@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.libraryofthings.model.LOTTask;
 import org.xml.sax.SAXException;
 
-public class TestTask extends LOTTestCase {
+public final class TestTask extends LOTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException {
 		LOTEnvironment env = getNewEnv();
