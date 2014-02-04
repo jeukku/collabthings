@@ -8,6 +8,8 @@ public interface RunEnvironment {
 
 	void setParameter(String string, MID id);
 
-	void addPart(String string, LOTPart destinationpart);
+	void setParameter(String string, String value);
+
+	void addPart(String string, LOTPart part);
 
 }
