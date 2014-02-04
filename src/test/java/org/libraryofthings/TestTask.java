@@ -19,13 +19,15 @@ public final class TestTask extends LOTTestCase {
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
-		LOTTask bs = new LOTTask(benv, s.getServiceObject().getID()
-				.getStringID());
+		LOTTask bs = env.getObjectFactory().getTask(
+				s.getServiceObject().getID().getStringID());
 		//
 		assertEquals(bs.getName(), s.getName());
-		assertTrue(bs.getSubTasks().size()>0);
+		assertTrue(bs.getSubTasks().size() > 0);
 		assertTrue(s.getSubTasks().containsAll(bs.getSubTasks()));
 		assertTrue(bs.getSubTasks().containsAll(s.getSubTasks()));
+		//
+		assertEquals(bs, env.getObjectFactory().getTask(bs.getServiceObject().getID().getStringID()));
 	}
 
 }

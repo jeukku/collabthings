@@ -40,6 +40,8 @@ public final class TestPart extends LOTTestCase {
 		LOTSubPart bsubpart = part.getSubParts().get(0);
 		assertEquals(bsubpart.getPart().getServiceObject().getID(), subpart
 				.getPart().getServiceObject().getID());
+		
+		assertEquals(bpart, benv.getObjectFactory().getPart(bpart.getServiceObject().getID().getStringID()));
 	}
 
 }
