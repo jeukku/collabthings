@@ -18,7 +18,7 @@ public final class TestTool extends LOTTestCase {
 		//
 		LOTScript lotScript = new LOTScript(env);
 		t.addScript("test", lotScript);
-		lotScript.setScript("testing tool script");
+		lotScript.setScript("function info() { return \"testing tool script\"; }");
 		//
 		t.newModel();
 		String testbinarydatastring = "TESTIBINARYDATA";
