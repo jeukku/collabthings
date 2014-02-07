@@ -11,4 +11,6 @@ public interface LOTObjectFactory {
 
 	LOTPart getPart(MStringID partid);
 
+	LOTPart getPart();
+
 }

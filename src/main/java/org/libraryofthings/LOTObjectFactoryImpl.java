@@ -32,6 +32,13 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	}
 
 	@Override
+	public LOTPart getPart() {
+		LOTPart p = new LOTPart(env);
+		parts.add(p);
+		return p;
+	}
+
+	@Override
 	public LOTPart getPart(MStringID partid) {
 		for (LOTPart part : parts) {
 			if (part.getServiceObject().getID().equals(partid)) {
