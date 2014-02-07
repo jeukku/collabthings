@@ -15,6 +15,7 @@ public class LLog {
 
 	public void error(Object o, String sourceMethod, Throwable e1) {
 		log.throwing(o.getClass().getName(), sourceMethod, e1);
+		e1.printStackTrace();
 	}
 
 	public static LLog getLogger(Object o) {
