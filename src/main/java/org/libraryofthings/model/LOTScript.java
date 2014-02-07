@@ -31,11 +31,13 @@ public final class LOTScript implements ServiceObjectData {
 	private LLog log = LLog.getLogger(this);
 
 	public LOTScript(LOTEnvironment env) {
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
+		o = new ServiceObject(BEANNAME, env.getClient(), this,
+				env.getVersion(), env.getPrefix());
 	}
 
 	public LOTScript(LOTEnvironment env, MStringID id) {
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
+		o = new ServiceObject(BEANNAME, env.getClient(), this,
+				env.getVersion(), env.getPrefix());
 		o.load(id);
 	}
 

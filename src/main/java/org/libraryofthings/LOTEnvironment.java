@@ -6,8 +6,8 @@ import waazdoh.cutils.MPreferences;
 import waazdoh.service.CMService;
 
 public final class LOTEnvironment {
-	public final String version = "0.0.1";
-	public final String prefix = "LOT";
+	private final String version = "0.0.1";
+	private final String prefix = "LOT";
 	//
 	private WClient client;
 	private LOTObjectFactory factory;
@@ -28,5 +28,13 @@ public final class LOTEnvironment {
 
 	public LOTObjectFactory getObjectFactory() {
 		return factory;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public String getPrefix() {
+		return prefix;
 	}
 }

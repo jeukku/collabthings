@@ -16,11 +16,11 @@ public final class LOTSubPart {
 	private final LVector n = new LVector();
 
 	/**
-	 * @param parent
+	 * @param nparent
 	 * @param env
 	 */
-	LOTSubPart(LOTPart parent, LOTEnvironment env) {
-		this.parent = parent;
+	LOTSubPart(final LOTPart nparent, final LOTEnvironment env) {
+		this.parent = nparent;
 		part = new LOTPart(env);
 	}
 

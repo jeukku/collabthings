@@ -26,12 +26,14 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 
 	public LOTTool(final LOTEnvironment nenv) {
 		this.env = nenv;
-		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.version);
+		o = new ServiceObject(BEANNAME, nenv.getClient(), this,
+				nenv.getVersion(), nenv.getPrefix());
 	}
 
 	public LOTTool(final LOTEnvironment nenv, final MStringID id) {
 		this.env = nenv;
-		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.version);
+		o = new ServiceObject(BEANNAME, nenv.getClient(), this,
+				nenv.getVersion(), nenv.getPrefix());
 		o.load(id);
 	}
 
@@ -88,8 +90,8 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setName(final String nname) {
+		this.name = nname;
 	}
 
 	@Override
