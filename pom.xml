@@ -104,7 +104,7 @@
 		<dependency>
 			<groupId>waazdoh</groupId>
 			<artifactId>waazdoh.client</artifactId>
-			<version>1.0.9-SNAPSHOT</version>
+			<version>1.0.10-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>
@@ -118,6 +118,11 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-
+		
+		<repository>
+			<id>waazdoh</id>
+			<name>waazdoh</name>
+			<url>http://maven.waazdoh.com/repository</url>
+		</repository>
 	</repositories>
 </project>
