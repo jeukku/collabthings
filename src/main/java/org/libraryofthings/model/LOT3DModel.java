@@ -19,15 +19,15 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	private MBinaryID binaryid;
 	private LOTEnvironment env;
 
-	public LOT3DModel(LOTEnvironment env) {
-		this.env = env;
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
+	public LOT3DModel(final LOTEnvironment nenv) {
+		this.env = nenv;
+		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.version);
 		newBinary();
 	}
 
-	public LOT3DModel(LOTEnvironment env, MStringID id) {
-		this.env = env;
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
+	public LOT3DModel(final LOTEnvironment nenv, final MStringID id) {
+		this.env = nenv;
+		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.version);
 		o.load(id);
 	}
 

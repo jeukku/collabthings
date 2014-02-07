@@ -20,14 +20,14 @@ public final class LOTTask implements ServiceObjectData {
 	private List<LOTTask> subtasks = new LinkedList<LOTTask>();
 	private LOTEnvironment env;
 
-	public LOTTask(LOTEnvironment env) {
-		this.env = env;
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
+	public LOTTask(final LOTEnvironment nenv) {
+		this.env = nenv;
+		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.version);
 	}
 
-	public LOTTask(LOTEnvironment env, MStringID id) {
-		this.env = env;
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
+	public LOTTask(final LOTEnvironment nenv, final MStringID id) {
+		this.env = nenv;
+		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.version);
 		o.load(id);
 	}
 

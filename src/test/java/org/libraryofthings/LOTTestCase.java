@@ -10,8 +10,6 @@ import junit.framework.TestCase;
 import org.libraryofthings.model.LOTObject;
 import org.xml.sax.SAXException;
 
-import waazdoh.client.Binary;
-import waazdoh.client.MBinaryID;
 import waazdoh.client.MBinarySource;
 import waazdoh.client.rest.RestClient;
 import waazdoh.cp2p.impl.P2PBinarySource;
@@ -22,6 +20,8 @@ import waazdoh.service.CMService;
 import waazdoh.testing.ServiceMock;
 
 public class LOTTestCase extends TestCase {
+	private static final int DEFAULT_WAITTIME = 100;
+	private static final int MAX_OBJECT_WAITTIME = 15000;
 	//
 	private Set<LOTEnvironment> clients = new HashSet<LOTEnvironment>();
 	MLogger log = MLogger.getLogger(this);
@@ -99,8 +99,8 @@ public class LOTTestCase extends TestCase {
 		long st = System.currentTimeMillis();
 		while (!obj.isReady()) {
 			//
-			doWait(100);
-			if (System.currentTimeMillis() - st > 15000) {
+			doWait(DEFAULT_WAITTIME);
+			if (System.currentTimeMillis() - st > MAX_OBJECT_WAITTIME) {
 				throw new RuntimeException("Giving up");
 			}
 		}
@@ -108,7 +108,7 @@ public class LOTTestCase extends TestCase {
 
 	private synchronized void doWait(int i) {
 		try {
-			wait(100);
+			wait(i);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

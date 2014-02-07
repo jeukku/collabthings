@@ -27,7 +27,10 @@ public final class TestTask extends LOTTestCase {
 		assertTrue(s.getSubTasks().containsAll(bs.getSubTasks()));
 		assertTrue(bs.getSubTasks().containsAll(s.getSubTasks()));
 		//
-		assertEquals(bs, env.getObjectFactory().getTask(bs.getServiceObject().getID().getStringID()));
+		assertEquals(
+				bs,
+				env.getObjectFactory().getTask(
+						bs.getServiceObject().getID().getStringID()));
 	}
 
 }

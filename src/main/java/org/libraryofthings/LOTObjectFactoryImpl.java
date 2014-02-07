@@ -14,12 +14,12 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	private List<LOTTask> tasks = new LinkedList<LOTTask>();
 	private List<LOTPart> parts = new LinkedList<LOTPart>();
 
-	public LOTObjectFactoryImpl(LOTEnvironment env) {
-		this.env = env;
+	public LOTObjectFactoryImpl(final LOTEnvironment nenv) {
+		this.env = nenv;
 	}
 
 	@Override
-	public LOTTask getTask(MStringID taskid) {
+	public LOTTask getTask(final MStringID taskid) {
 		for (LOTTask task : tasks) {
 			if (task.getServiceObject().getID().equals(taskid)) {
 				return task;
@@ -39,7 +39,7 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	}
 
 	@Override
-	public LOTPart getPart(MStringID partid) {
+	public LOTPart getPart(final MStringID partid) {
 		for (LOTPart part : parts) {
 			if (part.getServiceObject().getID().equals(partid)) {
 				return part;

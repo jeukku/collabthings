@@ -24,14 +24,14 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 	private Map<String, LOTScript> scripts = new HashMap<String, LOTScript>();
 	private LOTEnvironment env;
 
-	public LOTTool(LOTEnvironment env) {
-		this.env = env;
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
+	public LOTTool(final LOTEnvironment nenv) {
+		this.env = nenv;
+		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.version);
 	}
 
-	public LOTTool(LOTEnvironment env, MStringID id) {
-		this.env = env;
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
+	public LOTTool(final LOTEnvironment nenv, final MStringID id) {
+		this.env = nenv;
+		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.version);
 		o.load(id);
 	}
 

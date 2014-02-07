@@ -15,6 +15,6 @@ public interface RunEnvironment {
 	void addPart(String string, LOTPart part);
 
 	LOTPart getPart(String s);
-	
+
 	LLog log();
 }

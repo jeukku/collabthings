@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.libraryofthings.LOTEnvironment;
 
-import waazdoh.client.Binary;
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.cutils.MStringID;
@@ -23,14 +22,14 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 
 	private List<LOTSubPart> subparts = new LinkedList<LOTSubPart>();
 
-	public LOTPart(LOTEnvironment env) {
-		this.env = env;
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
+	public LOTPart(final LOTEnvironment nenv) {
+		this.env = nenv;
+		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.version);
 	}
 
-	public LOTPart(LOTEnvironment env, MStringID id) {
-		this.env = env;
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.version);
+	public LOTPart(final LOTEnvironment nenv, MStringID id) {
+		this.env = nenv;
+		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.version);
 		o.load(id);
 	}
 

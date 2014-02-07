@@ -14,8 +14,8 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 	private LOTEnvironment env;
 	private LLog log = LLog.getLogger(this);
 
-	public LOTSimulationEnvironment(LOTEnvironment env) {
-		this.env = env;
+	public LOTSimulationEnvironment(final LOTEnvironment nenv) {
+		this.env = nenv;
 	}
 
 	@Override

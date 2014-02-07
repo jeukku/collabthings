@@ -8,13 +8,16 @@ import java.util.prefs.Preferences;
 import waazdoh.cutils.MPreferences;
 
 public final class TestPreferences implements MPreferences {
+	private static final int RANDOM_PORT_D = 10000;
+	private static final int RANDOM_PORT_START = 9000;
 	private String username;
 
 	TestPreferences(String username) {
 		this.username = username;
 		Preferences prefs = getPrefs();
 		if (prefs.get(MPreferences.SERVICE_URL, "").equals("")) {
-			prefs.put(MPreferences.SERVICE_URL, "http://localhost:18099/waazdoh");
+			prefs.put(MPreferences.SERVICE_URL,
+					"http://localhost:18099/waazdoh");
 		}
 		if (prefs.get(MPreferences.LOCAL_PATH, "").equals("")) {
 			prefs.put(MPreferences.LOCAL_PATH, System.getProperty("user.home")
@@ -49,7 +52,7 @@ public final class TestPreferences implements MPreferences {
 	}
 
 	private int randomPort() {
-		int port = 9000 + (int) (Math.random() * 10000);
+		int port = RANDOM_PORT_START + (int) (Math.random() * RANDOM_PORT_D);
 		return port;
 	}
 

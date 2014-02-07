@@ -1,7 +1,6 @@
 package org.libraryofthings;
 
 import java.io.IOException;
-import java.io.ObjectInputStream.GetField;
 
 import javax.script.ScriptException;
 
@@ -63,7 +62,8 @@ public final class TestScript extends LOTTestCase {
 		}
 	}
 
-	private LOTScript getWorkingScript(LOTEnvironment env, String script) throws NoSuchMethodException, ScriptException {
+	private LOTScript getWorkingScript(LOTEnvironment env, String script)
+			throws NoSuchMethodException, ScriptException {
 		LOTScript s = new LOTScript(env);
 		s.setScript(script);
 		return s;
@@ -72,8 +72,8 @@ public final class TestScript extends LOTTestCase {
 	public void testRuntimeEnvironmentParameters() throws IOException,
 			SAXException, NoSuchMethodException, ScriptException {
 		LOTEnvironment env = getNewEnv();
-		LOTScript s = getWorkingScript(env, SCRIPT_TEMPLATE +
-				"function run(e) { e.setParameter('test', 'testvalue'); }");
+		LOTScript s = getWorkingScript(env, SCRIPT_TEMPLATE
+				+ "function run(e) { e.setParameter('test', 'testvalue'); }");
 		assertNotNull(s);
 		RunEnvironment e = new LOTSimulationEnvironment(env);
 		s.run(e);
