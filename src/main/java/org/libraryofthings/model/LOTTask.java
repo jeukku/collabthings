@@ -97,6 +97,11 @@ public final class LOTTask implements ServiceObjectData {
 	}
 
 	@Override
+	public int hashCode() {
+		return getBean().hashCode();
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof LOTTask) {
 			LOTTask task = (LOTTask) obj;
