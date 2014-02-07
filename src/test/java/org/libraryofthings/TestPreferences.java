@@ -8,6 +8,7 @@ import java.util.prefs.Preferences;
 import waazdoh.cutils.MPreferences;
 
 public final class TestPreferences implements MPreferences {
+	private static final int DEFAULT_NETWORK_MAX_DOWNLOADS = 8;
 	private static final int RANDOM_PORT_D = 10000;
 	private static final int RANDOM_PORT_START = 9000;
 	private String username;
@@ -24,7 +25,7 @@ public final class TestPreferences implements MPreferences {
 					+ "/lot/" + username + "/");
 		}
 
-		prefs.putInt(MPreferences.NETWORK_MAX_DOWNLOADS, 8);
+		prefs.putInt(MPreferences.NETWORK_MAX_DOWNLOADS, DEFAULT_NETWORK_MAX_DOWNLOADS);
 		prefs.put(MPreferences.SERVERLIST, "localhost");
 	}
 
