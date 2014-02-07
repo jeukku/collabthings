@@ -29,13 +29,23 @@ public final class LOTScript implements ServiceObjectData {
 
 	//
 	private LLog log = LLog.getLogger(this);
+	private String string;
 
-	public LOTScript(LOTEnvironment env) {
+	/**
+	 * Creates a new script with random ID.
+	 * @param env
+	 */
+	public LOTScript(final LOTEnvironment env) {
 		o = new ServiceObject(BEANNAME, env.getClient(), this,
 				env.getVersion(), env.getPrefix());
 	}
 
-	public LOTScript(LOTEnvironment env, MStringID id) {
+	/**
+	 * Loads a script with id.
+	 * @param env
+	 * @param id
+	 */
+	public LOTScript(final LOTEnvironment env, final MStringID id) {
 		o = new ServiceObject(BEANNAME, env.getClient(), this,
 				env.getVersion(), env.getPrefix());
 		o.load(id);
@@ -62,7 +72,15 @@ public final class LOTScript implements ServiceObjectData {
 		}
 	}
 
-	private boolean load(String s) throws ScriptException,
+	/**
+	 * Tries to parse the script using a ScriptLoader and calls info -function in script.
+	 * 
+	 * @param Script as a String
+	 * @return True, if success.
+	 * @throws ScriptException
+	 * @throws NoSuchMethodException
+	 */
+	private boolean load(final String s) throws ScriptException,
 			NoSuchMethodException {
 		ScriptLoader loader = new JavaScriptLoader();
 		inv = loader.load(s);
@@ -72,9 +90,9 @@ public final class LOTScript implements ServiceObjectData {
 		return true;
 	}
 
-	public boolean setScript(String string) throws NoSuchMethodException,
+	public boolean setScript(final String nscript) throws NoSuchMethodException,
 			ScriptException {
-		return load(string);
+		return load(nscript);
 	}
 
 	public ServiceObject getServiceObject() {
@@ -85,6 +103,11 @@ public final class LOTScript implements ServiceObjectData {
 		return script;
 	}
 
+
+	/**
+	 * 
+	 * @return true, if script is usable.
+	 */
 	public boolean isOK() {
 		return inv != null;
 	}
