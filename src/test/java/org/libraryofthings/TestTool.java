@@ -2,13 +2,16 @@ package org.libraryofthings;
 
 import java.io.IOException;
 
+import javax.script.ScriptException;
+
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.xml.sax.SAXException;
 
 public final class TestTool extends LOTTestCase {
 
-	public void testSaveAndLoad() throws IOException, SAXException {
+	public void testSaveAndLoad() throws IOException, SAXException,
+			NoSuchMethodException, ScriptException {
 		LOTEnvironment env = getNewEnv();
 		assertNotNull(env);
 		//

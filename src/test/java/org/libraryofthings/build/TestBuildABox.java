@@ -2,7 +2,10 @@ package org.libraryofthings.build;
 
 import java.io.IOException;
 
+import javax.script.ScriptException;
+
 import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTSimulationEnvironment;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.math.LVector;
@@ -12,11 +15,10 @@ import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.LOTTool;
 import org.xml.sax.SAXException;
 
-import waazdoh.cutils.MID;
-
 public final class TestBuildABox extends LOTTestCase {
 
-	public void testBox() throws IOException, SAXException {
+	public void testBox() throws IOException, SAXException,
+			NoSuchMethodException, ScriptException {
 		LOTEnvironment env = getNewEnv();
 		assertNotNull(env);
 
@@ -53,37 +55,33 @@ public final class TestBuildABox extends LOTTestCase {
 		//
 		LOTScript assembyscript = getAssemblyScript(tool, box, env);
 
-		LOTPart destinationpart = new LOTPart(env);
+		LOTPart destinationpart = env.getObjectFactory().getPart();
 
-		/*
-		RunEnvironment runenv = SimualtionEnvironment(env);
+		RunEnvironment runenv = new LOTSimulationEnvironment(env);
 		runenv.setParameter("partid", box.getServiceObject().getID());
 		runenv.addPart("destinationpart", destinationpart);
 
 		assembyscript.run(runenv);
 
-		// TODO make it a box.
-		assertTrue("is a box?", false);
-		*/
-	}
-
-	private RunEnvironment SimualtionEnvironment(LOTEnvironment env) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	private LOTScript getAssemblyScript(LOTTool tool, LOTPart box,
-			LOTEnvironment env) {
+			LOTEnvironment env) throws NoSuchMethodException, ScriptException {
 		String s = "";
-		s += "function run() { ";
-		s += "	part = getEnv().getPart(getParameters('partid'));";
-		s += "	destinationpart = getEnv().getPart(getParameters('destinationpartid'));";
+		s += "function info() { return \"testing box -building\"; }";
+		s += "function run(e) { ";
+		s += "	var part = e.getPart(e.getParameter('partid'));";
+		s += "	var destinationpart = e.getPart('destinationpartid');";
 		//
-		s += "  part.getSubParts().foreach(function(subpart) {";
-		s += "     moveAndAttach(subpart, destinationpart)";
+		s += "  e.log().info(\"script going to a loop!!!\");";
+		s += "  _.each(part.getSubParts().toArray(), function(subpart) {";
+		s += "     e.log().info('script test ' + subpart);";
+		s += "     moveAndAttach(subpart, destinationpart);";
 		s += "  });";
 		s += "}";
 
+		s += "function moveAndAttach(subpart, destpart) {";
+		s += "}";
 		//
 		LOTScript lots = new LOTScript(env);
 		lots.setScript(s);

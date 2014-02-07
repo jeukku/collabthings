@@ -6,14 +6,31 @@ import java.util.Map;
 import org.libraryofthings.model.LOTPart;
 
 import waazdoh.cutils.MID;
+import waazdoh.cutils.MStringID;
 
 public class LOTSimulationEnvironment implements RunEnvironment {
 	private Map<String, LOTPart> parts = new HashMap<String, LOTPart>();
 	private Map<String, String> params = new HashMap<String, String>();
+	private LOTEnvironment env;
+	private LLog log = LLog.getLogger(this);
+
+	public LOTSimulationEnvironment(LOTEnvironment env) {
+		this.env = env;
+	}
+
+	@Override
+	public LLog log() {
+		return log;
+	}
 
 	@Override
 	public void setParameter(String key, MID id) {
 		setParameter(key, id.getStringID().toString());
+	}
+
+	@Override
+	public String getParameter(String string) {
+		return params.get(string);
 	}
 
 	@Override
@@ -26,8 +43,14 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 		parts.put(string, part);
 	}
 
-	public String getParameter(String string) {
-		return params.get(string);
+	@Override
+	public LOTPart getPart(String s) {
+		LOTPart p = parts.get(s);
+		if (p != null) {
+			return p;
+		} else {
+			return env.getObjectFactory().getPart(new MStringID(s));
+		}
 	}
 
 }

@@ -10,6 +10,11 @@ public interface RunEnvironment {
 
 	void setParameter(String string, String value);
 
+	String getParameter(String s);
+
 	void addPart(String string, LOTPart part);
 
+	LOTPart getPart(String s);
+	
+	LLog log();
 }
