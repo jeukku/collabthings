@@ -17,6 +17,8 @@ import org.xml.sax.SAXException;
 
 public final class TestBuildABox extends LOTTestCase {
 
+	private static final int PARTS_IN_A_BOX = 6;
+
 	public void testBox() throws IOException, SAXException,
 			NoSuchMethodException, ScriptException {
 		LOTEnvironment env = getNewEnv();
@@ -27,30 +29,33 @@ public final class TestBuildABox extends LOTTestCase {
 		square.setName("wall");
 
 		// Create a box object
-		LOTPart box = new LOTPart(env);
+		LOTPart box = env.getObjectFactory().getPart();
 		box.setName("BOX");
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < PARTS_IN_A_BOX; i++) {
 			LOTSubPart wall = box.newSubPart();
 			wall.setPart(square);
 		}
 
-		box.getSubParts().get(0)
+		int partindex = 0;
+		box.getSubParts().get(partindex++)
 				.setOrientation(new LVector(0, -1, 0), new LVector(0, 1, 0));
-		box.getSubParts().get(1)
+		box.getSubParts().get(partindex++)
 				.setOrientation(new LVector(-1, 0, 0), new LVector(-1, 0, 0));
-		box.getSubParts().get(2)
+		box.getSubParts().get(partindex++)
 				.setOrientation(new LVector(1, 0, 0), new LVector(1, 0, 0));
-		box.getSubParts().get(3)
+		box.getSubParts().get(partindex++)
 				.setOrientation(new LVector(0, 0, -1), new LVector(0, 0, -1));
-		box.getSubParts().get(4)
+		box.getSubParts().get(partindex++)
 				.setOrientation(new LVector(0, 0, 1), new LVector(0, 0, 1));
-		box.getSubParts().get(5)
+		box.getSubParts().get(partindex++)
 				.setOrientation(new LVector(0, 1, 0), new LVector(0, 1, 0));
 
 		// TODO picking up plates, moving them and leaving them somewhere
+		// Create a plate source
+		LOTTool partsource = env.getObjectFactory().getTool();
 
 		// Create a tool to pick up plates
-		LOTTool tool = new LOTTool(env);
+		LOTTool tool = env.getObjectFactory().getTool();
 
 		//
 		LOTScript assembyscript = getAssemblyScript(tool, box, env);
@@ -60,9 +65,26 @@ public final class TestBuildABox extends LOTTestCase {
 		RunEnvironment runenv = new LOTSimulationEnvironment(env);
 		runenv.setParameter("partid", box.getServiceObject().getID());
 		runenv.addPart("destinationpart", destinationpart);
-
+		runenv.addTool("source", partsource);
+		runenv.addTool("tool", tool);
+		//
+		partsource.addScript("need", getSourceNeedScript(env));
+		//
 		assembyscript.run(runenv);
+		//
+		assertTrue(destinationpart.getSubParts().size() == PARTS_IN_A_BOX);
+	}
 
+	private LOTScript getSourceNeedScript(LOTEnvironment env)
+			throws NoSuchMethodException, ScriptException {
+		LOTScript script = new LOTScript(env);
+		String s = "function info() { return \"need script in part source\"; } ";
+		s += "function run(e, o) { ";
+		s += "  e.log().info(\"NEED \" + o);";
+		s += "}";
+
+		script.setScript(s);
+		return script;
 	}
 
 	private LOTScript getAssemblyScript(LOTTool tool, LOTPart box,
@@ -71,16 +93,23 @@ public final class TestBuildABox extends LOTTestCase {
 		s += "function info() { return \"testing box -building\"; }";
 		s += "function run(e) { ";
 		s += "	var part = e.getPart(e.getParameter('partid'));";
-		s += "	var destinationpart = e.getPart('destinationpartid');";
+		s += "	var destinationpart = e.getPart('destinationpart');";
 		//
 		s += "  e.log().info(\"script going to a loop!!!\");";
 		s += "  _.each(part.getSubParts().toArray(), function(subpart) {";
 		s += "     e.log().info('script test ' + subpart);";
-		s += "     moveAndAttach(subpart, destinationpart);";
+		s += "     moveAndAttach(e, subpart, destinationpart);";
 		s += "  });";
+		s += "  e.log().info(\"script end!!!\");";
 		s += "}";
 
-		s += "function moveAndAttach(subpart, destpart) {";
+		s += "function moveAndAttach(e, subpart, destpart) {";
+		s += "  var tool = e.getTool('tool');";
+		s += "  var partsource = e.getTool('source');";
+		s += "  partsource.call(e, 'need', subpart);";
+		s += "  tool.moveTo(partsource.getLocation());";
+		s += "  destpart.addSubPart(subpart);";
+		s += "  e.log().info(\"moveAndAttach done\");";
 		s += "}";
 		//
 		LOTScript lots = new LOTScript(env);

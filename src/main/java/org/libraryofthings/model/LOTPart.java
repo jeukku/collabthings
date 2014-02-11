@@ -128,4 +128,12 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 	public List<LOTSubPart> getSubParts() {
 		return subparts;
 	}
+
+	public LOTSubPart addSubPart(LOTSubPart part) {
+		LOTSubPart subpart = newSubPart();
+		subpart.setPart(part.getPart());
+		subpart.setOrientation(part.getLocation(), part.getNormal());
+		//
+		return subpart;
+	}
 }

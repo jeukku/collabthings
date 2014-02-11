@@ -1,6 +1,7 @@
 package org.libraryofthings;
 
 import org.libraryofthings.model.LOTPart;
+import org.libraryofthings.model.LOTTool;
 
 import waazdoh.cutils.MID;
 
@@ -17,4 +18,8 @@ public interface RunEnvironment {
 	LOTPart getPart(String s);
 
 	LLog log();
+
+	LOTToolState addTool(String id, LOTTool tool);
+
+	LOTToolState getTool(String id);
 }

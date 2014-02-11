@@ -15,7 +15,7 @@ public final class TestTool extends LOTTestCase {
 		LOTEnvironment env = getNewEnv();
 		assertNotNull(env);
 		//
-		LOTTool t = new LOTTool(env);
+		LOTTool t = env.getObjectFactory().getTool();
 		t.setName("testing changing name");
 		assertTrue(t.getServiceObject().save());
 		//
@@ -34,8 +34,8 @@ public final class TestTool extends LOTTestCase {
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
-		LOTTool btool = new LOTTool(benv, t.getServiceObject().getID()
-				.getStringID());
+		LOTTool btool = env.getObjectFactory().getTool(
+				t.getServiceObject().getID().getStringID());
 		assertEquals(btool.getName(), t.getName());
 		waitObject(btool);
 		//

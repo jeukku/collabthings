@@ -1,5 +1,8 @@
 package org.libraryofthings.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.script.Invocable;
 import javax.script.ScriptException;
 
@@ -33,6 +36,7 @@ public final class LOTScript implements ServiceObjectData {
 
 	/**
 	 * Creates a new script with random ID.
+	 * 
 	 * @param env
 	 */
 	public LOTScript(final LOTEnvironment env) {
@@ -42,6 +46,7 @@ public final class LOTScript implements ServiceObjectData {
 
 	/**
 	 * Loads a script with id.
+	 * 
 	 * @param env
 	 * @param id
 	 */
@@ -73,9 +78,11 @@ public final class LOTScript implements ServiceObjectData {
 	}
 
 	/**
-	 * Tries to parse the script using a ScriptLoader and calls info -function in script.
+	 * Tries to parse the script using a ScriptLoader and calls info -function
+	 * in script.
 	 * 
-	 * @param Script as a String
+	 * @param Script
+	 *            as a String
 	 * @return True, if success.
 	 * @throws ScriptException
 	 * @throws NoSuchMethodException
@@ -90,8 +97,8 @@ public final class LOTScript implements ServiceObjectData {
 		return true;
 	}
 
-	public boolean setScript(final String nscript) throws NoSuchMethodException,
-			ScriptException {
+	public boolean setScript(final String nscript)
+			throws NoSuchMethodException, ScriptException {
 		return load(nscript);
 	}
 
@@ -102,7 +109,6 @@ public final class LOTScript implements ServiceObjectData {
 	public String getScript() {
 		return script;
 	}
-
 
 	/**
 	 * 
@@ -132,5 +138,10 @@ public final class LOTScript implements ServiceObjectData {
 	public void run(final RunEnvironment runenv) throws NoSuchMethodException,
 			ScriptException {
 		inv.invokeFunction("run", runenv);
+	}
+
+	public void run(RunEnvironment e, Object... params)
+			throws NoSuchMethodException, ScriptException {
+		inv.invokeFunction("run", e, params);
 	}
 }

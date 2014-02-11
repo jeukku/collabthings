@@ -3,6 +3,7 @@ package org.libraryofthings.model;
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.math.LVector;
 
+import sun.util.logging.resources.logging;
 import waazdoh.cutils.MStringID;
 import waazdoh.cutils.xml.JBean;
 
@@ -45,4 +46,13 @@ public final class LOTSubPart {
 		this.p.set(location);
 		this.n.set(normal);
 	}
+
+	public LVector getNormal() {
+		return p;
+	}
+
+	public LVector getLocation() {
+		return n;
+	}
+
 }
