@@ -10,6 +10,18 @@ import org.xml.sax.SAXException;
 
 public final class TestTool extends LOTTestCase {
 
+	public void testGetAgain() throws IOException, SAXException {
+		LOTEnvironment env = getNewEnv();
+		assertNotNull(env);
+		//
+		env.getObjectFactory().getTool();
+		LOTTool t = env.getObjectFactory().getTool();
+		assertNotNull(t);
+		//
+		assertNotNull(env.getObjectFactory().getTool(t.getServiceObject().getID().getStringID()));
+		assertEquals(t, env.getObjectFactory().getTool(t.getServiceObject().getID().getStringID()));
+	}
+	
 	public void testSaveAndLoad() throws IOException, SAXException,
 			NoSuchMethodException, ScriptException {
 		LOTEnvironment env = getNewEnv();
@@ -34,7 +46,7 @@ public final class TestTool extends LOTTestCase {
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
-		LOTTool btool = env.getObjectFactory().getTool(
+		LOTTool btool = benv.getObjectFactory().getTool(
 				t.getServiceObject().getID().getStringID());
 		assertEquals(btool.getName(), t.getName());
 		waitObject(btool);
@@ -45,7 +57,6 @@ public final class TestTool extends LOTTestCase {
 		//
 		String sdata = new String(btool.getModel().getBinary().asByteBuffer());
 		assertEquals(testbinarydatastring, sdata);
-
 	}
 
 }
