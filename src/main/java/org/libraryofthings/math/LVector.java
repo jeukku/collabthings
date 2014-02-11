@@ -26,6 +26,11 @@ public final class LVector {
 		// zeros
 	}
 
+	@Override
+	public String toString() {
+		return "V[" + getX() + ", " + getY() + ", " + getZ() + "]";
+	}
+
 	public void set(LVector location) {
 		v.setEntry(0, location.getX());
 		v.setEntry(1, location.getY());
