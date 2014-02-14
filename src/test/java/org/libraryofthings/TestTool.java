@@ -17,6 +17,7 @@ public final class TestTool extends LOTTestCase {
 		env.getObjectFactory().getTool();
 		LOTTool t = env.getObjectFactory().getTool();
 		assertNotNull(t);
+		t.save();
 		//
 		assertNotNull(env.getObjectFactory().getTool(t.getServiceObject().getID().getStringID()));
 		assertEquals(t, env.getObjectFactory().getTool(t.getServiceObject().getID().getStringID()));

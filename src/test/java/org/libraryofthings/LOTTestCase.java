@@ -45,7 +45,7 @@ public class LOTTestCase extends TestCase {
 				getSession(p));
 		if (setsession) {
 			clients.add(c);
-			return c;
+			return c; 
 		} else {
 			String appidparam = "appid_" + email;
 			String sid = p.get(appidparam);
@@ -60,8 +60,10 @@ public class LOTTestCase extends TestCase {
 					.requestAppLogin(email, "testapp", id);
 			if (session != null) {
 				p.set("session", session);
+				return c;
+			} else {
+				return null;
 			}
-			return null;
 		}
 	}
 
