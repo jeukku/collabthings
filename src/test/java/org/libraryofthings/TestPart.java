@@ -6,6 +6,8 @@ import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
 import org.xml.sax.SAXException;
 
+import waazdoh.cutils.MStringID;
+
 public final class TestPart extends LOTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException {
@@ -14,7 +16,7 @@ public final class TestPart extends LOTTestCase {
 		//
 		LOTPart part = new LOTPart(env);
 		part.setName("testing changing name");
-		assertTrue(part.getServiceObject().save());
+		part.getServiceObject().save();
 		//
 		part.newModel();
 		String testbinarydatastring = "TESTIBINARYPARTDATA";
@@ -29,9 +31,9 @@ public final class TestPart extends LOTTestCase {
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
-		LOTPart bpart = benv.getObjectFactory().getPart(
-				part.getServiceObject().getID().getStringID());
-		assertEquals(bpart.getName(), part.getName());
+		MStringID bpartid = part.getServiceObject().getID().getStringID();
+		LOTPart bpart = benv.getObjectFactory().getPart(bpartid);
+		assertEquals(part.getName(), bpart.getName());
 		waitObject(bpart);
 		//
 		String sdata = new String(bpart.getModel().getBinary().asByteBuffer());

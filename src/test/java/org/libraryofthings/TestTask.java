@@ -11,15 +11,20 @@ public final class TestTask extends LOTTestCase {
 		LOTEnvironment env = getNewEnv();
 		assertNotNull(env);
 		//
-		LOTTask s = new LOTTask(env);
+		LOTTask s = env.getObjectFactory().getTask();
 		s.setName("a task");
-		s.addSubTask(new LOTTask(env));
-		assertTrue(s.save());
-		s.publish();
+		s.addSubTask(env.getObjectFactory().getTask());
+		//
+		assertTrue(s.publish());
+		//
+		assertEquals(
+				s,
+				env.getObjectFactory().getTask(
+						s.getServiceObject().getID().getStringID()));
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
-		LOTTask bs = env.getObjectFactory().getTask(
+		LOTTask bs = benv.getObjectFactory().getTask(
 				s.getServiceObject().getID().getStringID());
 		//
 		assertEquals(bs.getName(), s.getName());

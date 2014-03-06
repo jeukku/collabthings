@@ -13,7 +13,7 @@ public final class Test3DModel extends LOTTestCase {
 		//
 		LOT3DModel s = new LOT3DModel(env);
 		s.setName("TEST");
-		assertTrue(s.getServiceObject().save());
+		s.getServiceObject().publish();
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
@@ -32,8 +32,6 @@ public final class Test3DModel extends LOTTestCase {
 		s.getBinary().add(new String(testbinarydatastring).getBytes());
 		s.getBinary().setReady();
 		s.publish();
-		//
-		assertTrue(s.getServiceObject().save());
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);

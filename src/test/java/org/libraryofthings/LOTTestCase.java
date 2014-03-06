@@ -21,7 +21,7 @@ import waazdoh.testing.ServiceMock;
 
 public class LOTTestCase extends TestCase {
 	private static final int DEFAULT_WAITTIME = 100;
-	private static final int MAX_OBJECT_WAITTIME = 15000;
+	private static final int MAX_OBJECT_WAITTIME = 30000;
 	//
 	private Set<LOTEnvironment> clients = new HashSet<LOTEnvironment>();
 	MLogger log = MLogger.getLogger(this);
@@ -29,7 +29,10 @@ public class LOTTestCase extends TestCase {
 
 	public LOTEnvironment getNewEnv() throws IOException, SAXException {
 		boolean bind = usercounter >= 0 ? true : false;
-		String username = "test_username_" + (usercounter++) + "@localhost";
+		TestPreferences p = new TestPreferences("lottesting");
+		String username = p.get("useremail" + usercounter, "test_username_"
+				+ (usercounter) + "@localhost");
+		usercounter++;
 		return getNewEnv(username, bind);
 	}
 
@@ -45,7 +48,7 @@ public class LOTTestCase extends TestCase {
 				getSession(p));
 		if (setsession) {
 			clients.add(c);
-			return c; 
+			return c;
 		} else {
 			String appidparam = "appid_" + email;
 			String sid = p.get(appidparam);

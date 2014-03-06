@@ -22,6 +22,7 @@ public final class TestScript extends LOTTestCase {
 		assertNotNull(env);
 		//
 		LOTScript s = getWorkingScriptExample(env);
+		s.getServiceObject().publish();
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
@@ -44,7 +45,7 @@ public final class TestScript extends LOTTestCase {
 		LOTScript s = getWorkingScript(env, SCRIPT_TEMPLATE
 				+ "function run(env) { env.setParameter(\"testvalue\", \""
 				+ SCRIPT_ENV_TEST_VALUE + "\" ); } ");
-		assertTrue(s.getServiceObject().save());
+		s.getServiceObject().save();
 		return s;
 	}
 

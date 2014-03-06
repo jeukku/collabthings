@@ -33,18 +33,19 @@ public final class LOTTask implements ServiceObjectData {
 		o.load(id);
 	}
 
-	public boolean save() {
+	public void save() {
 		for (LOTTask task : subtasks) {
 			task.save();
 		}
-		return o.save();
+		o.save();
 	}
 
-	public void publish() {
+	public boolean publish() {
 		for (LOTTask task : subtasks) {
 			task.publish();
 		}
-		o.publish();
+
+		return o.publish();
 	}
 
 	@Override

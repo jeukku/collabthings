@@ -12,11 +12,11 @@ import waazdoh.cutils.xml.JBean;
 
 public final class LOTPart implements ServiceObjectData, LOTObject {
 	private static final String BEANNAME = "part";
-	private static final String VALUENAME_NAME = "value";
+	private static final String VALUENAME_NAME = "name";
 	private static final String VALUENAME_MODELID = "model3did";
 	//
 	private ServiceObject o;
-	private String name;
+	private String name = "part";
 	private LOT3DModel model;
 	LOTEnvironment env;
 
@@ -99,6 +99,10 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 		if (model != null) {
 			model.save();
 		}
+		
+		for (LOTSubPart subpart : this.subparts) {
+			subpart.getPart().save();
+		}
 
 		getServiceObject().save();
 	}
@@ -106,6 +110,10 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 	public void publish() {
 		if (model != null) {
 			model.publish();
+		}
+		//
+		for (LOTSubPart subpart : this.subparts) {
+			subpart.getPart().publish();
 		}
 
 		getServiceObject().publish();

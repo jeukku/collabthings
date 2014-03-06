@@ -18,4 +18,6 @@ public interface LOTObjectFactory {
 
 	LOTTool getTool();
 
+	LOTTask getTask();
+
 }

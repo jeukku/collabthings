@@ -30,7 +30,7 @@ public final class TestTool extends LOTTestCase {
 		//
 		LOTTool t = env.getObjectFactory().getTool();
 		t.setName("testing changing name");
-		assertTrue(t.getServiceObject().save());
+		t.getServiceObject().save();
 		//
 		LOTScript lotScript = new LOTScript(env);
 		t.addScript("test", lotScript);

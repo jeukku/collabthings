@@ -34,6 +34,13 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	}
 
 	@Override
+	public LOTTask getTask() {
+		LOTTask t = new LOTTask(env);
+		tasks.add(t);
+		return t;
+	}
+
+	@Override
 	public LOTTool getTool() {
 		LOTTool t = new LOTTool(env);
 		tools.add(t);
