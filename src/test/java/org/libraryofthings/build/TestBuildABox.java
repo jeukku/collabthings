@@ -88,33 +88,15 @@ public final class TestBuildABox extends LOTTestCase {
 	}
 
 	private LOTScript getAssemblyScript(LOTTool tool, LOTPart box,
-			LOTEnvironment env) throws NoSuchMethodException, ScriptException {
-		String s = "";
-		s += "function info() { return \"testing box -building\"; }";
-		s += "function run(e) { ";
-		s += "	var part = e.getPart(e.getParameter('partid'));";
-		s += "	var destinationpart = e.getPart('destinationpart');";
-		//
-		s += "  e.log().info(\"script going to a loop!!!\");";
-		s += "  _.each(part.getSubParts().toArray(), function(subpart) {";
-		s += "     e.log().info('script test ' + subpart);";
-		s += "     moveAndAttach(e, subpart, destinationpart);";
-		s += "  });";
-		s += "  e.log().info(\"script end!!!\");";
-		s += "}";
-
-		s += "function moveAndAttach(e, subpart, destpart) {";
-		s += "  var tool = e.getTool('tool');";
-		s += "  var partsource = e.getTool('source');";
-		s += "  partsource.call(e, 'need', subpart);";
-		s += "  tool.moveTo(partsource.getLocation());";
-		s += "  destpart.addSubPart(subpart);";
-		s += "  e.log().info(\"moveAndAttach done\");";
-		s += "}";
+			LOTEnvironment env) throws NoSuchMethodException, ScriptException, IOException {
+		String s = loadATestScript("buildabox_assembly.js");
 		//
 		LOTScript lots = new LOTScript(env);
 		lots.setScript(s);
-
+		assertNotNull(lots.getScript());
+		
 		return lots;
 	}
+
+	
 }

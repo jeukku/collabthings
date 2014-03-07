@@ -1,8 +1,5 @@
 package org.libraryofthings.model;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import javax.script.Invocable;
 import javax.script.ScriptException;
 
@@ -32,7 +29,6 @@ public final class LOTScript implements ServiceObjectData {
 
 	//
 	private LLog log = LLog.getLogger(this);
-	private String string;
 
 	/**
 	 * Creates a new script with random ID.
@@ -66,15 +62,7 @@ public final class LOTScript implements ServiceObjectData {
 	@Override
 	public boolean parseBean(final JBean bean) {
 		String sscript = bean.getBase64Value(SCRIPT);
-		try {
-			return load(sscript);
-		} catch (NoSuchMethodException e) {
-			log.error(this, "parseBean", e);
-			return false;
-		} catch (ScriptException e) {
-			log.error(this, "parseBean", e);
-			return false;
-		}
+		return load(sscript);
 	}
 
 	/**
@@ -87,18 +75,26 @@ public final class LOTScript implements ServiceObjectData {
 	 * @throws ScriptException
 	 * @throws NoSuchMethodException
 	 */
-	private boolean load(final String s) throws ScriptException,
-			NoSuchMethodException {
-		ScriptLoader loader = new JavaScriptLoader();
-		inv = loader.load(s);
-		// invoke the global function named "hello"
-		log.info("load a script " + inv.invokeFunction("info"));
-		this.script = s;
-		return true;
+	private boolean load(final String s) {
+		try {
+			ScriptLoader loader = new JavaScriptLoader();
+			inv = loader.load(s);
+			// invoke the global function named "hello"
+			log.info("load a script " + inv.invokeFunction("info"));
+			this.script = s;
+			return true;
+		} catch (NoSuchMethodException e) {
+			log.error(this, "parseBean", e);
+			script = null;
+			return false;
+		} catch (ScriptException e) {
+			log.error(this, "parseBean", e);
+			script = null;
+			return false;
+		}
 	}
 
-	public boolean setScript(final String nscript)
-			throws NoSuchMethodException, ScriptException {
+	public boolean setScript(final String nscript) {
 		return load(nscript);
 	}
 

@@ -1,6 +1,10 @@
 package org.libraryofthings;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Set;
@@ -117,5 +121,24 @@ public class LOTTestCase extends TestCase {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	protected String loadATestScript(String string) throws IOException {
+		StringBuffer sb = new StringBuffer();
+		String path = "src/test/js/" + string;
+		BufferedReader br = new BufferedReader(new FileReader(path));
+		StringWriter sw = new StringWriter();
+		//
+		while (true) {
+			String line = br.readLine();
+			if (line == null)
+				break;
+			sw.write(line);
+			sw.write("\n");
+		}
+
+		br.close();
+		sw.close();
+		return sw.getBuffer().toString();
 	}
 }

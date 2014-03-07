@@ -51,20 +51,11 @@ public final class TestScript extends LOTTestCase {
 
 	private LOTScript getFailingScript(LOTEnvironment env, String script) {
 		LOTScript s = new LOTScript(env);
-		try {
-			s.setScript(script);
-			return s;
-		} catch (ScriptException e) {
-			e.printStackTrace();
-			return null;
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-			return null;
-		}
+		s.setScript(script);
+		return s;
 	}
 
-	private LOTScript getWorkingScript(LOTEnvironment env, String script)
-			throws NoSuchMethodException, ScriptException {
+	private LOTScript getWorkingScript(LOTEnvironment env, String script) {
 		LOTScript s = new LOTScript(env);
 		s.setScript(script);
 		return s;
@@ -81,10 +72,15 @@ public final class TestScript extends LOTTestCase {
 		assertEquals("testvalue", e.getParameter("test"));
 	}
 
-	public void testFailLoad() throws IOException, SAXException,
-			NoSuchMethodException, ScriptException {
+	public void testFailLoad() throws IOException, SAXException {
 		LOTEnvironment env = getNewEnv();
 		LOTScript s = getFailingScript(env, FAILING_SCRIPT);
-		assertNull(s);
+		assertNull(s.getScript());
+	}
+
+	public void testMissingMethod() throws IOException, SAXException {
+		LOTEnvironment env = getNewEnv();
+		LOTScript s = getFailingScript(env, "function fail() {}");
+		assertNull(s.getScript());
 	}
 }
