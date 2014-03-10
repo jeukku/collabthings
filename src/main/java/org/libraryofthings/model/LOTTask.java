@@ -41,6 +41,8 @@ public final class LOTTask implements ServiceObjectData {
 	}
 
 	public boolean publish() {
+		save();
+		
 		for (LOTTask task : subtasks) {
 			task.publish();
 		}
