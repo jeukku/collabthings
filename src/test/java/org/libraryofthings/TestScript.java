@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.script.ScriptException;
 
 import org.libraryofthings.model.LOTScript;
+import org.libraryofthings.simulation.LOTSimulationEnvironment;
 import org.xml.sax.SAXException;
 
 public final class TestScript extends LOTTestCase {

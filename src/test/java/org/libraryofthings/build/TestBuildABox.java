@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.script.ScriptException;
 
 import org.libraryofthings.LOTEnvironment;
-import org.libraryofthings.LOTSimulationEnvironment;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.math.LVector;
@@ -13,6 +12,9 @@ import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.LOTTool;
+import org.libraryofthings.simulation.LOTSimpleSimulation;
+import org.libraryofthings.simulation.LOTSimulation;
+import org.libraryofthings.simulation.LOTSimulationEnvironment;
 import org.xml.sax.SAXException;
 
 public final class TestBuildABox extends LOTTestCase {
@@ -67,10 +69,14 @@ public final class TestBuildABox extends LOTTestCase {
 		runenv.addPart("destinationpart", destinationpart);
 		runenv.addTool("source", partsource);
 		runenv.addTool("tool", tool);
+		runenv.addScript("MoveAndAttach",
+				loadScript(env, "buildabox_moveandattach.js"));
 		//
 		partsource.addScript("need", getSourceNeedScript(env));
 		//
 		assembyscript.run(runenv);
+		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
+		simulation.run();
 		//
 		assertTrue(destinationpart.getSubParts().size() == PARTS_IN_A_BOX);
 	}
@@ -88,15 +94,20 @@ public final class TestBuildABox extends LOTTestCase {
 	}
 
 	private LOTScript getAssemblyScript(LOTTool tool, LOTPart box,
-			LOTEnvironment env) throws NoSuchMethodException, ScriptException, IOException {
-		String s = loadATestScript("buildabox_assembly.js");
+			LOTEnvironment env) throws NoSuchMethodException, ScriptException,
+			IOException {
+		String scriptname = "buildabox_assembly.js";
+		LOTScript lots = loadScript(env, scriptname);
+		return lots;
+	}
+
+	private LOTScript loadScript(LOTEnvironment env, String scriptname)
+			throws IOException {
+		String s = loadATestScript(scriptname);
 		//
 		LOTScript lots = new LOTScript(env);
 		lots.setScript(s);
 		assertNotNull(lots.getScript());
-		
 		return lots;
 	}
-
-	
 }

@@ -14,10 +14,5 @@ function run(e) {
 }
 
 function moveAndAttach(e, subpart, destpart) {
-	var tool = e.getTool('tool');
-	var partsource = e.getTool('source');
-	partsource.call(e, 'need', subpart);
-	tool.moveTo(partsource.getLocation());
-	destpart.addSubPart(subpart);
-	e.log().info("moveAndAttach done");
+	e.addTask(e.getScript("MoveAndAttach"), subpart, destpart);
 }
