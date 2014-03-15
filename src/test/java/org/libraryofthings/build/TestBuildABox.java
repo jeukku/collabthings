@@ -58,6 +58,8 @@ public final class TestBuildABox extends LOTTestCase {
 
 		// Create a tool to pick up plates
 		LOTTool tool = env.getObjectFactory().getTool();
+		tool.addScript("pickup", loadScript(env, "buildabox_pickup.js"));
+		tool.addScript("attach", loadScript(env, "buildabox_attach.js"));
 
 		//
 		LOTScript assembyscript = getAssemblyScript(tool, box, env);
@@ -65,8 +67,12 @@ public final class TestBuildABox extends LOTTestCase {
 		LOTPart destinationpart = env.getObjectFactory().getPart();
 
 		RunEnvironment runenv = new LOTSimulationEnvironment(env);
+		LOTSubPart destinationsubpart = runenv.getBasePart().getPart()
+				.getPart().newSubPart();
+		destinationsubpart.setPart(destinationpart);
+
 		runenv.setParameter("partid", box.getServiceObject().getID());
-		runenv.addPart("destinationpart", destinationpart);
+		runenv.addPart("destinationpart", destinationsubpart);
 		runenv.addTool("source", partsource);
 		runenv.addTool("tool", tool);
 		runenv.addScript("MoveAndAttach",

@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.libraryofthings.model.LOTPart;
-import org.libraryofthings.model.LOTTask;
 import org.libraryofthings.model.LOTTool;
 
 import waazdoh.cutils.MStringID;
@@ -12,32 +11,11 @@ import waazdoh.cutils.MStringID;
 public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 
 	private LOTEnvironment env;
-	private List<LOTTask> tasks = new LinkedList<LOTTask>();
 	private List<LOTPart> parts = new LinkedList<LOTPart>();
 	private List<LOTTool> tools = new LinkedList<LOTTool>();
 
 	public LOTObjectFactoryImpl(final LOTEnvironment nenv) {
 		this.env = nenv;
-	}
-
-	@Override
-	public LOTTask getTask(final MStringID taskid) {
-		for (LOTTask task : tasks) {
-			if (task.getServiceObject().getID().equals(taskid)) {
-				return task;
-			}
-		}
-		//
-		LOTTask task = new LOTTask(env, taskid);
-		tasks.add(task);
-		return task;
-	}
-
-	@Override
-	public LOTTask getTask() {
-		LOTTask t = new LOTTask(env);
-		tasks.add(t);
-		return t;
 	}
 
 	@Override

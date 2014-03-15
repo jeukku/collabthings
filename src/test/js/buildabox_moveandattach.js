@@ -2,18 +2,21 @@ function info() {
 	return "buildabox: move and attach";
 }
 
-function run(e, params) {
+function run(runenv, params) {
 	var subpart = params[0];
 	var destpart = params[1];
 	
-	e.log().info("subpart " + subpart);
-	e.log().info("destpart " + destpart);
+	runenv.log().info("subpart " + subpart);
+	runenv.log().info("destpart " + destpart);
 	
-	var tool = e.getTool('tool');
-	var partsource = e.getTool('source');
-	partsource.call(e, 'need', subpart);
+	var tool = runenv.getTool('tool');
+	var partsource = runenv.getTool('source');
+	partsource.call(runenv, 'need', subpart);
 	tool.moveTo(partsource.getLocation());
-	destpart.addSubPart(subpart);
-	e.log().info("moveAndAttach done");
+	tool.call(runenv, 'pickup', subpart, partsource);
+	tool.moveTo(destpart.getLocation());
+	tool.call(runenv, 'attach', subpart, destpart);
+	
+	runenv.log().info("moveAndAttach done");
 }
 

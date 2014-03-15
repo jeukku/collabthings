@@ -5,6 +5,7 @@ import java.util.List;
 import javax.script.ScriptException;
 
 import org.libraryofthings.RunEnvironment;
+import org.libraryofthings.environment.LOTTask;
 
 import waazdoh.cutils.MLogger;
 
@@ -20,8 +21,8 @@ public class LOTSimpleSimulation implements LOTSimulation {
 	@Override
 	public void run() {
 		try {
-			List<LOTSimulationTask> tasks = env.getTasks();
-			for (LOTSimulationTask task : tasks) {
+			List<LOTTask> tasks = env.getTasks();
+			for (LOTTask task : tasks) {
 				task.run(env);
 			}
 		} catch (NoSuchMethodException e) {

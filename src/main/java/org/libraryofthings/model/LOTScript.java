@@ -127,17 +127,32 @@ public final class LOTScript implements ServiceObjectData {
 	/**
 	 * Invokes run -function in the script.
 	 * 
+	 * @param env
+	 * 
 	 * @param RuntimeEnvironment
 	 * @throws NoSuchMethodException
 	 * @throws ScriptException
 	 */
-	public void run(final RunEnvironment runenv) throws NoSuchMethodException,
-			ScriptException {
-		inv.invokeFunction("run", runenv);
+	public void run(final RunEnvironment runenv) {
+		try {
+			inv.invokeFunction("run", runenv);
+		} catch (NoSuchMethodException | ScriptException e) {
+			handleException(e);
+		}
 	}
 
-	public void run(RunEnvironment e, Object... params)
-			throws NoSuchMethodException, ScriptException {
-		inv.invokeFunction("run", e, params);
+	public boolean run(final RunEnvironment e, Object... params) {
+		try {
+			inv.invokeFunction("run", e, params);
+			return true;
+		} catch (NoSuchMethodException | ScriptException e1) {
+			handleException(e1);
+			return false;
+		}
+	}
+
+	private void handleException(Exception e1) {
+		log.info("Error in script " + script);
+		log.error(this, "run", e1);
 	}
 }

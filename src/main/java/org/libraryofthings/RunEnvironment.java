@@ -2,10 +2,13 @@ package org.libraryofthings;
 
 import java.util.List;
 
+import org.libraryofthings.environment.LOTPartState;
+import org.libraryofthings.environment.LOTTask;
+import org.libraryofthings.environment.LOTToolState;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
+import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.LOTTool;
-import org.libraryofthings.simulation.LOTSimulationTask;
 
 import waazdoh.cutils.MID;
 
@@ -17,9 +20,9 @@ public interface RunEnvironment {
 
 	String getParameter(String s);
 
-	void addPart(String string, LOTPart part);
+	LOTPartState addPart(String string, LOTSubPart part);
 
-	LOTPart getPart(String s);
+	LOTPartState getPart(String s);
 
 	LLog log();
 
@@ -29,5 +32,10 @@ public interface RunEnvironment {
 
 	void addScript(String string, LOTScript loadScript);
 
-	List<LOTSimulationTask> getTasks();
+	List<LOTTask> getTasks();
+
+	LOTPart getOriginalPart(String s);
+
+	LOTPartState getBasePart();
+
 }

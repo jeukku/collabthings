@@ -2,17 +2,17 @@ function info() {
 	return "testing box -building";
 }
 
-function run(e) {
-	var part = e.getPart(e.getParameter('partid'));
-	var destinationpart = e.getPart('destinationpart');
-	e.log().info("script going to a loop!!!");
+function run(runenv) {
+	var part = runenv.getOriginalPart(runenv.getParameter('partid'));
+	var destinationpart = runenv.getPart('destinationpart');
+	runenv.log().info("script going to a loop!!!");
 	_.each(part.getSubParts().toArray(), function(subpart) {
-		e.log().info('script test ' + subpart);
-		moveAndAttach(e, subpart, destinationpart);
+		runenv.log().info('script test ' + subpart);
+		moveAndAttach(runenv, subpart, destinationpart);
 	});
-	e.log().info("script end!!!");
+	runenv.log().info("script end!!!");
 }
 
-function moveAndAttach(e, subpart, destpart) {
-	e.addTask(e.getScript("MoveAndAttach"), subpart, destpart);
+function moveAndAttach(runenv, subpart, destpart) {
+	runenv.addTask(runenv.getScript("MoveAndAttach"), subpart, destpart);
 }

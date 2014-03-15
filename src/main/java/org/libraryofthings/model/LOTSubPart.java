@@ -3,7 +3,6 @@ package org.libraryofthings.model;
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.math.LVector;
 
-import sun.util.logging.resources.logging;
 import waazdoh.cutils.MStringID;
 import waazdoh.cutils.xml.JBean;
 
@@ -20,7 +19,7 @@ public final class LOTSubPart {
 	 * @param nparent
 	 * @param env
 	 */
-	LOTSubPart(final LOTPart nparent, final LOTEnvironment env) {
+	public LOTSubPart(final LOTPart nparent, final LOTEnvironment env) {
 		this.parent = nparent;
 		part = new LOTPart(env);
 	}

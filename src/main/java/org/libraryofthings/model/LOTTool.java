@@ -1,11 +1,11 @@
 package org.libraryofthings.model;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.management.RuntimeErrorException;
 import javax.script.ScriptException;
 
 import org.libraryofthings.LOTEnvironment;
@@ -22,8 +22,10 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 	private static final String VALUENAME_MODELID = "model3did";
 	private static final String VALUENAME_SCRIPTS = "scripts";
 	//
+	public static int counter = 0;
+	//
 	private ServiceObject o;
-	private String name;
+	private String name = "tool" + (LOTTool.counter++);
 	private LOT3DModel model;
 	private Map<String, LOTScript> scripts = new HashMap<String, LOTScript>();
 	private LOTEnvironment env;
@@ -143,16 +145,21 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 		model = new LOT3DModel(env);
 	}
 
-	public void call(final RunEnvironment e, final String scriptname,
-			final Object... params) throws NoSuchMethodException,
-			ScriptException {
-
+	public void call(final RunEnvironment runenv,
+			final String scriptname, Object params[])
+			throws NoSuchMethodException, ScriptException {
 		LOTScript script = getScript(scriptname);
+
 		if (script != null) {
-			script.run(e, params);
+			script.run(runenv, params);
 		} else {
 			throw new RuntimeException("Script called '" + scriptname
 					+ "' does not exist in " + this);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "LOTTool[" + name + "]";
 	}
 }

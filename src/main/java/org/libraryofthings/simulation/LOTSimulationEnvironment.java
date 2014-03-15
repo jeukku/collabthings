@@ -7,27 +7,40 @@ import java.util.Map;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTEnvironment;
-import org.libraryofthings.LOTToolState;
 import org.libraryofthings.RunEnvironment;
+import org.libraryofthings.environment.LOTPartState;
+import org.libraryofthings.environment.LOTTask;
+import org.libraryofthings.environment.LOTToolState;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
+import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.LOTTool;
 
 import waazdoh.cutils.MID;
 import waazdoh.cutils.MStringID;
 
 public class LOTSimulationEnvironment implements RunEnvironment {
-	private Map<String, LOTPart> parts = new HashMap<String, LOTPart>();
+	private Map<String, LOTPartState> parts = new HashMap<String, LOTPartState>();
 	private Map<String, LOTScript> scripts = new HashMap<String, LOTScript>();
 	private Map<String, LOTToolState> tools = new HashMap<String, LOTToolState>();
 	private Map<String, String> params = new HashMap<String, String>();
-	private List<LOTSimulationTask> tasks = new LinkedList<LOTSimulationTask>();
+	private List<LOTTask> tasks = new LinkedList<LOTTask>();
 
 	private LOTEnvironment env;
 	private LLog log = LLog.getLogger(this);
+	private LOTPartState basepart;
 
 	public LOTSimulationEnvironment(final LOTEnvironment nenv) {
 		this.env = nenv;
+	}
+
+	@Override
+	public LOTPartState getBasePart() {
+		if (basepart == null) {
+			basepart = new LOTPartState(env, env.getObjectFactory().getPart()
+					.newSubPart());
+		}
+		return basepart;
 	}
 
 	@Override
@@ -51,28 +64,31 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 	}
 
 	public void addTask(LOTScript s, Object... params) {
-		LOTSimulationTask task = new LOTSimulationTask(env, s, params);
+		LOTTask task = new LOTTask(env, s, params);
 		tasks.add(task);
 	}
 
 	@Override
-	public List<LOTSimulationTask> getTasks() {
+	public List<LOTTask> getTasks() {
 		return new LinkedList<>(tasks);
 	}
 
 	@Override
-	public void addPart(String string, LOTPart part) {
-		parts.put(string, part);
+	public LOTPartState addPart(String string, LOTSubPart part) {
+		LOTPartState state = new LOTPartState(env, part);
+		parts.put(string, state);
+		return state;
 	}
 
 	@Override
-	public LOTPart getPart(String s) {
-		LOTPart p = parts.get(s);
-		if (p != null) {
-			return p;
-		} else {
-			return env.getObjectFactory().getPart(new MStringID(s));
-		}
+	public LOTPartState getPart(String s) {
+		LOTPartState p = parts.get(s);
+		return p;
+	}
+
+	@Override
+	public LOTPart getOriginalPart(String s) {
+		return env.getObjectFactory().getPart(new MStringID(s));
 	}
 
 	@Override

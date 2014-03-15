@@ -48,4 +48,13 @@ public final class LVector {
 	private double getZ() {
 		return v.getEntry(2);
 	}
+
+	public LVector copy() {
+		return new LVector(getX(), getY(), getZ());
+	}
+
+	public LVector add(LVector addv) {
+		v.add(addv.v);
+		return this;
+	}
 }
