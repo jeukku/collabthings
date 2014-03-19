@@ -2,8 +2,6 @@ package org.libraryofthings.simulation;
 
 import java.util.List;
 
-import javax.script.ScriptException;
-
 import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.environment.LOTTask;
 
@@ -19,16 +17,13 @@ public class LOTSimpleSimulation implements LOTSimulation {
 	}
 
 	@Override
-	public void run() {
-		try {
-			List<LOTTask> tasks = env.getTasks();
-			for (LOTTask task : tasks) {
-				task.run(env);
+	public boolean run() {
+		List<LOTTask> tasks = env.getTasks();
+		for (LOTTask task : tasks) {
+			if (!task.run(env)) {
+				return false;
 			}
-		} catch (NoSuchMethodException e) {
-			log.error(e);
-		} catch (ScriptException e) {
-			log.error(e);
 		}
+		return true;
 	}
 }
