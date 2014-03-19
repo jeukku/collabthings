@@ -14,10 +14,10 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	private static final String NAME = "name";
 	private static final String BINARYID = "binaryid";
 	//
-	private ServiceObject o;
+	private final ServiceObject o;
 	private String name = "";
 	private MBinaryID binaryid;
-	private LOTEnvironment env;
+	private final LOTEnvironment env;
 
 	public LOT3DModel(final LOTEnvironment nenv) {
 		this.env = nenv;
@@ -66,11 +66,7 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	}
 
 	public Binary getBinary() {
-		if (env != null && binaryid != null) {
-			return this.env.getBinarySource().getOrDownload(binaryid);
-		} else {
-			return null;
-		}
+		return this.env.getBinarySource().getOrDownload(binaryid);
 	}
 
 	public void setName(String n) {

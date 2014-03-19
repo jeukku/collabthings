@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.libraryofthings.model.LOT3DModel;
 import org.xml.sax.SAXException;
 
+import waazdoh.cutils.MStringID;
+
 public final class Test3DModel extends LOTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException {
@@ -43,6 +45,15 @@ public final class Test3DModel extends LOTTestCase {
 		//
 		String sdata = new String(bs.getBinary().asByteBuffer());
 		assertEquals(testbinarydatastring, sdata);
+	}
+
+	public void testFailBinary() throws IOException, SAXException {
+		LOTEnvironment env = getNewEnv();
+		try {
+			new LOT3DModel(env, new MStringID("FAIL"));
+		} catch (NullPointerException e) {
+			assertNotNull(e);
+		}
 	}
 
 }
