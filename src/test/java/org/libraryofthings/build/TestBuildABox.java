@@ -67,6 +67,8 @@ public final class TestBuildABox extends LOTTestCase {
 		LOTPart destinationpart = env.getObjectFactory().getPart();
 
 		RunEnvironment runenv = new LOTSimulationEnvironment(env);
+		runenv.addToolUser(new ReallySimpleSuperheroRobot(env));
+		
 		LOTSubPart destinationsubpart = runenv.getBasePart().getPart()
 				.getPart().newSubPart();
 		destinationsubpart.setPart(destinationpart);

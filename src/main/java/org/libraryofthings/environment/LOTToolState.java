@@ -6,27 +6,26 @@ import java.util.List;
 import javax.script.ScriptException;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTTool;
 
 public class LOTToolState {
 
-	private LOTEnvironment env;
+	private RunEnvironment env;
 	private LOTTool tool;
 	private LVector location = new LVector();
+	private LVector normal = new LVector(1, 0, 0);
 	//
 	private LLog log = LLog.getLogger(this);
 
-	public LOTToolState(final LOTEnvironment nenv, final LOTTool ntool) {
-		this.env = nenv;
+	public LOTToolState(final RunEnvironment runenv, final LOTTool ntool) {
+		this.env = runenv;
 		this.tool = ntool;
 	}
 
-	public void call(final RunEnvironment runenv, final String nname,
-			final Object... params) throws NoSuchMethodException,
-			ScriptException {
+	public void call(final String nname, final Object... params)
+			throws NoSuchMethodException, ScriptException {
 
 		List<Object> l = new LinkedList<Object>();
 		l.add(this);
@@ -34,18 +33,24 @@ public class LOTToolState {
 			l.add(o);
 		}
 
-		tool.call(runenv, nname, l.toArray());
+		tool.call(env, nname, l.toArray());
 	}
 
 	public void moveTo(LVector l) {
-		log.info("moving to " + l);
+		moveTo(location, normal);
 	}
 
 	public void moveTo(LVector l, LVector n) {
 		log.info("moving to l:" + l + " n:" + n);
+		this.env.requestMove(this, l, n);
 	}
 
 	public LVector getLocation() {
 		return location;
+	}
+
+	public void setLocation(LVector l, LVector n) {
+		this.location.set(l);
+		this.normal.set(n);
 	}
 }

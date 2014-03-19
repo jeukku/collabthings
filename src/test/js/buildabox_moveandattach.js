@@ -11,12 +11,11 @@ function run(runenv, params) {
 	
 	var tool = runenv.getTool('tool');
 	var partsource = runenv.getTool('source');
-	partsource.call(runenv, 'need', subpart);
+	partsource.call('need', subpart);
 	tool.moveTo(partsource.getLocation());
-	tool.call(runenv, 'pickup', subpart, partsource);
+	tool.call('pickup', subpart, partsource);
 	tool.moveTo(destpart.getLocation());
-	tool.call(runenv, 'attach', subpart, destpart);
+	tool.call('attach', subpart, destpart);
 	
 	runenv.log().info("moveAndAttach done");
 }
-

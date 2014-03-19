@@ -11,6 +11,8 @@ import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.environment.LOTPartState;
 import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.environment.LOTToolState;
+import org.libraryofthings.environment.LOTToolUser;
+import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTSubPart;
@@ -25,6 +27,7 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 	private Map<String, LOTToolState> tools = new HashMap<String, LOTToolState>();
 	private Map<String, String> params = new HashMap<String, String>();
 	private List<LOTTask> tasks = new LinkedList<LOTTask>();
+	private List<LOTToolUser> toolusers = new LinkedList<LOTToolUser>();
 
 	private LOTEnvironment env;
 	private LLog log = LLog.getLogger(this);
@@ -63,7 +66,8 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 		params.put(key, value);
 	}
 
-	public void addTask(LOTScript s, Object... params) {
+	@Override
+	public void addTask(final LOTScript s, final Object... params) {
 		LOTTask task = new LOTTask(env, s, params);
 		tasks.add(task);
 	}
@@ -102,7 +106,7 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 
 	@Override
 	public LOTToolState addTool(String id, LOTTool tool) {
-		LOTToolState toolstate = new LOTToolState(env, tool);
+		LOTToolState toolstate = new LOTToolState(this, tool);
 		tools.put(id, toolstate);
 		return toolstate;
 	}
@@ -116,5 +120,15 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 			MStringID stringid = new MStringID(id);
 			return addTool(id, env.getObjectFactory().getTool(stringid));
 		}
+	}
+
+	@Override
+	public void addToolUser(LOTToolUser tooluser) {
+		this.toolusers.add(tooluser);
+	}
+
+	@Override
+	public void requestMove(LOTToolState lotToolState, LVector l, LVector n) {
+		lotToolState.setLocation(l, n);
 	}
 }

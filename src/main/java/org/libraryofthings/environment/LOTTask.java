@@ -3,8 +3,6 @@ package org.libraryofthings.environment;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.script.ScriptException;
-
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.model.LOTScript;
@@ -32,9 +30,8 @@ public final class LOTTask {
 		this.subtasks.add(lotTask);
 	}
 
-	public void run(RunEnvironment runenv) throws NoSuchMethodException,
-			ScriptException {
-		s.run(runenv, params);
+	public boolean run(RunEnvironment runenv) {
+		return s.run(runenv, params);
 	}
 
 }
