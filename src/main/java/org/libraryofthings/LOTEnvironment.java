@@ -37,4 +37,8 @@ public final class LOTEnvironment {
 	public String getPrefix() {
 		return prefix;
 	}
+
+	public MPreferences getPreferences() {
+		return client.getPreferences();
+	}
 }

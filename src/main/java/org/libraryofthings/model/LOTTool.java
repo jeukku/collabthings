@@ -1,7 +1,6 @@
 package org.libraryofthings.model;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -82,7 +81,9 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 		for (JBean sbean : sbeans) {
 			String scriptname = sbean.getValue("name");
 			MStringID id = sbean.getIDValue("id");
-			scripts.put(scriptname, new LOTScript(env, id));
+			LOTScript script = new LOTScript(env);
+			script.load(id);
+			scripts.put(scriptname, script);
 		}
 		//
 		return getName() != null;
@@ -145,9 +146,8 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 		model = new LOT3DModel(env);
 	}
 
-	public void call(final RunEnvironment runenv,
-			final String scriptname, Object params[])
-			throws NoSuchMethodException, ScriptException {
+	public void call(final RunEnvironment runenv, final String scriptname,
+			Object params[]) throws NoSuchMethodException, ScriptException {
 		LOTScript script = getScript(scriptname);
 
 		if (script != null) {

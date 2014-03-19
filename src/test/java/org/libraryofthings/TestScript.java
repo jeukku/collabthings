@@ -27,8 +27,8 @@ public final class TestScript extends LOTTestCase {
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
-		LOTScript bs = new LOTScript(benv, s.getServiceObject().getID()
-				.getStringID());
+		LOTScript bs = new LOTScript(benv);
+		assertTrue(bs.load(s.getServiceObject().getID().getStringID()));
 
 		assertEquals(s.getScript(), bs.getScript());
 		assertTrue(s.isOK());
@@ -83,5 +83,13 @@ public final class TestScript extends LOTTestCase {
 		LOTEnvironment env = getNewEnv();
 		LOTScript s = getFailingScript(env, "function fail() {}");
 		assertNull(s.getScript());
+	}
+
+	public void testFailAtLoadingLibraries() throws IOException, SAXException,
+			NoSuchMethodException, ScriptException {
+		LOTEnvironment env = getNewEnv();
+		env.getPreferences().set(LOTScript.PREFERENCES_SCRIPTSPATH, "FAILPATH");
+		LOTScript s = getWorkingScriptExample(env);
+		assertFalse(s.isOK());
 	}
 }

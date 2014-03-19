@@ -37,11 +37,16 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	public JBean getBean() {
 		JBean b = o.getBean();
 		b.addValue(NAME, name);
-		if (binaryid != null) {
-			b.addValue(BINARYID, binaryid.toString());
-		}
+		b.addValue(BINARYID, getBinaryID().toString());
 		//
 		return b;
+	}
+
+	private MBinaryID getBinaryID() {
+		if (binaryid == null) {
+			newBinary();
+		}
+		return binaryid;
 	}
 
 	@Override

@@ -39,9 +39,7 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 	public JBean getBean() {
 		JBean b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
-		if (model != null) {
-			b.addValue(VALUENAME_MODELID, model.getServiceObject().getID());
-		}
+		b.addValue(VALUENAME_MODELID, getModel().getServiceObject().getID());
 		//
 		JBean bparts = b.add("parts");
 		for (LOTSubPart part : subparts) {
@@ -56,9 +54,7 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 	public boolean parseBean(JBean bean) {
 		setName(bean.getValue(VALUENAME_NAME));
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
-		if (modelid != null) {
-			model = new LOT3DModel(env, modelid);
-		}
+		model = new LOT3DModel(env, modelid);
 		//
 		JBean bparts = bean.get("parts");
 		for (JBean bpart : bparts.getChildren()) {
@@ -88,7 +84,7 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 
 	@Override
 	public boolean isReady() {
-		if (model != null && !model.isReady()) {
+		if (!getModel().isReady()) {
 			return false;
 		}
 
@@ -96,10 +92,8 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 	}
 
 	public void save() {
-		if (model != null) {
-			model.save();
-		}
-		
+		getModel().save();
+
 		for (LOTSubPart subpart : this.subparts) {
 			subpart.getPart().save();
 		}
@@ -108,9 +102,7 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 	}
 
 	public void publish() {
-		if (model != null) {
-			model.publish();
-		}
+		getModel().publish();
 		//
 		for (LOTSubPart subpart : this.subparts) {
 			subpart.getPart().publish();
@@ -120,6 +112,9 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 	}
 
 	public LOT3DModel getModel() {
+		if (model == null) {
+			newModel();
+		}
 		return model;
 	}
 

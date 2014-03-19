@@ -22,6 +22,7 @@ import waazdoh.cutils.xml.JBean;
 public final class LOTScript implements ServiceObjectData {
 	private static final String SCRIPT = "value";
 	private static final String BEANNAME = "script";
+	public static final String PREFERENCES_SCRIPTSPATH = "lot.script.path";
 	//
 	private ServiceObject o;
 	private String script;
@@ -29,6 +30,7 @@ public final class LOTScript implements ServiceObjectData {
 
 	//
 	private LLog log = LLog.getLogger(this);
+	private final LOTEnvironment env;
 
 	/**
 	 * Creates a new script with random ID.
@@ -36,20 +38,9 @@ public final class LOTScript implements ServiceObjectData {
 	 * @param env
 	 */
 	public LOTScript(final LOTEnvironment env) {
+		this.env = env;
 		o = new ServiceObject(BEANNAME, env.getClient(), this,
 				env.getVersion(), env.getPrefix());
-	}
-
-	/**
-	 * Loads a script with id.
-	 * 
-	 * @param env
-	 * @param id
-	 */
-	public LOTScript(final LOTEnvironment env, final MStringID id) {
-		o = new ServiceObject(BEANNAME, env.getClient(), this,
-				env.getVersion(), env.getPrefix());
-		o.load(id);
 	}
 
 	@Override
@@ -65,6 +56,10 @@ public final class LOTScript implements ServiceObjectData {
 		return load(sscript);
 	}
 
+	public boolean load(MStringID id) {
+		return o.load(id);
+	}
+
 	/**
 	 * Tries to parse the script using a ScriptLoader and calls info -function
 	 * in script.
@@ -77,12 +72,19 @@ public final class LOTScript implements ServiceObjectData {
 	 */
 	private boolean load(final String s) {
 		try {
-			ScriptLoader loader = new JavaScriptLoader();
+			ScriptLoader loader = new JavaScriptLoader(this.env
+					.getPreferences().get(LOTScript.PREFERENCES_SCRIPTSPATH,
+							"./"));
 			inv = loader.load(s);
-			// invoke the global function named "hello"
-			log.info("load a script " + inv.invokeFunction("info"));
-			this.script = s;
-			return true;
+			if (inv != null) {
+				// invoke the global function named "hello"
+				log.info("load a script " + inv.invokeFunction("info"));
+				this.script = s;
+				return true;
+			} else {
+				script = "";
+				return false;
+			}
 		} catch (NoSuchMethodException e) {
 			log.error(this, "parseBean", e);
 			script = null;

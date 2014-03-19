@@ -11,6 +11,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.libraryofthings.model.LOTObject;
+import org.libraryofthings.model.LOTScript;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.MBinarySource;
@@ -43,6 +44,8 @@ public class LOTTestCase extends TestCase {
 			throws MalformedURLException, SAXException {
 		//
 		TestPreferences p = new TestPreferences(email);
+		p.set(LOTScript.PREFERENCES_SCRIPTSPATH, "./");
+
 		MBinarySource binarysource = getBinarySource(p, bind);
 		LOTEnvironment c = new LOTEnvironment(p, binarysource, getTestService(
 				p, binarysource));
