@@ -19,10 +19,14 @@ public final class TestTool extends LOTTestCase {
 		assertNotNull(t);
 		t.save();
 		//
-		assertNotNull(env.getObjectFactory().getTool(t.getServiceObject().getID().getStringID()));
-		assertEquals(t, env.getObjectFactory().getTool(t.getServiceObject().getID().getStringID()));
+		assertNotNull(env.getObjectFactory().getTool(
+				t.getServiceObject().getID().getStringID()));
+		assertEquals(
+				t,
+				env.getObjectFactory().getTool(
+						t.getServiceObject().getID().getStringID()));
 	}
-	
+
 	public void testSaveAndLoad() throws IOException, SAXException,
 			NoSuchMethodException, ScriptException {
 		LOTEnvironment env = getNewEnv();
@@ -60,4 +64,14 @@ public final class TestTool extends LOTTestCase {
 		assertEquals(testbinarydatastring, sdata);
 	}
 
+	public void testCallUnknownScript() throws IOException, SAXException {
+		LOTEnvironment e = getNewEnv();
+		LOTTool tool = e.getObjectFactory().getTool();
+
+		try {
+			tool.call(null, "FAIL", new Object[] { "test" });
+		} catch (LOTToolException ex) {
+			assertNotNull(ex);
+		}
+	}
 }

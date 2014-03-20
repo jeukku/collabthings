@@ -7,6 +7,7 @@ import org.libraryofthings.model.LOTSubPart;
 import org.xml.sax.SAXException;
 
 import waazdoh.cutils.MStringID;
+import waazdoh.cutils.xml.JBean;
 
 public final class TestPart extends LOTTestCase {
 
@@ -49,4 +50,20 @@ public final class TestPart extends LOTTestCase {
 						bpart.getServiceObject().getID().getStringID()));
 	}
 
+	public void testLoadRandomID() throws IOException, SAXException {
+		try {
+			LOTEnvironment e = getNewEnv();
+			e.getObjectFactory().getPart(new MStringID());
+		} catch (Exception e) {
+			assertNotNull(e);
+		}
+	}
+
+	public void testParseFalseBean() throws IOException, SAXException {
+		LOTEnvironment e = getNewEnv();
+		LOTPart p = e.getObjectFactory().getPart();
+		JBean bean = new JBean("part");
+		bean.add("parts");
+		p.parseBean(bean);
+	}
 }

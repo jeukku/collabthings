@@ -6,6 +6,7 @@ import java.util.List;
 import javax.script.ScriptException;
 
 import org.libraryofthings.LLog;
+import org.libraryofthings.LOTToolException;
 import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTTool;
@@ -24,8 +25,7 @@ public class LOTToolState {
 		this.tool = ntool;
 	}
 
-	public void call(final String nname, final Object... params)
-			throws NoSuchMethodException, ScriptException {
+	public void call(final String nname, final Object... params) throws LOTToolException {
 
 		List<Object> l = new LinkedList<Object>();
 		l.add(this);

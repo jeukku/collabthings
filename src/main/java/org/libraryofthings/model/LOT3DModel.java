@@ -26,11 +26,8 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 		newBinary();
 	}
 
-	public LOT3DModel(final LOTEnvironment nenv, final MStringID id) {
-		this.env = nenv;
-		o = new ServiceObject(BEANNAME, nenv.getClient(), this,
-				nenv.getVersion(), nenv.getPrefix());
-		o.load(id);
+	public boolean load(MStringID id) {
+		return o.load(id);
 	}
 
 	@Override
@@ -43,9 +40,6 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	}
 
 	private MBinaryID getBinaryID() {
-		if (binaryid == null) {
-			newBinary();
-		}
 		return binaryid;
 	}
 
@@ -82,10 +76,11 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 		return name;
 	}
 
-	public void newBinary() {
+	public Binary newBinary() {
 		String comment = "LOT3DModel";
 		String extension = "bin";
 		binaryid = env.getBinarySource().newBinary(comment, extension).getID();
+		return getBinary();
 	}
 
 	public void publish() {

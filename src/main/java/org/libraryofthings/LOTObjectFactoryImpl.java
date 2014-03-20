@@ -53,8 +53,12 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 			}
 		}
 
-		LOTPart part = new LOTPart(env, partid);
-		parts.add(part);
-		return part;
+		LOTPart part = new LOTPart(env);
+		if (part.load(partid)) {
+			parts.add(part);
+			return part;
+		} else {
+			return null;
+		}
 	}
 }

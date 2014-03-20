@@ -26,6 +26,7 @@ import waazdoh.testing.ServiceMock;
 public class LOTTestCase extends TestCase {
 	private static final int DEFAULT_WAITTIME = 100;
 	private static final int MAX_OBJECT_WAITTIME = 30000;
+	private static final String PREFERENCES_RUNAGAINSTSERVICE = "lot.test.useservice";
 	//
 	private Set<LOTEnvironment> clients = new HashSet<LOTEnvironment>();
 	MLogger log = MLogger.getLogger(this);
@@ -90,14 +91,16 @@ public class LOTTestCase extends TestCase {
 
 	private CMService getTestService(TestPreferences p, MBinarySource source)
 			throws SAXException {
-		try {
-			RestClient client = new RestClient(p.get(MPreferences.SERVICE_URL),
-					source);
-			if (client.isConnected()) {
-				return client;
+		if (p.getBoolean(LOTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
+			try {
+				RestClient client = new RestClient(
+						p.get(MPreferences.SERVICE_URL), source);
+				if (client.isConnected()) {
+					return client;
+				}
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
 			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		}
 		return new ServiceMock(source);
 	}

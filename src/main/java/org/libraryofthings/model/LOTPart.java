@@ -28,11 +28,8 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 				nenv.getVersion(), nenv.getPrefix());
 	}
 
-	public LOTPart(final LOTEnvironment nenv, MStringID id) {
-		this.env = nenv;
-		o = new ServiceObject(BEANNAME, nenv.getClient(), this,
-				nenv.getVersion(), nenv.getPrefix());
-		o.load(id);
+	public boolean load(MStringID id) {
+		return o.load(id);
 	}
 
 	@Override
@@ -54,7 +51,8 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 	public boolean parseBean(JBean bean) {
 		setName(bean.getValue(VALUENAME_NAME));
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
-		model = new LOT3DModel(env, modelid);
+		model = new LOT3DModel(env);
+		model.load(modelid);
 		//
 		JBean bparts = bean.get("parts");
 		for (JBean bpart : bparts.getChildren()) {

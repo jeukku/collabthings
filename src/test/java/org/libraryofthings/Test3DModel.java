@@ -19,8 +19,8 @@ public final class Test3DModel extends LOTTestCase {
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
-		LOT3DModel bs = new LOT3DModel(benv, s.getServiceObject().getID()
-				.getStringID());
+		LOT3DModel bs = new LOT3DModel(benv);
+		bs.load(s.getServiceObject().getID().getStringID());
 		assertEquals(s.getName(), bs.getName());
 	}
 
@@ -37,8 +37,8 @@ public final class Test3DModel extends LOTTestCase {
 		//
 		LOTEnvironment benv = getNewEnv();
 		assertNotNull(benv);
-		LOT3DModel bs = new LOT3DModel(benv, s.getServiceObject().getID()
-				.getStringID());
+		LOT3DModel bs = new LOT3DModel(benv);
+		bs.load(s.getServiceObject().getID().getStringID());
 		assertEquals(s.getName(), bs.getName());
 		//
 		waitObject(bs);
@@ -50,7 +50,8 @@ public final class Test3DModel extends LOTTestCase {
 	public void testFailBinary() throws IOException, SAXException {
 		LOTEnvironment env = getNewEnv();
 		try {
-			new LOT3DModel(env, new MStringID("FAIL"));
+			LOT3DModel m = new LOT3DModel(env);
+			m.load(new MStringID("FAIL"));
 		} catch (NullPointerException e) {
 			assertNotNull(e);
 		}

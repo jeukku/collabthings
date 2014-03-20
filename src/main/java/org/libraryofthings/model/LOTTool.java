@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.script.ScriptException;
-
 import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTToolException;
 import org.libraryofthings.RunEnvironment;
 
 import waazdoh.client.ServiceObject;
@@ -71,7 +70,8 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 		setName(bean.getValue(VALUENAME_NAME));
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
 		if (modelid != null) {
-			model = new LOT3DModel(env, modelid);
+			model = new LOT3DModel(env);
+			model.load(modelid);
 		}
 		//
 		JBean ssbean = bean.get(VALUENAME_SCRIPTS);
@@ -147,13 +147,13 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 	}
 
 	public void call(final RunEnvironment runenv, final String scriptname,
-			Object params[]) throws NoSuchMethodException, ScriptException {
+			Object params[]) throws LOTToolException {
 		LOTScript script = getScript(scriptname);
 
 		if (script != null) {
 			script.run(runenv, params);
 		} else {
-			throw new RuntimeException("Script called '" + scriptname
+			throw new LOTToolException("Script called '" + scriptname
 					+ "' does not exist in " + this);
 		}
 	}
