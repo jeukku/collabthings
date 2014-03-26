@@ -1,6 +1,7 @@
 package org.libraryofthings.build;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.script.ScriptException;
 
@@ -67,8 +68,8 @@ public final class TestBuildABox extends LOTTestCase {
 		LOTPart destinationpart = env.getObjectFactory().getPart();
 
 		RunEnvironment runenv = new LOTSimulationEnvironment(env);
-		runenv.addToolUser(new ReallySimpleSuperheroRobot(env));
-		
+		runenv.addToolUser(new ReallySimpleSuperheroRobot(env, runenv));
+
 		LOTSubPart destinationsubpart = runenv.getBasePart().getPart()
 				.getPart().newSubPart();
 		destinationsubpart.setPart(destinationpart);
@@ -87,6 +88,20 @@ public final class TestBuildABox extends LOTTestCase {
 		simulation.run();
 		//
 		assertTrue(destinationpart.getSubParts().size() == PARTS_IN_A_BOX);
+		//
+		List<LOTSubPart> boxsubparts = box.getSubParts();
+		List<LOTSubPart> destsubparts = destinationpart.getSubParts();
+		int isub = 0;
+		for (int i = 0; i < boxsubparts.size(); i++) {
+			LOTSubPart boxsubpart = boxsubparts.get(i);
+			LOTSubPart destsubpart = destsubparts.get(i);
+			String boxlstring = boxsubpart.getLocation().toString();
+			String destlstring = destsubpart
+					.getLocation().toString();
+			assertEquals(boxlstring, destlstring);
+			assertEquals(boxsubpart.getNormal().toString(), destsubpart
+					.getNormal().toString());
+		}
 	}
 
 	private LOTScript getSourceNeedScript(LOTEnvironment env)

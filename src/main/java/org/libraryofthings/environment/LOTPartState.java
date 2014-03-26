@@ -38,4 +38,9 @@ public class LOTPartState {
 		nsp.setOrientation(np.getLocation(), np.getNormal());
 		p.addSubPart(nsp);
 	}
+
+	@Override
+	public String toString() {
+		return "PartState[" + part + "][" + location + "]";
+	}
 }

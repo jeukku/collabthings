@@ -129,6 +129,19 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 
 	@Override
 	public void requestMove(LOTToolState lotToolState, LVector l, LVector n) {
-		lotToolState.setLocation(l, n);
+		LOTToolUser tooluser = getToolUser(lotToolState, l);
+		tooluser.setTool(lotToolState);
+		tooluser.move(l, n);
+	}
+
+	private LOTToolUser getToolUser(LOTToolState lotToolState, LVector l) {
+		for (LOTToolUser tooluser : toolusers) {
+			return tooluser;
+		}
+		return null;
+	}
+
+	public boolean isRunning() {
+		return tasks.size() > 0;
 	}
 }

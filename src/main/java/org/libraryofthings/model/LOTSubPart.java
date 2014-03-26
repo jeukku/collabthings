@@ -31,10 +31,14 @@ public final class LOTSubPart {
 	public void parse(JBean bpart) {
 		MStringID partid = bpart.getIDValue("id");
 		part = this.parent.env.getObjectFactory().getPart(partid);
+		p.set(bpart.get("p"));
+		n.set(bpart.get("n"));
 	}
 
 	public void getBean(JBean bpart) {
 		bpart.addValue("id", part.getServiceObject().getID());
+		bpart.add("p", p.getBean());
+		bpart.add("n", n.getBean());
 	}
 
 	public void setPart(LOTPart part2) {
@@ -54,4 +58,8 @@ public final class LOTSubPart {
 		return n;
 	}
 
+	@Override
+	public String toString() {
+		return "SubPart[" + p + "][" + n + "]";
+	}
 }

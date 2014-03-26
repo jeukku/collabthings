@@ -14,7 +14,7 @@ function run(runenv, params) {
 	partsource.call('need', subpart);
 	tool.moveTo(partsource.getLocation());
 	tool.call('pickup', subpart, partsource);
-	tool.moveTo(destpart.getLocation());
+	tool.moveTo(destpart.getPart().getLocation());
 	tool.call('attach', subpart, destpart);
 	
 	runenv.log().info("moveAndAttach done");

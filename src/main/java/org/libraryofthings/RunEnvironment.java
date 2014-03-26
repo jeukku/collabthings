@@ -46,4 +46,6 @@ public interface RunEnvironment {
 
 	void requestMove(LOTToolState lotToolState, LVector l, LVector n);
 
+	boolean isRunning();
+
 }
