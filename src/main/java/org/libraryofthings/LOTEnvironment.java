@@ -6,7 +6,7 @@ import waazdoh.cutils.MPreferences;
 import waazdoh.service.CMService;
 
 public final class LOTEnvironment {
-	private final String version = "0.0.1";
+	public static final String version = "0.0.1";
 	private final String prefix = "LOT";
 	//
 	private WClient client;
@@ -31,7 +31,7 @@ public final class LOTEnvironment {
 	}
 
 	public String getVersion() {
-		return version;
+		return LOTEnvironment.version;
 	}
 
 	public String getPrefix() {
@@ -40,5 +40,9 @@ public final class LOTEnvironment {
 
 	public MPreferences getPreferences() {
 		return client.getPreferences();
+	}
+
+	public void stop() {
+		getClient().stop();
 	}
 }

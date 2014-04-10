@@ -13,6 +13,13 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
+	<distributionManagement>
+		<repository>
+			<id>waazdoh-ssh-repository</id>
+			<url>scp://maven.waazdoh.com:/opt/maven/repository</url>
+		</repository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -106,7 +113,14 @@
 			<artifactId>waazdoh.client</artifactId>
 			<version>1.1.1-SNAPSHOT</version>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>javafx</artifactId>
+			<version>2.2.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/jfxrt.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -118,7 +132,7 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-		
+
 		<repository>
 			<id>waazdoh</id>
 			<name>waazdoh</name>

@@ -7,9 +7,9 @@ function run(e, params) {
 	var subpart = params[1];
 	var destpart = params[2];
 	
-	e.log().info("tool " + tool);
-	e.log().info("subpart " + subpart);
-	e.log().info("destination " + destpart);
+	e.log().info("Attach tool " + tool);
+	e.log().info("Attach subpart " + subpart);
+	e.log().info("Attach destination " + destpart);
 	
 	var loc = destpart.getLocation().copy();
 	loc.add(subpart.getLocation());
