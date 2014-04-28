@@ -15,7 +15,8 @@ import org.libraryofthings.model.LOTScript;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.MBinarySource;
-import waazdoh.client.rest.RestClient;
+import waazdoh.client.WClientAppLogin;
+import waazdoh.client.rest.RestServiceClient;
 import waazdoh.cp2p.impl.P2PBinarySource;
 import waazdoh.cutils.MLogger;
 import waazdoh.cutils.MPreferences;
@@ -51,7 +52,7 @@ public class LOTTestCase extends TestCase {
 		LOTEnvironment c = new LOTEnvironment(p, binarysource, getTestService(
 				p, binarysource));
 
-		boolean setsession = c.getClient().setUsernameAndSession(email,
+		boolean setsession = c.getClient().setSession(email,
 				getSession(p));
 		if (setsession) {
 			clients.add(c);
@@ -66,10 +67,12 @@ public class LOTTestCase extends TestCase {
 				id = new MStringID();
 				p.set(appidparam, id.toString());
 			}
-			String session = c.getClient()
-					.requestAppLogin(email, "testapp", id);
-			if (session != null) {
-				p.set("session", session);
+			//
+
+			WClientAppLogin applogin = c.getClient().requestAppLogin();
+
+			if (applogin != null && applogin.getSessionId() != null) {
+				p.set("session", applogin.getSessionId());
 				return c;
 			} else {
 				return null;
@@ -93,7 +96,7 @@ public class LOTTestCase extends TestCase {
 			throws SAXException {
 		if (p.getBoolean(LOTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
 			try {
-				RestClient client = new RestClient(
+				RestServiceClient client = new RestServiceClient(
 						p.get(MPreferences.SERVICE_URL), source);
 				if (client.isConnected()) {
 					return client;

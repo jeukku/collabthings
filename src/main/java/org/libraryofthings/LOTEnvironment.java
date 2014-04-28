@@ -45,4 +45,9 @@ public final class LOTEnvironment {
 	public void stop() {
 		getClient().stop();
 	}
+
+	@Override
+	public String toString() {
+		return "" + this.client;
+	}
 }
