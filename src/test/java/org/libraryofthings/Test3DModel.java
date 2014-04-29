@@ -51,7 +51,7 @@ public final class Test3DModel extends LOTTestCase {
 		LOTEnvironment env = getNewEnv();
 		try {
 			LOT3DModel m = new LOT3DModel(env);
-			m.load(new MStringID("FAIL"));
+			m.load(new MStringID());
 		} catch (NullPointerException e) {
 			assertNotNull(e);
 		}
