@@ -3,14 +3,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>libraryofthings.client</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>libraryofthings.client</name>
 	<url>http://maven.apache.org</url>
 	<groupId>org.libraryofthings</groupId>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<project.reporting.outputEncoding>UTF-8
+		</project.reporting.outputEncoding>
 	</properties>
 
 	<distributionManagement>
@@ -113,13 +114,22 @@
 			<artifactId>waazdoh.client</artifactId>
 			<version>1.1.2-SNAPSHOT</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>com.interactivemesh</groupId>
+			<artifactId>jfx</artifactId>
+			<version>2.2.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/jimX3dModelImporterJFX.jar
+			</systemPath>
+		</dependency>
+
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>javafx</artifactId>
 			<version>2.2.3</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/jfxrt.jar</systemPath>
+			<systemPath>${env.JAVA_HOME}/jre/lib/jfxswt.jar</systemPath>
 		</dependency>
 	</dependencies>
 

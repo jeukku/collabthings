@@ -3,8 +3,6 @@ package org.libraryofthings.environment;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.script.ScriptException;
-
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTToolException;
 import org.libraryofthings.RunEnvironment;

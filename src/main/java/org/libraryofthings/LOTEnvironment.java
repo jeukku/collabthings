@@ -11,11 +11,13 @@ public final class LOTEnvironment {
 	//
 	private WClient client;
 	private LOTObjectFactory factory;
+	private LLog log = LLog.getLogger(this);
 
 	public LOTEnvironment(MPreferences p, MBinarySource binarysource,
 			CMService service) {
 		client = new WClient(p, binarysource, service);
 		this.factory = new LOTObjectFactoryImpl(this);
+		log.info("resources " + getClass().getResource("/").getPath());
 	}
 
 	public WClient getClient() {

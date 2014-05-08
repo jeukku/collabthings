@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.xml.sax.SAXException;
 
-import waazdoh.client.URLCaller;
 import waazdoh.client.WClientAppLogin;
 
 public final class TestLogin extends LOTTestCase {

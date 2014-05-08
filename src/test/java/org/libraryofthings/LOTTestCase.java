@@ -18,7 +18,6 @@ import waazdoh.client.MBinarySource;
 import waazdoh.client.WClientAppLogin;
 import waazdoh.client.rest.RestServiceClient;
 import waazdoh.cp2p.impl.P2PBinarySource;
-import waazdoh.cutils.MLogger;
 import waazdoh.cutils.MPreferences;
 import waazdoh.cutils.MStringID;
 import waazdoh.service.CMService;
@@ -30,7 +29,7 @@ public class LOTTestCase extends TestCase {
 	private static final String PREFERENCES_RUNAGAINSTSERVICE = "lot.test.useservice";
 	//
 	private Set<LOTEnvironment> clients = new HashSet<LOTEnvironment>();
-	MLogger log = MLogger.getLogger(this);
+	LLog log = LLog.getLogger(this);
 	private int usercounter = 0;
 
 	public LOTEnvironment getNewEnv() throws IOException, SAXException {
