@@ -1,11 +1,16 @@
 package org.libraryofthings;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.libraryofthings.model.LOT3DModel;
 import org.xml.sax.SAXException;
 
 import waazdoh.cutils.MStringID;
+import waazdoh.cutils.xml.JBean;
+import waazdoh.cutils.xml.XML;
 
 public final class Test3DModel extends LOTTestCase {
 
@@ -57,4 +62,19 @@ public final class Test3DModel extends LOTTestCase {
 		}
 	}
 
+	public void testImport() throws IOException, SAXException {
+		LOTEnvironment env = getNewEnv();
+		LOT3DModel m = new LOT3DModel(env);
+		assertTrue(m.importModel(new File("src/test/resources/models/cube.x3d")
+				.toURI().toURL()));
+		assertTrue(m.isReady());
+		assertTrue(m.getChildBinaries().size() > 0);
+		//
+		InputStream is = m.getModelStream();
+		JBean b = new JBean(new XML(new InputStreamReader(is)));
+		JBean imgtxt = b.find("ImageTexture");
+		String nurl = imgtxt.getAttribute("url");
+		assertNotNull(nurl);
+		assertTrue(new File(nurl).exists());
+	}
 }
