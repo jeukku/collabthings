@@ -51,12 +51,8 @@ public final class TestPart extends LOTTestCase {
 	}
 
 	public void testLoadRandomID() throws IOException, SAXException {
-		try {
-			LOTEnvironment e = getNewEnv();
-			e.getObjectFactory().getPart(new MStringID());
-		} catch (Exception e) {
-			assertNotNull(e);
-		}
+		LOTEnvironment e = getNewEnv();
+		assertNull(e.getObjectFactory().getPart(new MStringID()));
 	}
 
 	public void testParseFalseBean() throws IOException, SAXException {
