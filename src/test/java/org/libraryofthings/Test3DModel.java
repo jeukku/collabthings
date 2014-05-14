@@ -75,6 +75,8 @@ public final class Test3DModel extends LOTTestCase {
 		JBean imgtxt = b.find("ImageTexture");
 		String nurl = imgtxt.getAttribute("url");
 		assertNotNull(nurl);
-		assertTrue(new File(nurl).exists());
+		// make sure binary is saved to disk.
+		env.getBinarySource().clearMemory(0);
+		assertTrue("file should exist " + nurl, new File(nurl).exists());
 	}
 }
