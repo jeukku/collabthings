@@ -1,9 +1,12 @@
 package org.libraryofthings.model;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.libraryofthings.LOTEnvironment;
+import org.xml.sax.SAXException;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -136,5 +139,10 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 		subpart.setOrientation(part.getLocation(), part.getNormal());
 		//
 		return subpart;
+	}
+
+	public void importModel(File file) throws SAXException, IOException {
+		newModel();
+		model.importModel(file);
 	}
 }

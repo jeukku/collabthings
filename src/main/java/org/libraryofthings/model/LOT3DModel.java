@@ -5,10 +5,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -140,8 +140,8 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 		getServiceObject().save();
 	}
 
-	public boolean importModel(URL resource) throws SAXException, IOException {
-		XML xml = new XML(new InputStreamReader(resource.openStream()));
+	public boolean importModel(File file) throws SAXException, IOException {
+		XML xml = new XML(new FileReader(file));
 		JBean b = new JBean(xml);
 		log.info("importing " + b.toText());
 		if (importModel(b)) {
@@ -196,12 +196,26 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 		return childbinaries;
 	}
 
+	public File getModelFile() throws SAXException, IOException {
+		InputStream is = getModelStream();
+		File f = File.createTempFile("" + System.currentTimeMillis() + "_"
+				+ getBinary().getID().toString(), getBinary().getExtension());
+		f.delete();
+		Files.copy(is, f.toPath());
+		return f;
+	}
+
 	public InputStream getModelStream() throws SAXException {
 		if (isReady()) {
 			XML xml = new XML(new String(getBinary().asByteBuffer()));
-			log.info("parsing " + xml);
+			log.info("getModelStream parsing " + xml);
 			JBean b = new JBean(xml);
+			// FIXME TODO
+			b.find("X3D").setAttribute("xmlns:xsd",
+					"http://www.w3.org/2001/XMLSchema-instance");
+
 			convertURLs(b);
+			log.info("getModelStream returning " + b.toXML().toString());
 			return new BufferedInputStream(new ByteArrayInputStream(b.toXML()
 					.toString().getBytes()));
 		} else {

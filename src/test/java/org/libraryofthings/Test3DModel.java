@@ -65,8 +65,8 @@ public final class Test3DModel extends LOTTestCase {
 	public void testImport() throws IOException, SAXException {
 		LOTEnvironment env = getNewEnv();
 		LOT3DModel m = new LOT3DModel(env);
-		assertTrue(m.importModel(new File("src/test/resources/models/cube.x3d")
-				.toURI().toURL()));
+		assertTrue(m
+				.importModel(new File("src/test/resources/models/cube.x3d")));
 		assertTrue(m.isReady());
 		assertTrue(m.getChildBinaries().size() > 0);
 		//
