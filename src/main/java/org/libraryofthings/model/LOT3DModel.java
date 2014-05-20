@@ -116,7 +116,7 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 
 	public Binary newBinary() {
 		String comment = "LOT3DModel";
-		String extension = "xml";
+		String extension = "x3d";
 		binaryid = env.getBinarySource().newBinary(comment, extension).getID();
 		return getBinary();
 	}
@@ -199,7 +199,8 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	public File getModelFile() throws SAXException, IOException {
 		InputStream is = getModelStream();
 		File f = File.createTempFile("" + System.currentTimeMillis() + "_"
-				+ getBinary().getID().toString(), getBinary().getExtension());
+				+ getBinary().getID().toString(), "."
+				+ getBinary().getExtension());
 		f.delete();
 		Files.copy(is, f.toPath());
 		return f;

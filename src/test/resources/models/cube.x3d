@@ -29,7 +29,7 @@
 					<Shape>
 						<Appearance>
 							<ImageTexture DEF="IM_test_png_001"
-							              url='"C:/Users/vilmunju/kehitys/projects/waazdoh/libraryofthings.client/src/test/resources/images/test.png" "test.png" "C:/Users/vilmunju/Documents/../kehitys/projects/waazdoh/libraryofthings.client/src/test/resources/images/test.png"'
+							              url='"src/test/resources/images/test.png" "test.png" "src/test/resources/images/test.png"'
 							              />
 							<TextureTransform 
 							                  translation="0.000000 0.000000"
