@@ -32,6 +32,9 @@ public final class Test3DModel extends LOTTestCase {
 	public void testSaveAndLoadBinary() throws IOException, SAXException {
 		LOTEnvironment env = getNewEnv();
 		assertNotNull(env);
+		LOTEnvironment benv = getNewEnv();
+		assertNotNull(benv);
+		benv.getBinarySource().waitUntilReady();
 		//
 		LOT3DModel s = new LOT3DModel(env);
 		s.setName("TEST");
@@ -40,8 +43,6 @@ public final class Test3DModel extends LOTTestCase {
 		s.getBinary().setReady();
 		s.publish();
 		//
-		LOTEnvironment benv = getNewEnv();
-		assertNotNull(benv);
 		LOT3DModel bs = new LOT3DModel(benv);
 		bs.load(s.getServiceObject().getID().getStringID());
 		assertEquals(s.getName(), bs.getName());
