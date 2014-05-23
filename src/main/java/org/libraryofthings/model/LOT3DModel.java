@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
@@ -208,6 +210,7 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 
 	public InputStream getModelStream() throws SAXException {
 		if (isReady()) {
+			env.getBinarySource().saveWaves();
 			XML xml = new XML(new String(getBinary().asByteBuffer()));
 			log.info("getModelStream parsing " + xml);
 			JBean b = new JBean(xml);
@@ -229,8 +232,16 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 		if (surl != null) {
 			Binary cbin = env.getBinarySource().getOrDownload(
 					new MBinaryID(surl));
-			b.setAttribute("url", env.getBinarySource().getBinaryFile(cbin)
-					.getAbsolutePath());
+			//
+			String path = env.getBinarySource().getBinaryFile(cbin)
+					.getAbsolutePath();
+			URL textureurl;
+			try {
+				textureurl = new URL("file://" + path.replace('\\', '/'));
+				b.setAttribute("url", textureurl.toString());
+			} catch (MalformedURLException e) {
+				log.error(this, "convertURLs", e);
+			}
 		}
 		//
 		List<JBean> cbs = b.getChildren();
