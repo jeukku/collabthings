@@ -173,12 +173,14 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 		Enumeration<URL> systemResources = ClassLoader.getSystemResources(".");
 		while (systemResources.hasMoreElements()) {
 			URL u = systemResources.nextElement();
-			File f = new File(u.getFile().toString() + File.separator + "specifications");
-			log.info("finding specifications " + f);
+			File f = new File(u.getFile().toString() + File.separator
+					+ "specifications");
 			if (f.isDirectory()) {
+				log.info("found specifications in " + f);
 				return f.getParent().replace('\\', '/');
 			}
 		}
+		log.info("ERROR: specifications not found locally");
 		return null;
 	}
 
