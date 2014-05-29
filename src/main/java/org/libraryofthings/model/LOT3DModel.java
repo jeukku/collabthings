@@ -8,7 +8,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.nio.CharBuffer;
 import java.nio.file.Files;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -141,7 +144,19 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	}
 
 	public boolean importModel(File file) throws SAXException, IOException {
-		XML xml = new XML(new FileReader(file));
+		FileReader fr = new FileReader(file);
+		CharBuffer sb = CharBuffer.allocate((int) file.length());
+		while (fr.read(sb) > 0)
+			;
+		fr.close();
+		sb.rewind();
+		String s = sb.toString();
+		log.info("importing string " + s);
+		//
+		s = s.replace("http://www.web3d.org", findSpecificationsResources());
+		log.info("importing converted string " + s);
+		//
+		XML xml = new XML(s);
 		JBean b = new JBean(xml);
 		log.info("importing " + b.toText());
 		if (importModel(b)) {
@@ -152,6 +167,19 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 		} else {
 			return false;
 		}
+	}
+
+	private String findSpecificationsResources() throws IOException {
+		Enumeration<URL> systemResources = ClassLoader.getSystemResources(".");
+		while (systemResources.hasMoreElements()) {
+			URL u = systemResources.nextElement();
+			File f = new File(u.getFile().toString() + File.separator + "specifications");
+			log.info("finding specifications " + f);
+			if (f.isDirectory()) {
+				return f.getParent().replace('\\', '/');
+			}
+		}
+		return null;
 	}
 
 	private boolean importModel(JBean b) throws IOException {
