@@ -170,17 +170,19 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	}
 
 	private String findSpecificationsResources() throws IOException {
-		Enumeration<URL> systemResources = ClassLoader.getSystemResources(".");
+		Enumeration<URL> systemResources = ClassLoader.getSystemResources("specifications");
+		List<String> searchlist = new LinkedList<String>();
 		while (systemResources.hasMoreElements()) {
 			URL u = systemResources.nextElement();
-			File f = new File(u.getFile().toString() + File.separator
-					+ "specifications");
+			String pathname = u.getFile().toString();
+			searchlist.add(pathname);
+			File f = new File(pathname);
 			if (f.isDirectory()) {
 				log.info("found specifications in " + f);
 				return f.getParent().replace('\\', '/');
 			}
 		}
-		log.info("ERROR: specifications not found locally");
+		log.info("ERROR: specifications not found locally (" + searchlist + ")");
 		return null;
 	}
 
