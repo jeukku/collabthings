@@ -144,6 +144,7 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	}
 
 	public boolean importModel(File file) throws SAXException, IOException {
+		log.info("Importing " + file);
 		FileReader fr = new FileReader(file);
 		CharBuffer sb = CharBuffer.allocate((int) file.length());
 		while (fr.read(sb) > 0)
@@ -151,14 +152,14 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 		fr.close();
 		sb.rewind();
 		String s = sb.toString();
-		log.info("importing string " + s);
+		log.fine("importing string " + s);
 		//
 		s = s.replace("http://www.web3d.org", findSpecificationsResources());
-		log.info("importing converted string " + s);
+		log.fine("importing converted string " + s);
 		//
 		XML xml = new XML(s);
 		JBean b = new JBean(xml);
-		log.info("importing " + b.toText());
+		log.fine("importing " + b.toText());
 		if (importModel(b)) {
 			newBinary();
 			getBinary().set(0, b.toXML().toString().getBytes());
@@ -170,7 +171,8 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	}
 
 	private String findSpecificationsResources() throws IOException {
-		Enumeration<URL> systemResources = ClassLoader.getSystemResources("specifications");
+		Enumeration<URL> systemResources = ClassLoader
+				.getSystemResources("specifications");
 		List<String> searchlist = new LinkedList<String>();
 		while (systemResources.hasMoreElements()) {
 			URL u = systemResources.nextElement();

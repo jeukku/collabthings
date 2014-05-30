@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>libraryofthings.client</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.3</version>
 	<name>libraryofthings.client</name>
 	<url>http://maven.apache.org</url>
 	<groupId>org.libraryofthings</groupId>
@@ -95,7 +95,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
+			<version>[0.0.1,)</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -127,7 +127,7 @@
 		<dependency>
 			<groupId>waazdoh</groupId>
 			<artifactId>waazdoh.client</artifactId>
-			<version>1.1.4-SNAPSHOT</version>
+			<version>[0.0.1,)</version>
 		</dependency>
 
 		<dependency>

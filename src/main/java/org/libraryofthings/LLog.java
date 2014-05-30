@@ -22,4 +22,8 @@ public class LLog {
 		return new LLog(o);
 	}
 
+	public void fine(String string) {
+		log.info(string);
+	}
+
 }
