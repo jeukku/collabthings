@@ -46,6 +46,13 @@
 						<format>xml</format>
 					</formats>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.ow2.asm</groupId>
+						<artifactId>asm</artifactId>
+						<version>[5.0.0,)</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 
 			<plugin>
