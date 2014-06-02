@@ -125,6 +125,8 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	}
 
 	public void publish() {
+		save();
+		//
 		o.publish();
 		getBinary().publish();
 		for (Binary b : childbinaries) {
