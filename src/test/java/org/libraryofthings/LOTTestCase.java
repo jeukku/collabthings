@@ -58,6 +58,7 @@ public class LOTTestCase extends TestCase {
 			WClientAppLogin applogin = c.getClient().requestAppLogin();
 			applogin = c.getClient().checkAppLogin(applogin.getId());
 			if (applogin != null && applogin.getSessionId() != null) {
+				c.getClient().setSession(applogin.getSessionId());
 				p.set("session", applogin.getSessionId());
 				return c;
 			} else {
