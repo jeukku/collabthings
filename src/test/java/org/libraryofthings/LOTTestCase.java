@@ -19,7 +19,6 @@ import waazdoh.client.WClientAppLogin;
 import waazdoh.client.rest.RestServiceClient;
 import waazdoh.cp2p.impl.P2PBinarySource;
 import waazdoh.cutils.MPreferences;
-import waazdoh.cutils.MStringID;
 import waazdoh.service.CMService;
 import waazdoh.testing.ServiceMock;
 
@@ -49,27 +48,15 @@ public class LOTTestCase extends TestCase {
 
 		MBinarySource binarysource = getBinarySource(p, bind);
 		LOTEnvironment c = new LOTEnvironment(p, binarysource, getTestService(
-				p, binarysource));
+				email, p, binarysource));
 
-		boolean setsession = c.getClient().setSession(email,
-				getSession(p));
+		boolean setsession = c.getClient().setSession(getSession(p));
 		if (setsession) {
 			clients.add(c);
 			return c;
 		} else {
-			String appidparam = "appid_" + email;
-			String sid = p.get(appidparam);
-			MStringID id;
-			if (sid != null && sid.length() > 0) {
-				id = new MStringID(sid);
-			} else {
-				id = new MStringID();
-				p.set(appidparam, id.toString());
-			}
-			//
-
 			WClientAppLogin applogin = c.getClient().requestAppLogin();
-
+			applogin = c.getClient().checkAppLogin(applogin.getId());
 			if (applogin != null && applogin.getSessionId() != null) {
 				p.set("session", applogin.getSessionId());
 				return c;
@@ -91,8 +78,8 @@ public class LOTTestCase extends TestCase {
 		return p.get("session");
 	}
 
-	private CMService getTestService(TestPreferences p, MBinarySource source)
-			throws SAXException {
+	private CMService getTestService(String username, TestPreferences p,
+			MBinarySource source) throws SAXException {
 		if (p.getBoolean(LOTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
 			try {
 				RestServiceClient client = new RestServiceClient(
@@ -104,7 +91,7 @@ public class LOTTestCase extends TestCase {
 				e.printStackTrace();
 			}
 		}
-		return new ServiceMock(source);
+		return new ServiceMock(username, source);
 	}
 
 	public void testTrue() {
