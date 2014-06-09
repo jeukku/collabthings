@@ -87,7 +87,12 @@ public final class LVector {
 	}
 
 	public JBean getBean() {
-		JBean b = new JBean("vector");
+		String name = "vector";
+		return getBean(name);
+	}
+
+	public JBean getBean(String name) {
+		JBean b = new JBean(name);
 		b.addValue("x", getX());
 		b.addValue("y", getY());
 		b.addValue("z", getZ());
@@ -99,4 +104,5 @@ public final class LVector {
 		v.setEntry(_Y, b.getDoubleValue("y"));
 		v.setEntry(_Z, b.getDoubleValue("z"));
 	}
+
 }

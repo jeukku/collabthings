@@ -18,6 +18,7 @@ import java.util.StringTokenizer;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.math.LVector;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.Binary;
@@ -30,15 +31,21 @@ import waazdoh.cutils.xml.XML;
 
 public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	private static final String BEANNAME = "model3d";
+	private static final String SCALE = "scale";
+	private static final String TRANSLATION = "translation";
 	private static final String NAME = "name";
 	private static final String BINARYID = "binaryid";
 	//
+	private static int counter = 1;
+	//
 	private final ServiceObject o;
-	private String name = "";
+	private String name = "3dmodel" + (LOT3DModel.counter++);
 	private MBinaryID binaryid;
 	private final LOTEnvironment env;
 	private LLog log = LLog.getLogger(this);
 	private List<Binary> childbinaries = new LinkedList<Binary>();
+	private double scale = 1.0;
+	private LVector translation = new LVector();
 
 	public LOT3DModel(final LOTEnvironment nenv) {
 		this.env = nenv;
@@ -56,6 +63,8 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 		JBean b = o.getBean();
 		b.addValue(NAME, name);
 		b.addValue(BINARYID, getBinaryID().toString());
+		b.addValue(SCALE, scale);
+		b.add(translation.getBean(TRANSLATION));
 		//
 		JBean bb = b.add("binaries");
 		for (Binary binary : childbinaries) {
@@ -72,6 +81,8 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	public boolean parseBean(JBean bean) {
 		name = bean.getValue("name");
 		binaryid = new MBinaryID(bean.getIDValue(BINARYID));
+		scale = bean.getDoubleValue(SCALE);
+		translation = new LVector(bean.get(TRANSLATION));
 		//
 		JBean bs = bean.get("binaries");
 		List<JBean> bchildbinaries = bs.getChildren();
@@ -277,5 +288,21 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 		for (JBean cb : cbs) {
 			convertURLs(cb);
 		}
+	}
+
+	public double getScale() {
+		return scale;
+	}
+
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
+
+	public LVector getTranslation() {
+		return translation;
+	}
+	
+	public void setTranslation(LVector t) {
+		translation.set(t);
 	}
 }
