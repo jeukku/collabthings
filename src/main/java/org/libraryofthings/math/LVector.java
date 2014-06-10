@@ -22,7 +22,7 @@ public final class LVector {
 	public LVector(double x, double y, double z) {
 		v.setEntry(_X, x);
 		v.setEntry(_Y, y);
-		v.setEntry(_Z, x);
+		v.setEntry(_Z, z);
 	}
 
 	/**
@@ -47,15 +47,15 @@ public final class LVector {
 		v.setEntry(_Z, location.getZ());
 	}
 
-	private double getY() {
+	public double getY() {
 		return v.getEntry(_Y);
 	}
 
-	private double getX() {
+	public double getX() {
 		return v.getEntry(_X);
 	}
 
-	private double getZ() {
+	public double getZ() {
 		return v.getEntry(_Z);
 	}
 
