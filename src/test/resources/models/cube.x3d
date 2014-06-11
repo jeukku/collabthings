@@ -16,9 +16,9 @@
 		            skyColor="0.051 0.051 0.051"
 		            />
 		<Transform DEF="ShapeIndexedFaceSet_TRANSFORM"
-		           translation="-0.010395 -0.000336 0.023122"
+		           translation="0.0 0.0 0.0"
 		           scale="1.000000 1.000000 1.000000"
-		           rotation="0.000000 0.707107 0.707107 3.141593"
+		           rotation="0.000000 0.0 0.0 0.0"
 		           >
 			<Transform DEF="ShapeIndexedFaceSet_ifs_TRANSFORM"
 			           translation="0.000000 0.000000 -0.000000"
@@ -57,31 +57,6 @@
 					</Shape>
 				</Group>
 			</Transform>
-		</Transform>
-		<Transform DEF="Lamp_TRANSFORM"
-		           translation="-4.019571 2.643798 -3.141132"
-		           scale="1.000000 1.000000 1.000000"
-		           rotation="-0.498084 -0.762016 -0.413815 1.513875"
-		           >
-			<PointLight DEF="LA_Lamp"
-			            ambientIntensity="0.0000"
-			            color="1.0000 1.0000 1.0000"
-			            intensity="0.5714"
-			            radius="30.0000" 
-			            location="-0.0000 -0.0000 0.0000"
-			            />
-		</Transform>
-		<Transform DEF="Camera_TRANSFORM"
-		           translation="-7.481132 5.343665 -6.507640"
-		           scale="1.000000 1.000000 1.000000"
-		           rotation="-0.093039 -0.968741 -0.229967 2.347036"
-		           >
-			<Viewpoint DEF="CA_Camera"
-			           centerOfRotation="0 0 0"
-			           position="0.00 0.00 -0.00"
-			           orientation="-0.92 0.35 0.17 0.00"
-			           fieldOfView="0.858"
-			           />
 		</Transform>
 	</Scene>
 </X3D>
