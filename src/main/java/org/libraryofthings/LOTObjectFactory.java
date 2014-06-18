@@ -3,7 +3,7 @@ package org.libraryofthings;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTTool;
 
-import waazdoh.cutils.MStringID;
+import waazdoh.util.MStringID;
 
 public interface LOTObjectFactory {
 

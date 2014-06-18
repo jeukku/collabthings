@@ -2,8 +2,8 @@ package org.libraryofthings;
 
 import waazdoh.client.MBinarySource;
 import waazdoh.client.WClient;
-import waazdoh.cutils.MPreferences;
 import waazdoh.service.CMService;
+import waazdoh.util.MPreferences;
 
 public final class LOTEnvironment {
 	public static final String version = "0.0.1";

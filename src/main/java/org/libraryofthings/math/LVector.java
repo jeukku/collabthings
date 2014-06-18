@@ -3,7 +3,7 @@ package org.libraryofthings.math;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
-import waazdoh.cutils.xml.JBean;
+import waazdoh.util.xml.JBean;
 
 public final class LVector {
 	private static final int _X = 0;

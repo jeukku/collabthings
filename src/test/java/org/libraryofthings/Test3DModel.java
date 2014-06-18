@@ -8,9 +8,9 @@ import java.io.InputStreamReader;
 import org.libraryofthings.model.LOT3DModel;
 import org.xml.sax.SAXException;
 
-import waazdoh.cutils.MStringID;
-import waazdoh.cutils.xml.JBean;
-import waazdoh.cutils.xml.XML;
+import waazdoh.util.MStringID;
+import waazdoh.util.xml.JBean;
+import waazdoh.util.xml.XML;
 
 public final class Test3DModel extends LOTTestCase {
 

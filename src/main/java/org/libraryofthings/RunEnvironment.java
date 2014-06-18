@@ -12,7 +12,7 @@ import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.LOTTool;
 
-import waazdoh.cutils.MID;
+import waazdoh.client.model.MID;
 
 public interface RunEnvironment {
 

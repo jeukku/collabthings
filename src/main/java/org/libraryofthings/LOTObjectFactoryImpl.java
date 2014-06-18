@@ -6,7 +6,7 @@ import java.util.List;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTTool;
 
-import waazdoh.cutils.MStringID;
+import waazdoh.util.MStringID;
 
 public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 

@@ -21,13 +21,13 @@ import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.math.LVector;
 import org.xml.sax.SAXException;
 
-import waazdoh.client.Binary;
-import waazdoh.client.MBinaryID;
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.cutils.MStringID;
-import waazdoh.cutils.xml.JBean;
-import waazdoh.cutils.xml.XML;
+import waazdoh.client.model.Binary;
+import waazdoh.client.model.MBinaryID;
+import waazdoh.util.MStringID;
+import waazdoh.util.xml.JBean;
+import waazdoh.util.xml.XML;
 
 public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	private static final String BEANNAME = "model3d";
@@ -255,7 +255,7 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 
 	public InputStream getModelStream() throws SAXException {
 		if (isReady()) {
-			env.getBinarySource().saveWaves();
+			env.getBinarySource().saveBinaries();
 			XML xml = new XML(new String(getBinary().asByteBuffer()));
 			log.info("getModelStream parsing " + xml);
 			JBean b = new JBean(xml);

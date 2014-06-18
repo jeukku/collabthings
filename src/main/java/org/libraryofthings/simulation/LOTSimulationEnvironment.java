@@ -18,8 +18,8 @@ import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.LOTTool;
 
-import waazdoh.cutils.MID;
-import waazdoh.cutils.MStringID;
+import waazdoh.client.model.MID;
+import waazdoh.util.MStringID;
 
 public class LOTSimulationEnvironment implements RunEnvironment {
 	private Map<String, LOTPartState> parts = new HashMap<String, LOTPartState>();

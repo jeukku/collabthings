@@ -6,8 +6,8 @@ import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
 import org.xml.sax.SAXException;
 
-import waazdoh.cutils.MStringID;
-import waazdoh.cutils.xml.JBean;
+import waazdoh.util.MStringID;
+import waazdoh.util.xml.JBean;
 
 public final class TestPart extends LOTTestCase {
 

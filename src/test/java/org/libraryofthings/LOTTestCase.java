@@ -18,9 +18,9 @@ import waazdoh.client.MBinarySource;
 import waazdoh.client.WClientAppLogin;
 import waazdoh.client.rest.RestServiceClient;
 import waazdoh.cp2p.impl.P2PBinarySource;
-import waazdoh.cutils.MPreferences;
 import waazdoh.service.CMService;
 import waazdoh.testing.ServiceMock;
+import waazdoh.util.MPreferences;
 
 public class LOTTestCase extends TestCase {
 	private static final int DEFAULT_WAITTIME = 100;

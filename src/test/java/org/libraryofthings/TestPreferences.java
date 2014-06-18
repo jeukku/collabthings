@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import waazdoh.cutils.MPreferences;
+import waazdoh.util.MPreferences;
 
 public final class TestPreferences implements MPreferences {
 	private static final int DEFAULT_NETWORK_MAX_DOWNLOADS = 8;
