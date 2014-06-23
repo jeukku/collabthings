@@ -3,8 +3,8 @@ package org.libraryofthings.model;
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.math.LVector;
 
+import waazdoh.client.model.JBean;
 import waazdoh.util.MStringID;
-import waazdoh.util.xml.JBean;
 
 public final class LOTSubPart {
 	/**

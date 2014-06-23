@@ -1,8 +1,8 @@
 package org.libraryofthings;
 
-import waazdoh.client.MBinarySource;
 import waazdoh.client.WClient;
-import waazdoh.service.CMService;
+import waazdoh.client.binaries.MBinarySource;
+import waazdoh.client.model.CMService;
 import waazdoh.util.MPreferences;
 
 public final class LOTEnvironment {

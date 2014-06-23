@@ -11,8 +11,8 @@ import org.libraryofthings.scripting.ScriptLoader;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
+import waazdoh.client.model.JBean;
 import waazdoh.util.MStringID;
-import waazdoh.util.xml.JBean;
 
 /**
  * 

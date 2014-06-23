@@ -11,8 +11,8 @@ import org.libraryofthings.RunEnvironment;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
+import waazdoh.client.model.JBean;
 import waazdoh.util.MStringID;
-import waazdoh.util.xml.JBean;
 
 public final class LOTTool implements ServiceObjectData, LOTObject {
 	private static final String BEANNAME = "tool";

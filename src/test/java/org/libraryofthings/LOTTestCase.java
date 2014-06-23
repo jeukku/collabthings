@@ -14,11 +14,11 @@ import org.libraryofthings.model.LOTObject;
 import org.libraryofthings.model.LOTScript;
 import org.xml.sax.SAXException;
 
-import waazdoh.client.MBinarySource;
 import waazdoh.client.WClientAppLogin;
-import waazdoh.client.rest.RestServiceClient;
-import waazdoh.cp2p.impl.P2PBinarySource;
-import waazdoh.service.CMService;
+import waazdoh.client.binaries.MBinarySource;
+import waazdoh.client.model.CMService;
+import waazdoh.cp2p.P2PBinarySource;
+import waazdoh.service.rest.RestServiceClient;
 import waazdoh.testing.ServiceMock;
 import waazdoh.util.MPreferences;
 

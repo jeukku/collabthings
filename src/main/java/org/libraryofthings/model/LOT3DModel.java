@@ -24,9 +24,9 @@ import org.xml.sax.SAXException;
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.client.model.Binary;
+import waazdoh.client.model.JBean;
 import waazdoh.client.model.MBinaryID;
 import waazdoh.util.MStringID;
-import waazdoh.util.xml.JBean;
 import waazdoh.util.xml.XML;
 
 public final class LOT3DModel implements ServiceObjectData, LOTObject {

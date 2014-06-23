@@ -10,8 +10,8 @@ import org.xml.sax.SAXException;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
+import waazdoh.client.model.JBean;
 import waazdoh.util.MStringID;
-import waazdoh.util.xml.JBean;
 
 public final class LOTPart implements ServiceObjectData, LOTObject {
 	private static final String BEANNAME = "part";
