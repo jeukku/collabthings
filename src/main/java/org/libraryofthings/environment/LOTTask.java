@@ -20,8 +20,8 @@ public final class LOTTask {
 		this.params = params2;
 	}
 
-	public LinkedList<LOTTask> getSubTasks() {
-		LinkedList<LOTTask> list = new LinkedList<LOTTask>();
+	public List<LOTTask> getSubTasks() {
+		List<LOTTask> list = new LinkedList<LOTTask>();
 		list.addAll(subtasks);
 		return list;
 	}

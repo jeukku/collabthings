@@ -6,9 +6,9 @@ import org.apache.commons.math3.linear.RealVector;
 import waazdoh.client.model.JBean;
 
 public final class LVector {
-	private static final int _X = 0;
-	private static final int _Y = 1;
-	private static final int _Z = 2;
+	private static final int X = 0;
+	private static final int Y = 1;
+	private static final int Z = 2;
 	private static final int VALUE_COUNT = 3;
 	//
 	private RealVector v = new ArrayRealVector(new double[VALUE_COUNT]);
@@ -20,9 +20,9 @@ public final class LVector {
 	 * @param z
 	 */
 	public LVector(double x, double y, double z) {
-		v.setEntry(_X, x);
-		v.setEntry(_Y, y);
-		v.setEntry(_Z, z);
+		v.setEntry(X, x);
+		v.setEntry(Y, y);
+		v.setEntry(Z, z);
 	}
 
 	/**
@@ -42,21 +42,21 @@ public final class LVector {
 	}
 
 	public void set(LVector location) {
-		v.setEntry(_X, location.getX());
-		v.setEntry(_Y, location.getY());
-		v.setEntry(_Z, location.getZ());
+		v.setEntry(X, location.getX());
+		v.setEntry(Y, location.getY());
+		v.setEntry(Z, location.getZ());
 	}
 
 	public double getY() {
-		return v.getEntry(_Y);
+		return v.getEntry(Y);
 	}
 
 	public double getX() {
-		return v.getEntry(_X);
+		return v.getEntry(X);
 	}
 
 	public double getZ() {
-		return v.getEntry(_Z);
+		return v.getEntry(Z);
 	}
 
 	public LVector copy() {
@@ -100,9 +100,9 @@ public final class LVector {
 	}
 
 	public void set(JBean b) {
-		v.setEntry(_X, b.getDoubleValue("x"));
-		v.setEntry(_Y, b.getDoubleValue("y"));
-		v.setEntry(_Z, b.getDoubleValue("z"));
+		v.setEntry(X, b.getDoubleValue("x"));
+		v.setEntry(Y, b.getDoubleValue("y"));
+		v.setEntry(Z, b.getDoubleValue("z"));
 	}
 
 }

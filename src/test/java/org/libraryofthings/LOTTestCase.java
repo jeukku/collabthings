@@ -20,6 +20,7 @@ import waazdoh.client.model.CMService;
 import waazdoh.cp2p.P2PBinarySource;
 import waazdoh.service.rest.RestServiceClient;
 import waazdoh.testing.ServiceMock;
+import waazdoh.testing.StaticTestPreferences;
 import waazdoh.util.MPreferences;
 
 public class LOTTestCase extends TestCase {
@@ -31,11 +32,16 @@ public class LOTTestCase extends TestCase {
 	LLog log = LLog.getLogger(this);
 	private int usercounter = 0;
 
+	@Override
+	protected void tearDown() throws Exception {
+		StaticTestPreferences.clearPorts();
+	}
+
 	public LOTEnvironment getNewEnv() throws IOException, SAXException {
 		boolean bind = usercounter >= 0 ? true : false;
-		TestPreferences p = new TestPreferences("lottesting");
-		String username = p.get("useremail" + usercounter, "test_username_"
-				+ (usercounter) + "@localhost");
+
+		String username = "test_username_" + (usercounter) + "@localhost";
+		MPreferences p = new StaticTestPreferences("lottests", username);
 		usercounter++;
 		return getNewEnv(username, bind);
 	}
@@ -43,7 +49,7 @@ public class LOTTestCase extends TestCase {
 	public LOTEnvironment getNewEnv(String email, boolean bind)
 			throws MalformedURLException, SAXException {
 		//
-		TestPreferences p = new TestPreferences(email);
+		MPreferences p = new StaticTestPreferences("lottests", email);
 		p.set(LOTScript.PREFERENCES_SCRIPTSPATH, "./");
 
 		MBinarySource binarysource = getBinarySource(p, bind);
@@ -74,16 +80,16 @@ public class LOTTestCase extends TestCase {
 		return testsource;
 	}
 
-	private String getSession(TestPreferences p) {
-		return p.get("session");
+	private String getSession(MPreferences p) {
+		return p.get("session", "");
 	}
 
-	private CMService getTestService(String username, TestPreferences p,
+	private CMService getTestService(String username, MPreferences p,
 			MBinarySource source) throws SAXException {
 		if (p.getBoolean(LOTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
 			try {
-				RestServiceClient client = new RestServiceClient(
-						p.get(MPreferences.SERVICE_URL), source);
+				RestServiceClient client = new RestServiceClient(p.get(
+						MPreferences.SERVICE_URL, "unknown_service"), source);
 				if (client.isConnected()) {
 					return client;
 				}
