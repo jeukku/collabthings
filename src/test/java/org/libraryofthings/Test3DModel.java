@@ -9,6 +9,7 @@ import org.libraryofthings.model.LOT3DModel;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.model.JBean;
+import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MStringID;
 import waazdoh.util.xml.XML;
 
@@ -68,6 +69,8 @@ public final class Test3DModel extends LOTTestCase {
 		LOT3DModel m = new LOT3DModel(env);
 		assertTrue(m
 				.importModel(new File("src/test/resources/models/cube.x3d")));
+		new ConditionWaiter(() -> m.isReady(), 5000);
+		//
 		assertTrue(m.isReady());
 		assertTrue(m.getChildBinaries().size() > 0);
 		//
