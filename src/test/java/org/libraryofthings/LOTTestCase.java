@@ -35,8 +35,17 @@ public class LOTTestCase extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		StaticTestPreferences.clearPorts();
+		for (LOTEnvironment e : clients) {
+			e.stop();
+		}
 	}
 
+	@Override
+	protected void setUp() throws Exception {
+		log.info("**************** SETUP TEST " + getName() + " ************** ");
+		super.setUp();
+	}
+	
 	public LOTEnvironment getNewEnv() throws IOException, SAXException {
 		boolean bind = usercounter >= 0 ? true : false;
 

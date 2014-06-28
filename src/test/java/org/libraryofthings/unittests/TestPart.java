@@ -1,5 +1,6 @@
 package org.libraryofthings.unittests;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.libraryofthings.LOTEnvironment;
@@ -77,5 +78,13 @@ public final class TestPart extends LOTTestCase {
 		JBean bean = new JBean("part");
 		bean.add("parts");
 		p.parseBean(bean);
+	}
+
+	public void testImportModel() throws IOException, SAXException {
+		LOTEnvironment e = getNewEnv();
+		LOTPart p = e.getObjectFactory().getPart();
+		p.importModel(new File("src/test/resources/models/cube.x3d"));
+		assertNotNull(p.getModel());
+		assertTrue(p.getModel().getBinary().length() > 0);
 	}
 }
