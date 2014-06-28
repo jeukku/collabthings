@@ -51,11 +51,11 @@ public final class LOTSubPart {
 	}
 
 	public LVector getNormal() {
-		return p;
+		return n;
 	}
 
 	public LVector getLocation() {
-		return n;
+		return p;
 	}
 
 	@Override

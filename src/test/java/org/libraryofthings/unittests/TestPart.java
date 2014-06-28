@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.LOTTestCase;
+import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
 import org.xml.sax.SAXException;
@@ -50,6 +51,19 @@ public final class TestPart extends LOTTestCase {
 				bpart,
 				benv.getObjectFactory().getPart(
 						bpart.getServiceObject().getID().getStringID()));
+	}
+
+	public void testSubPartOrientation() throws IOException, SAXException {
+		LOTEnvironment e = getNewEnv();
+		LOTPart p = new LOTPart(e);
+		LOTSubPart subpart = p.newSubPart();
+		subpart.setPart(new LOTPart(e));
+		subpart.setOrientation(new LVector(10, 10, 10), new LVector(0, 1, 0));
+		//
+		assertEquals(subpart.getLocation().toString(),
+				new LVector(10, 10, 10).toString());
+		assertEquals(subpart.getNormal().toString(),
+				new LVector(0, 1, 0).toString());
 	}
 
 	public void testLoadRandomID() throws IOException, SAXException {
