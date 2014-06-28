@@ -1,7 +1,9 @@
-package org.libraryofthings;
+package org.libraryofthings.unittests;
 
 import java.io.IOException;
 
+import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTTestCase;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.WClientAppLogin;

@@ -1,4 +1,4 @@
-package org.libraryofthings.build;
+package org.libraryofthings.integrationtests;
 
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.RunEnvironment;

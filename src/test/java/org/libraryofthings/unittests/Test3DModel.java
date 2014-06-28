@@ -1,10 +1,12 @@
-package org.libraryofthings;
+package org.libraryofthings.unittests;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.model.LOT3DModel;
 import org.xml.sax.SAXException;
 

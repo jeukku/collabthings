@@ -1,9 +1,12 @@
-package org.libraryofthings;
+package org.libraryofthings.unittests;
 
 import java.io.IOException;
 
 import javax.script.ScriptException;
 
+import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTTestCase;
+import org.libraryofthings.LOTToolException;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.xml.sax.SAXException;

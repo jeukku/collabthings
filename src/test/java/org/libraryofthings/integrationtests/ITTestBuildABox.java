@@ -1,4 +1,4 @@
-package org.libraryofthings.build;
+package org.libraryofthings.integrationtests;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +18,7 @@ import org.libraryofthings.simulation.LOTSimulation;
 import org.libraryofthings.simulation.LOTSimulationEnvironment;
 import org.xml.sax.SAXException;
 
-public final class TestBuildABox extends LOTTestCase {
+public final class ITTestBuildABox extends LOTTestCase {
 
 	private static final int PARTS_IN_A_BOX = 6;
 
@@ -32,6 +32,74 @@ public final class TestBuildABox extends LOTTestCase {
 		square.setName("wall");
 
 		// Create a box object
+		LOTPart box = createBox(env, square);
+
+		// TODO picking up plates, moving them and leaving them somewhere
+		// Create a plate source
+		LOTTool partsource = createPartSource(env);
+
+		// Create a tool to pick up plates
+		LOTTool tool = getPickupTool(env);
+		//
+		LOTScript assembyscript = getAssemblyScript(tool, box, env);
+
+		LOTPart destinationpart = env.getObjectFactory().getPart();
+
+		RunEnvironment runenv = new LOTSimulationEnvironment(env);
+		runenv.addToolUser(new ReallySimpleSuperheroRobot(env, runenv));
+
+		LOTSubPart destinationsubpart = runenv.getBasePart().getPart()
+				.getPart().newSubPart();
+		destinationsubpart.setPart(destinationpart);
+
+		runenv.setParameter("partid", box.getServiceObject().getID());
+		runenv.addPart("destinationpart", destinationsubpart);
+		runenv.addTool("source", partsource);
+		runenv.addTool("tool", tool);
+		runenv.addScript("MoveAndAttach",
+				loadScript(env, "buildabox_moveandattach.js"));
+		// 
+		assembyscript.run(runenv);
+		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
+		simulation.run();
+		//
+		assertBuiltBox(box, destinationpart);
+	}
+
+	private void assertBuiltBox(LOTPart box, LOTPart destinationpart) {
+		assertTrue(destinationpart.getSubParts().size() == PARTS_IN_A_BOX);
+		// Checking out everything is in place
+		List<LOTSubPart> boxsubparts = box.getSubParts();
+		List<LOTSubPart> destsubparts = destinationpart.getSubParts();
+
+		for (int i = 0; i < boxsubparts.size(); i++) {
+			LOTSubPart boxsubpart = boxsubparts.get(i);
+			LOTSubPart destsubpart = destsubparts.get(i);
+			String boxlstring = boxsubpart.getLocation().toString();
+			String destlstring = destsubpart.getLocation().toString();
+			assertEquals(boxlstring, destlstring);
+			assertEquals(boxsubpart.getNormal().toString(), destsubpart
+					.getNormal().toString());
+		}
+	}
+
+	private LOTTool createPartSource(LOTEnvironment env)
+			throws NoSuchMethodException, ScriptException {
+		LOTTool partsource = env.getObjectFactory().getTool();
+		partsource.addScript("need", getSourceNeedScript(env));
+
+		return partsource;
+	}
+
+	private LOTTool getPickupTool(LOTEnvironment env) throws IOException,
+			NoSuchMethodException, ScriptException {
+		LOTTool tool = createPartSource(env);
+		tool.addScript("pickup", loadScript(env, "buildabox_pickup.js"));
+		tool.addScript("attach", loadScript(env, "buildabox_attach.js"));
+		return tool;
+	}
+
+	private LOTPart createBox(LOTEnvironment env, LOTPart square) {
 		LOTPart box = env.getObjectFactory().getPart();
 		box.setName("BOX");
 		for (int i = 0; i < PARTS_IN_A_BOX; i++) {
@@ -52,56 +120,7 @@ public final class TestBuildABox extends LOTTestCase {
 				.setOrientation(new LVector(0, 0, 1), new LVector(0, 0, 1));
 		box.getSubParts().get(partindex++)
 				.setOrientation(new LVector(0, 1, 0), new LVector(0, 1, 0));
-
-		// TODO picking up plates, moving them and leaving them somewhere
-		// Create a plate source
-		LOTTool partsource = env.getObjectFactory().getTool();
-
-		// Create a tool to pick up plates
-		LOTTool tool = env.getObjectFactory().getTool();
-		tool.addScript("pickup", loadScript(env, "buildabox_pickup.js"));
-		tool.addScript("attach", loadScript(env, "buildabox_attach.js"));
-
-		//
-		LOTScript assembyscript = getAssemblyScript(tool, box, env);
-
-		LOTPart destinationpart = env.getObjectFactory().getPart();
-
-		RunEnvironment runenv = new LOTSimulationEnvironment(env);
-		runenv.addToolUser(new ReallySimpleSuperheroRobot(env, runenv));
-
-		LOTSubPart destinationsubpart = runenv.getBasePart().getPart()
-				.getPart().newSubPart();
-		destinationsubpart.setPart(destinationpart);
-
-		runenv.setParameter("partid", box.getServiceObject().getID());
-		runenv.addPart("destinationpart", destinationsubpart);
-		runenv.addTool("source", partsource);
-		runenv.addTool("tool", tool);
-		runenv.addScript("MoveAndAttach",
-				loadScript(env, "buildabox_moveandattach.js"));
-		//
-		partsource.addScript("need", getSourceNeedScript(env));
-		//
-		assembyscript.run(runenv);
-		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
-		simulation.run();
-		//
-		assertTrue(destinationpart.getSubParts().size() == PARTS_IN_A_BOX);
-		//
-		List<LOTSubPart> boxsubparts = box.getSubParts();
-		List<LOTSubPart> destsubparts = destinationpart.getSubParts();
-		int isub = 0;
-		for (int i = 0; i < boxsubparts.size(); i++) {
-			LOTSubPart boxsubpart = boxsubparts.get(i);
-			LOTSubPart destsubpart = destsubparts.get(i);
-			String boxlstring = boxsubpart.getLocation().toString();
-			String destlstring = destsubpart
-					.getLocation().toString();
-			assertEquals(boxlstring, destlstring);
-			assertEquals(boxsubpart.getNormal().toString(), destsubpart
-					.getNormal().toString());
-		}
+		return box;
 	}
 
 	private LOTScript getSourceNeedScript(LOTEnvironment env)
