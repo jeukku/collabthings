@@ -46,20 +46,14 @@ public final class TestScript extends LOTTestCase {
 
 	private LOTScript getWorkingScriptExample(LOTEnvironment env)
 			throws NoSuchMethodException, ScriptException {
-		LOTScript s = getWorkingScript(env, SCRIPT_TEMPLATE
+		LOTScript s = getScript(env, SCRIPT_TEMPLATE
 				+ "function run(env) { env.setParameter(\"testvalue\", \""
 				+ SCRIPT_ENV_TEST_VALUE + "\" ); } ");
 		s.getServiceObject().save();
 		return s;
 	}
 
-	private LOTScript getFailingScript(LOTEnvironment env, String script) {
-		LOTScript s = new LOTScript(env);
-		s.setScript(script);
-		return s;
-	}
-
-	private LOTScript getWorkingScript(LOTEnvironment env, String script) {
+	private LOTScript getScript(LOTEnvironment env, String script) {
 		LOTScript s = new LOTScript(env);
 		s.setScript(script);
 		return s;
@@ -68,7 +62,7 @@ public final class TestScript extends LOTTestCase {
 	public void testRuntimeEnvironmentParameters() throws IOException,
 			SAXException, NoSuchMethodException, ScriptException {
 		LOTEnvironment env = getNewEnv();
-		LOTScript s = getWorkingScript(env, SCRIPT_TEMPLATE
+		LOTScript s = getScript(env, SCRIPT_TEMPLATE
 				+ "function run(e) { e.setParameter('test', 'testvalue'); }");
 		assertNotNull(s);
 		RunEnvironment e = new LOTSimulationEnvironment(env);
@@ -78,14 +72,21 @@ public final class TestScript extends LOTTestCase {
 
 	public void testFailLoad() throws IOException, SAXException {
 		LOTEnvironment env = getNewEnv();
-		LOTScript s = getFailingScript(env, FAILING_SCRIPT);
+		LOTScript s = getScript(env, FAILING_SCRIPT);
 		assertNull(s.getScript());
 	}
 
 	public void testMissingMethod() throws IOException, SAXException {
 		LOTEnvironment env = getNewEnv();
-		LOTScript s = getFailingScript(env, "function fail() {}");
+		LOTScript s = getScript(env, "function fail() {}");
 		assertNull(s.getScript());
+	}
+
+	public void testMissingRunMethod() throws IOException, SAXException {
+		LOTEnvironment env = getNewEnv();
+		LOTScript s = getScript(env, "function info() {}");
+		LOTSimulationEnvironment runenv = new LOTSimulationEnvironment(env);
+		assertFalse(s.run(runenv));
 	}
 
 	public void testFailAtLoadingLibraries() throws IOException, SAXException,
