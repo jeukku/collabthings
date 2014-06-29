@@ -36,6 +36,12 @@ public final class LVector {
 		set(b);
 	}
 
+	private void set(RealVector y) {
+		v.setEntry(X, y.getEntry(X));
+		v.setEntry(Y, y.getEntry(Y));
+		v.setEntry(Z, y.getEntry(Z));
+	}
+
 	@Override
 	public String toString() {
 		return "V[" + getX() + ", " + getY() + ", " + getZ() + "]";
@@ -64,7 +70,7 @@ public final class LVector {
 	}
 
 	public LVector add(LVector addv) {
-		v.add(addv.v);
+		set(v.add(addv.v));
 		return this;
 	}
 
@@ -75,15 +81,15 @@ public final class LVector {
 	}
 
 	private void sub(LVector b) {
-		v.subtract(b.v);
+		set(v.subtract(b.v));
 	}
 
 	public double length() {
-		return v.getL1Norm();
+		return v.getNorm();
 	}
 
 	public void mult(double d) {
-		v.mapMultiply(d);
+		set(v.mapMultiply(d));
 	}
 
 	public JBean getBean() {
