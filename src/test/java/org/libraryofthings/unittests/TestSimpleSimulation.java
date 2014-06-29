@@ -24,4 +24,20 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		assertFalse(simulation.run());
 	}
+
+	public void testSimpleScript() throws IOException, SAXException {
+		LOTEnvironment env = getNewEnv();
+
+		String testvalue = "testvalue" + System.currentTimeMillis();
+		//
+		LOTScript s = new LOTScript(env);
+		s.setScript("function info() {} function run(env, params) { env.setParameter('testparam', '"
+				+ testvalue + "'); }");
+
+		RunEnvironment runenv = new LOTSimulationEnvironment(env);
+		runenv.addTask(s, "test");
+		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
+		assertTrue(simulation.run());
+		assertEquals(testvalue, runenv.getParameter("testparam"));
+	}
 }
