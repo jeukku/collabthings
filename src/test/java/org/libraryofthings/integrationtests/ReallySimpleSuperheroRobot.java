@@ -8,7 +8,7 @@ import org.libraryofthings.math.LVector;
 
 public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
-	private static final long WAIT_A_BIT = 0;
+	private static final long WAIT_A_BIT = 200;
 	private static final float MOVING_LOCATION_LENGTH_TRIGGER = 0.001f;
 	private LOTEnvironment env;
 	private RunEnvironment simenv;
@@ -17,6 +17,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private LVector targetlocation;
 	private LVector location = new LVector();
 	private LVector normal = new LVector(1, 0, 0);
+	private boolean stopped;
 
 	public ReallySimpleSuperheroRobot(final LOTEnvironment env,
 			RunEnvironment simenv) {
@@ -37,9 +38,14 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		targetlocation = l.copy();
 		targetnormal = n.copy();
 		//
-		while (location.getSub(targetlocation).length() > MOVING_LOCATION_LENGTH_TRIGGER) {
+		while (!isStopped()
+				&& location.getSub(targetlocation).length() > MOVING_LOCATION_LENGTH_TRIGGER) {
 			waitAWhile();
 		}
+	}
+
+	private boolean isStopped() {
+		return this.stopped;
 	}
 
 	@Override
@@ -48,12 +54,18 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	}
 
 	private synchronized void doRun() {
-		while (simenv.isRunning()) {
-			LVector direction = targetlocation.getSub(location);
-			direction.mult(0.01);
-			location.add(direction);
-			tool.setLocation(location, targetnormal);
-			waitAWhile();
+		try {
+			while (simenv.isRunning()) {
+				if (targetlocation != null) {
+					LVector direction = targetlocation.getSub(location);
+					direction.mult(0.01);
+					location.add(direction);
+					tool.setLocation(location, targetnormal);
+				}
+				waitAWhile();
+			}
+		} finally {
+			stopped = true;
 		}
 	}
 
