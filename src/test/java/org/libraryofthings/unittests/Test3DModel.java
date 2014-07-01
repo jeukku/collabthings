@@ -74,7 +74,7 @@ public final class Test3DModel extends LOTTestCase {
 		new ConditionWaiter(() -> m.isReady(), 5000);
 		//
 		assertTrue(m.isReady());
-		assertTrue(m.getChildBinaries().size() > 0);
+		assertTrue(!m.getChildBinaries().isEmpty());
 		//
 		InputStream is = m.getModelStream();
 		JBean b = new JBean(new XML(new InputStreamReader(is)));

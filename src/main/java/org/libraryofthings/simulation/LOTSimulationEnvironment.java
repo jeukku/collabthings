@@ -41,9 +41,7 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 
 	@Override
 	public void start() {
-		new LOTStepRunner(MAX_STEP, (dtime) -> {
-			return step(dtime);
-		});
+		new LOTStepRunner(MAX_STEP, dtime -> step(dtime));
 	}
 
 	private boolean step(double dtime) {
@@ -102,8 +100,7 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 
 	@Override
 	public LOTPartState getPart(String s) {
-		LOTPartState p = parts.get(s);
-		return p;
+		return parts.get(s);
 	}
 
 	@Override
@@ -158,7 +155,7 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 	}
 
 	public boolean isRunning() {
-		return tasks.size() > 0;
+		return !tasks.isEmpty();
 	}
 
 	public LVector getVector(double x, double y, double z) {

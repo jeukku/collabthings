@@ -57,7 +57,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTScript script = new LOTScript(e);
 		String nscript = "function info(){} function run(e) { e.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0)); } ";
 		assertTrue(script.setScript(nscript));
-		rune.addTask(script, null);
+		rune.addTask(script, (Object[]) null);
 		LOTSimulation s = new LOTSimpleSimulation(rune);
 
 		assertTrue(s.run());

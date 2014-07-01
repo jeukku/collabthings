@@ -7,14 +7,16 @@ public class LOTStepRunner {
 
 	public LOTStepRunner(final double maxstep, final StepListener listener) {
 		this.maxstep = maxstep;
-		this.thread = new Thread(() -> {
-			try {
-				runLoop(listener);
-			} finally {
-				thread = null;
-			}
-		});
+		this.thread = new Thread(() -> launchLoop(listener));
 		this.thread.start();
+	}
+
+	private void launchLoop(final StepListener listener) {
+		try {
+			runLoop(listener);
+		} finally {
+			thread = null;
+		}
 	}
 
 	private void runLoop(final StepListener listener) {
