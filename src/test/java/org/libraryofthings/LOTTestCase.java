@@ -10,6 +10,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTObject;
 import org.libraryofthings.model.LOTScript;
 import org.xml.sax.SAXException;
@@ -28,6 +29,9 @@ public class LOTTestCase extends TestCase {
 	private static final int MAX_OBJECT_WAITTIME = 30000;
 	private static final String PREFERENCES_RUNAGAINSTSERVICE = "lot.test.useservice";
 	//
+	private static final double ACCEPTED_DIFFERENCE = 0.000000000001;
+
+	//
 	private Set<LOTEnvironment> clients = new HashSet<LOTEnvironment>();
 	LLog log = LLog.getLogger(this);
 	private int usercounter = 0;
@@ -42,10 +46,11 @@ public class LOTTestCase extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		log.info("**************** SETUP TEST " + getName() + " ************** ");
+		log.info("**************** SETUP TEST " + getName()
+				+ " ************** ");
 		super.setUp();
 	}
-	
+
 	public LOTEnvironment getNewEnv() throws IOException, SAXException {
 		boolean bind = usercounter >= 0 ? true : false;
 
@@ -149,5 +154,16 @@ public class LOTTestCase extends TestCase {
 		br.close();
 		sw.close();
 		return sw.getBuffer().toString();
+	}
+
+	protected void assertReayllyClose(LVector a, LVector b) {
+		assertReallyClose(a.getX(), b.getX());
+		assertReallyClose(a.getY(), b.getY());
+		assertReallyClose(a.getZ(), b.getZ());
+	}
+
+	protected void assertReallyClose(double valuea, double valueb) {
+		assertTrue("expecting " + valuea + ",but is " + valueb,
+				Math.abs(valuea - valueb) < ACCEPTED_DIFFERENCE);
 	}
 }

@@ -5,7 +5,11 @@ import java.io.IOException;
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.RunEnvironment;
+import org.libraryofthings.environment.LOTToolState;
+import org.libraryofthings.integrationtests.ReallySimpleSuperheroRobot;
+import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTScript;
+import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.simulation.LOTSimpleSimulation;
 import org.libraryofthings.simulation.LOTSimulation;
 import org.libraryofthings.simulation.LOTSimulationEnvironment;
@@ -39,5 +43,26 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		assertTrue(simulation.run());
 		assertEquals(testvalue, runenv.getParameter("testparam"));
+	}
+
+	public void testSimpleRobotSimulation() throws IOException, SAXException {
+		LOTEnvironment e = getNewEnv();
+		RunEnvironment rune = new LOTSimulationEnvironment(e);
+
+		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(e,
+				rune);
+		rune.addToolUser(robot);
+		LOTToolState toolstate = rune.addTool("tool", new LOTTool(e));
+		//
+		LOTScript script = new LOTScript(e);
+		String nscript = "function info(){} function run(e) { e.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0)); } ";
+		assertTrue(script.setScript(nscript));
+		rune.addTask(script, null);
+		LOTSimulation s = new LOTSimpleSimulation(rune);
+
+		assertTrue(s.run());
+		//
+		LVector l = toolstate.getLocation();
+		assertReayllyClose(new LVector(10, 0, 0), l);
 	}
 }

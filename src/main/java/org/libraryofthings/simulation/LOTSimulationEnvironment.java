@@ -22,6 +22,8 @@ import waazdoh.client.model.MID;
 import waazdoh.util.MStringID;
 
 public class LOTSimulationEnvironment implements RunEnvironment {
+	private static final double MAX_STEP = 0.01;
+	//
 	private Map<String, LOTPartState> parts = new HashMap<String, LOTPartState>();
 	private Map<String, LOTScript> scripts = new HashMap<String, LOTScript>();
 	private Map<String, LOTToolState> tools = new HashMap<String, LOTToolState>();
@@ -35,6 +37,20 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 
 	public LOTSimulationEnvironment(final LOTEnvironment nenv) {
 		this.env = nenv;
+	}
+
+	@Override
+	public void start() {
+		new LOTStepRunner(MAX_STEP, (dtime) -> {
+			return step(dtime);
+		});
+	}
+
+	private boolean step(double dtime) {
+		for (LOTToolUser tooluser : toolusers) {
+			tooluser.step(dtime);
+		}
+		return isRunning();
 	}
 
 	@Override
@@ -143,5 +159,9 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 
 	public boolean isRunning() {
 		return tasks.size() > 0;
+	}
+
+	public LVector getVector(double x, double y, double z) {
+		return new LVector(x, y, z);
 	}
 }

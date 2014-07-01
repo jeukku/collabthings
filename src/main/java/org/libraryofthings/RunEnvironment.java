@@ -48,4 +48,6 @@ public interface RunEnvironment {
 
 	boolean isRunning();
 
+	void start();
+
 }

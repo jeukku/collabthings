@@ -8,4 +8,5 @@ public interface LOTToolUser {
 
 	void setTool(LOTToolState lotToolState);
 
+	void step(double dtime);
 }

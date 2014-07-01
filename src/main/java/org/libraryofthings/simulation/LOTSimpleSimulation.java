@@ -17,6 +17,8 @@ public class LOTSimpleSimulation implements LOTSimulation {
 
 	@Override
 	public boolean run() {
+		env.start();
+		//
 		List<LOTTask> tasks = env.getTasks();
 		for (LOTTask task : tasks) {
 			if (!task.run(env)) {

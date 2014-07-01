@@ -146,6 +146,9 @@ public final class LOTScript implements ServiceObjectData {
 
 	public boolean run(final RunEnvironment e, Object... params) {
 		try {
+			if (params == null) {
+				params = new Object[0];
+			}
 			inv.invokeFunction("run", e, params);
 			return true;
 		} catch (NoSuchMethodException | ScriptException e1) {

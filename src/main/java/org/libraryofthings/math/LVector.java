@@ -92,6 +92,10 @@ public final class LVector {
 		set(v.mapMultiply(d));
 	}
 
+	public void normalize() {
+		set(v.mapDivide(length()));
+	}
+
 	public JBean getBean() {
 		String name = "vector";
 		return getBean(name);
@@ -111,4 +115,9 @@ public final class LVector {
 		v.setEntry(Z, b.getDoubleValue("z"));
 	}
 
+	public LVector getNormalized() {
+		LVector c = copy();
+		c.normalize();
+		return c;
+	}
 }

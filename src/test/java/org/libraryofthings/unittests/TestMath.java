@@ -6,7 +6,6 @@ import org.libraryofthings.math.LVector;
 public final class TestMath extends LOTTestCase {
 
 	private static final double LENGTH_1_1_1 = 1.7320508075688;
-	private static final double ACCEPTED_DIFFERENCE = 0.000000000001;
 
 	public void testVectorLength() {
 		LVector v = new LVector(1, 0, 0);
@@ -40,8 +39,9 @@ public final class TestMath extends LOTTestCase {
 		assertReallyClose(v.length(), LENGTH_1_1_1);
 	}
 
-	private void assertReallyClose(double valuea, double valueb) {
-		assertTrue("expecting " + valueb + ",but is " + valuea,
-				Math.abs(valuea - valueb) < ACCEPTED_DIFFERENCE);
+	public void testNormalize() {
+		LVector l = new LVector(2, 2, 2);
+		l.normalize();
+		assertReallyClose(l.length(), 1.0);
 	}
 }
