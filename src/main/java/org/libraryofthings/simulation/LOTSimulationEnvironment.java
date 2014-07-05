@@ -22,8 +22,6 @@ import waazdoh.client.model.MID;
 import waazdoh.util.MStringID;
 
 public class LOTSimulationEnvironment implements RunEnvironment {
-	private static final double MAX_STEP = 0.01;
-	//
 	private Map<String, LOTPartState> parts = new HashMap<String, LOTPartState>();
 	private Map<String, LOTScript> scripts = new HashMap<String, LOTScript>();
 	private Map<String, LOTToolState> tools = new HashMap<String, LOTToolState>();
@@ -34,21 +32,26 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 	private LOTEnvironment env;
 	private LLog log = LLog.getLogger(this);
 	private LOTPartState basepart;
+	private boolean stopped;
 
 	public LOTSimulationEnvironment(final LOTEnvironment nenv) {
 		this.env = nenv;
 	}
 
-	@Override
-	public void start() {
-		new LOTStepRunner(MAX_STEP, dtime -> step(dtime));
-	}
-
-	private boolean step(double dtime) {
+	public boolean step(double dtime) {
 		for (LOTToolUser tooluser : toolusers) {
 			tooluser.step(dtime);
 		}
 		return isRunning();
+	}
+
+	public boolean isRunning() {
+		return !stopped;
+	}
+
+	@Override
+	public void stop() {
+		stopped = true;
 	}
 
 	@Override
@@ -83,12 +86,23 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 	@Override
 	public void addTask(final LOTScript s, final Object... params) {
 		LOTTask task = new LOTTask(env, s, params);
-		tasks.add(task);
+		synchronized (tasks) {
+			tasks.add(task);
+		}
 	}
 
 	@Override
 	public List<LOTTask> getTasks() {
-		return new LinkedList<>(tasks);
+		synchronized (tasks) {
+			return new LinkedList<>(tasks);
+		}
+	}
+
+	@Override
+	public void removeTask(LOTTask task) {
+		synchronized (tasks) {
+			tasks.remove(task);
+		}
 	}
 
 	@Override
@@ -152,10 +166,6 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 			return tooluser;
 		}
 		return null;
-	}
-
-	public boolean isRunning() {
-		return !tasks.isEmpty();
 	}
 
 	public LVector getVector(double x, double y, double z) {

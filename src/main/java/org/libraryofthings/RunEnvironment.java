@@ -36,7 +36,9 @@ public interface RunEnvironment {
 
 	List<LOTTask> getTasks();
 
-	void addTask(LOTScript s, Object ... params);
+	void addTask(LOTScript s, Object... params);
+
+	void removeTask(LOTTask task);
 
 	LOTPart getOriginalPart(String s);
 
@@ -48,6 +50,8 @@ public interface RunEnvironment {
 
 	boolean isRunning();
 
-	void start();
+	boolean step(double dtime);
+
+	void stop();
 
 }

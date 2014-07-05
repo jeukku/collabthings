@@ -21,6 +21,7 @@ import org.xml.sax.SAXException;
 public final class ITTestBuildABox extends LOTTestCase {
 
 	private static final int PARTS_IN_A_BOX = 6;
+	private static final int MAX_SIMULATION_RUNTIME = 20000;
 
 	public void testBox() throws IOException, SAXException,
 			NoSuchMethodException, ScriptException {
@@ -61,7 +62,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		// 
 		assembyscript.run(runenv);
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
-		simulation.run();
+		simulation.run(MAX_SIMULATION_RUNTIME);
 		//
 		assertBuiltBox(box, destinationpart);
 	}

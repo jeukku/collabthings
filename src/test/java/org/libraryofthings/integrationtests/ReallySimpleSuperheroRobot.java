@@ -18,7 +18,6 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private LVector targetlocation;
 	private LVector location = new LVector();
 	private LVector normal = new LVector(1, 0, 0);
-	private Thread thread;
 	//
 	private LLog log = LLog.getLogger(this);
 

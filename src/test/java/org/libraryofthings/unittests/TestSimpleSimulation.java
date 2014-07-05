@@ -17,6 +17,8 @@ import org.xml.sax.SAXException;
 
 public class TestSimpleSimulation extends LOTTestCase {
 
+	private static final int MAX_SIMUALTION_RUNTIME = 20000;
+
 	public void testFailingScript() throws IOException, SAXException {
 		LOTEnvironment env = getNewEnv();
 
@@ -26,7 +28,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 		RunEnvironment runenv = new LOTSimulationEnvironment(env);
 		runenv.addTask(s, "test_fail");
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
-		assertFalse(simulation.run());
+		assertFalse(simulation.run(MAX_SIMUALTION_RUNTIME));
 	}
 
 	public void testSimpleScript() throws IOException, SAXException {
@@ -41,7 +43,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 		RunEnvironment runenv = new LOTSimulationEnvironment(env);
 		runenv.addTask(s, "test");
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
-		assertTrue(simulation.run());
+		assertTrue(simulation.run(MAX_SIMUALTION_RUNTIME));
 		assertEquals(testvalue, runenv.getParameter("testparam"));
 	}
 
@@ -60,7 +62,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 		rune.addTask(script, (Object[]) null);
 		LOTSimulation s = new LOTSimpleSimulation(rune);
 
-		assertTrue(s.run());
+		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
 		//
 		LVector l = toolstate.getLocation();
 		assertReayllyClose(new LVector(10, 0, 0), l);
