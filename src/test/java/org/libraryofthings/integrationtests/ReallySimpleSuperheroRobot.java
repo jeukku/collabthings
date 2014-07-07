@@ -2,9 +2,9 @@ package org.libraryofthings.integrationtests;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTEnvironment;
-import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.environment.LOTToolState;
 import org.libraryofthings.environment.LOTToolUser;
+import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.math.LVector;
 
 public class ReallySimpleSuperheroRobot implements LOTToolUser {

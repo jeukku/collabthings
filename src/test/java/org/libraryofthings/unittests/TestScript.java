@@ -6,7 +6,7 @@ import javax.script.ScriptException;
 
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.RunEnvironment;
+import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.simulation.LOTSimulationEnvironment;
 import org.xml.sax.SAXException;

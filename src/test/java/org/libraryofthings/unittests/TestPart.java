@@ -47,7 +47,8 @@ public final class TestPart extends LOTTestCase {
 		LOTSubPart bsubpart = part.getSubParts().get(0);
 		assertEquals(bsubpart.getPart().getServiceObject().getID(), subpart
 				.getPart().getServiceObject().getID());
-
+		assertEquals(subpart.toString(), bsubpart.toString());
+		//
 		assertEquals(
 				bpart,
 				benv.getObjectFactory().getPart(
@@ -65,6 +66,18 @@ public final class TestPart extends LOTTestCase {
 				new LVector(10, 10, 10).toString());
 		assertEquals(subpart.getNormal().toString(),
 				new LVector(0, 1, 0).toString());
+	}
+
+	public void testSubPartOrientation2() throws IOException, SAXException {
+		LOTEnvironment e = getNewEnv();
+		LOTPart p = new LOTPart(e);
+		LOTSubPart subpart = new LOTSubPart(p, e);
+		subpart.setPart(new LOTPart(e));
+		subpart.setOrientation(new LVector(10, 10, 10), new LVector(0, 1, 0));
+		LOTSubPart bsubpart = p.addSubPart(subpart);
+		//
+		assertReayllyClose(subpart.getLocation(), bsubpart.getLocation());
+		assertReayllyClose(subpart.getNormal(), bsubpart.getNormal());
 	}
 
 	public void testLoadRandomID() throws IOException, SAXException {

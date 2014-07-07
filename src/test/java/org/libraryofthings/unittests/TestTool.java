@@ -6,7 +6,6 @@ import javax.script.ScriptException;
 
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.LOTToolException;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.xml.sax.SAXException;
@@ -44,9 +43,9 @@ public final class TestTool extends LOTTestCase {
 		lotScript
 				.setScript("function info() { return \"testing tool script\"; }");
 		//
-		t.newModel();
+		t.newPart();
 		String testbinarydatastring = "TESTIBINARYDATA";
-		t.getModel().getBinary()
+		t.getPart().getModel().getBinary()
 				.add(new String(testbinarydatastring).getBytes());
 		//
 		t.save();
@@ -63,18 +62,25 @@ public final class TestTool extends LOTTestCase {
 		assertNotNull(bscript);
 		assertEquals(lotScript.getScript(), bscript.getScript());
 		//
-		String sdata = new String(btool.getModel().getBinary().asByteBuffer());
+		String sdata = new String(btool.getPart().getModel().getBinary()
+				.asByteBuffer());
 		assertEquals(testbinarydatastring, sdata);
+	}
+
+	public void testNullPart() throws IOException, SAXException {
+		LOTTool t = new LOTTool(getNewEnv());
+		t.save();
+		t.publish();
+		//
+		LOTTool b = getNewEnv().getObjectFactory().getTool(
+				t.getServiceObject().getID().getStringID());
+		assertTrue(b.isReady());
+		assertTrue(b.toString().indexOf("LOTTool") >= 0);
 	}
 
 	public void testCallUnknownScript() throws IOException, SAXException {
 		LOTEnvironment e = getNewEnv();
 		LOTTool tool = e.getObjectFactory().getTool();
-
-		try {
-			tool.call(null, "FAIL", new Object[] { "test" });
-		} catch (LOTToolException ex) {
-			assertNotNull(ex);
-		}
+		assertNull(tool.getScript("FAIL"));
 	}
 }

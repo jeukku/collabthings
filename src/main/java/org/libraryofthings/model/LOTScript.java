@@ -5,7 +5,6 @@ import javax.script.ScriptException;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTEnvironment;
-import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.scripting.JavaScriptLoader;
 import org.libraryofthings.scripting.ScriptLoader;
 
@@ -129,27 +128,10 @@ public final class LOTScript implements ServiceObjectData {
 	/**
 	 * Invokes run -function in the script.
 	 * 
-	 * @param env
-	 * 
-	 * @param RuntimeEnvironment
-	 * @return
 	 */
-	public boolean run(final RunEnvironment runenv) {
+	public boolean run(Object... params) {
 		try {
-			inv.invokeFunction("run", runenv);
-			return true;
-		} catch (NoSuchMethodException | ScriptException e) {
-			handleException(e);
-			return false;
-		}
-	}
-
-	public boolean run(final RunEnvironment e, Object... params) {
-		try {
-			if (params == null) {
-				params = new Object[0];
-			}
-			inv.invokeFunction("run", e, params);
+			inv.invokeFunction("run", params);
 			return true;
 		} catch (NoSuchMethodException | ScriptException e1) {
 			handleException(e1);

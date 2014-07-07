@@ -7,7 +7,7 @@ import javax.script.ScriptException;
 
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.RunEnvironment;
+import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
@@ -59,7 +59,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		runenv.addTool("tool", tool);
 		runenv.addScript("MoveAndAttach",
 				loadScript(env, "buildabox_moveandattach.js"));
-		// 
+		//
 		assembyscript.run(runenv);
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		simulation.run(MAX_SIMULATION_RUNTIME);
@@ -78,7 +78,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 			LOTSubPart destsubpart = destsubparts.get(i);
 			String boxlstring = boxsubpart.getLocation().toString();
 			String destlstring = destsubpart.getLocation().toString();
-			assertEquals(boxlstring, destlstring);
+			assertEquals("subpart index " + i, boxlstring, destlstring);
 			assertEquals(boxsubpart.getNormal().toString(), destsubpart
 					.getNormal().toString());
 		}
@@ -110,17 +110,17 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		int partindex = 0;
 		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(0, -1, 0), new LVector(0, 1, 0));
+				.setOrientation(new LVector(0, -2, 0), new LVector(0, 1, 0));
 		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(-1, 0, 0), new LVector(-1, 0, 0));
+				.setOrientation(new LVector(-2, 0, 0), new LVector(-1, 0, 0));
 		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(1, 0, 0), new LVector(1, 0, 0));
+				.setOrientation(new LVector(2, 0, 0), new LVector(1, 0, 0));
 		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(0, 0, -1), new LVector(0, 0, -1));
+				.setOrientation(new LVector(0, 0, -2), new LVector(0, 0, -1));
 		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(0, 0, 1), new LVector(0, 0, 1));
+				.setOrientation(new LVector(0, 0, 2), new LVector(0, 0, 1));
 		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(0, 1, 0), new LVector(0, 1, 0));
+				.setOrientation(new LVector(0, 2, 0), new LVector(0, 1, 0));
 		return box;
 	}
 

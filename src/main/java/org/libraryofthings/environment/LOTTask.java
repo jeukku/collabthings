@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.libraryofthings.LOTEnvironment;
-import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.model.LOTScript;
 
 public final class LOTTask {

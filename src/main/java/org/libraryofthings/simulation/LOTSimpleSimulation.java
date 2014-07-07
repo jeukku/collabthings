@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.environment.LOTTask;
+import org.libraryofthings.environment.RunEnvironment;
 
 import waazdoh.util.ConditionWaiter;
 

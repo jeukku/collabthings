@@ -7,11 +7,11 @@ import java.util.Map;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTEnvironment;
-import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.environment.LOTPartState;
 import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.environment.LOTToolState;
 import org.libraryofthings.environment.LOTToolUser;
+import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
@@ -85,6 +85,7 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 
 	@Override
 	public void addTask(final LOTScript s, final Object... params) {
+		log.info("addTask " + s + " params: " + params);
 		LOTTask task = new LOTTask(env, s, params);
 		synchronized (tasks) {
 			tasks.add(task);

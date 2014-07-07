@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.libraryofthings.LOTEnvironment;
-import org.libraryofthings.LOTToolException;
-import org.libraryofthings.RunEnvironment;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -24,7 +22,7 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 	//
 	private ServiceObject o;
 	private String name = "tool" + (LOTTool.counter++);
-	private LOT3DModel model;
+	private LOTPart part;
 	private Map<String, LOTScript> scripts = new HashMap<String, LOTScript>();
 	private LOTEnvironment env;
 
@@ -45,8 +43,8 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 	public JBean getBean() {
 		JBean b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
-		if (model != null) {
-			b.addValue(VALUENAME_MODELID, model.getServiceObject().getID());
+		if (part != null) {
+			b.addValue(VALUENAME_MODELID, part.getServiceObject().getID());
 		}
 		//
 		JBean ssbean = b.add(VALUENAME_SCRIPTS);
@@ -70,8 +68,8 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 		setName(bean.getValue(VALUENAME_NAME));
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
 		if (modelid != null) {
-			model = new LOT3DModel(env);
-			model.load(modelid);
+			part = newPart();
+			part.load(modelid);
 		}
 		//
 		JBean ssbean = bean.get(VALUENAME_SCRIPTS);
@@ -103,7 +101,7 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 
 	@Override
 	public boolean isReady() {
-		if (model != null && !model.isReady()) {
+		if (part != null && !part.isReady()) {
 			return false;
 		}
 
@@ -115,8 +113,8 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 	}
 
 	public void save() {
-		if (model != null) {
-			model.save();
+		if (part != null) {
+			part.save();
 		}
 
 		for (LOTScript s : scripts.values()) {
@@ -127,8 +125,8 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 	}
 
 	public void publish() {
-		if (model != null) {
-			model.publish();
+		if (part != null) {
+			part.publish();
 		}
 
 		for (LOTScript s : scripts.values()) {
@@ -138,24 +136,13 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 		getServiceObject().publish();
 	}
 
-	public LOT3DModel getModel() {
-		return model;
+	public LOTPart getPart() {
+		return part;
 	}
 
-	public void newModel() {
-		model = new LOT3DModel(env);
-	}
-
-	public void call(final RunEnvironment runenv, final String scriptname,
-			Object params[]) throws LOTToolException {
-		LOTScript script = getScript(scriptname);
-
-		if (script != null) {
-			script.run(runenv, params);
-		} else {
-			throw new LOTToolException("Script called '" + scriptname
-					+ "' does not exist in " + this);
-		}
+	public LOTPart newPart() {
+		part = new LOTPart(env);
+		return part;
 	}
 
 	@Override

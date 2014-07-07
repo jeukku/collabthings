@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.RunEnvironment;
 import org.libraryofthings.environment.LOTToolState;
+import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.integrationtests.ReallySimpleSuperheroRobot;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTScript;

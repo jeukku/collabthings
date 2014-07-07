@@ -18,6 +18,9 @@ public class LOTStepRunner {
 	private void launchLoop(final StepListener listener) {
 		long st = System.currentTimeMillis();
 		try {
+			synchronized (this) {
+				this.notifyAll();
+			}
 			runLoop(listener);
 		} finally {
 			log.info("Exiting in " + (System.currentTimeMillis() - st) + "ms");
@@ -38,6 +41,12 @@ public class LOTStepRunner {
 				break;
 			}
 		}
+		thread = null;
+		stopped = true;
+		//
+		synchronized (this) {
+			this.notifyAll();
+		}
 	}
 
 	public interface StepListener {
@@ -46,6 +55,10 @@ public class LOTStepRunner {
 
 	public void stop() {
 		stopped = true;
+	}
+
+	public boolean isStopped() {
+		return stopped && thread == null;
 	}
 
 }

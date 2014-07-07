@@ -1,11 +1,8 @@
-package org.libraryofthings;
+package org.libraryofthings.environment;
 
 import java.util.List;
 
-import org.libraryofthings.environment.LOTPartState;
-import org.libraryofthings.environment.LOTTask;
-import org.libraryofthings.environment.LOTToolState;
-import org.libraryofthings.environment.LOTToolUser;
+import org.libraryofthings.LLog;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
