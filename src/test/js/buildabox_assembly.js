@@ -14,5 +14,5 @@ function run(runenv) {
 }
 
 function moveAndAttach(runenv, subpart, destpart) {
-	runenv.addTask(runenv.getScript("MoveAndAttach"), subpart, destpart);
+	runenv.addTask(runenv.getScript("MoveAndAttach"), subpart, destpart).waitUntilFinished();
 }

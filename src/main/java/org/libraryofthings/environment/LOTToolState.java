@@ -17,6 +17,7 @@ public class LOTToolState {
 	private LVector normal = new LVector(1, 0, 0);
 	//
 	private LLog log = LLog.getLogger(this);
+	private boolean inuse;
 
 	public LOTToolState(final RunEnvironment runenv, final LOTTool ntool) {
 		this.env = runenv;
@@ -49,7 +50,6 @@ public class LOTToolState {
 	}
 
 	public void moveTo(LVector l, LVector n) {
-		log.info("moving to l:" + l + " n:" + n);
 		this.env.requestMove(this, l, n);
 	}
 
@@ -62,6 +62,18 @@ public class LOTToolState {
 		this.normal.set(n);
 	}
 
+	public void setAvailable() {
+		this.inuse = false;
+	}
+	
+	public void setInUse() {
+		this.inuse = true;
+	}
+	
+	public boolean isInUse() {
+		return this.inuse;
+	}
+	
 	@Override
 	public String toString() {
 		return "LOTToolState " + this.tool;

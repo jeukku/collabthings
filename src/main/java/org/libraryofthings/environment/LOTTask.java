@@ -6,12 +6,15 @@ import java.util.List;
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.model.LOTScript;
 
+import waazdoh.util.ConditionWaiter;
+
 public final class LOTTask {
 	private List<LOTTask> subtasks = new LinkedList<LOTTask>();
 	//
 	private LOTEnvironment env;
 	private LOTScript s;
 	private Object[] params;
+	private boolean isrun;
 
 	public LOTTask(final LOTEnvironment nenv, LOTScript s2, Object[] params2) {
 		this.env = nenv;
@@ -30,7 +33,12 @@ public final class LOTTask {
 	}
 
 	public boolean run(RunEnvironment runenv) {
-		return s.run(runenv, params);
+		boolean ret = s.run(runenv, params);
+		isrun = true;
+		return ret;
 	}
 
+	public void waitUntilFinished() {
+		new ConditionWaiter(() -> this.isrun, 0);
+	}
 }

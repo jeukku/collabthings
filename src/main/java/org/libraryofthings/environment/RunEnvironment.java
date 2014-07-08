@@ -33,7 +33,7 @@ public interface RunEnvironment {
 
 	List<LOTTask> getTasks();
 
-	void addTask(LOTScript s, Object... params);
+	LOTTask addTask(LOTScript s, Object... params);
 
 	void removeTask(LOTTask task);
 

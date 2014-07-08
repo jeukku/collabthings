@@ -19,6 +19,7 @@ import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.LOTTool;
 
 import waazdoh.client.model.MID;
+import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MStringID;
 
 public class LOTSimulationEnvironment implements RunEnvironment {
@@ -84,12 +85,13 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 	}
 
 	@Override
-	public void addTask(final LOTScript s, final Object... params) {
+	public LOTTask addTask(final LOTScript s, final Object... params) {
 		log.info("addTask " + s + " params: " + params);
 		LOTTask task = new LOTTask(env, s, params);
 		synchronized (tasks) {
 			tasks.add(task);
 		}
+		return task;
 	}
 
 	@Override
@@ -142,7 +144,9 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 	@Override
 	public LOTToolState getTool(String id) {
 		LOTToolState tool = tools.get(id);
+		//
 		if (tool != null) {
+			new ConditionWaiter(() -> !tool.isInUse() || !isRunning(), 0);
 			return tool;
 		} else {
 			MStringID stringid = new MStringID(id);

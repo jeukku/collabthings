@@ -10,6 +10,8 @@ function run(runenv, params) {
 	runenv.log().info("moveandattach destpart " + destpart);
 	
 	var tool = runenv.getTool('tool');
+	tool.setInUse();
+	
 	var partsource = runenv.getTool('source');
 	partsource.call('need', subpart);
 	tool.moveTo(partsource.getLocation());
@@ -21,6 +23,7 @@ function run(runenv, params) {
 			
 	tool.moveTo(destpart.getPart().getLocation());
 	tool.call('attach', subpart, destpart);
+	tool.setAvailable();
 	
 	runenv.log().info("moveAndAttach done");
 }

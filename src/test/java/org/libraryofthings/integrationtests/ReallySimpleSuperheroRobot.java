@@ -56,7 +56,6 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 				LVector direction = distance.getNormalized();
 
 				direction.mult(length);
-				log.info("moving " + direction + " location :" + location);
 				location.add(direction);
 				tool.setLocation(location, targetnormal);
 			}

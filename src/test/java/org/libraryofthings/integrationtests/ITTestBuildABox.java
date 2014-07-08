@@ -60,7 +60,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 		runenv.addScript("MoveAndAttach",
 				loadScript(env, "buildabox_moveandattach.js"));
 		//
-		assembyscript.run(runenv);
+		runenv.addTask(assembyscript);
+		//
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		simulation.run(MAX_SIMULATION_RUNTIME);
 		//
