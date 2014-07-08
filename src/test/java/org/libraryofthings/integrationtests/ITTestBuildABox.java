@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
 public final class ITTestBuildABox extends LOTTestCase {
 
 	private static final int PARTS_IN_A_BOX = 6;
-	private static final int MAX_SIMULATION_RUNTIME = 20000;
+	private static final int MAX_SIMULATION_RUNTIME = 60000;
 
 	public void testBox() throws IOException, SAXException,
 			NoSuchMethodException, ScriptException {
