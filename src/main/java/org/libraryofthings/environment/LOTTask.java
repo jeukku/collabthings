@@ -33,9 +33,12 @@ public final class LOTTask {
 	}
 
 	public boolean run(RunEnvironment runenv) {
-		boolean ret = s.run(runenv, params);
-		isrun = true;
-		return ret;
+		try {
+			boolean ret = s.run(runenv, params);
+			return ret;
+		} finally {
+			isrun = true;
+		}
 	}
 
 	public void waitUntilFinished() {

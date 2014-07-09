@@ -25,6 +25,7 @@ public class LOTStepRunner {
 		} finally {
 			log.info("Exiting in " + (System.currentTimeMillis() - st) + "ms");
 			thread = null;
+			stop();
 		}
 	}
 

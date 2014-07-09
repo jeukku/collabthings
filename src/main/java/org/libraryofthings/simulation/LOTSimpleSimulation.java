@@ -40,12 +40,14 @@ public class LOTSimpleSimulation implements LOTSimulation {
 	}
 
 	private void stop() {
+		log.info("Stopping");
 		env.stop();
 		runner.stop();
 	}
 
 	private void start() {
 		runner = new LOTStepRunner(MAX_STEP, dtime -> step(dtime));
+		log.info("started " + runner);
 	}
 
 	private boolean step(double dtime) {
@@ -53,7 +55,7 @@ public class LOTSimpleSimulation implements LOTSimulation {
 		return !isReady();
 	}
 
-	private boolean check() {
+	private synchronized boolean check() {
 		if (!env.getTasks().isEmpty()) {
 			final LOTTask task = env.getTasks().get(0);
 			env.removeTask(task);
@@ -65,7 +67,7 @@ public class LOTSimpleSimulation implements LOTSimulation {
 		return isReady();
 	}
 
-	private boolean isReady() {
+	private synchronized boolean isReady() {
 		return env.getTasks().isEmpty() && runningtasks.isEmpty();
 	}
 
@@ -73,6 +75,9 @@ public class LOTSimpleSimulation implements LOTSimulation {
 		if (!task.run(env)) {
 			this.allsuccess = false;
 		}
-		runningtasks.remove(task);
+
+		synchronized (this) {
+			runningtasks.remove(task);
+		}
 	}
 }

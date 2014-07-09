@@ -52,6 +52,7 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 
 	@Override
 	public void stop() {
+		log.info("Stop");
 		stopped = true;
 	}
 
