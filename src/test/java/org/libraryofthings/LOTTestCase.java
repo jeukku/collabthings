@@ -51,13 +51,18 @@ public class LOTTestCase extends TestCase {
 		super.setUp();
 	}
 
-	public LOTEnvironment getNewEnv() throws IOException, SAXException {
+	public LOTEnvironment getNewEnv() {
 		boolean bind = usercounter >= 0 ? true : false;
 
 		String username = "test_username_" + (usercounter) + "@localhost";
 		MPreferences p = new StaticTestPreferences("lottests", username);
 		usercounter++;
-		return getNewEnv(username, bind);
+		try {
+			return getNewEnv(username, bind);
+		} catch (MalformedURLException | SAXException e) {
+			assertNull(e);
+			return null;
+		}
 	}
 
 	public LOTEnvironment getNewEnv(String email, boolean bind)

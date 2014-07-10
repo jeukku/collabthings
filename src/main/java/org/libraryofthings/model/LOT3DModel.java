@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -160,8 +159,11 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 		log.info("Importing " + file);
 		FileReader fr = new FileReader(file);
 		CharBuffer sb = CharBuffer.allocate((int) file.length());
-		while (fr.read(sb) > 0)
-			;
+		while (fr.read(sb) > 0) {
+			// reading the whole file
+			;		
+		}
+		
 		fr.close();
 		sb.rewind();
 		String s = sb.toString();
@@ -218,7 +220,7 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	}
 
 	private void importReplaceURLAttribute(JBean b, String urlattribute)
-			throws IOException, FileNotFoundException {
+			throws IOException {
 		log.info("Found URL attribute " + urlattribute);
 		log.info("current dir " + new File(".").getAbsolutePath());
 		//
@@ -301,7 +303,7 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	public LVector getTranslation() {
 		return translation;
 	}
-	
+
 	public void setTranslation(LVector t) {
 		translation.set(t);
 	}

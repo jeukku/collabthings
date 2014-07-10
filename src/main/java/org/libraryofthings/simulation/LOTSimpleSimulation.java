@@ -27,15 +27,9 @@ public class LOTSimpleSimulation implements LOTSimulation {
 	public boolean run(int maxruntime) {
 		start();
 
-		//
-		/*
-		 * List<LOTTask> tasks = env.getTasks(); for (LOTTask task : tasks) { if
-		 * (!task.run(env)) { return false; } }
-		 */
-
 		new ConditionWaiter(() -> check(), maxruntime);
 		stop();
-		//
+
 		return allsuccess;
 	}
 

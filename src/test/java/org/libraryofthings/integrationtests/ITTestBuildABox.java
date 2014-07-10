@@ -23,8 +23,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 	private static final int PARTS_IN_A_BOX = 6;
 	private static final int MAX_SIMULATION_RUNTIME = 60000;
 
-	public void testBox() throws IOException, SAXException,
-			NoSuchMethodException, ScriptException {
+	public RunEnvironment testBox() throws NoSuchMethodException,
+			ScriptException, IOException {
 		LOTEnvironment env = getNewEnv();
 		assertNotNull(env);
 
@@ -41,17 +41,16 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		// Create a tool to pick up plates
 		LOTTool tool = getPickupTool(env);
-		//
-		LOTScript assembyscript = getAssemblyScript(tool, box, env);
 
-		LOTPart destinationpart = env.getObjectFactory().getPart();
+		LOTScript assembyscript = getAssemblyScript(tool, box, env);
 
 		RunEnvironment runenv = new LOTSimulationEnvironment(env);
 		runenv.addToolUser(new ReallySimpleSuperheroRobot(env, runenv));
 
 		LOTSubPart destinationsubpart = runenv.getBasePart().getPart()
 				.getPart().newSubPart();
-		destinationsubpart.setPart(destinationpart);
+
+		LOTPart destinationpart = env.getObjectFactory().getPart();
 
 		runenv.setParameter("partid", box.getServiceObject().getID());
 		runenv.addPart("destinationpart", destinationsubpart);
@@ -66,6 +65,16 @@ public final class ITTestBuildABox extends LOTTestCase {
 		simulation.run(MAX_SIMULATION_RUNTIME);
 		//
 		assertBuiltBox(box, destinationpart);
+		//
+		return runenv;
+	}
+
+	public void testBoxStack() throws NoSuchMethodException, IOException,
+			SAXException, ScriptException {
+		RunEnvironment env = testBox();
+		//
+
+		assertNotNull(env);
 	}
 
 	private void assertBuiltBox(LOTPart box, LOTPart destinationpart) {
