@@ -5,7 +5,7 @@ import waazdoh.client.binaries.MBinarySource;
 import waazdoh.client.model.CMService;
 import waazdoh.util.MPreferences;
 
-public final class LOTEnvironment {
+public final class LOTClient {
 	public static final String VERSION = "0.0.1";
 	private final String prefix = "LOT";
 	//
@@ -13,7 +13,7 @@ public final class LOTEnvironment {
 	private LOTObjectFactory factory;
 	private LLog log = LLog.getLogger(this);
 
-	public LOTEnvironment(MPreferences p, MBinarySource binarysource,
+	public LOTClient(MPreferences p, MBinarySource binarysource,
 			CMService service) {
 		client = new WClient(p, binarysource, service);
 		this.factory = new LOTObjectFactoryImpl(this);
@@ -33,7 +33,7 @@ public final class LOTEnvironment {
 	}
 
 	public String getVersion() {
-		return LOTEnvironment.VERSION;
+		return LOTClient.VERSION;
 	}
 
 	public String getPrefix() {

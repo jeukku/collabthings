@@ -3,6 +3,7 @@ package org.libraryofthings.unittests;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.simulation.LOTStepRunner;
 
+import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MTimedFlag;
 
 public final class TestStepRunner extends LOTTestCase {
@@ -21,9 +22,7 @@ public final class TestStepRunner extends LOTTestCase {
 		assertFalse(runner.isStopped());
 		assertFalse(f.isTriggered());
 		runner.stop();
-		synchronized (runner) {
-			runner.wait(2000);
-		}
+		new ConditionWaiter(() -> runner.isStopped(), 20000);
 		assertTrue(runner.isStopped());
 		assertFalse(f.isTriggered());
 	}

@@ -3,6 +3,7 @@ package org.libraryofthings.environment;
 import java.util.List;
 
 import org.libraryofthings.LLog;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
@@ -50,5 +51,11 @@ public interface RunEnvironment {
 	boolean step(double dtime);
 
 	void stop();
+
+	LOTClient getClient();
+
+	RunEnvironment getParent();
+
+	LOTPool getPool();
 
 }

@@ -4,7 +4,7 @@ import javax.script.Invocable;
 import javax.script.ScriptException;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.scripting.JavaScriptLoader;
 import org.libraryofthings.scripting.ScriptLoader;
 
@@ -29,17 +29,18 @@ public final class LOTScript implements ServiceObjectData {
 
 	//
 	private LLog log = LLog.getLogger(this);
-	private final LOTEnvironment env;
+	private final LOTClient env;
 
 	/**
 	 * Creates a new script with random ID.
 	 * 
 	 * @param env
 	 */
-	public LOTScript(final LOTEnvironment env) {
+	public LOTScript(final LOTClient env) {
 		this.env = env;
 		o = new ServiceObject(BEANNAME, env.getClient(), this,
 				env.getVersion(), env.getPrefix());
+		setScript("function run(env) { env.log().info('Running ' + this); } function info() { return 'default script'; } ");
 	}
 
 	@Override

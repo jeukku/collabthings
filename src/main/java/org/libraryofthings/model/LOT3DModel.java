@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
 import org.xml.sax.SAXException;
 
@@ -40,13 +40,13 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 	private final ServiceObject o;
 	private String name = "3dmodel" + (LOT3DModel.counter++);
 	private MBinaryID binaryid;
-	private final LOTEnvironment env;
+	private final LOTClient env;
 	private LLog log = LLog.getLogger(this);
 	private List<Binary> childbinaries = new LinkedList<Binary>();
 	private double scale = 1.0;
 	private LVector translation = new LVector();
 
-	public LOT3DModel(final LOTEnvironment nenv) {
+	public LOT3DModel(final LOTClient nenv) {
 		this.env = nenv;
 		o = new ServiceObject(BEANNAME, nenv.getClient(), this,
 				nenv.getVersion(), nenv.getPrefix());

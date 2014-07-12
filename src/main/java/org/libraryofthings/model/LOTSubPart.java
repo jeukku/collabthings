@@ -1,6 +1,6 @@
 package org.libraryofthings.model;
 
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
 
 import waazdoh.client.model.JBean;
@@ -19,7 +19,7 @@ public final class LOTSubPart {
 	 * @param nparent
 	 * @param env
 	 */
-	public LOTSubPart(final LOTPart nparent, final LOTEnvironment env) {
+	public LOTSubPart(final LOTPart nparent, final LOTClient env) {
 		this.parent = nparent;
 		part = new LOTPart(env);
 	}

@@ -1,7 +1,7 @@
 package org.libraryofthings.environment;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
@@ -9,12 +9,12 @@ import org.libraryofthings.model.LOTSubPart;
 public class LOTPartState {
 
 	private LOTSubPart part;
-	private LOTEnvironment env;
+	private LOTClient env;
 	private LVector location = new LVector();
 	//
 	private LLog log = LLog.getLogger(this);
 
-	public LOTPartState(final LOTEnvironment env, final LOTSubPart part) {
+	public LOTPartState(final LOTClient env, final LOTSubPart part) {
 		this.env = env;
 		this.part = part;
 	}

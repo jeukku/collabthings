@@ -6,6 +6,7 @@ import java.util.List;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTToolException;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 
@@ -20,14 +21,14 @@ public class LOTToolState {
 	private boolean inuse;
 
 	public LOTToolState(final RunEnvironment runenv, final LOTTool ntool) {
-		this.env = runenv;
+		this.env = new LOTRunEnvironmentImpl(runenv);
 		this.tool = ntool;
 	}
 
 	public void call(final String scriptname, final Object... params)
 			throws LOTToolException {
 		log.info("call " + scriptname + " params:" + params);
-		
+
 		List<Object> l = new LinkedList<Object>();
 		l.add(this);
 		for (Object o : params) {
@@ -50,7 +51,7 @@ public class LOTToolState {
 	}
 
 	public void moveTo(LVector l, LVector n) {
-		this.env.requestMove(this, l, n);
+		this.env.getParent().requestMove(this, l, n);
 	}
 
 	public LVector getLocation() {
@@ -65,17 +66,21 @@ public class LOTToolState {
 	public void setAvailable() {
 		this.inuse = false;
 	}
-	
+
 	public void setInUse() {
 		this.inuse = true;
 	}
-	
+
 	public boolean isInUse() {
 		return this.inuse;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "LOTToolState " + this.tool;
+	}
+
+	public RunEnvironment getEnvironment() {
+		return env;
 	}
 }

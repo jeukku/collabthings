@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.ServiceObject;
@@ -21,11 +21,11 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 	private ServiceObject o;
 	private String name = "part";
 	private LOT3DModel model;
-	LOTEnvironment env;
+	LOTClient env;
 
 	private List<LOTSubPart> subparts = new LinkedList<LOTSubPart>();
 
-	public LOTPart(final LOTEnvironment nenv) {
+	public LOTPart(final LOTClient nenv) {
 		this.env = nenv;
 		o = new ServiceObject(BEANNAME, nenv.getClient(), this,
 				nenv.getVersion(), nenv.getPrefix());

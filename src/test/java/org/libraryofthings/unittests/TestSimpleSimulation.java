@@ -2,8 +2,9 @@ package org.libraryofthings.unittests;
 
 import java.io.IOException;
 
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
+import org.libraryofthings.environment.LOTRunEnvironmentImpl;
 import org.libraryofthings.environment.LOTToolState;
 import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.integrationtests.ReallySimpleSuperheroRobot;
@@ -12,7 +13,6 @@ import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.simulation.LOTSimpleSimulation;
 import org.libraryofthings.simulation.LOTSimulation;
-import org.libraryofthings.simulation.LOTSimulationEnvironment;
 import org.xml.sax.SAXException;
 
 public class TestSimpleSimulation extends LOTTestCase {
@@ -20,19 +20,19 @@ public class TestSimpleSimulation extends LOTTestCase {
 	private static final int MAX_SIMUALTION_RUNTIME = 20000;
 
 	public void testFailingScript() throws IOException, SAXException {
-		LOTEnvironment env = getNewEnv();
+		LOTClient env = getNewEnv();
 
 		LOTScript s = new LOTScript(env);
 		s.setScript("function test() {}");
 
-		RunEnvironment runenv = new LOTSimulationEnvironment(env);
+		RunEnvironment runenv = new LOTRunEnvironmentImpl(env);
 		runenv.addTask(s, "test_fail");
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		assertFalse(simulation.run(MAX_SIMUALTION_RUNTIME));
 	}
 
 	public void testSimpleScript() throws IOException, SAXException {
-		LOTEnvironment env = getNewEnv();
+		LOTClient env = getNewEnv();
 
 		String testvalue = "testvalue" + System.currentTimeMillis();
 		//
@@ -40,7 +40,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 		s.setScript("function info() {} function run(env, params) { env.setParameter('testparam', '"
 				+ testvalue + "'); }");
 
-		RunEnvironment runenv = new LOTSimulationEnvironment(env);
+		RunEnvironment runenv = new LOTRunEnvironmentImpl(env);
 		runenv.addTask(s, "test");
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		assertTrue(simulation.run(MAX_SIMUALTION_RUNTIME));
@@ -48,8 +48,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 	}
 
 	public void testSimpleRobotSimulation() throws IOException, SAXException {
-		LOTEnvironment e = getNewEnv();
-		RunEnvironment rune = new LOTSimulationEnvironment(e);
+		LOTClient e = getNewEnv();
+		RunEnvironment rune = new LOTRunEnvironmentImpl(e);
 
 		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(e,
 				rune);
@@ -65,6 +65,6 @@ public class TestSimpleSimulation extends LOTTestCase {
 		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
 		//
 		LVector l = toolstate.getLocation();
-		assertReayllyClose(new LVector(10, 0, 0), l);
+		assertReallyClose(new LVector(10, 0, 0), l);
 	}
 }

@@ -32,14 +32,14 @@ public class LOTTestCase extends TestCase {
 	private static final double ACCEPTED_DIFFERENCE = 0.000000000001;
 
 	//
-	private Set<LOTEnvironment> clients = new HashSet<LOTEnvironment>();
+	private Set<LOTClient> clients = new HashSet<LOTClient>();
 	LLog log = LLog.getLogger(this);
 	private int usercounter = 0;
 
 	@Override
 	protected void tearDown() throws Exception {
 		StaticTestPreferences.clearPorts();
-		for (LOTEnvironment e : clients) {
+		for (LOTClient e : clients) {
 			e.stop();
 		}
 	}
@@ -51,7 +51,7 @@ public class LOTTestCase extends TestCase {
 		super.setUp();
 	}
 
-	public LOTEnvironment getNewEnv() {
+	public LOTClient getNewEnv() {
 		boolean bind = usercounter >= 0 ? true : false;
 
 		String username = "test_username_" + (usercounter) + "@localhost";
@@ -65,14 +65,14 @@ public class LOTTestCase extends TestCase {
 		}
 	}
 
-	public LOTEnvironment getNewEnv(String email, boolean bind)
+	public LOTClient getNewEnv(String email, boolean bind)
 			throws MalformedURLException, SAXException {
 		//
 		MPreferences p = new StaticTestPreferences("lottests", email);
 		p.set(LOTScript.PREFERENCES_SCRIPTSPATH, "./");
 
 		MBinarySource binarysource = getBinarySource(p, bind);
-		LOTEnvironment c = new LOTEnvironment(p, binarysource, getTestService(
+		LOTClient c = new LOTClient(p, binarysource, getTestService(
 				email, p, binarysource));
 
 		boolean setsession = c.getClient().setSession(getSession(p));
@@ -161,7 +161,7 @@ public class LOTTestCase extends TestCase {
 		return sw.getBuffer().toString();
 	}
 
-	protected void assertReayllyClose(LVector a, LVector b) {
+	protected void assertReallyClose(LVector a, LVector b) {
 		assertReallyClose(a.getX(), b.getX());
 		assertReallyClose(a.getY(), b.getY());
 		assertReallyClose(a.getZ(), b.getZ());

@@ -1,4 +1,4 @@
-package org.libraryofthings.simulation;
+package org.libraryofthings.environment;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -6,12 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.LOTEnvironment;
-import org.libraryofthings.environment.LOTPartState;
-import org.libraryofthings.environment.LOTTask;
-import org.libraryofthings.environment.LOTToolState;
-import org.libraryofthings.environment.LOTToolUser;
-import org.libraryofthings.environment.RunEnvironment;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
@@ -22,21 +17,29 @@ import waazdoh.client.model.MID;
 import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MStringID;
 
-public class LOTSimulationEnvironment implements RunEnvironment {
+public class LOTRunEnvironmentImpl implements RunEnvironment {
 	private Map<String, LOTPartState> parts = new HashMap<String, LOTPartState>();
 	private Map<String, LOTScript> scripts = new HashMap<String, LOTScript>();
 	private Map<String, LOTToolState> tools = new HashMap<String, LOTToolState>();
 	private Map<String, String> params = new HashMap<String, String>();
 	private List<LOTTask> tasks = new LinkedList<LOTTask>();
 	private List<LOTToolUser> toolusers = new LinkedList<LOTToolUser>();
+	private LOTPool pool = new LOTPool();
 
-	private LOTEnvironment env;
+	private LOTClient env;
+	private RunEnvironment parent;
+	//
 	private LLog log = LLog.getLogger(this);
 	private LOTPartState basepart;
 	private boolean stopped;
 
-	public LOTSimulationEnvironment(final LOTEnvironment nenv) {
+	public LOTRunEnvironmentImpl(final LOTClient nenv) {
 		this.env = nenv;
+	}
+
+	public LOTRunEnvironmentImpl(RunEnvironment runenv) {
+		this.parent = runenv;
+		this.env = runenv.getClient();
 	}
 
 	public boolean step(double dtime) {
@@ -63,6 +66,11 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 					.newSubPart());
 		}
 		return basepart;
+	}
+
+	@Override
+	public RunEnvironment getParent() {
+		return parent;
 	}
 
 	@Override
@@ -176,5 +184,15 @@ public class LOTSimulationEnvironment implements RunEnvironment {
 
 	public LVector getVector(double x, double y, double z) {
 		return new LVector(x, y, z);
+	}
+
+	@Override
+	public LOTClient getClient() {
+		return env;
+	}
+
+	@Override
+	public LOTPool getPool() {
+		return pool;
 	}
 }

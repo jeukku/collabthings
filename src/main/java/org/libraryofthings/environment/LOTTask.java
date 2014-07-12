@@ -3,7 +3,7 @@ package org.libraryofthings.environment;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTScript;
 
 import waazdoh.util.ConditionWaiter;
@@ -11,12 +11,12 @@ import waazdoh.util.ConditionWaiter;
 public final class LOTTask {
 	private List<LOTTask> subtasks = new LinkedList<LOTTask>();
 	//
-	private LOTEnvironment env;
+	private LOTClient env;
 	private LOTScript s;
 	private Object[] params;
 	private boolean isrun;
 
-	public LOTTask(final LOTEnvironment nenv, LOTScript s2, Object[] params2) {
+	public LOTTask(final LOTClient nenv, LOTScript s2, Object[] params2) {
 		this.env = nenv;
 		this.s = s2;
 		this.params = params2;

@@ -4,8 +4,9 @@ import java.io.IOException;
 
 import javax.script.ScriptException;
 
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
+import org.libraryofthings.model.LOTEnvironmentImpl;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.xml.sax.SAXException;
@@ -13,7 +14,7 @@ import org.xml.sax.SAXException;
 public final class TestTool extends LOTTestCase {
 
 	public void testGetAgain() throws IOException, SAXException {
-		LOTEnvironment env = getNewEnv();
+		LOTClient env = getNewEnv();
 		assertNotNull(env);
 		//
 		env.getObjectFactory().getTool();
@@ -31,7 +32,7 @@ public final class TestTool extends LOTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException,
 			NoSuchMethodException, ScriptException {
-		LOTEnvironment env = getNewEnv();
+		LOTClient env = getNewEnv();
 		assertNotNull(env);
 		//
 		LOTTool t = env.getObjectFactory().getTool();
@@ -51,7 +52,7 @@ public final class TestTool extends LOTTestCase {
 		t.save();
 		t.publish();
 		//
-		LOTEnvironment benv = getNewEnv();
+		LOTClient benv = getNewEnv();
 		assertNotNull(benv);
 		LOTTool btool = benv.getObjectFactory().getTool(
 				t.getServiceObject().getID().getStringID());
@@ -79,8 +80,15 @@ public final class TestTool extends LOTTestCase {
 	}
 
 	public void testCallUnknownScript() throws IOException, SAXException {
-		LOTEnvironment e = getNewEnv();
+		LOTClient e = getNewEnv();
 		LOTTool tool = e.getObjectFactory().getTool();
 		assertNull(tool.getScript("FAIL"));
+	}
+
+	public void testAddGetScript() {
+		LOTClient c = getNewEnv();
+		LOTTool tool = c.getObjectFactory().getTool();
+		tool.addScript("testscript", new LOTScript(c));
+		assertNotNull(tool.getScript("testscript"));
 	}
 }

@@ -1,7 +1,7 @@
 package org.libraryofthings.integrationtests;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.environment.LOTToolState;
 import org.libraryofthings.environment.LOTToolUser;
 import org.libraryofthings.environment.RunEnvironment;
@@ -13,7 +13,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private static final float MOVING_LOCATION_LENGTH_TRIGGER = 0.000000001f;
 	private static final double LOCATION_PRINTOUT = 2000;
 	//
-	private LOTEnvironment env;
+	private LOTClient env;
 	private RunEnvironment simenv;
 	private LOTToolState tool;
 	private LVector targetnormal;
@@ -25,7 +25,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	//
 	private double locationprintouttimer = 0;
 
-	public ReallySimpleSuperheroRobot(final LOTEnvironment env,
+	public ReallySimpleSuperheroRobot(final LOTClient env,
 			RunEnvironment simenv) {
 		this.env = env;
 		this.simenv = simenv;

@@ -10,11 +10,11 @@ import waazdoh.util.MStringID;
 
 public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 
-	private LOTEnvironment env;
+	private LOTClient env;
 	private List<LOTPart> parts = new LinkedList<LOTPart>();
 	private List<LOTTool> tools = new LinkedList<LOTTool>();
 
-	public LOTObjectFactoryImpl(final LOTEnvironment nenv) {
+	public LOTObjectFactoryImpl(final LOTClient nenv) {
 		this.env = nenv;
 	}
 

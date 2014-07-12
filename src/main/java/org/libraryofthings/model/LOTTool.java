@@ -1,11 +1,6 @@
 package org.libraryofthings.model;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -16,26 +11,27 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 	private static final String BEANNAME = "tool";
 	private static final String VALUENAME_NAME = "value";
 	private static final String VALUENAME_MODELID = "model3did";
-	private static final String VALUENAME_SCRIPTS = "scripts";
+	private static final String VALUENAME_ENVIRONMENTID = "environmentid";
 	//
 	public static int counter = 0;
 	//
 	private ServiceObject o;
 	private String name = "tool" + (LOTTool.counter++);
 	private LOTPart part;
-	private Map<String, LOTScript> scripts = new HashMap<String, LOTScript>();
+	private LOTClient client;
 	private LOTEnvironment env;
 
-	public LOTTool(final LOTEnvironment nenv) {
-		this.env = nenv;
-		o = new ServiceObject(BEANNAME, nenv.getClient(), this,
-				nenv.getVersion(), nenv.getPrefix());
+	public LOTTool(final LOTClient nclient) {
+		this.client = nclient;
+		env = new LOTEnvironmentImpl(nclient);
+		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
+				nclient.getVersion(), nclient.getPrefix());
 	}
 
-	public LOTTool(final LOTEnvironment nenv, final MStringID id) {
-		this.env = nenv;
-		o = new ServiceObject(BEANNAME, nenv.getClient(), this,
-				nenv.getVersion(), nenv.getPrefix());
+	public LOTTool(final LOTClient nclient, final MStringID id) {
+		this.client = nclient;
+		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
+				nclient.getVersion(), nclient.getPrefix());
 		o.load(id);
 	}
 
@@ -46,21 +42,14 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 		if (part != null) {
 			b.addValue(VALUENAME_MODELID, part.getServiceObject().getID());
 		}
+		b.addValue(VALUENAME_ENVIRONMENTID, env.getID());
 		//
-		JBean ssbean = b.add(VALUENAME_SCRIPTS);
-		Set<String> scriptnames = scripts.keySet();
-		for (String string : scriptnames) {
-			LOTScript s = getScript(string);
-			JBean sbean = ssbean.add("script");
-			sbean.addValue("name", string);
-			sbean.addValue("id", s.getServiceObject().getID());
-		}
 
 		return b;
 	}
 
 	public LOTScript getScript(String string) {
-		return scripts.get(string);
+		return env.getScript(string);
 	}
 
 	@Override
@@ -72,17 +61,8 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 			part.load(modelid);
 		}
 		//
-		JBean ssbean = bean.get(VALUENAME_SCRIPTS);
-		List<JBean> sbeans = ssbean
-
-		.getChildren();
-		for (JBean sbean : sbeans) {
-			String scriptname = sbean.getValue("name");
-			MStringID id = sbean.getIDValue("id");
-			LOTScript script = new LOTScript(env);
-			script.load(id);
-			scripts.put(scriptname, script);
-		}
+		env = new LOTEnvironmentImpl(client,
+				bean.getIDValue(VALUENAME_ENVIRONMENTID));
 		//
 		return getName() != null;
 	}
@@ -105,11 +85,15 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 			return false;
 		}
 
+		if (!env.isReady()) {
+			return false;
+		}
+
 		return true;
 	}
 
 	public void addScript(String scriptname, LOTScript lotScript) {
-		scripts.put(scriptname, lotScript);
+		env.addScript(scriptname, lotScript);
 	}
 
 	public void save() {
@@ -117,9 +101,7 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 			part.save();
 		}
 
-		for (LOTScript s : scripts.values()) {
-			s.getServiceObject().save();
-		}
+		env.save();
 
 		getServiceObject().save();
 	}
@@ -129,9 +111,7 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 			part.publish();
 		}
 
-		for (LOTScript s : scripts.values()) {
-			s.getServiceObject().publish();
-		}
+		getEnvironment().publish();
 
 		getServiceObject().publish();
 	}
@@ -141,12 +121,34 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 	}
 
 	public LOTPart newPart() {
-		part = new LOTPart(env);
+		part = new LOTPart(client);
 		return part;
 	}
 
 	@Override
 	public String toString() {
 		return "LOTTool[" + name + "]";
+	}
+
+	public LOTEnvironment getEnvironment() {
+		if (this.env == null) {
+			this.env = new LOTEnvironmentImpl(client);
+		}
+		return this.env;
+	}
+
+	@Override
+	public int hashCode() {
+		return getBean().toText().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof LOTTool) {
+			LOTTool tool = (LOTTool) obj;
+			return getBean().toText().equals(tool.getBean().toText());
+		} else {
+			return false;
+		}
 	}
 }

@@ -3,7 +3,7 @@ package org.libraryofthings.unittests;
 import java.io.File;
 import java.io.IOException;
 
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
@@ -16,7 +16,7 @@ import waazdoh.util.MStringID;
 public final class TestPart extends LOTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException {
-		LOTEnvironment env = getNewEnv();
+		LOTClient env = getNewEnv();
 		assertNotNull(env);
 		//
 		LOTPart part = new LOTPart(env);
@@ -34,7 +34,7 @@ public final class TestPart extends LOTTestCase {
 		part.save();
 		part.publish();
 		//
-		LOTEnvironment benv = getNewEnv();
+		LOTClient benv = getNewEnv();
 		assertNotNull(benv);
 		MStringID bpartid = part.getServiceObject().getID().getStringID();
 		LOTPart bpart = benv.getObjectFactory().getPart(bpartid);
@@ -56,7 +56,7 @@ public final class TestPart extends LOTTestCase {
 	}
 
 	public void testSubPartOrientation() throws IOException, SAXException {
-		LOTEnvironment e = getNewEnv();
+		LOTClient e = getNewEnv();
 		LOTPart p = new LOTPart(e);
 		LOTSubPart subpart = p.newSubPart();
 		subpart.setPart(new LOTPart(e));
@@ -69,24 +69,24 @@ public final class TestPart extends LOTTestCase {
 	}
 
 	public void testSubPartOrientation2() throws IOException, SAXException {
-		LOTEnvironment e = getNewEnv();
+		LOTClient e = getNewEnv();
 		LOTPart p = new LOTPart(e);
 		LOTSubPart subpart = new LOTSubPart(p, e);
 		subpart.setPart(new LOTPart(e));
 		subpart.setOrientation(new LVector(10, 10, 10), new LVector(0, 1, 0));
 		LOTSubPart bsubpart = p.addSubPart(subpart);
 		//
-		assertReayllyClose(subpart.getLocation(), bsubpart.getLocation());
-		assertReayllyClose(subpart.getNormal(), bsubpart.getNormal());
+		assertReallyClose(subpart.getLocation(), bsubpart.getLocation());
+		assertReallyClose(subpart.getNormal(), bsubpart.getNormal());
 	}
 
 	public void testLoadRandomID() throws IOException, SAXException {
-		LOTEnvironment e = getNewEnv();
+		LOTClient e = getNewEnv();
 		assertNull(e.getObjectFactory().getPart(new MStringID()));
 	}
 
 	public void testParseFalseBean() throws IOException, SAXException {
-		LOTEnvironment e = getNewEnv();
+		LOTClient e = getNewEnv();
 		LOTPart p = e.getObjectFactory().getPart();
 		JBean bean = new JBean("part");
 		bean.add("parts");
@@ -94,7 +94,7 @@ public final class TestPart extends LOTTestCase {
 	}
 
 	public void testImportModel() throws IOException, SAXException {
-		LOTEnvironment e = getNewEnv();
+		LOTClient e = getNewEnv();
 		LOTPart p = e.getObjectFactory().getPart();
 		p.importModel(new File("src/test/resources/models/cube.x3d"));
 		assertNotNull(p.getModel());
