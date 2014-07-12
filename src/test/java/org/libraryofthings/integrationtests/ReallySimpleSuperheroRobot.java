@@ -25,8 +25,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	//
 	private double locationprintouttimer = 0;
 
-	public ReallySimpleSuperheroRobot(final LOTClient env,
-			RunEnvironment simenv) {
+	public ReallySimpleSuperheroRobot(final LOTClient env, RunEnvironment simenv) {
 		this.env = env;
 		this.simenv = simenv;
 	}
@@ -80,7 +79,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		try {
 			this.wait(WAIT_A_BIT);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			log.error(this, "waitAWhile", e);
 		}
 	}
 }
