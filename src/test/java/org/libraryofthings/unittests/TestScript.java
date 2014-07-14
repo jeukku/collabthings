@@ -1,15 +1,11 @@
 package org.libraryofthings.unittests;
 
-import java.io.IOException;
-
-import javax.script.ScriptException;
-
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.environment.LOTRunEnvironmentImpl;
 import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.model.LOTScript;
-import org.xml.sax.SAXException;
+import org.libraryofthings.model.LOTScriptException;
 
 public final class TestScript extends LOTTestCase {
 
@@ -20,12 +16,11 @@ public final class TestScript extends LOTTestCase {
 			+ Math.random();
 	private static final String FAILING_SCRIPT = "FAIL";
 
-	public void testSaveAndLoad() throws IOException, SAXException,
-			NoSuchMethodException, ScriptException {
+	public void testSaveAndLoad() throws LOTScriptException {
 		LOTClient env = getNewEnv();
 		assertNotNull(env);
 		//
-		LOTScript s = getWorkingScriptExample(env);
+		LOTScript s = getAndTestWorkingScriptExample(env);
 		s.getServiceObject().publish();
 		//
 		LOTClient benv = getNewEnv();
@@ -44,23 +39,29 @@ public final class TestScript extends LOTTestCase {
 		assertEquals(THIS_SHOULD_WORK, bs.getInfo());
 	}
 
-	private LOTScript getWorkingScriptExample(LOTClient env)
-			throws NoSuchMethodException, ScriptException {
-		LOTScript s = getScript(env, SCRIPT_TEMPLATE
-				+ "function run(env) { env.setParameter(\"testvalue\", \""
-				+ SCRIPT_ENV_TEST_VALUE + "\" ); } ");
+	private LOTScript getAndTestWorkingScriptExample(LOTClient env) {
+		LOTScript s = getWorkingScriptExample(env);
+		assertNotNull(s);
 		s.getServiceObject().save();
 		return s;
 	}
 
-	private LOTScript getScript(LOTClient env, String script) {
-		LOTScript s = new LOTScript(env);
-		s.setScript(script);
-		return s;
+	private LOTScript getWorkingScriptExample(LOTClient env) {
+		return getScript(env, SCRIPT_TEMPLATE
+				+ "function run(env) { env.setParameter(\"testvalue\", \""
+				+ SCRIPT_ENV_TEST_VALUE + "\" ); } ");
 	}
 
-	public void testRuntimeEnvironmentParameters() throws IOException,
-			SAXException, NoSuchMethodException, ScriptException {
+	private LOTScript getScript(LOTClient env, String script) {
+		LOTScript s = new LOTScript(env);
+		if (s.setScript(script)) {
+			return s;
+		} else {
+			return null;
+		}
+	}
+
+	public void testRuntimeEnvironmentParameters() throws LOTScriptException {
 		LOTClient env = getNewEnv();
 		LOTScript s = getScript(env, SCRIPT_TEMPLATE
 				+ "function run(e) { e.setParameter('test', 'testvalue'); }");
@@ -70,30 +71,29 @@ public final class TestScript extends LOTTestCase {
 		assertEquals("testvalue", e.getParameter("test"));
 	}
 
-	public void testFailLoad() throws IOException, SAXException {
+	public void testFailLoad() {
 		LOTClient env = getNewEnv();
 		LOTScript s = getScript(env, FAILING_SCRIPT);
-		assertNull(s.getScript());
+		assertNull(s);
 	}
 
-	public void testMissingMethod() throws IOException, SAXException {
+	public void testMissingMethod() {
 		LOTClient env = getNewEnv();
 		LOTScript s = getScript(env, "function fail() {}");
-		assertNull(s.getScript());
+		assertNull(s);
 	}
 
-	public void testMissingRunMethod() throws IOException, SAXException {
+	public void testMissingRunMethod() {
 		LOTClient env = getNewEnv();
 		LOTScript s = getScript(env, "function info() {}");
 		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(env);
 		assertFalse(s.run(runenv));
 	}
 
-	public void testFailAtLoadingLibraries() throws IOException, SAXException,
-			NoSuchMethodException, ScriptException {
+	public void testFailAtLoadingLibraries() throws LOTScriptException {
 		LOTClient env = getNewEnv();
 		env.getPreferences().set(LOTScript.PREFERENCES_SCRIPTSPATH, "FAILPATH");
 		LOTScript s = getWorkingScriptExample(env);
-		assertFalse(s.isOK());
+		assertNull(s);
 	}
 }
