@@ -72,8 +72,8 @@ public class LOTTestCase extends TestCase {
 		p.set(LOTScript.PREFERENCES_SCRIPTSPATH, "./");
 
 		MBinarySource binarysource = getBinarySource(p, bind);
-		LOTClient c = new LOTClient(p, binarysource, getTestService(
-				email, p, binarysource));
+		LOTClient c = new LOTClient(p, binarysource, getTestService(email, p,
+				binarysource));
 
 		boolean setsession = c.getClient().setSession(getSession(p));
 		if (setsession) {
@@ -113,7 +113,7 @@ public class LOTTestCase extends TestCase {
 					return client;
 				}
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				log.error(this, "getTestService", e);
 			}
 		}
 		return new ServiceMock(username, source);
@@ -138,7 +138,7 @@ public class LOTTestCase extends TestCase {
 		try {
 			wait(i);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			log.error(this, "doWait", e);
 		}
 	}
 

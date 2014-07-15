@@ -82,7 +82,7 @@ public final class LOTScript implements ServiceObjectData {
 				this.script = s;
 				return true;
 			} else {
-				script = "";
+				script = null;
 				return false;
 			}
 		} catch (NoSuchMethodException e) {
@@ -122,8 +122,13 @@ public final class LOTScript implements ServiceObjectData {
 	 * @throws NoSuchMethodException
 	 * @throws ScriptException
 	 */
-	public String getInfo() throws NoSuchMethodException, ScriptException {
-		return "" + inv.invokeFunction("info");
+	public String getInfo() throws LOTScriptException {
+		try {
+			return "" + inv.invokeFunction("info");
+		} catch (NoSuchMethodException | ScriptException e) {
+			log.error(this, getInfo(), e);
+			throw new LOTScriptException(e);
+		}
 	}
 
 	/**

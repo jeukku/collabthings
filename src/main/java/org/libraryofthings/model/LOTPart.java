@@ -141,7 +141,7 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 		return subpart;
 	}
 
-	public void importModel(File file) throws SAXException, IOException {
-		getModel().importModel(file);
+	public boolean importModel(File file) {
+		return getModel().importModel(file);
 	}
 }

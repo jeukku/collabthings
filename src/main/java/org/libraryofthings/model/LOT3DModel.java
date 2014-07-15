@@ -155,32 +155,39 @@ public final class LOT3DModel implements ServiceObjectData, LOTObject {
 		getServiceObject().save();
 	}
 
-	public boolean importModel(File file) throws SAXException, IOException {
+	public boolean importModel(File file) {
 		log.info("Importing " + file);
-		FileReader fr = new FileReader(file);
-		CharBuffer sb = CharBuffer.allocate((int) file.length());
-		while (fr.read(sb) > 0) {
-			// reading the whole file
-			;		
-		}
-		
-		fr.close();
-		sb.rewind();
-		String s = sb.toString();
-		log.fine("importing string " + s);
-		//
-		s = s.replace("http://www.web3d.org", findSpecificationsResources());
-		log.fine("importing converted string " + s);
-		//
-		XML xml = new XML(s);
-		JBean b = new JBean(xml);
-		log.fine("importing " + b.toText());
-		if (importModel(b)) {
-			newBinary();
-			getBinary().set(0, b.toXML().toString().getBytes());
-			getBinary().setReady();
-			return true;
-		} else {
+		FileReader fr;
+		try {
+			fr = new FileReader(file);
+			CharBuffer sb = CharBuffer.allocate((int) file.length());
+			while (fr.read(sb) > 0) {
+				// reading the whole file
+				;
+			}
+
+			fr.close();
+			sb.rewind();
+			String s = sb.toString();
+			log.fine("importing string " + s);
+			//
+			s = s.replace("http://www.web3d.org", findSpecificationsResources());
+			log.fine("importing converted string " + s);
+			//
+			XML xml = new XML(s);
+			JBean b = new JBean(xml);
+			log.fine("importing " + b.toText());
+			if (importModel(b)) {
+				newBinary();
+				getBinary().set(0, b.toXML().toString().getBytes());
+				getBinary().setReady();
+				return true;
+			} else {
+				return false;
+			}
+
+		} catch (IOException | SAXException e) {
+			log.error(this, "import model", e);
 			return false;
 		}
 	}
