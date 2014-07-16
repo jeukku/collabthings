@@ -14,7 +14,7 @@ import org.xml.sax.SAXException;
 public final class TestTool extends LOTTestCase {
 
 	public void testGetAgain() throws IOException, SAXException {
-		LOTClient env = getNewEnv();
+		LOTClient env = getNewClient();
 		assertNotNull(env);
 		//
 		env.getObjectFactory().getTool();
@@ -32,7 +32,7 @@ public final class TestTool extends LOTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException,
 			NoSuchMethodException, ScriptException {
-		LOTClient env = getNewEnv();
+		LOTClient env = getNewClient();
 		assertNotNull(env);
 		//
 		LOTTool t = env.getObjectFactory().getTool();
@@ -52,7 +52,7 @@ public final class TestTool extends LOTTestCase {
 		t.save();
 		t.publish();
 		//
-		LOTClient benv = getNewEnv();
+		LOTClient benv = getNewClient();
 		assertNotNull(benv);
 		LOTTool btool = benv.getObjectFactory().getTool(
 				t.getServiceObject().getID().getStringID());
@@ -69,24 +69,24 @@ public final class TestTool extends LOTTestCase {
 	}
 
 	public void testNullPart() throws IOException, SAXException {
-		LOTTool t = new LOTTool(getNewEnv());
+		LOTTool t = new LOTTool(getNewClient());
 		t.save();
 		t.publish();
 		//
-		LOTTool b = getNewEnv().getObjectFactory().getTool(
+		LOTTool b = getNewClient().getObjectFactory().getTool(
 				t.getServiceObject().getID().getStringID());
 		assertTrue(b.isReady());
 		assertTrue(b.toString().indexOf("LOTTool") >= 0);
 	}
 
 	public void testCallUnknownScript() throws IOException, SAXException {
-		LOTClient e = getNewEnv();
+		LOTClient e = getNewClient();
 		LOTTool tool = e.getObjectFactory().getTool();
 		assertNull(tool.getScript("FAIL"));
 	}
 
 	public void testAddGetScript() {
-		LOTClient c = getNewEnv();
+		LOTClient c = getNewClient();
 		LOTTool tool = c.getObjectFactory().getTool();
 		tool.addScript("testscript", new LOTScript(c));
 		assertNotNull(tool.getScript("testscript"));

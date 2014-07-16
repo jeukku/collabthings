@@ -22,7 +22,7 @@ public interface RunEnvironment {
 
 	LOTPartState addPart(String string, LOTSubPart part);
 
-	LOTPartState getPart(String s);
+	LOTPartState getPartState(String s);
 
 	LLog log();
 
@@ -36,9 +36,7 @@ public interface RunEnvironment {
 
 	LOTTask addTask(LOTScript s, Object... params);
 
-	void removeTask(LOTTask task);
-
-	LOTPart getOriginalPart(String s);
+	LOTPart getPart(String s);
 
 	LOTPartState getBasePart();
 
@@ -57,5 +55,15 @@ public interface RunEnvironment {
 	RunEnvironment getParent();
 
 	LOTPool getPool();
+
+	void addChild(RunEnvironment runenv);
+
+	boolean isReady();
+
+	void addListener(RunEnvironmentListener listener);
+
+	LOTScript getScript(String name);
+
+	LOTToolUser getToolUser(LOTToolState lotToolState, LVector l);
 
 }

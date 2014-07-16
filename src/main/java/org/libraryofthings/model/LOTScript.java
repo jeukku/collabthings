@@ -30,6 +30,10 @@ public final class LOTScript implements ServiceObjectData {
 	//
 	private LLog log = LLog.getLogger(this);
 	private final LOTClient env;
+	//
+	private static int namecounter = 0;
+	private String name;
+	private String info;
 
 	/**
 	 * Creates a new script with random ID.
@@ -40,6 +44,7 @@ public final class LOTScript implements ServiceObjectData {
 		this.env = env;
 		o = new ServiceObject(BEANNAME, env.getClient(), this,
 				env.getVersion(), env.getPrefix());
+		setName("script" + (LOTScript.namecounter++));
 		setScript("function run(env) { env.log().info('Running ' + this); } function info() { return 'default script'; } ");
 	}
 
@@ -47,12 +52,14 @@ public final class LOTScript implements ServiceObjectData {
 	public JBean getBean() {
 		JBean b = o.getBean();
 		b.setBase64Value(SCRIPT, script);
+		b.addValue("name", name);
 		return b;
 	}
 
 	@Override
 	public boolean parseBean(final JBean bean) {
 		String sscript = bean.getBase64Value(SCRIPT);
+		this.name = bean.getValue("name");
 		return load(sscript);
 	}
 
@@ -78,7 +85,8 @@ public final class LOTScript implements ServiceObjectData {
 			inv = loader.load(s);
 			if (inv != null) {
 				// invoke the global function named "hello"
-				log.info("load a script " + inv.invokeFunction("info"));
+				info = "" + inv.invokeFunction("info");
+				log.info("load a script " + info);
 				this.script = s;
 				return true;
 			} else {
@@ -126,7 +134,7 @@ public final class LOTScript implements ServiceObjectData {
 		try {
 			return "" + inv.invokeFunction("info");
 		} catch (NoSuchMethodException | ScriptException e) {
-			log.error(this, getInfo(), e);
+			log.error(this, this.name, e);
 			throw new LOTScriptException(e);
 		}
 	}
@@ -147,6 +155,16 @@ public final class LOTScript implements ServiceObjectData {
 
 	private void handleException(Exception e1) {
 		log.info("Error in script " + script);
+		log.info("Error in script " + script + " exception " + e1);
 		log.error(this, "run", e1);
+	}
+
+	@Override
+	public String toString() {
+		return "LOTScript[" + this.name + "][" + info + "]";
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

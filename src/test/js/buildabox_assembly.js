@@ -2,9 +2,11 @@ function info() {
 	return "testing box -building";
 }
 
-function run(runenv) {
-	var part = runenv.getOriginalPart(runenv.getParameter('partid'));
+function run(runenv, boxfactory) {
+	var part = runenv.getPart(runenv.getParameter('partid'));
+	
 	var destinationpart = runenv.getPart('destinationpart');
+	
 	runenv.log().info("script going to a loop!!!");
 	_.each(part.getSubParts().toArray(), function(subpart) {
 		runenv.log().info('script test ' + subpart);

@@ -4,6 +4,8 @@ import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.environment.LOTRunEnvironmentImpl;
 import org.libraryofthings.environment.RunEnvironment;
+import org.libraryofthings.model.LOTEnvironment;
+import org.libraryofthings.model.LOTEnvironmentImpl;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTScriptException;
 
@@ -17,13 +19,13 @@ public final class TestScript extends LOTTestCase {
 	private static final String FAILING_SCRIPT = "FAIL";
 
 	public void testSaveAndLoad() throws LOTScriptException {
-		LOTClient env = getNewEnv();
-		assertNotNull(env);
+		LOTClient client = getNewClient();
+		assertNotNull(client);
 		//
-		LOTScript s = getAndTestWorkingScriptExample(env);
+		LOTScript s = getAndTestWorkingScriptExample(client);
 		s.getServiceObject().publish();
 		//
-		LOTClient benv = getNewEnv();
+		LOTClient benv = getNewClient();
 		assertNotNull(benv);
 		LOTScript bs = new LOTScript(benv);
 		assertTrue(bs.load(s.getServiceObject().getID().getStringID()));
@@ -31,7 +33,8 @@ public final class TestScript extends LOTTestCase {
 		assertEquals(s.getScript(), bs.getScript());
 		assertTrue(s.isOK());
 		//
-		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(benv);
+		LOTEnvironment env = new LOTEnvironmentImpl(client);
+		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client, env);
 		bs.run(runenv);
 		assertEquals(SCRIPT_ENV_TEST_VALUE, runenv.getParameter("testvalue"));
 		//
@@ -62,36 +65,38 @@ public final class TestScript extends LOTTestCase {
 	}
 
 	public void testRuntimeEnvironmentParameters() throws LOTScriptException {
-		LOTClient env = getNewEnv();
-		LOTScript s = getScript(env, SCRIPT_TEMPLATE
+		LOTClient client = getNewClient();
+		LOTScript s = getScript(client, SCRIPT_TEMPLATE
 				+ "function run(e) { e.setParameter('test', 'testvalue'); }");
 		assertNotNull(s);
-		RunEnvironment e = new LOTRunEnvironmentImpl(env);
+		LOTEnvironment env = new LOTEnvironmentImpl(client);
+		RunEnvironment e = new LOTRunEnvironmentImpl(client, env);
 		s.run(e);
 		assertEquals("testvalue", e.getParameter("test"));
 	}
 
 	public void testFailLoad() {
-		LOTClient env = getNewEnv();
+		LOTClient env = getNewClient();
 		LOTScript s = getScript(env, FAILING_SCRIPT);
 		assertNull(s);
 	}
 
 	public void testMissingMethod() {
-		LOTClient env = getNewEnv();
+		LOTClient env = getNewClient();
 		LOTScript s = getScript(env, "function fail() {}");
 		assertNull(s);
 	}
 
 	public void testMissingRunMethod() {
-		LOTClient env = getNewEnv();
-		LOTScript s = getScript(env, "function info() {}");
-		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(env);
+		LOTClient client = getNewClient();
+		LOTScript s = getScript(client, "function info() {}");
+		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client,
+				new LOTEnvironmentImpl(client));
 		assertFalse(s.run(runenv));
 	}
 
 	public void testFailAtLoadingLibraries() throws LOTScriptException {
-		LOTClient env = getNewEnv();
+		LOTClient env = getNewClient();
 		env.getPreferences().set(LOTScript.PREFERENCES_SCRIPTSPATH, "FAILPATH");
 		LOTScript s = getWorkingScriptExample(env);
 		assertNull(s);

@@ -18,14 +18,14 @@ import waazdoh.util.xml.XML;
 public final class Test3DModel extends LOTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException {
-		LOTClient env = getNewEnv();
+		LOTClient env = getNewClient();
 		assertNotNull(env);
 		//
 		LOT3DModel s = new LOT3DModel(env);
 		s.setName("TEST");
 		s.getServiceObject().publish();
 		//
-		LOTClient benv = getNewEnv();
+		LOTClient benv = getNewClient();
 		assertNotNull(benv);
 		LOT3DModel bs = new LOT3DModel(benv);
 		bs.load(s.getServiceObject().getID().getStringID());
@@ -33,9 +33,9 @@ public final class Test3DModel extends LOTTestCase {
 	}
 
 	public void testSaveAndLoadBinary() throws IOException, SAXException {
-		LOTClient env = getNewEnv();
+		LOTClient env = getNewClient();
 		assertNotNull(env);
-		LOTClient benv = getNewEnv();
+		LOTClient benv = getNewClient();
 		assertNotNull(benv);
 		benv.getBinarySource().waitUntilReady();
 		//
@@ -57,7 +57,7 @@ public final class Test3DModel extends LOTTestCase {
 	}
 
 	public void testFailBinary() throws IOException, SAXException {
-		LOTClient env = getNewEnv();
+		LOTClient env = getNewClient();
 		try {
 			LOT3DModel m = new LOT3DModel(env);
 			m.load(new MStringID());
@@ -67,7 +67,7 @@ public final class Test3DModel extends LOTTestCase {
 	}
 
 	public void testImport() throws IOException, SAXException {
-		LOTClient env = getNewEnv();
+		LOTClient env = getNewClient();
 		LOT3DModel m = new LOT3DModel(env);
 		assertTrue(m
 				.importModel(new File("src/test/resources/models/cube.x3d")));

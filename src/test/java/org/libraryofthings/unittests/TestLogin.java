@@ -11,12 +11,12 @@ import waazdoh.client.WClientAppLogin;
 public final class TestLogin extends LOTTestCase {
 
 	public void testClient() throws IOException, SAXException {
-		LOTClient c = getNewEnv();
+		LOTClient c = getNewClient();
 		assertNotNull(c);
 	}
 
 	public void testAppLogin() throws IOException, SAXException {
-		LOTClient e = getNewEnv();
+		LOTClient e = getNewClient();
 		assertNotNull(e);
 		WClientAppLogin applogin = e.getClient().requestAppLogin();
 		assertNotNull(applogin);

@@ -6,7 +6,6 @@ import java.util.List;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTToolException;
 import org.libraryofthings.math.LVector;
-import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 
@@ -21,8 +20,13 @@ public class LOTToolState {
 	private boolean inuse;
 
 	public LOTToolState(final RunEnvironment runenv, final LOTTool ntool) {
-		this.env = new LOTRunEnvironmentImpl(runenv);
+		log.info("LOTToolState with " + runenv + " tool:" + tool);
+		this.env = new LOTRunEnvironmentImpl(runenv, ntool.getEnvironment());
 		this.tool = ntool;
+	}
+
+	public void addTask(final String name) {
+		env.addTask(tool.getScript(name), this);
 	}
 
 	public void call(final String scriptname, final Object... params)
@@ -38,7 +42,7 @@ public class LOTToolState {
 		LOTScript script = tool.getScript(scriptname);
 
 		if (script != null) {
-			log.info("calling " + scriptname + " with " + l);
+			log.info("calling " + script + " with " + l);
 			script.run(env, l);
 		} else {
 			throw new LOTToolException("Script called '" + scriptname

@@ -12,6 +12,8 @@ import org.libraryofthings.environment.LOTRunEnvironmentImpl;
 import org.libraryofthings.environment.LOTToolState;
 import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTEnvironment;
+import org.libraryofthings.model.LOTEnvironmentImpl;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTSubPart;
@@ -29,26 +31,28 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 	public RunEnvironment testBox() throws NoSuchMethodException,
 			ScriptException, IOException {
-		LOTClient env = getNewEnv();
-		assertNotNull(env);
+		LOTClient client = getNewClient();
+		assertNotNull(client);
 
-		LOTTool boxfactory = createBoxFactory(env);
+		LOTTool boxfactory = createBoxFactory(client);
 
-		RunEnvironment runenv = new LOTRunEnvironmentImpl(env);
-		runenv.addToolUser(new ReallySimpleSuperheroRobot(env, runenv));
+		LOTEnvironment env = new LOTEnvironmentImpl(client);
+		RunEnvironment runenv = new LOTRunEnvironmentImpl(client, env);
+		runenv.addToolUser(new ReallySimpleSuperheroRobot(client, runenv));
 		runenv.addTool("boxfactory", boxfactory);
 		//
-		runenv.addTask(getCallOrderScript(env));
+		runenv.addTask(getCallOrderScript(client));
 		//
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
-		simulation.run(MAX_SIMULATION_RUNTIME);
+		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
 		//
 		RunEnvironment boxfactoryenv = runenv.getTool("boxfactor")
 				.getEnvironment();
 		//
 		LOTPart box = boxfactoryenv.getPool().getPart("box");
-		LOTPart destinationpart = env.getObjectFactory().getPart(
-				new MStringID(runenv.getParameter("partid")));
+		LOTPart destinationpart = client.getObjectFactory().getPart(
+				new MStringID(boxfactory.getEnvironment()
+						.getParameter("partid")));
 		assertBuiltBox(box, destinationpart);
 		//
 		return runenv;
@@ -56,7 +60,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 	private LOTScript getCallOrderScript(LOTClient env) {
 		LOTScript s = new LOTScript(env);
-		s.setScript("function run() { env.getTool('boxfactory').call('order'); } function info() { return 'calling order'; }");
+		s.setScript("function run(env) { env.log().info('calling order'); env.getTool('boxfactory').call('order'); } function info() { return 'calling order'; }");
+		s.setName("order");
 		return s;
 	}
 
@@ -85,6 +90,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 				loadScript(env, "buildabox_moveandattach.js"));
 		boxfactory.addScript("Assembly",
 				loadScript(env, "buildabox_assembly.js"));
+		boxfactory.addScript("order", loadScript(env, "buildabox_order.js"));
 
 		return boxfactory;
 	}
@@ -168,19 +174,13 @@ public final class ITTestBuildABox extends LOTTestCase {
 		return script;
 	}
 
-	private LOTScript getAssemblyScript(LOTTool tool, LOTPart box, LOTClient env)
-			throws NoSuchMethodException, ScriptException, IOException {
-		String scriptname = "buildabox_assembly.js";
-		LOTScript lots = loadScript(env, scriptname);
-		return lots;
-	}
-
 	private LOTScript loadScript(LOTClient env, String scriptname)
 			throws IOException {
 		String s = loadATestScript(scriptname);
 		//
 		LOTScript lots = new LOTScript(env);
 		lots.setScript(s);
+		lots.setName(scriptname);
 		assertNotNull(lots.getScript());
 		return lots;
 	}

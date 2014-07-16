@@ -8,6 +8,7 @@ import java.util.Map;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTSubPart;
@@ -26,27 +27,99 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	private List<LOTToolUser> toolusers = new LinkedList<LOTToolUser>();
 	private LOTPool pool = new LOTPool();
 
-	private LOTClient env;
+	private LOTClient client;
 	private RunEnvironment parent;
+	private List<RunEnvironment> children = new LinkedList<>();
 	//
 	private LLog log = LLog.getLogger(this);
 	private LOTPartState basepart;
+	//
+	private List<LOTTask> runningtasks = new LinkedList<LOTTask>();
 	private boolean stopped;
+	//
+	private List<RunEnvironmentListener> listeners = new LinkedList<>();
+	private LOTEnvironment environment;
 
-	public LOTRunEnvironmentImpl(final LOTClient nenv) {
-		this.env = nenv;
+	public LOTRunEnvironmentImpl(final LOTClient nclient, final LOTEnvironment e) {
+		this.client = nclient;
+		this.environment = e;
 	}
 
-	public LOTRunEnvironmentImpl(RunEnvironment runenv) {
+	public LOTRunEnvironmentImpl(RunEnvironment runenv, final LOTEnvironment e) {
 		this.parent = runenv;
-		this.env = runenv.getClient();
+		this.environment = e;
+
+		parent.addChild(this);
+		this.client = runenv.getClient();
 	}
 
 	public boolean step(double dtime) {
+		checkTasks();
+
 		for (LOTToolUser tooluser : toolusers) {
 			tooluser.step(dtime);
 		}
+		//
+		for (RunEnvironment runenv : new LinkedList<RunEnvironment>(children)) {
+			runenv.step(dtime);
+		}
+
 		return isRunning();
+	}
+
+	private synchronized void checkTasks() {
+		if (!getTasks().isEmpty()) {
+			final LOTTask task = getTasks().get(0);
+			removeTask(task);
+			runningtasks.add(task);
+			//
+			new Thread(() -> runTask(task)).start();
+		}
+	}
+
+	private void runTask(LOTTask task) {
+		if (!task.run(this)) {
+			fireTaskFailed(this, task);
+		}
+
+		synchronized (this) {
+			runningtasks.remove(task);
+		}
+	}
+
+	private void fireTaskFailed(RunEnvironment runenv, LOTTask task) {
+		for (RunEnvironmentListener listener : listeners) {
+			listener.taskFailed(this, task);
+		}
+	}
+
+	@Override
+	public void addListener(RunEnvironmentListener listener) {
+		listeners.add(listener);
+	}
+
+	@Override
+	public boolean isReady() {
+		if (!runningtasks.isEmpty() || !tasks.isEmpty()) {
+			return false;
+		}
+
+		for (RunEnvironment child : children) {
+			if (!child.isReady()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public void addChild(RunEnvironment chileenv) {
+		synchronized (children) {
+			children.add(chileenv);
+			chileenv.addListener((runenv, task) -> {
+				fireTaskFailed(runenv, task);
+			});
+		}
 	}
 
 	public boolean isRunning() {
@@ -62,8 +135,8 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	@Override
 	public LOTPartState getBasePart() {
 		if (basepart == null) {
-			basepart = new LOTPartState(env, env.getObjectFactory().getPart()
-					.newSubPart());
+			basepart = new LOTPartState(client, client.getObjectFactory()
+					.getPart().newSubPart());
 		}
 		return basepart;
 	}
@@ -85,7 +158,15 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 
 	@Override
 	public String getParameter(String string) {
-		return params.get(string);
+		String value = params.get(string);
+		if (value == null && parent != null) {
+			value = parent.getParameter(string);
+		}
+
+		if (value == null && environment != null) {
+			value = environment.getParameter(string);
+		}
+		return value;
 	}
 
 	@Override
@@ -96,7 +177,7 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	@Override
 	public LOTTask addTask(final LOTScript s, final Object... params) {
 		log.info("addTask " + s + " params: " + params);
-		LOTTask task = new LOTTask(env, s, params);
+		LOTTask task = new LOTTask(client, s, params);
 		synchronized (tasks) {
 			tasks.add(task);
 		}
@@ -110,8 +191,7 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 		}
 	}
 
-	@Override
-	public void removeTask(LOTTask task) {
+	private void removeTask(LOTTask task) {
 		synchronized (tasks) {
 			tasks.remove(task);
 		}
@@ -119,19 +199,19 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 
 	@Override
 	public LOTPartState addPart(String string, LOTSubPart part) {
-		LOTPartState state = new LOTPartState(env, part);
+		LOTPartState state = new LOTPartState(client, part);
 		parts.put(string, state);
 		return state;
 	}
 
 	@Override
-	public LOTPartState getPart(String s) {
+	public LOTPartState getPartState(String s) {
 		return parts.get(s);
 	}
 
 	@Override
-	public LOTPart getOriginalPart(String s) {
-		return env.getObjectFactory().getPart(new MStringID(s));
+	public LOTPart getPart(String s) {
+		return client.getObjectFactory().getPart(new MStringID(s));
 	}
 
 	@Override
@@ -140,7 +220,14 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	}
 
 	public LOTScript getScript(String name) {
-		return scripts.get(name);
+		LOTScript s = scripts.get(name);
+		if (s == null && parent != null) {
+			s = parent.getScript(name);
+		}
+		if (s == null && environment != null) {
+			s = environment.getScript(name);
+		}
+		return s;
 	}
 
 	@Override
@@ -152,15 +239,30 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 
 	@Override
 	public LOTToolState getTool(String id) {
-		LOTToolState tool = tools.get(id);
-		//
+		LOTToolState tool = findTool(id);
 		if (tool != null) {
 			new ConditionWaiter(() -> !tool.isInUse() || !isRunning(), 0);
 			return tool;
 		} else {
-			MStringID stringid = new MStringID(id);
-			return addTool(id, env.getObjectFactory().getTool(stringid));
+			return null;
 		}
+	}
+
+	private LOTToolState findTool(String id) {
+		LOTToolState toolstate = tools.get(id);
+		if (toolstate == null && parent != null) {
+			toolstate = parent.getTool(id);
+		}
+		if (toolstate == null && environment != null) {
+			// TODO Not sure about this at all. Should a ToolState created on
+			// the fly like this?
+			// What should toolstates current location be?
+			LOTTool tool = environment.getTool(id);
+			if (tool != null) {
+				return addTool(id, tool);
+			}
+		}
+		return toolstate;
 	}
 
 	@Override
@@ -175,9 +277,14 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 		tooluser.move(l, n);
 	}
 
-	private LOTToolUser getToolUser(LOTToolState lotToolState, LVector l) {
+	@Override
+	public LOTToolUser getToolUser(LOTToolState lotToolState, LVector l) {
 		for (LOTToolUser tooluser : toolusers) {
 			return tooluser;
+		}
+		if (parent != null) {
+			// TODO should this be possible?
+			return parent.getToolUser(lotToolState, l);
 		}
 		return null;
 	}
@@ -188,7 +295,7 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 
 	@Override
 	public LOTClient getClient() {
-		return env;
+		return client;
 	}
 
 	@Override

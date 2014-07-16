@@ -13,7 +13,7 @@ import org.xml.sax.SAXException;
 public final class TestEnvironment extends LOTTestCase {
 
 	public void testGetAgain() throws IOException, SAXException {
-		LOTClient c = getNewEnv();
+		LOTClient c = getNewClient();
 		assertNotNull(c);
 		//
 		LOTEnvironmentImpl orge = new LOTEnvironmentImpl(c);
@@ -34,7 +34,7 @@ public final class TestEnvironment extends LOTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException,
 			NoSuchMethodException, ScriptException {
-		LOTClient c = getNewEnv();
+		LOTClient c = getNewClient();
 		assertNotNull(c);
 		//
 		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
@@ -51,7 +51,7 @@ public final class TestEnvironment extends LOTTestCase {
 		e.save();
 		e.publish();
 		//
-		LOTClient bc = getNewEnv();
+		LOTClient bc = getNewClient();
 		assertNotNull(bc);
 		LOTEnvironmentImpl benv = new LOTEnvironmentImpl(c, e
 				.getServiceObject().getID().getStringID());
@@ -62,7 +62,7 @@ public final class TestEnvironment extends LOTTestCase {
 	}
 
 	public void testAddGetScript() throws IOException, SAXException {
-		LOTClient c = getNewEnv();
+		LOTClient c = getNewClient();
 		LOTEnvironmentImpl env = new LOTEnvironmentImpl(c);
 		assertNull(env.getScript("FAIL"));
 		//
@@ -72,7 +72,7 @@ public final class TestEnvironment extends LOTTestCase {
 	}
 
 	public void testAddGetParameter() {
-		LOTClient c = getNewEnv();
+		LOTClient c = getNewClient();
 		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
 		String testparam = "testparam";
 		String testvalue = "testvalue";
@@ -81,7 +81,7 @@ public final class TestEnvironment extends LOTTestCase {
 	}
 	
 	public void testAddSaveGetTool() {
-		LOTClient c = getNewEnv();
+		LOTClient c = getNewClient();
 		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
 		String testtool = "testtool";
 		e.addTool(testtool, c.getObjectFactory().getTool());

@@ -51,7 +51,7 @@ public class LOTTestCase extends TestCase {
 		super.setUp();
 	}
 
-	public LOTClient getNewEnv() {
+	public LOTClient getNewClient() {
 		boolean bind = usercounter >= 0 ? true : false;
 
 		String username = "test_username_" + (usercounter) + "@localhost";

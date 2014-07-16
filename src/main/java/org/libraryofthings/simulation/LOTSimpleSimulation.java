@@ -1,26 +1,25 @@
 package org.libraryofthings.simulation;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.libraryofthings.LLog;
 import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.environment.RunEnvironment;
+import org.libraryofthings.environment.RunEnvironmentListener;
 
 import waazdoh.util.ConditionWaiter;
 
-public class LOTSimpleSimulation implements LOTSimulation {
+public class LOTSimpleSimulation implements LOTSimulation,
+		RunEnvironmentListener {
 	private static final double MAX_STEP = 0.01;
 	//
 
 	private RunEnvironment env;
-	private List<LOTTask> runningtasks = new LinkedList<LOTTask>();
 	private LLog log = LLog.getLogger(this);
 	private boolean allsuccess = true;
 	private LOTStepRunner runner;
 
 	public LOTSimpleSimulation(RunEnvironment runenv) {
 		this.env = runenv;
+		env.addListener(this);
 	}
 
 	@Override
@@ -31,6 +30,12 @@ public class LOTSimpleSimulation implements LOTSimulation {
 		stop();
 
 		return allsuccess;
+	}
+
+	@Override
+	public synchronized void taskFailed(RunEnvironment runenv, LOTTask task) {
+		log.info("task " + task + " failed in " + runenv);
+		allsuccess = false;
 	}
 
 	private void stop() {
@@ -50,28 +55,10 @@ public class LOTSimpleSimulation implements LOTSimulation {
 	}
 
 	private synchronized boolean check() {
-		if (!env.getTasks().isEmpty()) {
-			final LOTTask task = env.getTasks().get(0);
-			env.removeTask(task);
-			runningtasks.add(task);
-			//
-			new Thread(() -> runTask(task)).start();
-		}
-		//
-		return isReady();
+		return isReady() || !this.allsuccess;
 	}
 
 	private synchronized boolean isReady() {
-		return env.getTasks().isEmpty() && runningtasks.isEmpty();
-	}
-
-	private void runTask(LOTTask task) {
-		if (!task.run(env)) {
-			this.allsuccess = false;
-		}
-
-		synchronized (this) {
-			runningtasks.remove(task);
-		}
+		return env.isReady();
 	}
 }

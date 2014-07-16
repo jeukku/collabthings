@@ -1,5 +1,7 @@
 package org.libraryofthings;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.Logger;
 
 public class LLog {
@@ -14,6 +16,11 @@ public class LLog {
 	}
 
 	public void error(Object o, String sourceMethod, Throwable e1) {
+		log.warning("ERROR in " + o + " " + sourceMethod + " throwable:" + e1);
+		StringWriter w = new StringWriter();
+		e1.printStackTrace(new PrintWriter(w));
+		log.severe("ERROR in " + o + " " + w.getBuffer());
+		//
 		log.throwing(o.getClass().getName(), sourceMethod, e1);
 	}
 

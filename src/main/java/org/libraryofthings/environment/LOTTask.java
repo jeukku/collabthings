@@ -3,6 +3,7 @@ package org.libraryofthings.environment;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTScript;
 
@@ -11,15 +12,17 @@ import waazdoh.util.ConditionWaiter;
 public final class LOTTask {
 	private List<LOTTask> subtasks = new LinkedList<LOTTask>();
 	//
-	private LOTClient env;
+	private LOTClient client;
 	private LOTScript s;
 	private Object[] params;
 	private boolean isrun;
 
 	public LOTTask(final LOTClient nenv, LOTScript s2, Object[] params2) {
-		this.env = nenv;
+		this.client = nenv;
 		this.s = s2;
 		this.params = params2;
+		//
+		LLog.getLogger(this).info("LOTTask " + s.isOK());
 	}
 
 	public List<LOTTask> getSubTasks() {
@@ -35,13 +38,20 @@ public final class LOTTask {
 	public boolean run(RunEnvironment runenv) {
 		try {
 			boolean ret = s.run(runenv, params);
-			return ret;
-		} finally {
 			isrun = true;
+			return ret;
+		} catch (Exception e) {
+			LLog.getLogger(this).error(this, "run", e);
+			isrun = true;
+			return false;
 		}
 	}
 
 	public void waitUntilFinished() {
 		new ConditionWaiter(() -> this.isrun, 0);
+	}
+
+	public String toString() {
+		return "LOTTask[" + this.s + "][" + params + "]";
 	}
 }
