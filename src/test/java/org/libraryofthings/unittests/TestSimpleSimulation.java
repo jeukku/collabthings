@@ -29,7 +29,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		RunEnvironment runenv = new LOTRunEnvironmentImpl(client, env);
-		
+
 		runenv.addTask(s, "test_fail");
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		assertFalse(simulation.run(MAX_SIMUALTION_RUNTIME));
@@ -73,5 +73,31 @@ public class TestSimpleSimulation extends LOTTestCase {
 		//
 		LVector l = toolstate.getLocation();
 		assertReallyClose(new LVector(10, 0, 0), l);
+	}
+
+	public void testCallTool() {
+		LOTClient client = getNewClient();
+		LOTEnvironment env = new LOTEnvironmentImpl(client);
+		RunEnvironment rune = new LOTRunEnvironmentImpl(client, env);
+		//
+		LOTTool tool = new LOTTool(client);
+		LOTScript testscript = new LOTScript(client);
+		tool.addScript("test", testscript);
+		String testscriptvalue = "testvalue" + Math.random();
+		testscript
+				.setScript("function info() {} function run(e) { e.getParent().setParameter('test', '"
+						+ testscriptvalue + "'); }");
+		//
+		LOTToolState toolstate = rune.addTool("tool", tool);
+		//
+		LOTScript taskscript = new LOTScript(client);
+		String nscript = "function info(){} function run(e) { e.getTool('tool').call('test'); } ";
+		assertTrue(taskscript.setScript(nscript));
+		rune.addTask(taskscript, null);
+		//
+		LOTSimulation s = new LOTSimpleSimulation(rune);
+		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
+		//
+		assertEquals(testscriptvalue, rune.getParameter("test"));
 	}
 }
