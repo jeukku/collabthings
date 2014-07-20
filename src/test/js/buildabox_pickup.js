@@ -1,5 +1,5 @@
 function info() {
-	return "buildabox: move and attach";
+	return "buildabox: pickup";
 }
 
 function run(e, params) {
@@ -7,12 +7,14 @@ function run(e, params) {
 	var subpart = params[1];
 	var source  = params[2];
 	
-	e.log().info("tool " + tool);
-	e.log().info("subpart " + subpart);
-	e.log().info("source " + source);
+	e.log().info("Pickup tool " + tool);
+	e.log().info("Pickup subpart " + subpart);
+	e.log().info("Pickup source " + source);
 	
-	tool.moveTo(subpart.getLocation());
+	source.getPool().waitForPart("ready");
+	var platepart = source.getPool().getPart("ready");
+	tool.getPool().addPart("pickedup", platepart);
 	
-	e.log().info("moveAndAttach done");
+	e.log().info("pickup done");
 }
 

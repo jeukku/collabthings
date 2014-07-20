@@ -1,12 +1,10 @@
 package org.libraryofthings.model;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.libraryofthings.LOTClient;
-import org.xml.sax.SAXException;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -41,13 +39,20 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 		b.addValue(VALUENAME_NAME, getName());
 		b.addValue(VALUENAME_MODELID, getModel().getServiceObject().getID());
 		//
-		JBean bparts = b.add("parts");
+		JBean bparts = getSubPartsBean();
+		//
+		b.add(bparts);
+		//
+		return b;
+	}
+
+	private JBean getSubPartsBean() {
+		JBean bparts = new JBean("parts");
 		for (LOTSubPart part : subparts) {
 			JBean bpart = bparts.add("part");
 			part.getBean(bpart);
 		}
-		//
-		return b;
+		return bparts;
 	}
 
 	@Override
@@ -125,7 +130,7 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 
 	public LOTSubPart newSubPart() {
 		LOTSubPart spart = new LOTSubPart(this, env);
-		addPart(spart);
+		subparts.add(spart);
 		return spart;
 	}
 
@@ -133,15 +138,13 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 		return subparts;
 	}
 
-	public LOTSubPart addSubPart(LOTSubPart part) {
-		LOTSubPart subpart = newSubPart();
-		subpart.setPart(part.getPart());
-		subpart.setOrientation(part.getLocation(), part.getNormal());
-		//
-		return subpart;
-	}
-
 	public boolean importModel(File file) {
 		return getModel().importModel(file);
+	}
+
+	public boolean isAnEqualPart(LOTPart p) {
+		JBean thisb = this.getSubPartsBean();
+		JBean thatb = p.getSubPartsBean();
+		return thisb.equals(thatb);
 	}
 }

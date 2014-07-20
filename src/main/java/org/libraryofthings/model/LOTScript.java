@@ -85,7 +85,7 @@ public final class LOTScript implements ServiceObjectData {
 			inv = loader.load(s);
 			if (inv != null) {
 				// invoke the global function named "hello"
-				info = "" + inv.invokeFunction("info");
+				info = getInfo();
 				log.info("load a script " + info);
 				this.script = s;
 				return true;
@@ -93,11 +93,7 @@ public final class LOTScript implements ServiceObjectData {
 				script = null;
 				return false;
 			}
-		} catch (NoSuchMethodException e) {
-			log.error(this, "parseBean", e);
-			script = null;
-			return false;
-		} catch (ScriptException e) {
+		} catch (LOTScriptException | ScriptException e) {
 			log.error(this, "parseBean", e);
 			script = null;
 			return false;
@@ -131,8 +127,12 @@ public final class LOTScript implements ServiceObjectData {
 	 * @throws ScriptException
 	 */
 	public String getInfo() throws LOTScriptException {
+		return invoke("info");
+	}
+
+	public String invoke(String string) throws LOTScriptException {
 		try {
-			return "" + inv.invokeFunction("info");
+			return "" + inv.invokeFunction(string);
 		} catch (NoSuchMethodException | ScriptException e) {
 			log.error(this, this.name, e);
 			throw new LOTScriptException(e);

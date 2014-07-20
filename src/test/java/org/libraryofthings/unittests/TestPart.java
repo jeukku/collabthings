@@ -68,18 +68,6 @@ public final class TestPart extends LOTTestCase {
 				new LVector(0, 1, 0).toString());
 	}
 
-	public void testSubPartOrientation2() throws IOException, SAXException {
-		LOTClient e = getNewClient();
-		LOTPart p = new LOTPart(e);
-		LOTSubPart subpart = new LOTSubPart(p, e);
-		subpart.setPart(new LOTPart(e));
-		subpart.setOrientation(new LVector(10, 10, 10), new LVector(0, 1, 0));
-		LOTSubPart bsubpart = p.addSubPart(subpart);
-		//
-		assertReallyClose(subpart.getLocation(), bsubpart.getLocation());
-		assertReallyClose(subpart.getNormal(), bsubpart.getNormal());
-	}
-
 	public void testLoadRandomID() throws IOException, SAXException {
 		LOTClient e = getNewClient();
 		assertNull(e.getObjectFactory().getPart(new MStringID()));
@@ -99,5 +87,29 @@ public final class TestPart extends LOTTestCase {
 		p.importModel(new File("src/test/resources/models/cube.x3d"));
 		assertNotNull(p.getModel());
 		assertTrue(p.getModel().getBinary().length() > 0);
+	}
+
+	public void testEqualPart() {
+		LOTClient client = getNewClient();
+		LOTPart a = client.getObjectFactory().getPart();
+		LOTPart b = client.getObjectFactory().getPart();
+		LOTPart c = client.getObjectFactory().getPart();
+
+		setupSubparts(a, c);
+		setupSubparts(b, c);
+		//
+		assertFalse(a.isAnEqualPart(c));
+		assertFalse(b.isAnEqualPart(c));
+		assertTrue(a.isAnEqualPart(b));
+		assertTrue(b.isAnEqualPart(a));
+	}
+
+	private void setupSubparts(LOTPart a, LOTPart c) {
+		for (int i = 0; i < 10; i++) {
+			LOTSubPart newSubPart = a.newSubPart();
+			newSubPart.setPart(c);
+			newSubPart.setOrientation(new LVector(i, i, i),
+					new LVector(i, i, i));
+		}
 	}
 }

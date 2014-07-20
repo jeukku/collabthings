@@ -7,7 +7,6 @@ import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
-import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.LOTTool;
 
 import waazdoh.client.model.MID;
@@ -20,9 +19,9 @@ public interface RunEnvironment {
 
 	String getParameter(String s);
 
-	LOTPartState addPart(String string, LOTSubPart part);
-
 	LOTPartState getPartState(String s);
+
+	LOTPartState newPart();
 
 	LLog log();
 
@@ -37,8 +36,6 @@ public interface RunEnvironment {
 	LOTTask addTask(LOTScript s, Object... params);
 
 	LOTPart getPart(String s);
-
-	LOTPartState getBasePart();
 
 	void addToolUser(LOTToolUser tooluser);
 

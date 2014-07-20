@@ -87,6 +87,20 @@ public final class TestScript extends LOTTestCase {
 		assertNull(s);
 	}
 
+	public void testInvokeUnknownFuntion() {
+		LOTClient client = getNewClient();
+		LOTScript s = getAndTestWorkingScriptExample(client);
+		boolean exceptioncaught = false;
+		try {
+			s.invoke("FOO");
+		} catch (LOTScriptException e) {
+			assertNotNull(s);
+			exceptioncaught = true;
+		}
+		//
+		assertTrue(exceptioncaught);
+	}
+
 	public void testMissingRunMethod() {
 		LOTClient client = getNewClient();
 		LOTScript s = getScript(client, "function info() {}");

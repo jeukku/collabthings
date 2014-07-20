@@ -26,4 +26,19 @@ public final class TestStepRunner extends LOTTestCase {
 		assertTrue(runner.isStopped());
 		assertFalse(f.isTriggered());
 	}
+
+	public void testExceptionInTest() throws InterruptedException {
+		MTimedFlag f = new MTimedFlag(2000000);
+		LOTStepRunner runner = new LOTStepRunner(0.01, (double step) -> {
+			throw new RuntimeException();
+		});
+		assertFalse(runner.isStopped());
+		assertFalse(f.isTriggered());
+		synchronized (runner) {
+			runner.wait(2000);
+		}
+		new ConditionWaiter(() -> runner.isStopped(), 1000);
+		//
+		assertTrue(runner.isStopped());
+	}
 }

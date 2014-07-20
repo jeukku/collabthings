@@ -8,13 +8,13 @@ import org.libraryofthings.model.LOTSubPart;
 
 public class LOTPartState {
 
-	private LOTSubPart part;
+	private LOTPart part;
 	private LOTClient env;
 	private LVector location = new LVector();
 	//
 	private LLog log = LLog.getLogger(this);
 
-	public LOTPartState(final LOTClient env, final LOTSubPart part) {
+	public LOTPartState(final LOTClient env, final LOTPart part) {
 		this.env = env;
 		this.part = part;
 	}
@@ -28,15 +28,14 @@ public class LOTPartState {
 		return location;
 	}
 
-	public LOTSubPart getPart() {
+	public LOTPart getPart() {
 		return part;
 	}
 
 	public void addPart(LOTSubPart np) {
-		LOTPart p = part.getPart();
-		LOTSubPart nsp = new LOTSubPart(p, env);
+		LOTSubPart nsp = part.newSubPart();
+		nsp.setPart(np.getPart());
 		nsp.setOrientation(np.getLocation(), np.getNormal());
-		p.addSubPart(nsp);
 	}
 
 	@Override

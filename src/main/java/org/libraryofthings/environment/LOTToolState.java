@@ -87,4 +87,8 @@ public class LOTToolState {
 	public RunEnvironment getEnvironment() {
 		return env;
 	}
+
+	public LOTPool getPool() {
+		return getEnvironment().getPool();
+	}
 }

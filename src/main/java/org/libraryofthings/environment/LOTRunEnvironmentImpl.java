@@ -11,7 +11,6 @@ import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
-import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.LOTTool;
 
 import waazdoh.client.model.MID;
@@ -60,10 +59,18 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 			tooluser.step(dtime);
 		}
 		//
-		for (RunEnvironment runenv : new LinkedList<RunEnvironment>(children)) {
-			runenv.step(dtime);
+		List<RunEnvironment> listchildren = null;
+		synchronized (children) {
+			if (!children.isEmpty()) {
+				listchildren = new LinkedList<>(children);
+			}
 		}
-
+		if (listchildren != null) {
+			for (RunEnvironment runenv : listchildren) {
+				runenv.step(dtime);
+			}
+		}
+		//
 		return isRunning();
 	}
 
@@ -133,15 +140,6 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	}
 
 	@Override
-	public LOTPartState getBasePart() {
-		if (basepart == null) {
-			basepart = new LOTPartState(client, client.getObjectFactory()
-					.getPart().newSubPart());
-		}
-		return basepart;
-	}
-
-	@Override
 	public RunEnvironment getParent() {
 		return parent;
 	}
@@ -198,13 +196,6 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	}
 
 	@Override
-	public LOTPartState addPart(String string, LOTSubPart part) {
-		LOTPartState state = new LOTPartState(client, part);
-		parts.put(string, state);
-		return state;
-	}
-
-	@Override
 	public LOTPartState getPartState(String s) {
 		return parts.get(s);
 	}
@@ -212,6 +203,13 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	@Override
 	public LOTPart getPart(String s) {
 		return client.getObjectFactory().getPart(new MStringID(s));
+	}
+
+	@Override
+	public LOTPartState newPart() {
+		LOTPartState partstate = new LOTPartState(client, client
+				.getObjectFactory().getPart());
+		return partstate;
 	}
 
 	@Override
