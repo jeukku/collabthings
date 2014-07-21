@@ -25,19 +25,15 @@ public class LOTToolState {
 		this.tool = ntool;
 	}
 
-	public void addTask(final String name) {
-		env.addTask(tool.getScript(name), this);
+	public void addTask(final String name, final Object... params) {
+		env.addTask(tool.getScript(name), populateParameters(params));
 	}
 
 	public void call(final String scriptname, final Object... params)
 			throws LOTToolException {
 		log.info("call " + scriptname + " params:" + params);
 
-		List<Object> l = new LinkedList<Object>();
-		l.add(this);
-		for (Object o : params) {
-			l.add(o);
-		}
+		Object[] l = populateParameters(params);
 
 		LOTScript script = tool.getScript(scriptname);
 
@@ -47,6 +43,26 @@ public class LOTToolState {
 		} else {
 			throw new LOTToolException("Script called '" + scriptname
 					+ "' does not exist in " + this);
+		}
+	}
+
+	private Object[] populateParameters(final Object... params) {
+		List<Object> l = new LinkedList<Object>();
+		l.add(this);
+		for (Object o : params) {
+			addParameterToList(l, o);
+		}
+		return l.toArray();
+	}
+
+	private void addParameterToList(List<Object> l, Object o) {
+		if (o instanceof Object[]) {
+			Object[] oa = (Object[]) o;
+			for (Object object : oa) {
+				addParameterToList(l, object);
+			}
+		} else {
+			l.add(o);
 		}
 	}
 

@@ -2,17 +2,23 @@ function info() {
 	return "testing box -building";
 }
 
-function run(runenv, boxfactory) {
+function run(runenv, params) {
 	var log = runenv.log();
 	
-	var part = runenv.getPart(runenv.getParameter('partid'));
+	log.info("params " + params);
+	
+	var toolstate = params[0];
+	
+	var partid = params[1];
+	log.info("partid " + partid)
+	var part = runenv.getPart(partid);
 	
 	var destpartstate = runenv.newPart();
 	
 	log.info("Running through all subparts. Destination part " + destpartstate);
 	_.each(part.getSubParts().toArray(), function(subpart) {
 		log.info('script test ' + subpart);
-		moveAndAttach(runenv, subpart, destpartstate);
+		moveandattach(runenv, subpart, destpartstate);
 	});
 	
 	log.info("Assembly done " + destpartstate);
@@ -33,6 +39,6 @@ function run(runenv, boxfactory) {
 	log.info("script end!!!");
 }
 
-function moveAndAttach(runenv, subpart, destpart) {
-	runenv.addTask(runenv.getScript("MoveAndAttach"), subpart, destpart).waitUntilFinished();
+function moveandattach(runenv, subpart, destpart) {
+	runenv.addTask(runenv.getScript("moveandattach"), subpart, destpart).waitUntilFinished();
 }

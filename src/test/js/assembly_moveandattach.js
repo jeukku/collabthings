@@ -25,5 +25,5 @@ function run(runenv, params) {
 	tool.call('attach', subpart, destpart);
 	tool.setAvailable();
 
-	runenv.log().info("moveAndAttach done");
+	runenv.log().info("moveandattach done");
 }
