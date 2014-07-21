@@ -49,7 +49,7 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 	}
 
 	public LOTScript getScript(String string) {
-		return env.getScript(string);
+		return env.getScript(string.toLowerCase());
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 	}
 
 	public void addScript(String scriptname, LOTScript lotScript) {
-		env.addScript(scriptname, lotScript);
+		env.addScript(scriptname.toLowerCase(), lotScript);
 	}
 
 	public void save() {
