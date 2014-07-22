@@ -46,7 +46,7 @@ public class LOTPool {
 		}
 	}
 
-	private boolean isPartPoolEmpty(String pool) {
+	public boolean isPartPoolEmpty(String pool) {
 		return parts.get(pool) == null || parts.get(pool).isEmpty();
 	}
 
