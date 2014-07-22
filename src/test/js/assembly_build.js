@@ -1,5 +1,5 @@
 function info() {
-	return "testing box -building";
+	return "assembly build";
 }
 
 function run(runenv, params) {
@@ -10,8 +10,8 @@ function run(runenv, params) {
 	var toolstate = params[0];
 	
 	var partid = params[1];
-	log.info("partid " + partid)
 	var part = runenv.getPart(partid);
+	log.info("partid " + partid + " -> part " + part);
 	
 	var destpartstate = runenv.newPart();
 	

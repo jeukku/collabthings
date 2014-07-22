@@ -63,4 +63,8 @@ public interface RunEnvironment {
 
 	LOTToolUser getToolUser(LOTToolState lotToolState, LVector l);
 
+	void setName(String string);
+
+	String getInfo();
+
 }

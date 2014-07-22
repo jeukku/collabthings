@@ -23,6 +23,7 @@ public class LOTToolState {
 		log.info("LOTToolState with " + runenv + " tool:" + tool);
 		this.env = new LOTRunEnvironmentImpl(runenv, ntool.getEnvironment());
 		this.tool = ntool;
+		env.setName("Tool " + tool.getName());
 	}
 
 	public void addTask(final String name, final Object... params) {
@@ -31,7 +32,10 @@ public class LOTToolState {
 
 	public void call(final String scriptname, final Object... params)
 			throws LOTToolException {
-		log.info("call " + scriptname + " params:" + params);
+
+		log.info("Calling " + scriptname + "(" + this + ")");
+		log.info("\tparams:" + params);
+		log.info("\tEnvironment:" + env.getInfo().replace(";", "\n\t"));
 
 		Object[] l = populateParameters(params);
 
@@ -97,7 +101,7 @@ public class LOTToolState {
 
 	@Override
 	public String toString() {
-		return "LOTToolState " + this.tool;
+		return "LOTToolState[" + this.tool + "][" + this.location + "]";
 	}
 
 	public RunEnvironment getEnvironment() {

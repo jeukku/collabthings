@@ -9,6 +9,7 @@ import org.libraryofthings.LOTClient;
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.client.model.JBean;
+import waazdoh.client.model.MID;
 import waazdoh.util.MStringID;
 
 public final class LOTPart implements ServiceObjectData, LOTObject {
@@ -27,6 +28,11 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 		this.env = nenv;
 		o = new ServiceObject(BEANNAME, nenv.getClient(), this,
 				nenv.getVersion(), nenv.getPrefix());
+	}
+
+	@Override
+	public String toString() {
+		return "LOTPart[" + name + "][" + subparts + "][" + getID() + "]";
 	}
 
 	public boolean load(MStringID id) {
@@ -146,5 +152,9 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 		JBean thisb = this.getSubPartsBean();
 		JBean thatb = p.getSubPartsBean();
 		return thisb.equals(thatb);
+	}
+
+	public MID getID() {
+		return getServiceObject().getID();
 	}
 }

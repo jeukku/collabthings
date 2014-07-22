@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.script.ScriptException;
 
+import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.LOTToolException;
@@ -30,13 +31,19 @@ public final class ITTestBuildABox extends LOTTestCase {
 	private static final int MAX_SIMULATION_RUNTIME = 60000;
 	//
 	private LOTPart box;
+	private LLog log = LLog.getLogger(this);
 
 	public void testBoxLine() throws NoSuchMethodException, IOException,
 			SAXException, ScriptException, LOTToolException {
-		RunEnvironment env = testBox();
-		setupFactoryThatUsesBoxes(env);
+		LOTClient client = getNewClient();
+
+		LOTEnvironment env = new LOTEnvironmentImpl(client);
+		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client, env);
+
+		LOTToolState factory = setupFactoryThatUsesBoxes(runenv);
 		//
-		LOTPart line = env.getClient().getObjectFactory().getPart();
+		LOTPart line = runenv.getClient().getObjectFactory().getPart();
+		line.setName("line");
 		assertNotNull(line);
 		//
 		for (int i = 0; i < 10; i++) {
@@ -45,10 +52,10 @@ public final class ITTestBuildABox extends LOTTestCase {
 			sb.setOrientation(new LVector(i * 2, 0, 0), new LVector(0, 1, 0));
 		}
 		//
-		LOTToolState boxfactory = env.getTool("boxfactory");
+		LOTToolState boxfactory = factory.getEnvironment().getTool("source");
 		boxfactory.call("order");
 		//
-		LOTSimulation simulation = new LOTSimpleSimulation(env);
+		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
 
 	}
@@ -59,10 +66,19 @@ public final class ITTestBuildABox extends LOTTestCase {
 		assertNotNull(runenv);
 	}
 
-	private void setupFactoryThatUsesBoxes(RunEnvironment env)
-			throws IOException {
+	private LOTToolState setupFactoryThatUsesBoxes(RunEnvironment env)
+			throws IOException, NoSuchMethodException, ScriptException {
 		LOTClient client = env.getClient();
-		LOTTool factory = client.getObjectFactory().getTool();
+		LOTTool factory = createAssemblyFactory(client);
+		log.info("factory that uses boxes " + factory);
+
+		factory.getEnvironment().addTool("source", createBoxFactory(client));
+
+		LOTToolState runfact = env.addTool("factory", factory);
+		runfact.getEnvironment().addToolUser(
+				new ReallySimpleSuperheroRobot(client, env));
+		//
+		return runfact;
 	}
 
 	public RunEnvironment testBox() throws NoSuchMethodException,
@@ -110,19 +126,24 @@ public final class ITTestBuildABox extends LOTTestCase {
 	private LOTTool createBoxFactory(LOTClient client)
 			throws NoSuchMethodException, ScriptException, IOException {
 		LOTTool factory = createAssemblyFactory(client);
-	
+		log.info("Boxfactory " + factory);
+
 		// TODO picking up plates, moving them and leaving them somewhere
 		// Create a plate object
-		LOTPart square = new LOTPart(client);
+		LOTPart square = client.getObjectFactory().getPart();
 		square.setName("wall");
+		log.info("Square " + square);
 
 		// Create a box object
 		LOTPart box = createBox(client, square);
-		factory.getEnvironment().setParameter("partid", box.getServiceObject().getID());
-		
+		factory.getEnvironment().setParameter("partid",
+				box.getServiceObject().getID());
+		log.info("box " + box);
+
 		// Create a plate source
 		LOTTool platesource = createPlateSource(client, square);
 		factory.getEnvironment().addTool("source", platesource);
+		log.info("platesource " + platesource);
 
 		return factory;
 	}
@@ -137,9 +158,9 @@ public final class ITTestBuildABox extends LOTTestCase {
 		// scripts
 		factory.addScript("moveandattach",
 				loadScript(client, "assembly_moveandattach.js"));
-		factory.addScript("build",
-				loadScript(client, "assembly_build.js"));
+		factory.addScript("build", loadScript(client, "assembly_build.js"));
 		factory.addScript("order", loadScript(client, "assembly_order.js"));
+
 		return factory;
 	}
 

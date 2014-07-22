@@ -13,7 +13,7 @@ function run(runenv, params) {
 	tool.setInUse();
 
 	var partsource = runenv.getTool('source');
-	partsource.call('order', subpart);
+	partsource.call('order', subpart.getPart().getID());
 	tool.moveTo(partsource.getLocation());
 	tool.call('pickup', subpart, partsource);
 	//

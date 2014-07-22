@@ -23,6 +23,7 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	private Map<String, LOTToolState> tools = new HashMap<String, LOTToolState>();
 	private Map<String, String> params = new HashMap<String, String>();
 	private List<LOTTask> tasks = new LinkedList<LOTTask>();
+	private List<LOTTask> runningtasks = new LinkedList<LOTTask>();
 	private List<LOTToolUser> toolusers = new LinkedList<LOTToolUser>();
 	private LOTPool pool = new LOTPool();
 
@@ -30,14 +31,13 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	private RunEnvironment parent;
 	private List<RunEnvironment> children = new LinkedList<>();
 	//
-	private LLog log = LLog.getLogger(this);
-	private LOTPartState basepart;
-	//
-	private List<LOTTask> runningtasks = new LinkedList<LOTTask>();
 	private boolean stopped;
 	//
 	private List<RunEnvironmentListener> listeners = new LinkedList<>();
 	private LOTEnvironment environment;
+	private String name;
+	//
+	private LLog log = LLog.getLogger(this);
 
 	public LOTRunEnvironmentImpl(final LOTClient nclient, final LOTEnvironment e) {
 		this.client = nclient;
@@ -50,6 +50,49 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 
 		parent.addChild(this);
 		this.client = runenv.getClient();
+	}
+
+	@Override
+	public String toString() {
+		return "LOTRunEnvironmentImpl[" + this.name + "]";
+	}
+
+	@Override
+	public String getInfo() {
+		StringBuffer s = new StringBuffer();
+		s.append("LOTRunEnvironment(" + name + ");");
+		s.append("pool :" + pool + ";");
+		//
+		s.append("runningtasks: ");
+		for (LOTTask t : runningtasks) {
+			s.append("" + t + ";");
+		}
+		s.append("tasks: ");
+		for (LOTTask t : this.tasks) {
+			s.append("" + t + ";");
+		}
+		//
+		s.append("parameters:");
+		for (String p : params.keySet()) {
+			s.append(p + " -> " + getParameter(p) + ";");
+		}
+		s.append("toolusers:");
+		for (LOTToolUser tu : toolusers) {
+			s.append(tu + ";");
+		}
+		s.append("parts:");
+		for (String partkey : parts.keySet()) {
+			s.append(partkey + " -> " + getPart(partkey) + ";");
+		}
+		s.append("tools:");
+		for (String toolname : tools.keySet()) {
+			s.append(toolname + " -> " + getTool(toolname) + ";");
+		}
+		return s.toString();
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public boolean step(double dtime) {
@@ -174,7 +217,14 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 
 	@Override
 	public LOTTask addTask(final LOTScript s, final Object... params) {
-		log.info("addTask " + s + " params: " + params);
+		StringBuffer sb = new StringBuffer();
+		sb.append("addTask " + s + "\n");
+		sb.append("\tparameters: ");
+		for (Object object : params) {
+			sb.append("\t\t" + object + "\n");
+		}
+		log.info(sb.toString());
+		//
 		LOTTask task = new LOTTask(client, s, params);
 		synchronized (tasks) {
 			tasks.add(task);
