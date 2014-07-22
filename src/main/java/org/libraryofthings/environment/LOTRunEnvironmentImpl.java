@@ -219,10 +219,15 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	public LOTTask addTask(final LOTScript s, final Object... params) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("addTask " + s + "\n");
-		sb.append("\tparameters: ");
-		for (Object object : params) {
-			sb.append("\t\t" + object + "\n");
+		if (params != null) {
+			sb.append("\tparameters: ");
+			for (Object object : params) {
+				sb.append("\t\t" + object + "\n");
+			}
+		} else {
+			sb.append("Parameters null\n");
 		}
+
 		log.info(sb.toString());
 		//
 		LOTTask task = new LOTTask(client, s, params);
