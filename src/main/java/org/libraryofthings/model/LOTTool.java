@@ -13,7 +13,7 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 	private static final String VALUENAME_MODELID = "model3did";
 	private static final String VALUENAME_ENVIRONMENTID = "environmentid";
 	//
-	public static int counter = 0;
+	private static int counter = 0;
 	//
 	private ServiceObject o;
 	private String name = "tool" + (LOTTool.counter++);
