@@ -33,9 +33,9 @@ public final class Test3DModel extends LOTTestCase {
 	}
 
 	public void testSaveAndLoadBinary() throws IOException, SAXException {
-		LOTClient env = getNewClient();
+		LOTClient env = getNewClient(true);
 		assertNotNull(env);
-		LOTClient benv = getNewClient();
+		LOTClient benv = getNewClient(true);
 		assertNotNull(benv);
 		benv.getBinarySource().waitUntilReady();
 		//

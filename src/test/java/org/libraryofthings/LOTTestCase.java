@@ -26,7 +26,7 @@ import waazdoh.util.MPreferences;
 
 public class LOTTestCase extends TestCase {
 	private static final int DEFAULT_WAITTIME = 100;
-	private static final int MAX_OBJECT_WAITTIME = 30000;
+	private static final int MAX_OBJECT_WAITTIME = 60000;
 	private static final String PREFERENCES_RUNAGAINSTSERVICE = "lot.test.useservice";
 	//
 	private static final double ACCEPTED_DIFFERENCE = 0.000000000001;
@@ -52,7 +52,12 @@ public class LOTTestCase extends TestCase {
 	}
 
 	public LOTClient getNewClient() {
-		boolean bind = usercounter >= 0 ? true : false;
+		return getNewClient(false);
+	}
+
+	public LOTClient getNewClient(boolean forcebind) {
+		// do not bind if the first one.
+		boolean bind = usercounter > 0 || forcebind ? true : false;
 
 		String username = "test_username_" + (usercounter) + "@localhost";
 		MPreferences p = new StaticTestPreferences("lottests", username);

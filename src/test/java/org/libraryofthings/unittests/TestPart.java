@@ -16,7 +16,7 @@ import waazdoh.util.MStringID;
 public final class TestPart extends LOTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException {
-		LOTClient env = getNewClient();
+		LOTClient env = getNewClient(true);
 		assertNotNull(env);
 		//
 		LOTPart part = new LOTPart(env);
@@ -34,7 +34,7 @@ public final class TestPart extends LOTTestCase {
 		part.save();
 		part.publish();
 		//
-		LOTClient benv = getNewClient();
+		LOTClient benv = getNewClient(true);
 		assertNotNull(benv);
 		MStringID bpartid = part.getServiceObject().getID().getStringID();
 		LOTPart bpart = benv.getObjectFactory().getPart(bpartid);

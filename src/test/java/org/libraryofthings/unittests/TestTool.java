@@ -32,7 +32,7 @@ public final class TestTool extends LOTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException,
 			NoSuchMethodException, ScriptException {
-		LOTClient env = getNewClient();
+		LOTClient env = getNewClient(true);
 		assertNotNull(env);
 		//
 		LOTTool t = env.getObjectFactory().getTool();
@@ -52,7 +52,7 @@ public final class TestTool extends LOTTestCase {
 		t.save();
 		t.publish();
 		//
-		LOTClient benv = getNewClient();
+		LOTClient benv = getNewClient(true);
 		assertNotNull(benv);
 		LOTTool btool = benv.getObjectFactory().getTool(
 				t.getServiceObject().getID().getStringID());
