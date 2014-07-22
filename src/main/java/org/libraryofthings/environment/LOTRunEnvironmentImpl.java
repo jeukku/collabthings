@@ -230,7 +230,7 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 
 		log.info(sb.toString());
 		//
-		LOTTask task = new LOTTask(client, s, params);
+		LOTTask task = new LOTTask(s, params);
 		synchronized (tasks) {
 			tasks.add(task);
 		}
