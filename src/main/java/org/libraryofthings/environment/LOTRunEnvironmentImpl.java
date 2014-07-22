@@ -59,7 +59,7 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 
 	@Override
 	public String getInfo() {
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		s.append("LOTRunEnvironment(" + name + ");");
 		s.append("pool :" + pool + ";");
 		//
@@ -217,7 +217,7 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 
 	@Override
 	public LOTTask addTask(final LOTScript s, final Object... params) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("addTask " + s + "\n");
 		if (params != null) {
 			sb.append("\tparameters: ");

@@ -148,7 +148,7 @@ public class LOTTestCase extends TestCase {
 	}
 
 	protected String loadATestScript(String string) throws IOException {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		String path = "src/test/js/" + string;
 		BufferedReader br = new BufferedReader(new FileReader(path));
 		StringWriter sw = new StringWriter();
