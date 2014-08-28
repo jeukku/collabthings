@@ -13,6 +13,8 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	private LOTClient env;
 	private List<LOTPart> parts = new LinkedList<LOTPart>();
 	private List<LOTTool> tools = new LinkedList<LOTTool>();
+	//
+	private LLog log = LLog.getLogger(this);
 
 	public LOTObjectFactoryImpl(final LOTClient nenv) {
 		this.env = nenv;
@@ -41,6 +43,7 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	@Override
 	public LOTPart getPart() {
 		LOTPart p = new LOTPart(env);
+		log.info("new part " + p.getBean());
 		parts.add(p);
 		return p;
 	}
@@ -55,9 +58,15 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 
 		LOTPart part = new LOTPart(env);
 		if (part.load(partid)) {
+			log.info("Load part " + part);
 			parts.add(part);
 			return part;
 		} else {
+			log.info("Failed to load part " + partid);
+			log.info("Current parts " + parts);
+			for (LOTPart p : parts) {
+				log.info("Part " + p.getBean());
+			}
 			return null;
 		}
 	}
