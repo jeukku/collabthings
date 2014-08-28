@@ -80,7 +80,7 @@ public final class LVector {
 		return ret;
 	}
 
-	private void sub(LVector b) {
+	public void sub(LVector b) {
 		set(v.subtract(b.v));
 	}
 
@@ -88,8 +88,15 @@ public final class LVector {
 		return v.getNorm();
 	}
 
-	public void mult(double d) {
+	public LVector mult(double d) {
 		set(v.mapMultiply(d));
+		return this;
+	}
+
+	public LVector getMult(double d) {
+		LVector ret = copy();
+		ret.mult(d);
+		return ret;
 	}
 
 	public void normalize() {
@@ -120,4 +127,5 @@ public final class LVector {
 		c.normalize();
 		return c;
 	}
+
 }
