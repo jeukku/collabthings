@@ -151,4 +151,5 @@ public final class LOTTool implements ServiceObjectData, LOTObject {
 			return false;
 		}
 	}
+
 }

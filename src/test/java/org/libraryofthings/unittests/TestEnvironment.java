@@ -79,14 +79,15 @@ public final class TestEnvironment extends LOTTestCase {
 		e.setParameter(testparam, testvalue);
 		assertEquals(testvalue, e.getParameter(testparam));
 	}
-	
+
 	public void testAddSaveGetTool() {
 		LOTClient c = getNewClient();
 		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
 		String testtool = "testtool";
 		e.addTool(testtool, c.getObjectFactory().getTool());
 		e.save();
-		LOTEnvironmentImpl benv = new LOTEnvironmentImpl(c, e.getID().getStringID());
+		LOTEnvironmentImpl benv = new LOTEnvironmentImpl(c, e.getID()
+				.getStringID());
 		assertNotNull(benv.getTool(testtool));
 		assertEquals(e.getTool(testtool), benv.getTool(testtool));
 	}

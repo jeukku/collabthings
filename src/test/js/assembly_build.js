@@ -2,23 +2,38 @@ function info() {
 	return "assembly build";
 }
 
-function run(runenv, params) {
-	var log = runenv.log();
+function run(runenv, factory, values) {
+	var log = runenv.log().instance("Assembly build");
 	
-	log.info("params " + params);
+	log.info("values " + values);
 	
-	var toolstate = params[0];
+	var toolstate = values.get('tool');
 	
-	var partid = params[1];
-	var part = runenv.getPart(partid);
+	var partid = values.get('partid');
+	if(partid==null) {
+		partid = factory.getParameter('partid');
+	}
+	
+	var poolid = values.get('poolid');
+	if(poolid==null) {
+		poolid = partid;
+	}
+	log.info("poolid " + poolid);
+	
+	var part = factory.getPart(partid);
+	log.setInfo("Assembly build " + part.getName())	
 	log.info("partid " + partid + " -> part " + part);
 	
-	var destpartstate = runenv.newPart();
+	var destpartstate = factory.newPart();
 	
 	log.info("Running through all subparts. Destination part " + destpartstate);
 	_.each(part.getSubParts().toArray(), function(subpart) {
 		log.info('script test ' + subpart);
-		moveandattach(runenv, subpart, destpartstate);
+		var callvalues = values.copy();
+		callvalues.put('subpart', subpart);
+		callvalues.put('destpart', destpartstate);
+		
+		moveandattach(runenv, factory, callvalues);
 	});
 	
 	log.info("Assembly done " + destpartstate);
@@ -27,18 +42,18 @@ function run(runenv, params) {
 	log.info("modelpart bean: " + part.getBean());
 	log.info("destpart bean: " + destpart.getBean());
 	
-	var pool = runenv.getPool();
+	var pool = factory.getPool();
 	if(part.isAnEqualPart(destpart)) {
-		log.info("Adding part to box -pool");
-		pool.addPart("box", destpart);
+		log.info("Adding part to " + poolid + " -pool");
+		pool.addPart(poolid, destpart);
 	} else {
 		log.info("Parts are not equal.");
 		pool.addPart("trash", destpart);
 	}
 	
-	log.info("script end!!!");
+	log.info("Done.");
 }
 
-function moveandattach(runenv, subpart, destpart) {
-	runenv.addTask(runenv.getScript("moveandattach"), subpart, destpart).waitUntilFinished();
+function moveandattach(runenv, factory, values) {
+	factory.addTask("moveandattach", values).waitUntilFinished();
 }

@@ -5,6 +5,8 @@ import javax.script.ScriptException;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.environment.LOTRuntimeObject;
+import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.scripting.JavaScriptLoader;
 import org.libraryofthings.scripting.ScriptLoader;
 
@@ -45,7 +47,7 @@ public final class LOTScript implements ServiceObjectData {
 		o = new ServiceObject(BEANNAME, env.getClient(), this,
 				env.getVersion(), env.getPrefix());
 		setName("script" + (LOTScript.namecounter++));
-		setScript("function run(env) { env.log().info('Running ' + this); } function info() { return 'default script'; } ");
+		setScript("function run(env, values) { env.log().info('Running ' + this); } function info() { return 'default script'; } ");
 	}
 
 	@Override
@@ -142,15 +144,22 @@ public final class LOTScript implements ServiceObjectData {
 	/**
 	 * Invokes run -function in the script.
 	 * 
+	 * @param o2
+	 * 
 	 */
-	public boolean run(Object... params) {
+	public boolean run(RunEnvironment runenv, LOTRuntimeObject runo,
+			LOTValues values) {
 		try {
-			inv.invokeFunction("run", params);
+			inv.invokeFunction("run", runenv, runo, values);
 			return true;
 		} catch (NoSuchMethodException | ScriptException e1) {
 			handleException(e1);
 			return false;
 		}
+	}
+
+	public boolean run(RunEnvironment runenv, LOTRuntimeObject o) {
+		return run(runenv, o, new LOTValues());
 	}
 
 	private void handleException(Exception e1) {

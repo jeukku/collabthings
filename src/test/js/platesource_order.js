@@ -2,11 +2,13 @@ function info() {
 	return "buildabox platesource: Order";
 }
 
-function run(e, params) {
-	var tool = params[0];
-	e.log().info("tool " + tool);
+function run(e, factory, values) {
+	var tool = values.get('tool');
+	var log = e.log().instance("" + tool);
 
-	tool.addTask("build");
+	log.info("tool " + tool);
 
-	e.log().info("Order done");
+	factory.addTask("build", values);
+
+	log.info("Order done");
 }

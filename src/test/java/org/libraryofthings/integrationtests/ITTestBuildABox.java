@@ -9,16 +9,17 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.LOTToolException;
-import org.libraryofthings.environment.LOTRunEnvironmentImpl;
-import org.libraryofthings.environment.LOTToolState;
+import org.libraryofthings.environment.LOTFactoryState;
 import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTEnvironmentImpl;
+import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.LOTTool;
+import org.libraryofthings.model.LOTValues;
 import org.libraryofthings.simulation.LOTSimpleSimulation;
 import org.libraryofthings.simulation.LOTSimulation;
 import org.xml.sax.SAXException;
@@ -38,9 +39,13 @@ public final class ITTestBuildABox extends LOTTestCase {
 		LOTClient client = getNewClient();
 
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
-		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client, env);
 
-		LOTToolState factory = setupFactoryThatUsesBoxes(runenv);
+		LOTFactory factory = setupFactoryThatUsesBoxes(client);
+		LOTFactoryState factorystate = factory.initRuntimeEnvironment(client,
+				env);
+		RunEnvironment runenv = factorystate.getRunEnvironment();
+
+		factory.setLocation(new LVector(0, 0, 0));
 		//
 		LOTPart line = runenv.getClient().getObjectFactory().getPart();
 		line.setName("line");
@@ -52,12 +57,14 @@ public final class ITTestBuildABox extends LOTTestCase {
 			sb.setOrientation(new LVector(i * 2, 0, 0), new LVector(0, 1, 0));
 		}
 		//
-		LOTToolState boxfactory = factory.getEnvironment().getTool("source");
-		boxfactory.call("order");
+		factorystate.call("order", new LOTValues("partid", line.getID()));
 		//
-		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
-		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
+		LOTSimulation simulation = new LOTSimpleSimulation(runenv, true);
 
+		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
+		//
+		LOTPart builtline = factorystate.getPool().getPart("" + line.getID());
+		assertNotNull(builtline);
 	}
 
 	public void testBuildABox() throws NoSuchMethodException, ScriptException,
@@ -66,19 +73,18 @@ public final class ITTestBuildABox extends LOTTestCase {
 		assertNotNull(runenv);
 	}
 
-	private LOTToolState setupFactoryThatUsesBoxes(RunEnvironment env)
+	private LOTFactory setupFactoryThatUsesBoxes(LOTClient client)
 			throws IOException, NoSuchMethodException, ScriptException {
-		LOTClient client = env.getClient();
-		LOTTool factory = createAssemblyFactory(client);
+		LOTFactory factory = createAssemblyFactory(client);
 		log.info("factory that uses boxes " + factory);
 
-		factory.getEnvironment().addTool("source", createBoxFactory(client));
+		LOTFactory boxfactory = createBoxFactory(client);
+		boxfactory.setLocation(new LVector(20, 0, 0));
+		factory.addFactory("source", boxfactory);
 
-		LOTToolState runfact = env.addTool("factory", factory);
-		runfact.getEnvironment().addToolUser(
-				new ReallySimpleSuperheroRobot(client, env));
-		//
-		return runfact;
+		factory.addFactory("boxfactory", boxfactory);
+
+		return factory;
 	}
 
 	public RunEnvironment testBox() throws NoSuchMethodException,
@@ -86,81 +92,81 @@ public final class ITTestBuildABox extends LOTTestCase {
 		LOTClient client = getNewClient();
 		assertNotNull(client);
 
-		LOTTool boxfactory = createBoxFactory(client);
+		LOTFactory boxfactory = createBoxFactory(client);
 
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
-		RunEnvironment runenv = new LOTRunEnvironmentImpl(client, env);
-		runenv.addToolUser(new ReallySimpleSuperheroRobot(client, runenv));
+		LOTFactoryState factorystate = boxfactory.initRuntimeEnvironment(
+				client, env);
+		RunEnvironment runenv = factorystate.getRunEnvironment();
 
-		String boxfactoryid = "boxfactory";
-		runenv.addTool(boxfactoryid, boxfactory);
 		//
-		runenv.addTask(getCallOrderScript(client));
+		runenv.addTask(getCallOrderScript(client), factorystate, null);
+		//
+		String partid = boxfactory.getEnvironment().getParameter("partid");
 		//
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
+
 		//
-		RunEnvironment boxfactoryenv = runenv.getTool(boxfactoryid)
-				.getEnvironment();
-		//
-		LOTPart box = boxfactoryenv.getPool().getPart("box");
-		assertNotNull(box);
+		LOTPart nbox = factorystate.getPool().getPart(partid);
+		assertNotNull(nbox);
 		//
 		LOTPart modelpart = client.getObjectFactory().getPart(
-				new MStringID(boxfactory.getEnvironment()
-						.getParameter("partid")));
+				new MStringID(partid));
 		assertNotNull(modelpart);
 		//
-		assertBuiltBox(box, modelpart);
+		assertBuiltBox(nbox, modelpart);
 		//
 		return runenv;
 	}
 
 	private LOTScript getCallOrderScript(LOTClient env) {
 		LOTScript s = new LOTScript(env);
-		s.setScript("function run(env) { env.log().info('calling order'); env.getTool('boxfactory').call('order'); } function info() { return 'calling order'; }");
+		s.setScript("function run(env, factory, values) { env.log().info('calling order ' + factory + ' values ' + values); factory.call('order'); } function info() { return 'calling order'; }");
 		s.setName("order");
 		return s;
 	}
 
-	private LOTTool createBoxFactory(LOTClient client)
+	private LOTFactory createBoxFactory(LOTClient client)
 			throws NoSuchMethodException, ScriptException, IOException {
-		LOTTool factory = createAssemblyFactory(client);
-		log.info("Boxfactory " + factory);
+		LOTFactory boxfactory = createAssemblyFactory(client);
+		boxfactory.setName("boxfactory");
+		log.info("Boxfactory " + boxfactory);
 
 		// TODO picking up plates, moving them and leaving them somewhere
 		// Create a plate object
 		LOTPart square = client.getObjectFactory().getPart();
-		square.setName("wall");
+		square.setName("square");
 		log.info("Square " + square);
 
 		// Create a box object
 		LOTPart box = createBox(client, square);
-		factory.getEnvironment().setParameter("partid",
+		boxfactory.getEnvironment().setParameter("partid",
 				box.getServiceObject().getID());
 		log.info("box " + box);
 
 		// Create a plate source
-		LOTTool platesource = createPlateSource(client, square);
-		factory.getEnvironment().addTool("source", platesource);
-		log.info("platesource " + platesource);
+		LOTFactory platesource = createPlateSource(client, square);
+		platesource.setName("platesource");
+		boxfactory.addFactory("source", platesource);
 
-		return factory;
+		log.info("platesource " + platesource + " with square " + square);
+		log.info("square bean " + square.getBean());
+		return boxfactory;
 	}
 
-	private LOTTool createAssemblyFactory(LOTClient client) throws IOException,
-			NoSuchMethodException, ScriptException {
-		LOTTool factory = new LOTTool(client);
+	private LOTFactory createAssemblyFactory(LOTClient client)
+			throws IOException, NoSuchMethodException, ScriptException {
+		LOTFactory factory = new LOTFactory(client);
 		// Create a tool to pick up plates
 		LOTTool tool = getPickupTool(client);
-		factory.getEnvironment().addTool("tool", tool);
-
+		factory.getEnvironment().addTool("pickuptool", tool);
 		// scripts
 		factory.addScript("moveandattach",
 				loadScript(client, "assembly_moveandattach.js"));
 		factory.addScript("build", loadScript(client, "assembly_build.js"));
 		factory.addScript("order", loadScript(client, "assembly_order.js"));
-
+		factory.addScript("start", loadScript(client, "assembly_start.js"));
 		return factory;
 	}
 
@@ -181,9 +187,11 @@ public final class ITTestBuildABox extends LOTTestCase {
 		}
 	}
 
-	private LOTTool createPlateSource(LOTClient client, LOTPart square)
+	private LOTFactory createPlateSource(LOTClient client, LOTPart square)
 			throws NoSuchMethodException, ScriptException, IOException {
-		LOTTool partsource = client.getObjectFactory().getTool();
+		LOTFactory partsource = new LOTFactory(client);
+		partsource.setName("platesource");
+
 		partsource.getEnvironment().setParameter("plateid",
 				square.getServiceObject().getID());
 		partsource.addScript("order",

@@ -1,20 +1,20 @@
 function info() {
-	return "buildabox: Order";
+	return "assembly: Order";
 }
 
-function run(e, params) {
-	var tool = params[0];
+function run(e, factory, values) {
+	var partid = values.get('partid');
+	var poolid = values.get('poolid');
 	
-	var partid;
-	if(params.length>1) {
-		partid = params[1];
-	} else {
-		partid = e.getParameter('partid');
+	var log = e.log().instance("assembly order " + factory);
+
+	if(!partid) {
+		partid = factory.getParameter('partid');
 	}
 	
-	e.log().info("tool order " + tool + " partid " + partid);
+	log.info("factory order " + factory + " partid " + partid);
 
-	tool.addTask("build", partid);
+	factory.addTask("build", values);
 
-	e.log().info("Order done");
+	log.info("Order done " + partid);
 }

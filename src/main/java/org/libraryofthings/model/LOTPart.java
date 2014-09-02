@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 
 import waazdoh.client.ServiceObject;
@@ -79,7 +80,12 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 	}
 
 	private void addPart(LOTSubPart subpart) {
+		getLog().info("addPart " + subpart);
 		subparts.add(subpart);
+	}
+
+	private LLog getLog() {
+		return LLog.getLogger(this);
 	}
 
 	public ServiceObject getServiceObject() {
@@ -137,6 +143,7 @@ public final class LOTPart implements ServiceObjectData, LOTObject {
 	public LOTSubPart newSubPart() {
 		LOTSubPart spart = new LOTSubPart(this, env);
 		subparts.add(spart);
+		getLog().info("New subpart " + spart);
 		return spart;
 	}
 

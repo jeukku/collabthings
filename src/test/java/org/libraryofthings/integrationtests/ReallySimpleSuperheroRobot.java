@@ -1,7 +1,7 @@
 package org.libraryofthings.integrationtests;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.LOTClient;
+import org.libraryofthings.environment.LOTFactoryState;
 import org.libraryofthings.environment.LOTToolState;
 import org.libraryofthings.environment.LOTToolUser;
 import org.libraryofthings.environment.RunEnvironment;
@@ -13,7 +13,6 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private static final float MOVING_LOCATION_LENGTH_TRIGGER = 0.000000001f;
 	private static final double LOCATION_PRINTOUT = 2000;
 	//
-	private LOTClient env;
 	private RunEnvironment simenv;
 	private LOTToolState tool;
 	private LVector targetnormal;
@@ -24,10 +23,20 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private LLog log = LLog.getLogger(this);
 	//
 	private double locationprintouttimer = 0;
+	private double speed = 1;
+	private LOTFactoryState factorystate;
 
-	public ReallySimpleSuperheroRobot(final LOTClient env, RunEnvironment simenv) {
-		this.env = env;
+	private static int counter = 0;
+
+	public ReallySimpleSuperheroRobot(RunEnvironment simenv) {
+		ReallySimpleSuperheroRobot.counter++;
 		this.simenv = simenv;
+	}
+
+	@Override
+	public String toString() {
+		return "SuperHeroRobot[" + ReallySimpleSuperheroRobot.counter + "]["
+				+ tool + "][" + location + "]";
 	}
 
 	@Override
@@ -40,12 +49,46 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 				&& targetlocation.getSub(location).length() > MOVING_LOCATION_LENGTH_TRIGGER) {
 			waitAWhile();
 		}
+		tool.setLocation(targetlocation, targetnormal);
+
 		log.info("Moved to " + targetlocation + " " + location);
 	}
 
 	@Override
 	public void setTool(LOTToolState lotToolState) {
+		log.info("setting tool " + lotToolState);
 		this.tool = lotToolState;
+		initLogger();
+	}
+
+	@Override
+	public void setParentFactory(LOTFactoryState nfactorystate) {
+		this.factorystate = nfactorystate;
+	}
+
+	private void initLogger() {
+		log = LLog.getLogger(this);
+	}
+
+	@Override
+	public LVector getLocation() {
+		return location.copy();
+	}
+
+	@Override
+	public LVector getAbsoluteLocation() {
+		LVector ret = new LVector();
+		if (factorystate != null) {
+			ret.add(factorystate.getAbsoluteLocation());
+		}
+
+		ret.add(location);
+		return ret;
+	}
+
+	@Override
+	public void stop() {
+		targetlocation = null;
 	}
 
 	@Override
@@ -53,24 +96,27 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		locationprintouttimer += dtime;
 
 		if (targetlocation != null) {
-			LVector distance = targetlocation.getSub(location);
-			double length = distance.length();
-			if (length > 0.01) {
-				length = 0.01;
+			LVector vdistance = targetlocation.getSub(location);
+			double distance = vdistance.length();
+			double maxdistance = dtime * speed / 1000;
+			if (distance > maxdistance) {
+				distance = maxdistance;
 			}
 
-			if (length > MOVING_LOCATION_LENGTH_TRIGGER) {
-				LVector direction = distance.getNormalized();
+			// checking distance because we cannot normalize zero length vector
+			if (distance > MOVING_LOCATION_LENGTH_TRIGGER) {
+				LVector direction = vdistance.getNormalized();
 
-				direction.mult(length);
+				direction.mult(distance);
 				location.add(direction);
 				tool.setLocation(location, targetnormal);
 			}
 		}
 
 		if (locationprintouttimer > LOCATION_PRINTOUT) {
-			log.info("location " + location + " normal " + normal + " step:"
-					+ dtime + " targetlocation:" + targetlocation);
+			log.info("tool:" + tool + " location " + location + " normal "
+					+ normal + " step:" + dtime + " targetlocation:"
+					+ targetlocation + " abslocation:" + getAbsoluteLocation());
 			locationprintouttimer = 0;
 		}
 	}
@@ -81,5 +127,10 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		} catch (InterruptedException e) {
 			log.error(this, "waitAWhile", e);
 		}
+	}
+
+	@Override
+	public boolean isAvailable(LOTToolState toolstate) {
+		return this.tool == toolstate || tool == null;
 	}
 }

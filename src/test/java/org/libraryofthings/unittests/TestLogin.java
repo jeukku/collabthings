@@ -21,7 +21,7 @@ public final class TestLogin extends LOTTestCase {
 		WClientAppLogin applogin = e.getClient().requestAppLogin();
 		assertNotNull(applogin);
 		assertNotNull(applogin.getURL());
-		
+
 		e.getClient().getService().acceptAppLogin(applogin.getId());
 		applogin = e.getClient().checkAppLogin(applogin.getId());
 	}

@@ -2,24 +2,27 @@ package org.libraryofthings.environment;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.model.LOTScript;
+import org.libraryofthings.model.LOTValues;
 
 import waazdoh.util.ConditionWaiter;
 
 public final class LOTTask {
 	private LOTScript s;
-	private Object[] params;
+	private LOTValues values;
 	private boolean isrun;
+	private LOTRuntimeObject runtimeobject;
 
-	public LOTTask(LOTScript s2, Object[] params2) {
+	public LOTTask(LOTScript s2, LOTRuntimeObject o, LOTValues values) {
 		this.s = s2;
-		this.params = params2;
+		this.values = values;
+		this.runtimeobject = o;
 		//
 		LLog.getLogger(this).info("LOTTask " + s.isOK());
 	}
 
 	public boolean run(RunEnvironment runenv) {
 		try {
-			boolean ret = s.run(runenv, params);
+			boolean ret = s.run(runenv, runtimeobject, values);
 			isrun = true;
 			return ret;
 		} catch (Exception e) {
@@ -34,7 +37,7 @@ public final class LOTTask {
 	}
 
 	public String toString() {
-		return "LOTTask[" + this.s + "][" + params + "]";
+		return "LOTTask[" + this.s + "][" + values + "]";
 	}
 
 	public boolean isRun() {

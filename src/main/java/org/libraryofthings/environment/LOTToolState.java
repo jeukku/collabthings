@@ -1,81 +1,95 @@
 package org.libraryofthings.environment;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTToolException;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
+import org.libraryofthings.model.LOTValues;
 
-public class LOTToolState {
+public class LOTToolState implements LOTRuntimeObject {
 
 	private RunEnvironment env;
+	private LOTRuntimeObject parent;
+
 	private LOTTool tool;
 	private LVector location = new LVector();
 	private LVector normal = new LVector(1, 0, 0);
+	private LOTFactoryState factorystate;
 	//
 	private LLog log = LLog.getLogger(this);
 	private boolean inuse;
+	private String name;
+	private LOTPool pool = new LOTPool();
 
-	public LOTToolState(final RunEnvironment runenv, final LOTTool ntool) {
-		log.info("LOTToolState with " + runenv + " tool:" + tool);
-		this.env = new LOTRunEnvironmentImpl(runenv, ntool.getEnvironment());
+	public LOTToolState(final String name, final RunEnvironment runenv,
+			final LOTTool ntool, final LOTFactoryState factorystate) {
+		log.info("LOTToolState with " + runenv + " tool:" + ntool.getName());
+
+		this.name = name;
+		this.factorystate = factorystate;
+		this.env = runenv;
 		this.tool = ntool;
-		env.setName("Tool " + tool.getName());
+		this.parent = factorystate;
 	}
 
-	public void addTask(final String name, final Object... params) {
-		env.addTask(tool.getScript(name), populateParameters(params));
+	public String getName() {
+		return name;
 	}
 
-	public void call(final String scriptname, final Object... params)
+	@Override
+	public void step(double dtime) {
+		// nothing to do
+	}
+
+	@Override
+	public void stop() {
+		// nothing to do
+	}
+
+	@Override
+	public void setParentFactory(LOTFactoryState nfactorystate) {
+		this.factorystate = nfactorystate;
+	}
+
+	public void call(final String scriptname, final LOTValues values)
 			throws LOTToolException {
-
-		log.info("Calling " + scriptname + "(" + this + ")");
-		log.info("\tparams:" + params);
-		log.info("\tEnvironment:" + env.getInfo().replace(";", "\n\t"));
-
-		Object[] l = populateParameters(params);
-
 		LOTScript script = tool.getScript(scriptname);
 
+		LOTValues callvalues = values != null ? values.copy() : new LOTValues();
+
+		callvalues.put("tool", this);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("Calling " + scriptname + "(" + this + ")\n");
+		sb.append("\tvalues:" + callvalues);
+		sb.append("\tEnvironment:" + env.getInfo().replace(";", "\n\t"));
+		log.info(sb.toString());
+
 		if (script != null) {
-			log.info("calling " + script + " with " + l);
-			script.run(env, l);
+			script.run(env, this, callvalues);
 		} else {
 			throw new LOTToolException("Script called '" + scriptname
 					+ "' does not exist in " + this);
 		}
-	}
-
-	private Object[] populateParameters(final Object... params) {
-		List<Object> l = new LinkedList<Object>();
-		l.add(this);
-		for (Object o : params) {
-			addParameterToList(l, o);
-		}
-		return l.toArray();
-	}
-
-	private void addParameterToList(List<Object> l, Object o) {
-		if (o instanceof Object[]) {
-			Object[] oa = (Object[]) o;
-			for (Object object : oa) {
-				addParameterToList(l, object);
-			}
-		} else {
-			l.add(o);
-		}
+		log.info("call " + scriptname + " done");
 	}
 
 	public void moveTo(LVector l) {
-		moveTo(location, normal);
+		moveTo(l, normal);
+	}
+
+	public LVector getAbsoluteLocation() {
+		if (parent != null) {
+			return parent.getLocation().copy().add(location);
+		} else {
+			return location;
+		}
 	}
 
 	public void moveTo(LVector l, LVector n) {
-		this.env.getParent().requestMove(this, l, n);
+		log.info("moveTo " + l + " " + n);
+		this.factorystate.requestMove(this, l, n);
 	}
 
 	public LVector getLocation() {
@@ -99,16 +113,12 @@ public class LOTToolState {
 		return this.inuse;
 	}
 
+	public LOTPool getPool() {
+		return pool;
+	}
+
 	@Override
 	public String toString() {
 		return "LOTToolState[" + this.tool + "][" + this.location + "]";
-	}
-
-	public RunEnvironment getEnvironment() {
-		return env;
-	}
-
-	public LOTPool getPool() {
-		return getEnvironment().getPool();
 	}
 }

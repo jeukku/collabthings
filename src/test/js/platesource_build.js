@@ -2,16 +2,14 @@ function info() {
 	return "buildabox platesource: Build";
 }
 
-function run(e, params) {
-	var log = e.log();
-	var tool = params[0];
-	log.info("Platesource tool " + tool);
+function run(e, factory, values) {
+	var log = e.log().instance("platesource build " + factory);
 
-	var plateid = e.getParameter('plateid');
-	log.info("plate id " + plateid);
+	var plateid = factory.getParameter('plateid');
+	log.info("plate partid " + plateid);
 
-	var part = e.getPart(plateid);
-	tool.getPool().addPart("ready",  part);
-	
-	e.log().info("Build platesource done");
+	var part = factory.getPart(plateid);
+	factory.getPool().addPart(plateid, part);
+
+	log.info("Build platesource done");
 }

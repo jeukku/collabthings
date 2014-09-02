@@ -26,6 +26,7 @@ public class LOTPool {
 	}
 
 	public synchronized void addPart(String pool, LOTPart p) {
+		log.info("Adding part " + p + " to pool " + pool);
 		List<LOTPart> list = parts.get(pool);
 		if (list == null) {
 			list = new LinkedList<LOTPart>();
@@ -44,6 +45,8 @@ public class LOTPool {
 		while (isPartPoolEmpty(pool)) {
 			waitABit();
 		}
+
+		log.info("Waiting for pool " + pool + " done");
 	}
 
 	public boolean isPartPoolEmpty(String pool) {

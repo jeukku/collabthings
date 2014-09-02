@@ -28,6 +28,18 @@ public final class TestPool extends LOTTestCase {
 		assertNull(pool.getPart("test_null"));
 	}
 
+	public void testAddPartGetPartTwice() throws IOException, SAXException {
+		LOTClient e = getNewClient();
+		assertNotNull(e);
+
+		LOTPool pool = new LOTPool();
+		pool.addPart("test", e.getObjectFactory().getPart());
+		//
+		assertNotNull(pool.getPart("test"));
+		assertNull(pool.getPart("test_null"));
+		assertNull(pool.getPart("test"));
+	}
+
 	public void testAddPartGetPartDouble() throws IOException, SAXException {
 		LOTClient e = getNewClient();
 		assertNotNull(e);

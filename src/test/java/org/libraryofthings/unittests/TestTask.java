@@ -17,7 +17,7 @@ public final class TestTask extends LOTTestCase {
 		assertNotNull(c);
 		//
 		LOTScript script = new LOTScript(c);
-		LOTTask t = new LOTTask(script, null);
+		LOTTask t = new LOTTask(script, null, null);
 		assertTrue(t
 				.run(new LOTRunEnvironmentImpl(c, new LOTEnvironmentImpl(c))));
 	}
@@ -28,9 +28,9 @@ public final class TestTask extends LOTTestCase {
 		//
 		LOTScript script = new LOTScript(c);
 		script.setScript("function info() {} function run() { foo.bar(); }");
-		LOTTask t = new LOTTask(script, null);
-		assertFalse(t
-				.run(new LOTRunEnvironmentImpl(c, new LOTEnvironmentImpl(c))));
+		LOTTask t = new LOTTask(script, null, null);
+		assertFalse(t.run(new LOTRunEnvironmentImpl(c,
+				new LOTEnvironmentImpl(c))));
 	}
 
 	public void testWait() throws IOException, SAXException {
@@ -38,7 +38,7 @@ public final class TestTask extends LOTTestCase {
 		assertNotNull(c);
 		//
 		LOTScript script = new LOTScript(c);
-		LOTTask t = new LOTTask(script, null);
+		LOTTask t = new LOTTask(script, null, null);
 		new Thread(() -> {
 			t.run(new LOTRunEnvironmentImpl(c, new LOTEnvironmentImpl(c)));
 		}).start();

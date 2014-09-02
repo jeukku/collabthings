@@ -35,7 +35,7 @@ public final class TestScript extends LOTTestCase {
 		//
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client, env);
-		bs.run(runenv);
+		bs.run(runenv, null);
 		assertEquals(SCRIPT_ENV_TEST_VALUE, runenv.getParameter("testvalue"));
 		//
 		//
@@ -71,7 +71,7 @@ public final class TestScript extends LOTTestCase {
 		assertNotNull(s);
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		RunEnvironment e = new LOTRunEnvironmentImpl(client, env);
-		s.run(e);
+		s.run(e, null);
 		assertEquals("testvalue", e.getParameter("test"));
 	}
 
@@ -106,7 +106,7 @@ public final class TestScript extends LOTTestCase {
 		LOTScript s = getScript(client, "function info() {}");
 		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client,
 				new LOTEnvironmentImpl(client));
-		assertFalse(s.run(runenv));
+		assertFalse(s.run(runenv, null));
 	}
 
 	public void testFailAtLoadingLibraries() throws LOTScriptException {
