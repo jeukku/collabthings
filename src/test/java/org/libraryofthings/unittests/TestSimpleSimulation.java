@@ -86,10 +86,10 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 
 		LOTFactory f = new LOTFactory(client);
-		LOTScript statscript = new LOTScript(client);
-		f.addScript("start", statscript);
+		LOTScript startscript = new LOTScript(client);
+		f.addScript("start", startscript);
 
-		LOTScript taskscript = statscript;
+		LOTScript taskscript = new LOTScript(client);
 		String nscript = "function info(){} function run(e, factory, values) { "
 				+ "e.log().info('calling tooltest'); factory.getTool('tool').call('tooltest', values); } ";
 		assertTrue(taskscript.setScript(nscript));
@@ -99,7 +99,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 		RunEnvironment rune = factorystate.getRunEnvironment();
 		//
 		LOTTool tool = new LOTTool(client);
-		LOTScript testscript = statscript;
+		LOTScript testscript = new LOTScript(client);
 		tool.addScript("tooltest", testscript);
 		String testscriptvalue = "testvalue" + Math.random();
 		testscript
@@ -114,6 +114,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTSimulation s = new LOTSimpleSimulation(rune);
 		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
 		//
+		assertNotNull(rune.getParameter("testfromtool"));
 		assertEquals(testscriptvalue, rune.getParameter("testfromtool"));
 	}
 }
