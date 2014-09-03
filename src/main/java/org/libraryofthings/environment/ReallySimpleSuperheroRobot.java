@@ -1,10 +1,6 @@
-package org.libraryofthings.integrationtests;
+package org.libraryofthings.environment;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.environment.LOTFactoryState;
-import org.libraryofthings.environment.LOTToolState;
-import org.libraryofthings.environment.LOTToolUser;
-import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.math.LVector;
 
 public class ReallySimpleSuperheroRobot implements LOTToolUser {
@@ -26,17 +22,14 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private double speed = 1;
 	private LOTFactoryState factorystate;
 
-	private static int counter = 0;
-
 	public ReallySimpleSuperheroRobot(RunEnvironment simenv) {
-		ReallySimpleSuperheroRobot.counter++;
 		this.simenv = simenv;
 	}
 
 	@Override
 	public String toString() {
-		return "SuperHeroRobot[" + ReallySimpleSuperheroRobot.counter + "]["
-				+ tool + "][" + location + "]";
+		return "SuperHeroRobot[" + super.hashCode() + "][" + tool + "]["
+				+ location + "]";
 	}
 
 	@Override
@@ -44,6 +37,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		targetlocation = l.copy();
 		targetnormal = n.copy();
 		log.info("Target location " + targetlocation);
+		log.info("factory " + this.factorystate);
 		//
 		while (simenv.isRunning()
 				&& targetlocation.getSub(location).length() > MOVING_LOCATION_LENGTH_TRIGGER) {
@@ -114,11 +108,15 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		}
 
 		if (locationprintouttimer > LOCATION_PRINTOUT) {
-			log.info("tool:" + tool + " location " + location + " normal "
-					+ normal + " step:" + dtime + " targetlocation:"
-					+ targetlocation + " abslocation:" + getAbsoluteLocation());
+			debugInfo(dtime);
 			locationprintouttimer = 0;
 		}
+	}
+
+	private void debugInfo(double dtime) {
+		log.info("tool:" + tool + " location " + location + " normal " + normal
+				+ " step:" + dtime + " targetlocation:" + targetlocation
+				+ " abslocation:" + getAbsoluteLocation());
 	}
 
 	private synchronized void waitAWhile() {

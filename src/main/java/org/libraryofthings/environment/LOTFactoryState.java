@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.integrationtests.ReallySimpleSuperheroRobot;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;

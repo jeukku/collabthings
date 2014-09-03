@@ -29,7 +29,7 @@ import waazdoh.util.MStringID;
 public final class ITTestBuildABox extends LOTTestCase {
 
 	private static final int PARTS_IN_A_BOX = 6;
-	private static final int MAX_SIMULATION_RUNTIME = 60000;
+	private static final int MAX_SIMULATION_RUNTIME = 600000;
 	//
 	private LOTPart box;
 	private LLog log = LLog.getLogger(this);
