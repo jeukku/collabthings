@@ -46,4 +46,5 @@ public interface RunEnvironment {
 
 	Set<LOTRuntimeObject> getRunObjects();
 
+	void addRunObject(String string, LOTRuntimeObject runo);
 }

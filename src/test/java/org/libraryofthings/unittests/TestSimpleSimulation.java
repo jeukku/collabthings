@@ -60,8 +60,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		LOTFactory factory = new LOTFactory(client);
 
-		LOTFactoryState factorystate = factory.initRuntimeEnvironment(client,
-				env);
+		LOTFactoryState factorystate = new LOTFactoryState(client, env,
+				"testfactory", factory);
 		RunEnvironment rune = factorystate.getRunEnvironment();
 
 		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(rune);
@@ -95,7 +95,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 		assertTrue(taskscript.setScript(nscript));
 		f.addScript("factorytest", taskscript);
 
-		LOTFactoryState factorystate = f.initRuntimeEnvironment(client, env);
+		LOTFactoryState factorystate = new LOTFactoryState(client, env,
+				"testfactory", f);
 		RunEnvironment rune = factorystate.getRunEnvironment();
 		//
 		LOTTool tool = new LOTTool(client);

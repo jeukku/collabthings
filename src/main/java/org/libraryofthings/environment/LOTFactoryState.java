@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.libraryofthings.LLog;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
@@ -19,11 +21,13 @@ import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MStringID;
 
 public class LOTFactoryState implements LOTRuntimeObject {
-	private LOTFactory factory;
-	private LVector location = new LVector();
+	final private LOTFactory factory;
+	final private RunEnvironment runenv;
 	//
 	private LLog log;
-	private RunEnvironment runenv;
+	//
+	final private String name;
+	private LVector location = new LVector();
 
 	private Set<LOTToolState> tools = new HashSet<LOTToolState>();
 	private List<LOTToolUser> toolusers = new LinkedList<LOTToolUser>();
@@ -34,7 +38,14 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 	private Map<String, LOTPartState> parts = new HashMap<>();
 
-	private String name;
+	public LOTFactoryState(final LOTClient client, LOTEnvironment env,
+			final String name, final LOTFactory factory) {
+		this.factory = factory;
+		this.name = name;
+		runenv = new LOTRunEnvironmentImpl(client, env);
+		runenv.addRunObject("main", this);
+		callStart();
+	}
 
 	public LOTFactoryState(final String name, final RunEnvironment runenv,
 			final LOTFactory nfactory, final LOTFactoryState factorystate) {
@@ -42,7 +53,10 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		this.runenv = runenv;
 		this.parent = factorystate;
 		this.name = name;
-		//
+		callStart();
+	}
+
+	private void callStart() {
 		LOTValues values = new LOTValues("factory", factory);
 		call("start", values);
 	}

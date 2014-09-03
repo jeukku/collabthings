@@ -41,8 +41,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 
 		LOTFactory factory = setupFactoryThatUsesBoxes(client);
-		LOTFactoryState factorystate = factory.initRuntimeEnvironment(client,
-				env);
+		LOTFactoryState factorystate = new LOTFactoryState(client, env,
+				"linefactory", factory);
 		RunEnvironment runenv = factorystate.getRunEnvironment();
 
 		factory.setLocation(new LVector(0, 0, 0));
@@ -95,8 +95,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 		LOTFactory boxfactory = createBoxFactory(client);
 
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
-		LOTFactoryState factorystate = boxfactory.initRuntimeEnvironment(
-				client, env);
+		LOTFactoryState factorystate = new LOTFactoryState(client, env,
+				"boxfactory", boxfactory);
 		RunEnvironment runenv = factorystate.getRunEnvironment();
 
 		//

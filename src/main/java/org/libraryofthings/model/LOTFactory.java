@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.libraryofthings.LOTClient;
-import org.libraryofthings.environment.LOTFactoryState;
-import org.libraryofthings.environment.LOTRunEnvironmentImpl;
 import org.libraryofthings.math.LVector;
 
 import waazdoh.client.ServiceObject;
@@ -134,14 +132,6 @@ public final class LOTFactory implements ServiceObjectData, LOTObject {
 		} else {
 			return false;
 		}
-	}
-
-	public LOTFactoryState initRuntimeEnvironment(LOTClient client,
-			LOTEnvironment env2) {
-		LOTRunEnvironmentImpl impl = new LOTRunEnvironmentImpl(client, env2);
-		LOTFactoryState state = new LOTFactoryState("main", impl, this, null);
-		impl.addRunObject("main", state);
-		return state;
 	}
 
 	public void addFactory(final String factoryname,
