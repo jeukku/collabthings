@@ -138,6 +138,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 	public void addToolUser(LOTToolUser tooluser) {
 		this.toolusers.add(tooluser);
+		tooluser.setParentFactory(this);
 	}
 
 	@Override
@@ -148,6 +149,10 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		//
 		for (LOTToolState tool : tools) {
 			tool.step(dtime);
+		}
+		//
+		for (LOTFactoryState f : factories) {
+			f.step(dtime);
 		}
 	}
 
