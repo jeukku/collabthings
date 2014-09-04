@@ -189,9 +189,6 @@ public class ViewSimulation implements RunEnvironmentListener {
 		/* Create the Scene instance and set the group node as root */
 
 		Scene scene = new Scene(scenegroup, Color.DARKGRAY);
-		// Color.rgb(getBackground().getRed(),
-		// getBackground().getGreen(),
-		// getBackground().getBlue()));
 
 		this.camera = new PerspectiveCamera(true);
 		camera.setFarClip(10000);
@@ -216,8 +213,6 @@ public class ViewSimulation implements RunEnvironmentListener {
 		scenegroup.getChildren().add(text);
 
 		scenegroup.getChildren().add(objectgroup);
-		//
-		// createLights();
 
 		return scene;
 	}
@@ -230,21 +225,6 @@ public class ViewSimulation implements RunEnvironmentListener {
 		g.setTranslateZ(0);
 		g.setRotate(0);
 		return g;
-	}
-
-	private void createLights() {
-		AmbientLight light = new AmbientLight();
-		light.setColor(Color.GRAY);
-
-		Group lightgroup = newGroup();
-		lightgroup.getChildren().add(light);
-
-		PointLight plight = new PointLight();
-		plight.setTranslateY(0);
-		plight.setTranslateZ(-200);
-		plight.setColor(Color.WHITE);
-
-		scenegroup.getChildren().add(lightgroup);
 	}
 
 	private void updateRotation() {
