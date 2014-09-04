@@ -8,6 +8,7 @@ import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
+import org.libraryofthings.model.impl.LOTPartImpl;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.model.JBean;
@@ -19,9 +20,9 @@ public final class TestPart extends LOTTestCase {
 		LOTClient env = getNewClient(true);
 		assertNotNull(env);
 		//
-		LOTPart part = new LOTPart(env);
+		LOTPart part = new LOTPartImpl(env);
 		part.setName("testing changing name");
-		part.getServiceObject().save();
+		part.save();
 		//
 		part.newModel();
 		String testbinarydatastring = "TESTIBINARYPARTDATA";
@@ -36,7 +37,7 @@ public final class TestPart extends LOTTestCase {
 		//
 		LOTClient benv = getNewClient(true);
 		assertNotNull(benv);
-		MStringID bpartid = part.getServiceObject().getID().getStringID();
+		MStringID bpartid = part.getID().getStringID();
 		LOTPart bpart = benv.getObjectFactory().getPart(bpartid);
 		assertEquals(part.getName(), bpart.getName());
 		waitObject(bpart);
@@ -45,21 +46,18 @@ public final class TestPart extends LOTTestCase {
 		assertEquals(testbinarydatastring, sdata);
 		//
 		LOTSubPart bsubpart = part.getSubParts().get(0);
-		assertEquals(bsubpart.getPart().getServiceObject().getID(), subpart
-				.getPart().getServiceObject().getID());
+		assertEquals(bsubpart.getPart().getID(), subpart.getPart().getID());
 		assertEquals(subpart.toString(), bsubpart.toString());
 		//
-		assertEquals(
-				bpart,
-				benv.getObjectFactory().getPart(
-						bpart.getServiceObject().getID().getStringID()));
+		assertEquals(bpart,
+				benv.getObjectFactory().getPart(bpart.getID().getStringID()));
 	}
 
 	public void testSubPartOrientation() throws IOException, SAXException {
 		LOTClient e = getNewClient();
-		LOTPart p = new LOTPart(e);
+		LOTPartImpl p = new LOTPartImpl(e);
 		LOTSubPart subpart = p.newSubPart();
-		subpart.setPart(new LOTPart(e));
+		subpart.setPart(new LOTPartImpl(e));
 		subpart.setOrientation(new LVector(10, 10, 10), new LVector(0, 1, 0));
 		//
 		assertEquals(subpart.getLocation().toString(),
@@ -75,7 +73,7 @@ public final class TestPart extends LOTTestCase {
 
 	public void testParseFalseBean() throws IOException, SAXException {
 		LOTClient e = getNewClient();
-		LOTPart p = e.getObjectFactory().getPart();
+		LOTPartImpl p = (LOTPartImpl) e.getObjectFactory().getPart();
 		JBean bean = new JBean("part");
 		bean.add("parts");
 		p.parseBean(bean);

@@ -6,8 +6,9 @@ import javax.script.ScriptException;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.model.LOTEnvironmentImpl;
 import org.libraryofthings.model.LOTScript;
+import org.libraryofthings.model.impl.LOTEnvironmentImpl;
+import org.libraryofthings.model.impl.LOTScriptImpl;
 import org.xml.sax.SAXException;
 
 public final class TestEnvironment extends LOTTestCase {
@@ -18,7 +19,7 @@ public final class TestEnvironment extends LOTTestCase {
 		//
 		LOTEnvironmentImpl orge = new LOTEnvironmentImpl(c);
 
-		LOTScript lotScript = new LOTScript(c);
+		LOTScriptImpl lotScript = new LOTScriptImpl(c);
 		orge.addScript("test", lotScript);
 		orge.save();
 		orge.publish();
@@ -41,7 +42,7 @@ public final class TestEnvironment extends LOTTestCase {
 		String paramname = "testparam";
 		e.setParameter(paramname, "testvalue");
 		//
-		LOTScript lotScript = new LOTScript(c);
+		LOTScriptImpl lotScript = new LOTScriptImpl(c);
 		e.addScript("test", lotScript);
 		lotScript
 				.setScript("function info() { return \"testing tool script\"; }");
@@ -67,7 +68,7 @@ public final class TestEnvironment extends LOTTestCase {
 		assertNull(env.getScript("FAIL"));
 		//
 		String scriptname = "testscript";
-		env.addScript(scriptname, new LOTScript(c));
+		env.addScript(scriptname, new LOTScriptImpl(c));
 		assertNotNull(env.getScript(scriptname));
 	}
 

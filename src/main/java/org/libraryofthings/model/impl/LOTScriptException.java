@@ -1,4 +1,4 @@
-package org.libraryofthings.model;
+package org.libraryofthings.model.impl;
 
 public class LOTScriptException extends Exception {
 	/**

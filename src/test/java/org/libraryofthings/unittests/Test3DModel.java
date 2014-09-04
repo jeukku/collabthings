@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.model.LOT3DModel;
+import org.libraryofthings.model.impl.LOT3DModelImpl;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.model.JBean;
@@ -21,14 +22,14 @@ public final class Test3DModel extends LOTTestCase {
 		LOTClient env = getNewClient();
 		assertNotNull(env);
 		//
-		LOT3DModel s = new LOT3DModel(env);
+		LOT3DModel s = new LOT3DModelImpl(env);
 		s.setName("TEST");
-		s.getServiceObject().publish();
+		s.publish();
 		//
 		LOTClient benv = getNewClient();
 		assertNotNull(benv);
-		LOT3DModel bs = new LOT3DModel(benv);
-		bs.load(s.getServiceObject().getID().getStringID());
+		LOT3DModelImpl bs = new LOT3DModelImpl(benv);
+		bs.load(s.getID().getStringID());
 		assertEquals(s.getName(), bs.getName());
 	}
 
@@ -39,15 +40,15 @@ public final class Test3DModel extends LOTTestCase {
 		assertNotNull(benv);
 		benv.getBinarySource().waitUntilReady();
 		//
-		LOT3DModel s = new LOT3DModel(env);
+		LOT3DModelImpl s = new LOT3DModelImpl(env);
 		s.setName("TEST");
 		String testbinarydatastring = "TESTIBINARYDATA";
 		s.getBinary().add(new String(testbinarydatastring).getBytes());
 		s.getBinary().setReady();
 		s.publish();
 		//
-		LOT3DModel bs = new LOT3DModel(benv);
-		bs.load(s.getServiceObject().getID().getStringID());
+		LOT3DModel bs = new LOT3DModelImpl(benv);
+		bs.load(s.getID().getStringID());
 		assertEquals(s.getName(), bs.getName());
 		//
 		waitObject(bs);
@@ -59,7 +60,7 @@ public final class Test3DModel extends LOTTestCase {
 	public void testFailBinary() throws IOException, SAXException {
 		LOTClient env = getNewClient();
 		try {
-			LOT3DModel m = new LOT3DModel(env);
+			LOT3DModelImpl m = new LOT3DModelImpl(env);
 			m.load(new MStringID());
 		} catch (NullPointerException e) {
 			assertNotNull(e);
@@ -68,7 +69,7 @@ public final class Test3DModel extends LOTTestCase {
 
 	public void testImport() throws IOException, SAXException {
 		LOTClient env = getNewClient();
-		LOT3DModel m = new LOT3DModel(env);
+		LOT3DModelImpl m = new LOT3DModelImpl(env);
 		assertTrue(m
 				.importModel(new File("src/test/resources/models/cube.x3d")));
 		new ConditionWaiter(() -> m.isReady(), 5000);

@@ -1,4 +1,4 @@
-package org.libraryofthings.model;
+package org.libraryofthings.model.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.model.LOTEnvironment;
+import org.libraryofthings.model.LOTScript;
+import org.libraryofthings.model.LOTTool;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -13,8 +16,7 @@ import waazdoh.client.model.JBean;
 import waazdoh.client.model.MID;
 import waazdoh.util.MStringID;
 
-public class LOTEnvironmentImpl implements LOTEnvironment, LOTObject,
-		ServiceObjectData {
+public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	private static final String BEANNAME = "env";
 	private static final String VALUENAME_SCRIPTS = "scripts";
 	private static final String VALUENAME_TOOLS = "tools";
@@ -58,7 +60,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, LOTObject,
 			LOTTool s = getTool(string);
 			JBean sbean = toolbean.add("tool");
 			sbean.addValue("name", string);
-			sbean.addValue("id", s.getServiceObject().getID());
+			sbean.addValue("id", s.getID());
 		}
 	}
 
@@ -69,7 +71,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, LOTObject,
 			LOTScript s = getScript(string);
 			JBean sbean = scriptbean.add("script");
 			sbean.addValue("name", string);
-			sbean.addValue("id", s.getServiceObject().getID());
+			sbean.addValue("id", s.getID());
 		}
 	}
 
@@ -98,7 +100,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, LOTObject,
 		for (JBean sbean : sbeans) {
 			String scriptname = sbean.getValue("name");
 			MStringID id = sbean.getIDValue("id");
-			LOTScript script = new LOTScript(client);
+			LOTScriptImpl script = new LOTScriptImpl(client);
 			script.load(id);
 			scripts.put(scriptname, script);
 		}
@@ -110,7 +112,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, LOTObject,
 		for (JBean b : tbeans) {
 			String name = b.getValue("name");
 			MStringID id = b.getIDValue("id");
-			LOTTool tool = new LOTTool(client, id);
+			LOTToolImpl tool = new LOTToolImpl(client, id);
 			tools.put(name, tool);
 		}
 	}
@@ -168,7 +170,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, LOTObject,
 	@Override
 	public void save() {
 		for (LOTScript s : scripts.values()) {
-			s.getServiceObject().save();
+			s.save();
 		}
 
 		for (LOTTool tool : this.tools.values()) {
@@ -181,7 +183,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, LOTObject,
 	@Override
 	public void publish() {
 		for (LOTScript s : scripts.values()) {
-			s.getServiceObject().publish();
+			s.publish();
 		}
 
 		for (LOTTool tool : this.tools.values()) {

@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 import org.libraryofthings.impl.LOTClientImpl;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTObject;
-import org.libraryofthings.model.LOTScript;
+import org.libraryofthings.model.impl.LOTScriptImpl;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.WClientAppLogin;
@@ -75,7 +75,7 @@ public class LOTTestCase extends TestCase {
 			throws MalformedURLException, SAXException {
 		//
 		MPreferences p = new StaticTestPreferences("lottests", email);
-		p.set(LOTScript.PREFERENCES_SCRIPTSPATH, "./");
+		p.set(LOTScriptImpl.PREFERENCES_SCRIPTSPATH, "./");
 
 		MBinarySource binarysource = getBinarySource(p, bind);
 		LOTClient c = new LOTClientImpl(p, binarysource, getTestService(email,

@@ -1,65 +1,17 @@
 package org.libraryofthings.model;
 
-import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
 
-import waazdoh.client.model.JBean;
-import waazdoh.util.MStringID;
+public interface LOTSubPart {
 
-public final class LOTSubPart {
-	/**
-	 * 
-	 */
-	private final LOTPart parent;
-	private LOTPart part;
-	private final LVector p = new LVector();
-	private final LVector n = new LVector();
+	LOTPart getPart();
 
-	/**
-	 * @param nparent
-	 * @param env
-	 */
-	public LOTSubPart(final LOTPart nparent, final LOTClient env) {
-		this.parent = nparent;
-		part = new LOTPart(env);
-	}
+	LVector getLocation();
 
-	public LOTPart getPart() {
-		return part;
-	}
+	void setPart(LOTPart part);
 
-	public void parse(JBean bpart) {
-		MStringID partid = bpart.getIDValue("id");
-		part = this.parent.env.getObjectFactory().getPart(partid);
-		p.set(bpart.get("p"));
-		n.set(bpart.get("n"));
-	}
+	LVector getNormal();
 
-	public void getBean(JBean bpart) {
-		bpart.addValue("id", part.getServiceObject().getID());
-		bpart.add("p", p.getBean());
-		bpart.add("n", n.getBean());
-	}
+	void setOrientation(LVector location, LVector normal);
 
-	public void setPart(LOTPart part2) {
-		this.part = part2;
-	}
-
-	public void setOrientation(LVector location, LVector normal) {
-		this.p.set(location);
-		this.n.set(normal);
-	}
-
-	public LVector getNormal() {
-		return n;
-	}
-
-	public LVector getLocation() {
-		return p;
-	}
-
-	@Override
-	public String toString() {
-		return "SubPart[" + p + "][" + n + "]";
-	}
 }

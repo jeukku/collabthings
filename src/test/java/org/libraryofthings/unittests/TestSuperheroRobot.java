@@ -9,8 +9,8 @@ import org.libraryofthings.environment.LOTToolState;
 import org.libraryofthings.environment.ReallySimpleSuperheroRobot;
 import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.math.LVector;
-import org.libraryofthings.model.LOTEnvironmentImpl;
-import org.libraryofthings.model.LOTTool;
+import org.libraryofthings.model.impl.LOTEnvironmentImpl;
+import org.libraryofthings.model.impl.LOTToolImpl;
 import org.xml.sax.SAXException;
 
 import waazdoh.util.MTimedFlag;
@@ -27,7 +27,7 @@ public final class TestSuperheroRobot extends LOTTestCase {
 				new LOTEnvironmentImpl(e));
 		final ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(
 				rune);
-		LOTToolState lotToolState = new LOTToolState("test", rune, new LOTTool(
+		LOTToolState lotToolState = new LOTToolState("test", rune, new LOTToolImpl(
 				e), null);
 		robot.setTool(lotToolState);
 

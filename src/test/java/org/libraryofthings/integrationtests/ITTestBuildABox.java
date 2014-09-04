@@ -13,13 +13,14 @@ import org.libraryofthings.environment.LOTFactoryState;
 import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
-import org.libraryofthings.model.LOTEnvironmentImpl;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.model.LOTValues;
+import org.libraryofthings.model.impl.LOTEnvironmentImpl;
+import org.libraryofthings.model.impl.LOTScriptImpl;
 import org.libraryofthings.simulation.LOTSimpleSimulation;
 import org.libraryofthings.simulation.LOTSimulation;
 import org.xml.sax.SAXException;
@@ -40,7 +41,9 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 
-		LOTFactory factory = setupFactoryThatUsesBoxes(client);
+		LOTFactory factory = client.getObjectFactory().getFactory();
+
+		setupFactoryThatUsesBoxes(factory, client);
 		LOTFactoryState factorystate = new LOTFactoryState(client, env,
 				"linefactory", factory);
 		RunEnvironment runenv = factorystate.getRunEnvironment();
@@ -73,16 +76,15 @@ public final class ITTestBuildABox extends LOTTestCase {
 		assertNotNull(runenv);
 	}
 
-	private LOTFactory setupFactoryThatUsesBoxes(LOTClient client)
-			throws IOException, NoSuchMethodException, ScriptException {
-		LOTFactory factory = createAssemblyFactory(client);
+	private LOTFactory setupFactoryThatUsesBoxes(LOTFactory factory,
+			LOTClient client) throws IOException, NoSuchMethodException,
+			ScriptException {
+		createAssemblyFactory(factory, client);
 		log.info("factory that uses boxes " + factory);
 
-		LOTFactory boxfactory = createBoxFactory(client);
+		LOTFactory boxfactory = factory.addFactory("source");
+		createBoxFactory(boxfactory, client);
 		boxfactory.setLocation(new LVector(20, 0, 0));
-		factory.addFactory("source", boxfactory);
-
-		factory.addFactory("boxfactory", boxfactory);
 
 		return factory;
 	}
@@ -92,7 +94,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 		LOTClient client = getNewClient();
 		assertNotNull(client);
 
-		LOTFactory boxfactory = createBoxFactory(client);
+		LOTFactory boxfactory = client.getObjectFactory().getFactory();
+		createBoxFactory(boxfactory, client);
 
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		LOTFactoryState factorystate = new LOTFactoryState(client, env,
@@ -121,15 +124,15 @@ public final class ITTestBuildABox extends LOTTestCase {
 	}
 
 	private LOTScript getCallOrderScript(LOTClient env) {
-		LOTScript s = new LOTScript(env);
+		LOTScript s = new LOTScriptImpl(env);
 		s.setScript("function run(env, factory, values) { env.log().info('calling order ' + factory + ' values ' + values); factory.call('order'); } function info() { return 'calling order'; }");
 		s.setName("order");
 		return s;
 	}
 
-	private LOTFactory createBoxFactory(LOTClient client)
+	private LOTFactory createBoxFactory(LOTFactory boxfactory, LOTClient client)
 			throws NoSuchMethodException, ScriptException, IOException {
-		LOTFactory boxfactory = createAssemblyFactory(client);
+		createAssemblyFactory(boxfactory, client);
 		boxfactory.setName("boxfactory");
 		log.info("Boxfactory " + boxfactory);
 
@@ -141,39 +144,39 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		// Create a box object
 		LOTPart box = createBox(client, square);
-		boxfactory.getEnvironment().setParameter("partid",
-				box.getServiceObject().getID());
+		boxfactory.getEnvironment().setParameter("partid", box.getID());
 		log.info("box " + box);
 
 		// Create a plate source
-		LOTFactory platesource = createPlateSource(client, square);
+		LOTFactory platesource = createPlateSource(
+				boxfactory.addFactory("source"), client, square);
 		platesource.setName("platesource");
-		boxfactory.addFactory("source", platesource);
 
 		log.info("platesource " + platesource + " with square " + square);
 		log.info("square bean " + square.getBean());
 		return boxfactory;
 	}
 
-	private LOTFactory createAssemblyFactory(LOTClient client)
-			throws IOException, NoSuchMethodException, ScriptException {
-		LOTFactory factory = new LOTFactory(client);
+	private LOTFactory createAssemblyFactory(LOTFactory factory,
+			LOTClient client) throws IOException, NoSuchMethodException,
+			ScriptException {
 		// Create a tool to pick up plates
 		LOTTool tool = getPickupTool(client);
 		factory.getEnvironment().addTool("pickuptool", tool);
 		// scripts
-		factory.addScript("moveandattach",
-				loadScript(client, "assembly_moveandattach.js"));
-		factory.addScript("build", loadScript(client, "assembly_build.js"));
-		factory.addScript("order", loadScript(client, "assembly_order.js"));
-		factory.addScript("start", loadScript(client, "assembly_start.js"));
+
+		loadScript(factory.addScript("moveandattach"),
+				"assembly_moveandattach.js");
+		loadScript(factory.addScript("build"), "assembly_build.js");
+		loadScript(factory.addScript("order"), "assembly_order.js");
+		loadScript(factory.addScript("start"), "assembly_start.js");
 		return factory;
 	}
 
-	private void assertBuiltBox(LOTPart box, LOTPart destinationpart) {
+	private void assertBuiltBox(LOTPart nbox, LOTPart destinationpart) {
 		assertTrue(destinationpart.getSubParts().size() == PARTS_IN_A_BOX);
 		// Checking out everything is in place
-		List<LOTSubPart> boxsubparts = box.getSubParts();
+		List<LOTSubPart> boxsubparts = nbox.getSubParts();
 		List<LOTSubPart> destsubparts = destinationpart.getSubParts();
 
 		for (int i = 0; i < boxsubparts.size(); i++) {
@@ -187,26 +190,23 @@ public final class ITTestBuildABox extends LOTTestCase {
 		}
 	}
 
-	private LOTFactory createPlateSource(LOTClient client, LOTPart square)
-			throws NoSuchMethodException, ScriptException, IOException {
-		LOTFactory partsource = new LOTFactory(client);
-		partsource.setName("platesource");
+	private LOTFactory createPlateSource(LOTFactory platesource,
+			LOTClient client, LOTPart square) throws NoSuchMethodException,
+			ScriptException, IOException {
+		platesource.setName("platesource");
 
-		partsource.getEnvironment().setParameter("plateid",
-				square.getServiceObject().getID());
-		partsource.addScript("order",
-				loadScript(client, "platesource_order.js"));
-		partsource.addScript("build",
-				loadScript(client, "platesource_build.js"));
+		platesource.getEnvironment().setParameter("plateid", square.getID());
+		loadScript(platesource.addScript("order"), "platesource_order.js");
+		loadScript(platesource.addScript("build"), "platesource_build.js");
 
-		return partsource;
+		return platesource;
 	}
 
 	private LOTTool getPickupTool(LOTClient client) throws IOException,
 			NoSuchMethodException, ScriptException {
 		LOTTool tool = client.getObjectFactory().getTool();
-		tool.addScript("pickup", loadScript(client, "assembly_pickup.js"));
-		tool.addScript("attach", loadScript(client, "assembly_attach.js"));
+		loadScript(tool.addScript("pickup"), "assembly_pickup.js");
+		loadScript(tool.addScript("attach"), "assembly_attach.js");
 		return tool;
 	}
 
@@ -234,11 +234,9 @@ public final class ITTestBuildABox extends LOTTestCase {
 		return box;
 	}
 
-	private LOTScript loadScript(LOTClient env, String scriptname)
+	private LOTScript loadScript(LOTScript lots, String scriptname)
 			throws IOException {
 		String s = loadATestScript(scriptname);
-		//
-		LOTScript lots = new LOTScript(env);
 		lots.setScript(s);
 		lots.setName(scriptname);
 		assertNotNull(lots.getScript());

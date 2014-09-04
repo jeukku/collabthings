@@ -1,19 +1,21 @@
-package org.libraryofthings.model;
+package org.libraryofthings.model.impl;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.model.LOTObjectFactory;
+import org.libraryofthings.model.LOTTool;
 
 import waazdoh.util.MStringID;
 
 public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 
 	private LOTClient env;
-	private List<LOTPart> parts = new LinkedList<>();
-	private List<LOTTool> tools = new LinkedList<>();
-	private List<LOTFactory> factories = new LinkedList<>();
+	private List<LOTPartImpl> parts = new LinkedList<>();
+	private List<LOTToolImpl> tools = new LinkedList<>();
+	private List<LOTFactoryImpl> factories = new LinkedList<>();
 	//
 	private LLog log = LLog.getLogger(this);
 
@@ -22,28 +24,28 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	}
 
 	@Override
-	public LOTFactory getFactory() {
-		LOTFactory f = new LOTFactory(env);
+	public LOTFactoryImpl getFactory() {
+		LOTFactoryImpl f = new LOTFactoryImpl(env);
 		factories.add(f);
 		return f;
 	}
 
 	@Override
-	public LOTFactory getFactory(MStringID factoryid) {
-		for (LOTFactory factory : factories) {
-			if (factory.getServiceObject().getID().equals(factoryid)) {
+	public LOTFactoryImpl getFactory(MStringID factoryid) {
+		for (LOTFactoryImpl factory : factories) {
+			if (factory.getID().equals(factoryid)) {
 				return factory;
 			}
 		}
 
-		LOTFactory factory = new LOTFactory(env, factoryid);
+		LOTFactoryImpl factory = new LOTFactoryImpl(env, factoryid);
 		factories.add(factory);
 		return factory;
 	}
 
 	@Override
-	public LOTTool getTool() {
-		LOTTool t = new LOTTool(env);
+	public LOTToolImpl getTool() {
+		LOTToolImpl t = new LOTToolImpl(env);
 		tools.add(t);
 		return t;
 	}
@@ -51,33 +53,33 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	@Override
 	public LOTTool getTool(MStringID toolid) {
 		for (LOTTool tool : tools) {
-			if (tool.getServiceObject().getID().equals(toolid)) {
+			if (tool.getID().equals(toolid)) {
 				return tool;
 			}
 		}
 
-		LOTTool tool = new LOTTool(env, toolid);
+		LOTToolImpl tool = new LOTToolImpl(env, toolid);
 		tools.add(tool);
 		return tool;
 	}
 
 	@Override
-	public LOTPart getPart() {
-		LOTPart p = new LOTPart(env);
+	public LOTPartImpl getPart() {
+		LOTPartImpl p = new LOTPartImpl(env);
 		log.info("new part " + p.getBean());
 		parts.add(p);
 		return p;
 	}
 
 	@Override
-	public LOTPart getPart(final MStringID partid) {
-		for (LOTPart part : parts) {
-			if (part.getServiceObject().getID().equals(partid)) {
+	public LOTPartImpl getPart(final MStringID partid) {
+		for (LOTPartImpl part : parts) {
+			if (part.getID().equals(partid)) {
 				return part;
 			}
 		}
 
-		LOTPart part = new LOTPart(env);
+		LOTPartImpl part = new LOTPartImpl(env);
 		if (part.load(partid)) {
 			log.info("Load part " + part);
 			parts.add(part);
@@ -85,7 +87,7 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 		} else {
 			log.info("Failed to load part " + partid);
 			log.info("Current parts " + parts);
-			for (LOTPart p : parts) {
+			for (LOTPartImpl p : parts) {
 				log.info("Part " + p.getBean());
 			}
 			return null;

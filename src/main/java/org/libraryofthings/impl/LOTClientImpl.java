@@ -3,7 +3,7 @@ package org.libraryofthings.impl;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTObjectFactory;
-import org.libraryofthings.model.LOTObjectFactoryImpl;
+import org.libraryofthings.model.impl.LOTObjectFactoryImpl;
 
 import waazdoh.client.WClient;
 import waazdoh.client.binaries.MBinarySource;

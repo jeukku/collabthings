@@ -8,6 +8,8 @@ import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
+import org.libraryofthings.model.impl.LOTScriptImpl;
+import org.libraryofthings.model.impl.LOTToolImpl;
 import org.xml.sax.SAXException;
 
 public final class TestTool extends LOTTestCase {
@@ -21,12 +23,8 @@ public final class TestTool extends LOTTestCase {
 		assertNotNull(t);
 		t.save();
 		//
-		assertNotNull(env.getObjectFactory().getTool(
-				t.getServiceObject().getID().getStringID()));
-		assertEquals(
-				t,
-				env.getObjectFactory().getTool(
-						t.getServiceObject().getID().getStringID()));
+		assertNotNull(env.getObjectFactory().getTool(t.getID().getStringID()));
+		assertEquals(t, env.getObjectFactory().getTool(t.getID().getStringID()));
 	}
 
 	public void testSaveAndLoad() throws IOException, SAXException,
@@ -36,10 +34,9 @@ public final class TestTool extends LOTTestCase {
 		//
 		LOTTool t = env.getObjectFactory().getTool();
 		t.setName("testing changing name");
-		t.getServiceObject().save();
+		t.save();
 		//
-		LOTScript lotScript = new LOTScript(env);
-		t.addScript("test", lotScript);
+		LOTScript lotScript = t.addScript("test");
 		lotScript
 				.setScript("function info() { return \"testing tool script\"; }");
 		//
@@ -53,8 +50,8 @@ public final class TestTool extends LOTTestCase {
 		//
 		LOTClient benv = getNewClient(true);
 		assertNotNull(benv);
-		LOTTool btool = benv.getObjectFactory().getTool(
-				t.getServiceObject().getID().getStringID());
+		LOTTool btool = benv.getObjectFactory()
+				.getTool(t.getID().getStringID());
 		assertEquals(btool.getName(), t.getName());
 		waitObject(btool);
 		//
@@ -68,12 +65,12 @@ public final class TestTool extends LOTTestCase {
 	}
 
 	public void testNullPart() throws IOException, SAXException {
-		LOTTool t = new LOTTool(getNewClient());
+		LOTToolImpl t = new LOTToolImpl(getNewClient());
 		t.save();
 		t.publish();
 		//
 		LOTTool b = getNewClient().getObjectFactory().getTool(
-				t.getServiceObject().getID().getStringID());
+				t.getID().getStringID());
 		assertTrue(b.isReady());
 		assertTrue(b.toString().indexOf("LOTTool") >= 0);
 	}
@@ -87,7 +84,7 @@ public final class TestTool extends LOTTestCase {
 	public void testAddGetScript() {
 		LOTClient c = getNewClient();
 		LOTTool tool = c.getObjectFactory().getTool();
-		tool.addScript("testscript", new LOTScript(c));
+		tool.addScript("testscript");
 		assertNotNull(tool.getScript("testscript"));
 	}
 }

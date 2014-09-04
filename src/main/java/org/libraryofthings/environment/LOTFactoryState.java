@@ -17,6 +17,7 @@ import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.model.LOTValues;
+import org.libraryofthings.model.impl.LOTToolImpl;
 
 import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MStringID;

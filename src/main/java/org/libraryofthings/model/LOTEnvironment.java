@@ -2,15 +2,11 @@ package org.libraryofthings.model;
 
 import waazdoh.client.model.MID;
 
-public interface LOTEnvironment {
+public interface LOTEnvironment extends LOTObject {
 
 	LOTScript getScript(String string);
 
 	void addScript(String scriptname, LOTScript lotScript);
-
-	void save();
-
-	void publish();
 
 	void addTool(String string, LOTTool partsource);
 

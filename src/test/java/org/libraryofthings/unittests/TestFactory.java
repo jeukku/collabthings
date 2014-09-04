@@ -22,12 +22,10 @@ public final class TestFactory extends LOTTestCase {
 		assertNotNull(f);
 		f.save();
 		//
-		assertNotNull(env.getObjectFactory().getFactory(
-				f.getServiceObject().getID().getStringID()));
-		assertEquals(
-				f,
-				env.getObjectFactory().getFactory(
-						f.getServiceObject().getID().getStringID()));
+		assertNotNull(env.getObjectFactory()
+				.getFactory(f.getID().getStringID()));
+		assertEquals(f,
+				env.getObjectFactory().getFactory(f.getID().getStringID()));
 	}
 
 	public void testSaveAndLoad() throws IOException, SAXException,
@@ -37,10 +35,10 @@ public final class TestFactory extends LOTTestCase {
 		//
 		LOTFactory f = env.getObjectFactory().getFactory();
 		f.setName("testing changing name");
-		f.getServiceObject().save();
+		f.save();
 		//
-		LOTScript lotScript = new LOTScript(env);
-		f.addScript("test", lotScript);
+
+		LOTScript lotScript = f.addScript("test");
 		lotScript
 				.setScript("function info() { return \"testing tool script\"; }");
 		//
@@ -50,7 +48,7 @@ public final class TestFactory extends LOTTestCase {
 		LOTClient benv = getNewClient(true);
 		assertNotNull(benv);
 		LOTFactory bfact = benv.getObjectFactory().getFactory(
-				f.getServiceObject().getID().getStringID());
+				f.getID().getStringID());
 		assertEquals(bfact.getName(), f.getName());
 		waitObject(bfact);
 		//
@@ -68,7 +66,7 @@ public final class TestFactory extends LOTTestCase {
 	public void testAddGetScript() {
 		LOTClient c = getNewClient();
 		LOTTool tool = c.getObjectFactory().getTool();
-		tool.addScript("testscript", new LOTScript(c));
+		LOTScript s = tool.addScript("testscript");
 		assertNotNull(tool.getScript("testscript"));
 	}
 }
