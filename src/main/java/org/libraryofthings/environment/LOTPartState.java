@@ -41,9 +41,9 @@ public class LOTPartState implements LOTRuntimeObject {
 
 	public LVector getAbsoluteLocation() {
 		if (parent != null) {
-			return parent.getLocation().copy().add(location);
+			return parent.getLocation().copy().add(getLocation());
 		} else {
-			return location;
+			return getLocation();
 		}
 	}
 
