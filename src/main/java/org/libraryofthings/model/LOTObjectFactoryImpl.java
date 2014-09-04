@@ -11,13 +11,34 @@ import waazdoh.util.MStringID;
 public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 
 	private LOTClient env;
-	private List<LOTPart> parts = new LinkedList<LOTPart>();
-	private List<LOTTool> tools = new LinkedList<LOTTool>();
+	private List<LOTPart> parts = new LinkedList<>();
+	private List<LOTTool> tools = new LinkedList<>();
+	private List<LOTFactory> factories = new LinkedList<>();
 	//
 	private LLog log = LLog.getLogger(this);
 
 	public LOTObjectFactoryImpl(final LOTClient nenv) {
 		this.env = nenv;
+	}
+
+	@Override
+	public LOTFactory getFactory() {
+		LOTFactory f = new LOTFactory(env);
+		factories.add(f);
+		return f;
+	}
+
+	@Override
+	public LOTFactory getFactory(MStringID factoryid) {
+		for (LOTFactory factory : factories) {
+			if (factory.getServiceObject().getID().equals(factoryid)) {
+				return factory;
+			}
+		}
+
+		LOTFactory factory = new LOTFactory(env, factoryid);
+		factories.add(factory);
+		return factory;
 	}
 
 	@Override
