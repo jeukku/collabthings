@@ -3,6 +3,7 @@ package org.libraryofthings.environment;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTToolException;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.model.LOTValues;
@@ -10,12 +11,11 @@ import org.libraryofthings.model.LOTValues;
 public class LOTToolState implements LOTRuntimeObject {
 
 	private RunEnvironment env;
-	private LOTRuntimeObject parent;
+	private LOTFactoryState factory;
 
 	private LOTTool tool;
 	private LVector location = new LVector();
 	private LVector normal = new LVector(1, 0, 0);
-	private LOTFactoryState factorystate;
 	//
 	private LLog log = LLog.getLogger(this);
 	private boolean inuse;
@@ -27,10 +27,10 @@ public class LOTToolState implements LOTRuntimeObject {
 		log.info("LOTToolState with " + runenv + " tool:" + ntool.getName());
 
 		this.name = name;
-		this.factorystate = factorystate;
+		this.factory = factorystate;
 		this.env = runenv;
 		this.tool = ntool;
-		this.parent = factorystate;
+		this.factory = factorystate;
 	}
 
 	public String getName() {
@@ -48,8 +48,13 @@ public class LOTToolState implements LOTRuntimeObject {
 	}
 
 	@Override
-	public void setParentFactory(LOTFactoryState nfactorystate) {
-		this.factorystate = nfactorystate;
+	public String getParameter(String name) {
+		return factory.getParameter(name);
+	}
+
+	@Override
+	public void setParent(LOTRuntimeObject nparent) {
+		//
 	}
 
 	public void call(final String scriptname, final LOTValues values)
@@ -80,8 +85,8 @@ public class LOTToolState implements LOTRuntimeObject {
 	}
 
 	public LVector getAbsoluteLocation() {
-		if (parent != null) {
-			return parent.getLocation().copy().add(location);
+		if (factory != null) {
+			return factory.getLocation().copy().add(location);
 		} else {
 			return location;
 		}
@@ -89,7 +94,7 @@ public class LOTToolState implements LOTRuntimeObject {
 
 	public void moveTo(LVector l, LVector n) {
 		log.info("moveTo " + l + " " + n);
-		this.factorystate.requestMove(this, l, n);
+		this.factory.requestMove(this, l, n);
 	}
 
 	public LVector getLocation() {

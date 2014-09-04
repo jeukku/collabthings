@@ -13,6 +13,7 @@ import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;
+import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.model.LOTValues;
@@ -34,7 +35,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	private Set<LOTFactoryState> factories = new HashSet<>();
 
 	private LOTPool pool = new LOTPool();
-	private LOTFactoryState parent;
+	private LOTRuntimeObject parent;
 
 	private Map<String, LOTPartState> parts = new HashMap<>();
 
@@ -74,7 +75,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	}
 
 	@Override
-	public void setParentFactory(LOTFactoryState nfactorystate) {
+	public void setParent(LOTRuntimeObject nfactorystate) {
 		this.parent = nfactorystate;
 	}
 
@@ -112,7 +113,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		getLog().info("addTool " + id + " tool:" + tool);
 		LOTToolState toolstate = new LOTToolState(id, runenv, tool, this);
 		tools.add(toolstate);
-		toolstate.setParentFactory(this);
+		toolstate.setParent(this);
 		return toolstate;
 	}
 
@@ -151,7 +152,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 	public void addToolUser(LOTToolUser tooluser) {
 		this.toolusers.add(tooluser);
-		tooluser.setParentFactory(this);
+		tooluser.setParent(this);
 	}
 
 	@Override

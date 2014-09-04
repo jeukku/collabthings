@@ -5,7 +5,6 @@ import javax.script.ScriptException;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
-import org.libraryofthings.environment.LOTRuntimeObject;
 import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.scripting.JavaScriptLoader;
 import org.libraryofthings.scripting.ScriptLoader;

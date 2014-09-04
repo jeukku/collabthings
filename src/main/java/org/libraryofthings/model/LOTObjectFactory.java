@@ -1,7 +1,4 @@
-package org.libraryofthings;
-
-import org.libraryofthings.model.LOTPart;
-import org.libraryofthings.model.LOTTool;
+package org.libraryofthings.model;
 
 import waazdoh.util.MStringID;
 

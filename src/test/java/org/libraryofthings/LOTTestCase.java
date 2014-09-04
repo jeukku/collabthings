@@ -10,6 +10,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.libraryofthings.impl.LOTClientImpl;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTObject;
 import org.libraryofthings.model.LOTScript;
@@ -77,8 +78,8 @@ public class LOTTestCase extends TestCase {
 		p.set(LOTScript.PREFERENCES_SCRIPTSPATH, "./");
 
 		MBinarySource binarysource = getBinarySource(p, bind);
-		LOTClient c = new LOTClient(p, binarysource, getTestService(email, p,
-				binarysource));
+		LOTClient c = new LOTClientImpl(p, binarysource, getTestService(email,
+				p, binarysource));
 
 		boolean setsession = c.getClient().setSession(getSession(p));
 		if (setsession) {

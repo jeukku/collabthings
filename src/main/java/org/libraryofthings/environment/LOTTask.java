@@ -1,6 +1,7 @@
 package org.libraryofthings.environment;
 
 import org.libraryofthings.LLog;
+import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTValues;
 

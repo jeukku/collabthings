@@ -1,6 +1,7 @@
 package org.libraryofthings.environment;
 
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTRuntimeObject;
 
 public interface LOTToolUser extends LOTRuntimeObject {
 

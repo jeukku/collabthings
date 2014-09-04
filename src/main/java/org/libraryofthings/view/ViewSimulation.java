@@ -32,13 +32,13 @@ import javax.swing.SwingUtilities;
 import org.libraryofthings.LLog;
 import org.libraryofthings.environment.LOTFactoryState;
 import org.libraryofthings.environment.LOTPartState;
-import org.libraryofthings.environment.LOTRuntimeObject;
 import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.environment.LOTToolState;
 import org.libraryofthings.environment.LOTToolUser;
 import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.environment.RunEnvironmentListener;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTRuntimeObject;
 
 public class ViewSimulation implements RunEnvironmentListener {
 

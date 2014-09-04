@@ -1,10 +1,10 @@
-package org.libraryofthings;
+package org.libraryofthings.model;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import org.libraryofthings.model.LOTPart;
-import org.libraryofthings.model.LOTTool;
+import org.libraryofthings.LLog;
+import org.libraryofthings.LOTClient;
 
 import waazdoh.util.MStringID;
 

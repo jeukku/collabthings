@@ -3,6 +3,7 @@ package org.libraryofthings.environment;
 import org.libraryofthings.LLog;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
+import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTSubPart;
 
 public class LOTPartState implements LOTRuntimeObject {
@@ -13,7 +14,6 @@ public class LOTPartState implements LOTRuntimeObject {
 	private RunEnvironment runenv;
 	//
 	private LOTRuntimeObject parent;
-	private LOTFactoryState factorystate;
 
 	public LOTPartState(final RunEnvironment runenv, final LOTPart part) {
 		this.part = part;
@@ -35,8 +35,8 @@ public class LOTPartState implements LOTRuntimeObject {
 	}
 
 	@Override
-	public void setParentFactory(LOTFactoryState nfactorystate) {
-		this.factorystate = nfactorystate;
+	public void setParent(final LOTRuntimeObject nparent) {
+		this.parent = nparent;
 	}
 
 	public LVector getAbsoluteLocation() {
@@ -55,6 +55,15 @@ public class LOTPartState implements LOTRuntimeObject {
 		LOTSubPart nsp = part.newSubPart();
 		nsp.setPart(np.getPart());
 		nsp.setOrientation(np.getLocation(), np.getNormal());
+	}
+
+	@Override
+	public String getParameter(String name) {
+		if (parent != null) {
+			return parent.getParameter(name);
+		} else {
+			return null;
+		}
 	}
 
 	@Override

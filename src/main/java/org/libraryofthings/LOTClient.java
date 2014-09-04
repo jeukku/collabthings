@@ -1,55 +1,25 @@
 package org.libraryofthings;
 
+import org.libraryofthings.model.LOTObjectFactory;
+
 import waazdoh.client.WClient;
 import waazdoh.client.binaries.MBinarySource;
-import waazdoh.client.model.CMService;
 import waazdoh.util.MPreferences;
 
-public final class LOTClient {
+public interface LOTClient {
 	public static final String VERSION = "0.0.1";
-	private final String prefix = "LOT";
-	//
-	private WClient client;
-	private LOTObjectFactory factory;
-	private LLog log = LLog.getLogger(this);
 
-	public LOTClient(MPreferences p, MBinarySource binarysource,
-			CMService service) {
-		client = new WClient(p, binarysource, service);
-		this.factory = new LOTObjectFactoryImpl(this);
-		log.info("resources " + getClass().getResource("/").getPath());
-	}
+	LOTObjectFactory getObjectFactory();
 
-	public WClient getClient() {
-		return client;
-	}
+	String getVersion();
 
-	public MBinarySource getBinarySource() {
-		return client.getBinarySource();
-	}
+	String getPrefix();
 
-	public LOTObjectFactory getObjectFactory() {
-		return factory;
-	}
+	WClient getClient();
 
-	public String getVersion() {
-		return LOTClient.VERSION;
-	}
+	MBinarySource getBinarySource();
 
-	public String getPrefix() {
-		return prefix;
-	}
+	void stop();
 
-	public MPreferences getPreferences() {
-		return client.getPreferences();
-	}
-
-	public void stop() {
-		getClient().stop();
-	}
-
-	@Override
-	public String toString() {
-		return "" + this.client;
-	}
+	MPreferences getPreferences();
 }
