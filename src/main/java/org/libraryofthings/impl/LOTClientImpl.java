@@ -53,6 +53,12 @@ public final class LOTClientImpl implements LOTClient {
 	}
 
 	@Override
+	public String getGlobalSetting(String name) {
+		return client
+				.readStorageArea("/public/" + prefix + "/settings/" + name);
+	}
+
+	@Override
 	public String toString() {
 		return "" + this.client;
 	}

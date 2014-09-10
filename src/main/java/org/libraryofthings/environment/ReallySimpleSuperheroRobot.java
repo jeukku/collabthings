@@ -8,7 +8,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 	private static final long WAIT_A_BIT = 20;
 	private static final float MOVING_LOCATION_LENGTH_TRIGGER = 0.000000001f;
-	private static final double LOCATION_PRINTOUT = 2000;
+	private static final double LOCATION_PRINTOUT = 20000;
 	//
 	private RunEnvironment simenv;
 	private LOTToolState tool;

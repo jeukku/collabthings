@@ -40,8 +40,9 @@ import org.libraryofthings.model.LOTRuntimeObject;
 
 public class ViewSimulation implements RunEnvironmentListener {
 
+	private static final double ZOOMSPEED_MINIMUM = 0.8;
 	private static final int ZOOM_MAXIMUM = 10;
-	private static final double ZOOM_MINIMUM = 0.0000000000001;
+	private static final double ZOOM_MINIMUM = 0.00001;
 	private RunEnvironment env;
 	private Group scenegroup;
 	private PerspectiveCamera camera;
@@ -137,6 +138,11 @@ public class ViewSimulation implements RunEnvironmentListener {
 		List<LOTToolUser> ftus = fs.getToolUsers();
 		for (LOTToolUser lotToolUser : ftus) {
 			addToolUser(lotToolUser);
+		}
+
+		List<LOTFactoryState> fss = fs.getFactories();
+		for (LOTFactoryState lotFactoryState : fss) {
+//			addFactoryState(lotFactoryState);
 		}
 	}
 
@@ -279,7 +285,10 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 			}
 			if (somethingoutofscreen) {
-				zoomspeed *= 0.97;
+				zoomspeed *= 0.95;
+				if (zoomspeed < ZOOMSPEED_MINIMUM) {
+					zoomspeed = ZOOMSPEED_MINIMUM;
+				}
 			} else {
 				zoomspeed *= 1.01;
 			}

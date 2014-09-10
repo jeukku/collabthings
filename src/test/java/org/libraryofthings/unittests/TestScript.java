@@ -8,6 +8,7 @@ import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
 import org.libraryofthings.model.impl.LOTScriptException;
 import org.libraryofthings.model.impl.LOTScriptImpl;
+import org.libraryofthings.scripting.LOTJavaScriptLoader;
 
 public final class TestScript extends LOTTestCase {
 
@@ -75,6 +76,20 @@ public final class TestScript extends LOTTestCase {
 		assertEquals("testvalue", e.getParameter("test"));
 	}
 
+	public void testRestrictedWords() {
+		LOTClient c = getNewClient();
+
+		try {
+			LOTScriptImpl s = getScript(
+					c,
+					SCRIPT_TEMPLATE
+							+ "function run(e) { r = new java.io.FileWriter('/jstest.txt'); r.flush(); }");
+			assertNull(s);
+		} catch (SecurityException ex) {
+			assertNotNull(ex);
+		}
+	}
+
 	public void testFailLoad() {
 		LOTClient env = getNewClient();
 		LOTScriptImpl s = getScript(env, FAILING_SCRIPT);
@@ -87,20 +102,6 @@ public final class TestScript extends LOTTestCase {
 		assertNull(s);
 	}
 
-	public void testInvokeUnknownFuntion() {
-		LOTClient client = getNewClient();
-		LOTScriptImpl s = getAndTestWorkingScriptExample(client);
-		boolean exceptioncaught = false;
-		try {
-			s.invoke("FOO");
-		} catch (LOTScriptException e) {
-			assertNotNull(s);
-			exceptioncaught = true;
-		}
-		//
-		assertTrue(exceptioncaught);
-	}
-
 	public void testMissingRunMethod() {
 		LOTClient client = getNewClient();
 		LOTScriptImpl s = getScript(client, "function info() {}");
@@ -111,9 +112,11 @@ public final class TestScript extends LOTTestCase {
 
 	public void testFailAtLoadingLibraries() throws LOTScriptException {
 		LOTClient env = getNewClient();
+		LOTJavaScriptLoader.reset();
 		env.getPreferences().set(LOTScriptImpl.PREFERENCES_SCRIPTSPATH,
 				"FAILPATH");
 		LOTScriptImpl s = getWorkingScriptExample(env);
 		assertNull(s);
+		LOTJavaScriptLoader.reset();
 	}
 }

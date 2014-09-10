@@ -8,6 +8,7 @@ import waazdoh.util.MPreferences;
 
 public interface LOTClient {
 	public static final String VERSION = "0.0.1";
+	public static final String JAVASCRIPT_FORBIDDENWORDS = "lot.javascript.forbiddenwords";
 
 	LOTObjectFactory getObjectFactory();
 
@@ -22,4 +23,6 @@ public interface LOTClient {
 	void stop();
 
 	MPreferences getPreferences();
+
+	String getGlobalSetting(String name);
 }

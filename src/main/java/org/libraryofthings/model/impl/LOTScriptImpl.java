@@ -1,5 +1,8 @@
 package org.libraryofthings.model.impl;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 import javax.script.Invocable;
 import javax.script.ScriptException;
 
@@ -9,7 +12,7 @@ import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTValues;
-import org.libraryofthings.scripting.JavaScriptLoader;
+import org.libraryofthings.scripting.LOTJavaScriptLoader;
 import org.libraryofthings.scripting.ScriptLoader;
 
 import waazdoh.client.ServiceObject;
@@ -83,13 +86,13 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	 */
 	private boolean load(final String s) {
 		try {
-			ScriptLoader loader = new JavaScriptLoader(this.env
+			ScriptLoader loader = LOTJavaScriptLoader.get(this.env, this.env
 					.getPreferences().get(
-							LOTScriptImpl.PREFERENCES_SCRIPTSPATH, "./"));
+							LOTScriptImpl.PREFERENCES_SCRIPTSPATH, ""));
 			inv = loader.load(s);
 			if (inv != null) {
 				// invoke the global function named "hello"
-				info = getInfo();
+				info = "" + inv.invokeFunction("info");
 				log.info("load a script " + info);
 				this.script = s;
 				return true;
@@ -97,7 +100,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 				script = null;
 				return false;
 			}
-		} catch (LOTScriptException | ScriptException e) {
+		} catch (ScriptException | NoSuchMethodException e) {
 			log.error(this, "parseBean", e);
 			script = null;
 			return false;
@@ -151,16 +154,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	 * @throws ScriptException
 	 */
 	public String getInfo() throws LOTScriptException {
-		return invoke("info");
-	}
-
-	public String invoke(String string) throws LOTScriptException {
-		try {
-			return "" + inv.invokeFunction(string);
-		} catch (NoSuchMethodException | ScriptException e) {
-			log.error(this, this.name, e);
-			throw new LOTScriptException(e);
-		}
+		return info;
 	}
 
 	/**
@@ -171,13 +165,18 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	 */
 	public boolean run(RunEnvironment runenv, LOTRuntimeObject runo,
 			LOTValues values) {
-		try {
-			inv.invokeFunction("run", runenv, runo, values);
-			return true;
-		} catch (NoSuchMethodException | ScriptException e1) {
-			handleException(e1);
-			return false;
-		}
+
+		return AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+			public Boolean run() {
+				try {
+					inv.invokeFunction("run", runenv, runo, values);
+					return true;
+				} catch (NoSuchMethodException | ScriptException e1) {
+					handleException(e1);
+					return false;
+				}
+			}
+		});
 	}
 
 	public boolean run(RunEnvironment runenv, LOTRuntimeObject o) {
@@ -197,5 +196,9 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	private class SandboxManager extends SecurityManager {
+
 	}
 }
