@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>libraryofthings.client</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.4</version>
+	<version>0.0.5</version>
 	<name>libraryofthings.client</name>
 	<url>http://maven.apache.org</url>
 	<groupId>org.libraryofthings</groupId>
@@ -143,7 +143,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.8</source>
-					<target>1.8</target>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 
