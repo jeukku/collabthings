@@ -80,13 +80,17 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	}
 
 	private synchronized void checkTasks() {
-		if (!getTasks().isEmpty()) {
+		if (!isTasksEmpty()) {
 			final LOTTask task = getTasks().get(0);
 			removeTask(task);
 			runningtasks.add(task);
 			//
 			new Thread(() -> runTask(task)).start();
 		}
+	}
+
+	private boolean isTasksEmpty() {
+		return this.tasks.isEmpty();
 	}
 
 	private void runTask(LOTTask task) {

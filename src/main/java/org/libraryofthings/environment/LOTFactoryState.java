@@ -17,7 +17,6 @@ import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.model.LOTValues;
-import org.libraryofthings.model.impl.LOTToolImpl;
 
 import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MStringID;
@@ -176,6 +175,9 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		for (LOTToolUser tooluser : toolusers) {
 			tooluser.stop();
 		}
+		for (LOTFactoryState factory : factories) {
+			factory.stop();
+		}
 	}
 
 	public void requestMove(LOTToolState lotToolState, LVector l, LVector n) {
@@ -254,6 +256,10 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 	public LOTFactory getFactory() {
 		return factory;
+	}
+
+	public List<LOTFactoryState> getFactories() {
+		return new LinkedList<LOTFactoryState>(this.factories);
 	}
 
 	// TODO FIXME
