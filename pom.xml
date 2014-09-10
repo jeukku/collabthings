@@ -143,7 +143,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.8</source>
-					<target>1.7</target>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
@@ -212,7 +212,7 @@
 		<dependency>
 			<groupId>waazdoh</groupId>
 			<artifactId>waazdoh.client</artifactId>
-			<version>[0.0.1,)</version>
+			<version>[1.2.0,)</version>
 		</dependency>
 
 		<dependency>
