@@ -28,10 +28,11 @@ function run(runenv, factory, values) {
 	
 	log.info("Running through all subparts. Destination part " + destpartstate);
 	_.each(part.getSubParts().toArray(), function(subpart) {
-		log.info('script test ' + subpart);
 		var callvalues = values.copy();
 		callvalues.put('subpart', subpart);
 		callvalues.put('destpart', destpartstate);
+		callvalues.put('partid', subpart.getPart().getID());
+		factory.call('order', callvalues);
 		
 		moveandattach(runenv, factory, callvalues);
 	});

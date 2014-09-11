@@ -40,17 +40,32 @@ public final class ITTestBuildABox extends LOTTestCase {
 		LOTClient client = getNewClient();
 
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
-
 		LOTFactory factory = client.getObjectFactory().getFactory();
-
 		setupFactoryThatUsesBoxes(factory, client);
+
+		factory.setLocation(new LVector(0, 0, 0));
+		//
+		LOTPart line = getLineOfBoxes(client);
+		//
 		LOTFactoryState factorystate = new LOTFactoryState(client, env,
 				"linefactory", factory);
 		RunEnvironment runenv = factorystate.getRunEnvironment();
 
-		factory.setLocation(new LVector(0, 0, 0));
+		factorystate.addTask("order", new LOTValues("partid", line.getID()));
 		//
-		LOTPart line = runenv.getClient().getObjectFactory().getPart();
+		LOTSimulation simulation = new LOTSimpleSimulation(runenv, true);
+
+		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
+		//
+		LOTPart builtline = factorystate.getPool().getPart("" + line.getID());
+		assertNotNull(builtline);
+		//
+
+		assertTrue(builtline.isAnEqualPart(line));
+	}
+
+	private LOTPart getLineOfBoxes(LOTClient client) {
+		LOTPart line = client.getObjectFactory().getPart();
 		line.setName("line");
 		assertNotNull(line);
 		//
@@ -59,21 +74,15 @@ public final class ITTestBuildABox extends LOTTestCase {
 			sb.setPart(box);
 			sb.setOrientation(new LVector(i * 2, 0, 0), new LVector(0, 1, 0));
 		}
-		//
-		factorystate.call("order", new LOTValues("partid", line.getID()));
-		//
-		LOTSimulation simulation = new LOTSimpleSimulation(runenv, true);
-
-		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
-		//
-		LOTPart builtline = factorystate.getPool().getPart("" + line.getID());
-		assertNotNull(builtline);
+		return line;
 	}
 
 	public void testBuildABox() throws NoSuchMethodException, ScriptException,
 			IOException {
 		RunEnvironment runenv = testBox();
 		assertNotNull(runenv);
+		LOTSimulation s = new LOTSimpleSimulation(runenv);
+		assertTrue(s.run(MAX_SIMULATION_RUNTIME));
 	}
 
 	private LOTFactory setupFactoryThatUsesBoxes(LOTFactory factory,

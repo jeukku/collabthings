@@ -75,7 +75,7 @@ public class LOTTestCase extends TestCase {
 			throws MalformedURLException, SAXException {
 		//
 		MPreferences p = new StaticTestPreferences("lottests", email);
-		p.set(LOTScriptImpl.PREFERENCES_SCRIPTSPATH, "./");
+		p.set(LOTScriptImpl.PREFERENCES_SCRIPTSPATH, "");
 
 		MBinarySource binarysource = getBinarySource(p, bind);
 		LOTClient c = new LOTClientImpl(p, binarysource, getTestService(email,
@@ -122,7 +122,9 @@ public class LOTTestCase extends TestCase {
 				log.error(this, "getTestService", e);
 			}
 		}
-		return new ServiceMock(username, source);
+		ServiceMock mockservice = new ServiceMock(username, source);
+		mockservice.writeStorageArea("/public/LOT/settings/lot.javascript.forbiddenwords", "forbiddenword");
+		return mockservice;
 	}
 
 	public void testTrue() {

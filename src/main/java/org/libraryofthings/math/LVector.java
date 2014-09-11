@@ -128,4 +128,8 @@ public final class LVector {
 		return c;
 	}
 
+	public String asShortString() {
+		return String.format("[%.2f, %.2f, %.2f]", getX(), getY(), getZ());
+	}
+
 }

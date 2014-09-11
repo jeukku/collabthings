@@ -13,14 +13,12 @@ import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
-import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
@@ -41,8 +39,8 @@ import org.libraryofthings.model.LOTRuntimeObject;
 public class ViewSimulation implements RunEnvironmentListener {
 
 	private static final double ZOOMSPEED_MINIMUM = 0.8;
-	private static final int ZOOM_MAXIMUM = 10;
-	private static final double ZOOM_MINIMUM = 0.00001;
+	private static final int ZOOM_MAXIMUM = 1000;
+	private static final double ZOOM_MINIMUM = 0.000001;
 	private RunEnvironment env;
 	private Group scenegroup;
 	private PerspectiveCamera camera;
@@ -50,20 +48,21 @@ public class ViewSimulation implements RunEnvironmentListener {
 	private Group objectgroup;
 	private JFXPanel canvas;
 
-	private Map<LOTRuntimeObject, Node> nodes = new HashMap<LOTRuntimeObject, Node>();
+	private Map<LOTRuntimeObject, NodeInfo> nodes = new HashMap<LOTRuntimeObject, NodeInfo>();
 	private double rotatex = 0;
-	private double zoom = 1;
+	private double zoom = 10;
 	private double zoomspeed = 1;
-	private Text text;
 	private Timeline timeline;
 	private double time;
 	private AnimationTimer timer;
 
 	private double cameradistance = 170;
-	private Rotate camerarx = new Rotate(0, Rotate.X_AXIS);
-	private Translate cameratr = new Translate(0, 0, -cameradistance);
+	private Rotate camerarx = new Rotate(Math.PI / 4, Rotate.X_AXIS);
+	private Translate cameratr = new Translate(0, cameradistance,
+			-cameradistance);
 	private LLog log = LLog.getLogger(this);
 	private Scene scene;
+	private double camerarotate;
 
 	public ViewSimulation(RunEnvironment env) {
 		this.env = env;
@@ -142,7 +141,7 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 		List<LOTFactoryState> fss = fs.getFactories();
 		for (LOTFactoryState lotFactoryState : fss) {
-//			addFactoryState(lotFactoryState);
+			addFactoryState(lotFactoryState);
 		}
 	}
 
@@ -158,7 +157,11 @@ public class ViewSimulation implements RunEnvironmentListener {
 			g.getChildren().add(sp);
 
 			objectgroup.getChildren().add(g);
-			nodes.put(partstate, g);
+
+			NodeInfo i = new NodeInfo();
+			i.group = g;
+
+			nodes.put(partstate, i);
 		}
 	}
 
@@ -169,7 +172,17 @@ public class ViewSimulation implements RunEnvironmentListener {
 			sp.setMaterial(getRandomMaterial());
 			g.getChildren().add(sp);
 			objectgroup.getChildren().add(g);
-			nodes.put(lotToolUser, g);
+
+			NodeInfo i = new NodeInfo();
+			/*
+			 * Text t = new Text("text"); t.setFont(Font.font(1));
+			 * t.setTranslateY(1.5); i.text = t;
+			 */
+			// g.getChildren().add(t);
+
+			i.group = g;
+
+			nodes.put(lotToolUser, i);
 		}
 	}
 
@@ -193,9 +206,10 @@ public class ViewSimulation implements RunEnvironmentListener {
 		/* Create the Scene instance and set the group node as root */
 
 		Scene scene = new Scene(scenegroup, Color.DARKGRAY);
+		scenegroup.setAutoSizeChildren(false);
 
 		this.camera = new PerspectiveCamera(true);
-		camera.setFarClip(10000);
+		camera.setFarClip(1000000);
 		camera.setNearClip(0.1);
 
 		camera.getTransforms().addAll(camerarx, cameratr);
@@ -209,13 +223,11 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 		this.objectgroup = newGroup();
 
-		text = new Text("Hello World");
-		text.setScaleX(0.1);
-		text.setScaleY(0.1);
-		text.setTranslateY(-1);
-
-		scenegroup.getChildren().add(text);
-
+		Box b = new Box(100, 1, 100);
+		b.setTranslateY(-2);
+		b.setMaterial(getRandomMaterial());
+		objectgroup.getChildren().add(b);
+		//
 		scenegroup.getChildren().add(objectgroup);
 
 		return scene;
@@ -232,6 +244,8 @@ public class ViewSimulation implements RunEnvironmentListener {
 	}
 
 	private void updateRotation() {
+		camerarx.setAngle(camerarotate);
+
 		objectgroup.setRotate(rotatex);
 		objectgroup.setRotationAxis(new Point3D(0, 1, 0));
 	}
@@ -243,11 +257,13 @@ public class ViewSimulation implements RunEnvironmentListener {
 	}
 
 	public synchronized void step(double dtime) {
-		rotatex += dtime * 0.01;
+		// rotatex += dtime * 0.01;
+		camerarotate += dtime * 0.1;
+
 		time += dtime;
 		zoom += (zoomspeed - 1) * dtime / 1000;
 		if (zoom > ZOOM_MAXIMUM) {
-			zoom = 10;
+			zoom = ZOOM_MAXIMUM;
 		} else if (zoom < ZOOM_MINIMUM) {
 			zoom = ZOOM_MINIMUM;
 		}
@@ -255,8 +271,6 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 	private void updateScene() {
 		if (scenegroup != null) {
-			text.setText("time " + getShortString(time) + " zoom:" + zoom);
-
 			addRuntimeObjects(env);
 
 			updateRotation();
@@ -268,11 +282,15 @@ public class ViewSimulation implements RunEnvironmentListener {
 			boolean somethingoutofscreen = false;
 
 			for (LOTRuntimeObject tu : nodes.keySet()) {
-				Node node = nodes.get(tu);
-				LVector location = tu.getAbsoluteLocation();
+				NodeInfo nodei = nodes.get(tu);
+				Group node = nodei.group;
+				// LVector location = tu.getAbsoluteLocation();
+				LVector location = tu.getLocation();
 				node.setTranslateX(location.getX());
 				node.setTranslateY(location.getY());
 				node.setTranslateZ(location.getZ());
+
+				// nodei.text.setText("" + location.asShortString());
 
 				Point2D screen = node.localToScreen(0, 0, 0);
 
@@ -302,5 +320,10 @@ public class ViewSimulation implements RunEnvironmentListener {
 		} else {
 			return string;
 		}
+	}
+
+	private class NodeInfo {
+		Group group;
+		// Text text;
 	}
 }
