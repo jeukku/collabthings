@@ -123,7 +123,9 @@ public class LOTTestCase extends TestCase {
 			}
 		}
 		ServiceMock mockservice = new ServiceMock(username, source);
-		mockservice.writeStorageArea("/public/LOT/settings/lot.javascript.forbiddenwords", "forbiddenword");
+		mockservice.writeStorageArea(
+				"/public/LOT/settings/lot.javascript.forbiddenwords",
+				"forbiddenword");
 		return mockservice;
 	}
 

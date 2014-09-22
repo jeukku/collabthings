@@ -132,4 +132,18 @@ public final class LVector {
 		return String.format("[%.2f, %.2f, %.2f]", getX(), getY(), getZ());
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof LVector) {
+			LVector b = (LVector) obj;
+			if (getX() == b.getX() && getY() == b.getY() && getZ() == b.getZ()) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
 }

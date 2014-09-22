@@ -3,6 +3,9 @@ package org.libraryofthings.model;
 import java.io.File;
 import java.util.List;
 
+import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.impl.LOTBoundingBox;
+
 public interface LOTPart extends LOTObject {
 
 	LOTSubPart newSubPart();
@@ -20,5 +23,9 @@ public interface LOTPart extends LOTObject {
 	String getName();
 
 	boolean importModel(File file);
+
+	void setBoundingBox(LVector lVector, LVector lVector2);
+
+	LOTBoundingBox getBoundingBox();
 
 }

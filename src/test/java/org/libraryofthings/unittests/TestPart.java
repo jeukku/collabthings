@@ -8,6 +8,7 @@ import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
+import org.libraryofthings.model.impl.LOTBoundingBox;
 import org.libraryofthings.model.impl.LOTPartImpl;
 import org.xml.sax.SAXException;
 
@@ -77,6 +78,20 @@ public final class TestPart extends LOTTestCase {
 		JBean bean = new JBean("part");
 		bean.add("parts");
 		p.parseBean(bean);
+	}
+
+	public void testBoundingBox() {
+		LOTClient c = getNewClient();
+		LOTPart p = new LOTPartImpl(c);
+		LVector av = new LVector(-1, -1, -1);
+		LVector bv = new LVector(1, 1, 1);
+		p.setBoundingBox(av, bv);
+		p.publish();
+		//
+		LOTPart pb = getNewClient().getObjectFactory().getPart(p.getID().getStringID());
+		LOTBoundingBox bounding = pb.getBoundingBox();
+		assertEquals(bounding.getA(), av);
+		assertEquals(bounding.getB(), bv);
 	}
 
 	public void testImportModel() throws IOException, SAXException {

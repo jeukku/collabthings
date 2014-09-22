@@ -240,6 +240,9 @@ public final class ITTestBuildABox extends LOTTestCase {
 				.setOrientation(new LVector(0, 0, 2), new LVector(0, 0, 1));
 		box.getSubParts().get(partindex++)
 				.setOrientation(new LVector(0, 2, 0), new LVector(0, 1, 0));
+
+		box.setBoundingBox(new LVector(-2, -2, -2), new LVector(2, 2, 2));
+		
 		return box;
 	}
 

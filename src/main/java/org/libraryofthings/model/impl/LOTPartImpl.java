@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
 
@@ -26,6 +27,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	LOTClient env;
 
 	private List<LOTSubPart> subparts = new LinkedList<>();
+	private LOTBoundingBox boundingbox;
 
 	public LOTPartImpl(final LOTClient nenv) {
 		this.env = nenv;
@@ -47,10 +49,14 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		JBean b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
 		b.addValue(VALUENAME_MODELID, getModel().getID());
+		if (getBoundingBox() != null) {
+			b.add(getBoundingBox().getBean());
+		}
 		//
 		JBean bparts = getSubPartsBean();
 		//
 		b.add(bparts);
+
 		//
 		return b;
 	}
@@ -70,6 +76,11 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
 		model = new LOT3DModelImpl(env);
 		model.load(modelid);
+		//
+		JBean beanboundingbox = bean.get(LOTBoundingBox.BEAN_NAME);
+		if (beanboundingbox != null) {
+			boundingbox = new LOTBoundingBox(beanboundingbox);
+		}
 		//
 		JBean bparts = bean.get("parts");
 		for (JBean bpart : bparts.getChildren()) {
@@ -100,6 +111,16 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	public void setName(final String nname) {
 		this.name = nname;
+	}
+
+	@Override
+	public void setBoundingBox(LVector a, LVector b) {
+		boundingbox = new LOTBoundingBox(a, b);
+	}
+
+	@Override
+	public LOTBoundingBox getBoundingBox() {
+		return boundingbox;
 	}
 
 	@Override
