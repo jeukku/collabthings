@@ -74,6 +74,12 @@ public final class LVector {
 		return this;
 	}
 
+	public LVector getAdd(LVector l) {
+		LVector c = copy();
+		c.add(l);
+		return c;
+	}
+
 	public LVector getSub(LVector b) {
 		LVector ret = copy();
 		ret.sub(b);
@@ -145,5 +151,4 @@ public final class LVector {
 			return false;
 		}
 	}
-
 }
