@@ -4,6 +4,7 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.environment.RunEnvironmentListener;
+import org.libraryofthings.view.SimpleSimulationView;
 import org.libraryofthings.view.ViewSimulation;
 
 import waazdoh.util.ConditionWaiter;
@@ -18,7 +19,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	private boolean allsuccess = true;
 	private LOTStepRunner runner;
 	//
-	private ViewSimulation view;
+	private SimpleSimulationView view;
 
 	public LOTSimpleSimulation(RunEnvironment runenv) {
 		this.env = runenv;
@@ -28,7 +29,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	public LOTSimpleSimulation(RunEnvironment runenv, boolean b) {
 		this(runenv);
 		if (b) {
-			view = new ViewSimulation(runenv);
+			view = new SimpleSimulationView(runenv);
 		}
 	}
 
