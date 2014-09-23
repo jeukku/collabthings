@@ -1,7 +1,7 @@
 <project>
 	<import file="ant.xml" />
 
-		<property name="projectname" value="libraryofthings.client" />
+	<property name="projectname" value="libraryofthings.client" />
 
 	<target name="client.check.uptodate">
 		<uptodate property="client.notrequired" targetfile="target/build.trig">

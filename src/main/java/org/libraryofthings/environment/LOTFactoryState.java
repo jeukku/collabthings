@@ -1,10 +1,8 @@
 package org.libraryofthings.environment;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.libraryofthings.LLog;
@@ -37,7 +35,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	private LOTPool pool = new LOTPool();
 	private LOTRuntimeObject parent;
 
-	private Map<String, LOTPartState> parts = new HashMap<>();
+	private Set<LOTPartState> parts = new HashSet<>();
 
 	public LOTFactoryState(final LOTClient client, LOTEnvironment env,
 			final String name, final LOTFactory factory) {
@@ -240,8 +238,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return factory.getScript(string);
 	}
 
-	public LOTPartState getPartState(String s) {
-		return parts.get(s);
+	public Set<LOTPartState> getParts() {
+		return new HashSet<>(this.parts);
 	}
 
 	public LOTPart getPart(String s) {
@@ -251,6 +249,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	public LOTPartState newPart() {
 		LOTPartState partstate = new LOTPartState(runenv, runenv.getClient()
 				.getObjectFactory().getPart());
+		parts.add(partstate);
 		return partstate;
 	}
 

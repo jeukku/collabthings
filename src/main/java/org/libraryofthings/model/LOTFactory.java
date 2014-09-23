@@ -1,6 +1,7 @@
 package org.libraryofthings.model;
 
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.impl.LOTBoundingBox;
 
 import waazdoh.client.model.MID;
 
@@ -26,6 +27,12 @@ public interface LOTFactory extends LOTObject {
 
 	LOTFactory addFactory(String string);
 
+	LOTFactory getFactory(String string);
+
 	void setLocation(LVector lVector);
+
+	LOTBoundingBox getBoundingBox();
+
+	void setBoundingBox(LVector lVector, LVector lVector2);
 
 }

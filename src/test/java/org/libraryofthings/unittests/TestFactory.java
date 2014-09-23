@@ -6,9 +6,11 @@ import javax.script.ScriptException;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
+import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
+import org.libraryofthings.model.impl.LOTBoundingBox;
 import org.xml.sax.SAXException;
 
 public final class TestFactory extends LOTTestCase {
@@ -55,6 +57,37 @@ public final class TestFactory extends LOTTestCase {
 		LOTScript bscript = bfact.getScript("test");
 		assertNotNull(bscript);
 		assertEquals(lotScript.getScript(), bscript.getScript());
+	}
+
+	public void testChildFactory() {
+		LOTClient c = getNewClient();
+		LOTFactory f = c.getObjectFactory().getFactory();
+		LOTFactory childf = f.addFactory("test");
+		String childfactoryname = "testchildfactory";
+		childf.setName(childfactoryname);
+		childf.addScript("testscript");
+		f.publish();
+		//
+		LOTClient bc = getNewClient();
+		LOTFactory bf = bc.getObjectFactory().getFactory(
+				f.getID().getStringID());
+		assertEquals(f.getBean().toText(), bf.getBean().toText());
+		LOTFactory bchildf = bf.getFactory("test");
+		assertNotNull(bchildf);
+		assertEquals(childf.getBean().toText(), bchildf.getBean().toText());
+	}
+
+	public void testBoundingBox() {
+		LOTClient c = getNewClient();
+		LOTFactory f = c.getObjectFactory().getFactory();
+		f.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 1, 10));
+		f.publish();
+		LOTClient bc = getNewClient();
+		LOTFactory bf = bc.getObjectFactory().getFactory(
+				f.getID().getStringID());
+		LOTBoundingBox bbox = bf.getBoundingBox();
+		assertEquals(f.getBoundingBox().getBean().toText(), bbox.getBean()
+				.toText());
 	}
 
 	public void testCallUnknownScript() throws IOException, SAXException {

@@ -1,6 +1,7 @@
 package org.libraryofthings.model.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.libraryofthings.LOTClient;
@@ -18,7 +19,7 @@ import waazdoh.util.MStringID;
 
 public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	private static final String BEANNAME = "factory";
-	private static final String VALUENAME_NAME = "value";
+	private static final String VALUENAME_NAME = "name";
 	private static final String VALUENAME_MODELID = "model3did";
 	private static final String VALUENAME_ENVIRONMENTID = "environmentid";
 	private static final String VALUENAME_LOCATION = "location";
@@ -32,6 +33,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	//
 	private LVector location = new LVector();
 	private Map<String, LOTFactoryImpl> factories = new HashMap<>();
+	private LOTBoundingBox bbox;
 
 	public LOTFactoryImpl(final LOTClient nclient) {
 		this.client = nclient;
@@ -43,6 +45,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	public LOTFactoryImpl(final LOTClient nclient, final MStringID id) {
 		this.client = nclient;
+		env = new LOTEnvironmentImpl(nclient);
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
 				nclient.getVersion(), nclient.getPrefix());
 		o.load(id);
@@ -56,6 +59,14 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		JBean locationbean = location.getBean();
 		locationbean.setName(VALUENAME_LOCATION);
 		b.add(locationbean);
+		if (bbox != null) {
+			b.add(bbox.getBean());
+		}
+		JBean bchildfactories = b.add("factories");
+		for (String cfname : factories.keySet()) {
+			LOTFactoryImpl cf = factories.get(cfname);
+			bchildfactories.addValue(cfname, cf.getID().toString());
+		}
 		//
 		return b;
 	}
@@ -68,12 +79,20 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	public boolean parseBean(JBean bean) {
 		setName(bean.getValue(VALUENAME_NAME));
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
-		//
 		location = new LVector(bean.get(VALUENAME_LOCATION));
-		//
 		env = new LOTEnvironmentImpl(client,
 				bean.getIDValue(VALUENAME_ENVIRONMENTID));
-		//
+		JBean bbbox = bean.get(LOTBoundingBox.BEAN_NAME);
+		if (bbbox != null) {
+			bbox = new LOTBoundingBox(bbbox);
+		}
+		JBean bchildfactories = bean.get("factories");
+		List<JBean> bcfs = bchildfactories.getChildren();
+		for (JBean bchildfactory : bcfs) {
+			String cfname = bchildfactory.getName();
+			addFactory(cfname, new LOTFactoryImpl(this.client, new MStringID(
+					bchildfactory.getText())));
+		}
 		return getName() != null;
 	}
 
@@ -100,6 +119,16 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	@Override
+	public LOTBoundingBox getBoundingBox() {
+		return bbox;
+	}
+
+	@Override
+	public void setBoundingBox(LVector a, LVector b) {
+		bbox = new LOTBoundingBox(a, b);
+	}
+
+	@Override
 	public boolean isReady() {
 		if (!env.isReady()) {
 			return false;
@@ -116,11 +145,19 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	public void save() {
 		env.save();
 		getServiceObject().save();
+		for (LOTFactoryImpl cf : factories.values()) {
+			cf.save();
+		}
 	}
 
 	public void publish() {
+		save();
+		
 		getEnvironment().publish();
 		getServiceObject().publish();
+		for (LOTFactoryImpl cf : factories.values()) {
+			cf.publish();
+		}
 	}
 
 	@Override
