@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.List;
 
 import org.libraryofthings.math.LVector;
-import org.libraryofthings.model.impl.LOTBoundingBox;
 
 public interface LOTPart extends LOTObject {
 

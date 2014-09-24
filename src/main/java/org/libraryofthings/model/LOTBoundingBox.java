@@ -1,4 +1,4 @@
-package org.libraryofthings.model.impl;
+package org.libraryofthings.model;
 
 import org.libraryofthings.math.LVector;
 

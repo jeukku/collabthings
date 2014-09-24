@@ -1,7 +1,6 @@
 package org.libraryofthings.model;
 
 import org.libraryofthings.math.LVector;
-import org.libraryofthings.model.impl.LOTBoundingBox;
 
 import waazdoh.client.model.MID;
 

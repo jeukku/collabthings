@@ -7,6 +7,7 @@ import java.util.List;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTBoundingBox;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
 

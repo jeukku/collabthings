@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTBoundingBox;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTScript;
