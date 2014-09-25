@@ -139,6 +139,11 @@ public final class LVector {
 	}
 
 	@Override
+	public int hashCode() {
+		return getBean().toText().hashCode();
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof LVector) {
 			LVector b = (LVector) obj;
