@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.model.LOTObjectFactory;
 import org.libraryofthings.model.LOTTool;
 
@@ -12,20 +13,21 @@ import waazdoh.util.MStringID;
 
 public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 
-	private LOTClient env;
+	private LOTClient client;
 	private List<LOTPartImpl> parts = new LinkedList<>();
 	private List<LOTToolImpl> tools = new LinkedList<>();
 	private List<LOTFactoryImpl> factories = new LinkedList<>();
+	private List<LOT3DModelImpl> models = new LinkedList<>();
 	//
 	private LLog log = LLog.getLogger(this);
 
 	public LOTObjectFactoryImpl(final LOTClient nenv) {
-		this.env = nenv;
+		this.client = nenv;
 	}
 
 	@Override
 	public LOTFactoryImpl getFactory() {
-		LOTFactoryImpl f = new LOTFactoryImpl(env);
+		LOTFactoryImpl f = new LOTFactoryImpl(client);
 		factories.add(f);
 		return f;
 	}
@@ -38,14 +40,14 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 			}
 		}
 
-		LOTFactoryImpl factory = new LOTFactoryImpl(env, factoryid);
+		LOTFactoryImpl factory = new LOTFactoryImpl(client, factoryid);
 		factories.add(factory);
 		return factory;
 	}
 
 	@Override
 	public LOTToolImpl getTool() {
-		LOTToolImpl t = new LOTToolImpl(env);
+		LOTToolImpl t = new LOTToolImpl(client);
 		tools.add(t);
 		return t;
 	}
@@ -58,14 +60,14 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 			}
 		}
 
-		LOTToolImpl tool = new LOTToolImpl(env, toolid);
+		LOTToolImpl tool = new LOTToolImpl(client, toolid);
 		tools.add(tool);
 		return tool;
 	}
 
 	@Override
 	public LOTPartImpl getPart() {
-		LOTPartImpl p = new LOTPartImpl(env);
+		LOTPartImpl p = new LOTPartImpl(client);
 		log.info("new part " + p.getBean());
 		parts.add(p);
 		return p;
@@ -79,7 +81,7 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 			}
 		}
 
-		LOTPartImpl part = new LOTPartImpl(env);
+		LOTPartImpl part = new LOTPartImpl(client);
 		if (part.load(partid)) {
 			log.info("Load part " + part);
 			parts.add(part);
@@ -93,4 +95,26 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 			return null;
 		}
 	}
+
+	@Override
+	public LOT3DModel getModel() {
+		LOT3DModelImpl model = new LOT3DModelImpl(this.client);
+		models.add(model);
+		return model;
+	}
+
+	@Override
+	public LOT3DModel getModel(MStringID modelid) {
+		for (LOT3DModelImpl model : models) {
+			if (model.getID().getStringID().equals(modelid)) {
+				return model;
+			}
+		}
+		//
+		LOT3DModelImpl model = new LOT3DModelImpl(client);
+		model.load(modelid);
+		models.add(model);
+		return model;
+	}
+
 }

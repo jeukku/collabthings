@@ -43,6 +43,8 @@ public final class TestFactory extends LOTTestCase {
 		LOTScript lotScript = f.addScript("test");
 		lotScript
 				.setScript("function info() { return \"testing tool script\"; }");
+		// model
+		f.setModel(env.getObjectFactory().getModel());
 		//
 		f.save();
 		f.publish();

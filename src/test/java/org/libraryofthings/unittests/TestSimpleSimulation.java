@@ -75,7 +75,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 				client));
 		//
 		LOTScriptImpl script = new LOTScriptImpl(client);
-		String nscript = "function info(){} function run(e, factory) { factory.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0)); } ";
+		String nscript = "function info(){} function run(e, factory) { factory.newPart(); factory.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0)); } ";
 		assertTrue(script.setScript(nscript));
 		LOTScriptRunner runner = new LOTScriptRunnerImpl(script, rune,
 				factorystate);
@@ -83,6 +83,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTSimulation s = new LOTSimpleSimulation(rune);
 
 		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
+		
+		assertTrue(factorystate.getParts().size() > 0);
 		//
 		LVector l = toolstate.getLocation();
 		assertReallyClose(new LVector(10, 0, 0), l);

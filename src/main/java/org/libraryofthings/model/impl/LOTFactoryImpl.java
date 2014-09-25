@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.model.LOTBoundingBox;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
@@ -35,6 +36,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	private LVector location = new LVector();
 	private Map<String, LOTFactoryImpl> factories = new HashMap<>();
 	private LOTBoundingBox bbox;
+	private LOT3DModel model;
 
 	public LOTFactoryImpl(final LOTClient nclient) {
 		this.client = nclient;
@@ -63,6 +65,9 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		if (bbox != null) {
 			b.add(bbox.getBean());
 		}
+		if (model != null) {
+			b.addValue(VALUENAME_MODELID, model.getID());
+		}
 		JBean bchildfactories = b.add("factories");
 		for (String cfname : factories.keySet()) {
 			LOTFactoryImpl cf = factories.get(cfname);
@@ -80,6 +85,9 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	public boolean parseBean(JBean bean) {
 		setName(bean.getValue(VALUENAME_NAME));
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
+		if (modelid != null) {
+			model = client.getObjectFactory().getModel(modelid);
+		}
 		location = new LVector(bean.get(VALUENAME_LOCATION));
 		env = new LOTEnvironmentImpl(client,
 				bean.getIDValue(VALUENAME_ENVIRONMENTID));
@@ -153,7 +161,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	public void publish() {
 		save();
-		
+
 		getEnvironment().publish();
 		getServiceObject().publish();
 		for (LOTFactoryImpl cf : factories.values()) {
@@ -213,5 +221,9 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	public String getParameter(String name) {
 		return getEnvironment().getParameter(name);
+	}
+
+	public void setModel(LOT3DModel model) {
+		this.model = model;
 	}
 }
