@@ -1,16 +1,16 @@
-package org.libraryofthings.environment;
+package org.libraryofthings.environment.impl;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTToolException;
+import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTRuntimeObject;
-import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.model.LOTValues;
 
 public class LOTToolState implements LOTRuntimeObject {
 
-	private RunEnvironment env;
+	private LOTRunEnvironment env;
 	private LOTFactoryState factory;
 
 	private LOTTool tool;
@@ -20,9 +20,9 @@ public class LOTToolState implements LOTRuntimeObject {
 	private LLog log = LLog.getLogger(this);
 	private boolean inuse;
 	private String name;
-	private LOTPool pool = new LOTPool();
+	final private LOTPool pool;
 
-	public LOTToolState(final String name, final RunEnvironment runenv,
+	public LOTToolState(final String name, final LOTRunEnvironment runenv,
 			final LOTTool ntool, final LOTFactoryState factorystate) {
 		log.info("LOTToolState with " + runenv + " tool:" + ntool.getName());
 
@@ -31,6 +31,7 @@ public class LOTToolState implements LOTRuntimeObject {
 		this.env = runenv;
 		this.tool = ntool;
 		this.factory = factorystate;
+		pool = new LOTPool(runenv, this);
 	}
 
 	public String getName() {
@@ -54,7 +55,6 @@ public class LOTToolState implements LOTRuntimeObject {
 
 	public void call(final String scriptname, final LOTValues values)
 			throws LOTToolException {
-		LOTScript script = tool.getScript(scriptname);
 
 		LOTValues callvalues = values != null ? values.copy() : new LOTValues();
 
@@ -66,8 +66,9 @@ public class LOTToolState implements LOTRuntimeObject {
 		sb.append("\tEnvironment:" + env.getInfo().replace(";", "\n\t"));
 		log.info(sb.toString());
 
+		LOTScriptRunnerImpl script = pool.getScript(tool.getScript(scriptname));
 		if (script != null) {
-			script.run(env, this, callvalues);
+			script.run(callvalues);
 		} else {
 			throw new LOTToolException("Script called '" + scriptname
 					+ "' does not exist in " + this);

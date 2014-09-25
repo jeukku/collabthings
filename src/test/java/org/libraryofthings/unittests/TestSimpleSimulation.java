@@ -4,11 +4,13 @@ import java.io.IOException;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.environment.LOTFactoryState;
-import org.libraryofthings.environment.LOTRunEnvironmentImpl;
-import org.libraryofthings.environment.LOTToolState;
-import org.libraryofthings.environment.ReallySimpleSuperheroRobot;
-import org.libraryofthings.environment.RunEnvironment;
+import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.LOTScriptRunner;
+import org.libraryofthings.environment.impl.LOTFactoryState;
+import org.libraryofthings.environment.impl.LOTRunEnvironmentImpl;
+import org.libraryofthings.environment.impl.LOTScriptRunnerImpl;
+import org.libraryofthings.environment.impl.LOTToolState;
+import org.libraryofthings.environment.impl.ReallySimpleSuperheroRobot;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
@@ -30,9 +32,10 @@ public class TestSimpleSimulation extends LOTTestCase {
 		s.setScript("function test() {}");
 
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
-		RunEnvironment runenv = new LOTRunEnvironmentImpl(client, env);
+		LOTRunEnvironment runenv = new LOTRunEnvironmentImpl(client, env);
 
-		runenv.addTask(s);
+		LOTScriptRunner runner = new LOTScriptRunnerImpl(s, runenv, null);
+		runenv.addTask(runner);
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		assertFalse(simulation.run(MAX_SIMUALTION_RUNTIME));
 	}
@@ -47,8 +50,9 @@ public class TestSimpleSimulation extends LOTTestCase {
 		s.setScript("function info() {} function run(env, params) { env.setParameter('testparam', '"
 				+ testvalue + "'); }");
 
-		RunEnvironment runenv = new LOTRunEnvironmentImpl(client, env);
-		runenv.addTask(s);
+		LOTRunEnvironment runenv = new LOTRunEnvironmentImpl(client, env);
+		LOTScriptRunner runner = new LOTScriptRunnerImpl(s, runenv, null);
+		runenv.addTask(runner);
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		assertTrue(simulation.run(MAX_SIMUALTION_RUNTIME));
 		assertEquals(testvalue, runenv.getParameter("testparam"));
@@ -62,7 +66,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 		LOTFactoryState factorystate = new LOTFactoryState(client, env,
 				"testfactory", factory);
-		RunEnvironment rune = factorystate.getRunEnvironment();
+		LOTRunEnvironment rune = factorystate.getRunEnvironment();
 
 		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(rune,
 				factorystate);
@@ -73,7 +77,9 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTScriptImpl script = new LOTScriptImpl(client);
 		String nscript = "function info(){} function run(e, factory) { factory.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0)); } ";
 		assertTrue(script.setScript(nscript));
-		rune.addTask(script, factorystate, null);
+		LOTScriptRunner runner = new LOTScriptRunnerImpl(script, rune,
+				factorystate);
+		rune.addTask(runner);
 		LOTSimulation s = new LOTSimpleSimulation(rune);
 
 		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
@@ -98,7 +104,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 		LOTFactoryState factorystate = new LOTFactoryState(client, env,
 				"testfactory", f);
-		RunEnvironment rune = factorystate.getRunEnvironment();
+		LOTRunEnvironment rune = factorystate.getRunEnvironment();
 		//
 		LOTToolImpl tool = new LOTToolImpl(client);
 		LOTScriptImpl testscript = new LOTScriptImpl(client);

@@ -2,8 +2,9 @@ package org.libraryofthings.unittests;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.environment.LOTRunEnvironmentImpl;
-import org.libraryofthings.environment.RunEnvironment;
+import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.impl.LOTRunEnvironmentImpl;
+import org.libraryofthings.environment.impl.LOTScriptRunnerImpl;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
 import org.libraryofthings.model.impl.LOTScriptException;
@@ -36,7 +37,9 @@ public final class TestScript extends LOTTestCase {
 		//
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client, env);
-		bs.run(runenv, null);
+		LOTScriptRunnerImpl runner = new LOTScriptRunnerImpl(s, runenv, null);
+		runner.run();
+		
 		assertEquals(SCRIPT_ENV_TEST_VALUE, runenv.getParameter("testvalue"));
 		//
 		//
@@ -71,8 +74,9 @@ public final class TestScript extends LOTTestCase {
 				+ "function run(e) { e.setParameter('test', 'testvalue'); }");
 		assertNotNull(s);
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
-		RunEnvironment e = new LOTRunEnvironmentImpl(client, env);
-		s.run(e, null);
+		LOTRunEnvironment e = new LOTRunEnvironmentImpl(client, env);
+		LOTScriptRunnerImpl runner = new LOTScriptRunnerImpl(s, e, null);
+		runner.run();
 		assertEquals("testvalue", e.getParameter("test"));
 	}
 
@@ -107,7 +111,10 @@ public final class TestScript extends LOTTestCase {
 		LOTScriptImpl s = getScript(client, "function info() {}");
 		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client,
 				new LOTEnvironmentImpl(client));
-		assertFalse(s.run(runenv, null));
+		LOTScriptRunnerImpl runner = new LOTScriptRunnerImpl(s, runenv, null);
+		runner.run();
+
+		assertFalse(runner.run());
 	}
 
 	public void testFailAtLoadingLibraries() throws LOTScriptException {

@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.environment.LOTRunEnvironmentImpl;
-import org.libraryofthings.environment.LOTToolState;
-import org.libraryofthings.environment.ReallySimpleSuperheroRobot;
-import org.libraryofthings.environment.RunEnvironment;
+import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.impl.LOTRunEnvironmentImpl;
+import org.libraryofthings.environment.impl.LOTToolState;
+import org.libraryofthings.environment.impl.ReallySimpleSuperheroRobot;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
 import org.libraryofthings.model.impl.LOTToolImpl;
@@ -23,7 +23,7 @@ public final class TestSuperheroRobot extends LOTTestCase {
 		final LOTClient e = getNewClient();
 		assertNotNull(e);
 
-		RunEnvironment rune = new LOTRunEnvironmentImpl(e,
+		LOTRunEnvironment rune = new LOTRunEnvironmentImpl(e,
 				new LOTEnvironmentImpl(e));
 		final ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(
 				rune, null);

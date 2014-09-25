@@ -1,4 +1,4 @@
-package org.libraryofthings.environment;
+package org.libraryofthings.environment.impl;
 
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTRuntimeObject;

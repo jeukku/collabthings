@@ -9,8 +9,10 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.LOTToolException;
-import org.libraryofthings.environment.LOTFactoryState;
-import org.libraryofthings.environment.RunEnvironment;
+import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.LOTScriptRunner;
+import org.libraryofthings.environment.impl.LOTFactoryState;
+import org.libraryofthings.environment.impl.LOTScriptRunnerImpl;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
@@ -49,7 +51,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		//
 		LOTFactoryState factorystate = new LOTFactoryState(client, env,
 				"linefactory", factory);
-		RunEnvironment runenv = factorystate.getRunEnvironment();
+		LOTRunEnvironment runenv = factorystate.getRunEnvironment();
 
 		factorystate.addTask("order", new LOTValues("partid", line.getID()));
 		//
@@ -79,7 +81,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 	public void testBuildABox() throws NoSuchMethodException, ScriptException,
 			IOException {
-		RunEnvironment runenv = testBox();
+		LOTRunEnvironment runenv = testBox();
 		assertNotNull(runenv);
 		LOTSimulation s = new LOTSimpleSimulation(runenv);
 		assertTrue(s.run(MAX_SIMULATION_RUNTIME));
@@ -101,7 +103,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		return factory;
 	}
 
-	public RunEnvironment testBox() throws NoSuchMethodException,
+	public LOTRunEnvironment testBox() throws NoSuchMethodException,
 			ScriptException, IOException {
 		LOTClient client = getNewClient();
 		assertNotNull(client);
@@ -112,10 +114,12 @@ public final class ITTestBuildABox extends LOTTestCase {
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		LOTFactoryState factorystate = new LOTFactoryState(client, env,
 				"boxfactory", boxfactory);
-		RunEnvironment runenv = factorystate.getRunEnvironment();
+		LOTRunEnvironment runenv = factorystate.getRunEnvironment();
 
 		//
-		runenv.addTask(getCallOrderScript(client), factorystate, null);
+		LOTScriptRunner runner = new LOTScriptRunnerImpl(
+				getCallOrderScript(client), runenv, factorystate);
+		runenv.addTask(runner, null);
 		//
 		String partid = boxfactory.getEnvironment().getParameter("partid");
 		//

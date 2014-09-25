@@ -12,7 +12,7 @@ import org.libraryofthings.model.LOTValues;
 
 import waazdoh.client.model.MID;
 
-public interface RunEnvironment {
+public interface LOTRunEnvironment {
 
 	void setParameter(String string, MID id);
 
@@ -24,10 +24,9 @@ public interface RunEnvironment {
 
 	List<LOTTask> getTasks();
 
-	LOTTask addTask(LOTScript s, LOTRuntimeObject runtimeobject,
-			LOTValues values);
+	LOTTask addTask(LOTScriptRunner s, LOTValues values);
 
-	LOTTask addTask(LOTScript script);
+	LOTTask addTask(LOTScriptRunner s);
 
 	LOTClient getClient();
 

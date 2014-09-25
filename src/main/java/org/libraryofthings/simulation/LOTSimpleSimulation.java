@@ -1,11 +1,10 @@
 package org.libraryofthings.simulation;
 
 import org.libraryofthings.LLog;
+import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.environment.LOTTask;
-import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.environment.RunEnvironmentListener;
 import org.libraryofthings.view.SimpleSimulationView;
-import org.libraryofthings.view.ViewSimulation;
 
 import waazdoh.util.ConditionWaiter;
 
@@ -14,19 +13,19 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	private static final double MAX_STEP = 0.01;
 	//
 
-	private RunEnvironment env;
+	private LOTRunEnvironment env;
 	private LLog log = LLog.getLogger(this);
 	private boolean allsuccess = true;
 	private LOTStepRunner runner;
 	//
 	private SimpleSimulationView view;
 
-	public LOTSimpleSimulation(RunEnvironment runenv) {
+	public LOTSimpleSimulation(LOTRunEnvironment runenv) {
 		this.env = runenv;
 		env.addListener(this);
 	}
 
-	public LOTSimpleSimulation(RunEnvironment runenv, boolean b) {
+	public LOTSimpleSimulation(LOTRunEnvironment runenv, boolean b) {
 		this(runenv);
 		if (b) {
 			view = new SimpleSimulationView(runenv);
@@ -44,7 +43,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	}
 
 	@Override
-	public synchronized void taskFailed(RunEnvironment runenv, LOTTask task) {
+	public synchronized void taskFailed(LOTRunEnvironment runenv, LOTTask task) {
 		log.info("task " + task + " failed in " + runenv);
 		allsuccess = false;
 	}

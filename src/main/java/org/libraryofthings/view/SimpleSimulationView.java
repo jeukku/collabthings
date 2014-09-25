@@ -13,10 +13,10 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.environment.LOTFactoryState;
-import org.libraryofthings.environment.LOTPartState;
-import org.libraryofthings.environment.LOTToolUser;
-import org.libraryofthings.environment.RunEnvironment;
+import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.impl.LOTFactoryState;
+import org.libraryofthings.environment.impl.LOTPartState;
+import org.libraryofthings.environment.impl.LOTToolUser;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTBoundingBox;
 import org.libraryofthings.model.LOTPart;
@@ -26,7 +26,7 @@ import org.libraryofthings.model.LOTSubPart;
 public class SimpleSimulationView {
 
 	private static final double MAX_TEXTUPDATETIME = 20000;
-	private RunEnvironment runenv;
+	private LOTRunEnvironment runenv;
 	private VCanvas ycanvas;
 	private VCanvas xcanvas;
 	private VCanvas zcanvas;
@@ -34,7 +34,7 @@ public class SimpleSimulationView {
 	private JTextArea infotext;
 	private double textupdatetime;
 
-	public SimpleSimulationView(RunEnvironment runenv) {
+	public SimpleSimulationView(LOTRunEnvironment runenv) {
 		this.runenv = runenv;
 		SwingUtilities.invokeLater(() -> createFrame());
 	}

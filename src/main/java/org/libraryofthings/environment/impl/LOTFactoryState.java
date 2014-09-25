@@ -1,4 +1,4 @@
-package org.libraryofthings.environment;
+package org.libraryofthings.environment.impl;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -7,12 +7,13 @@ import java.util.Set;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTRuntimeObject;
-import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.model.LOTValues;
 
@@ -21,7 +22,7 @@ import waazdoh.util.MStringID;
 
 public class LOTFactoryState implements LOTRuntimeObject {
 	final private LOTFactory factory;
-	final private RunEnvironment runenv;
+	final private LOTRunEnvironment runenv;
 	//
 	private LLog log;
 	//
@@ -32,7 +33,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	private List<LOTToolUser> toolusers = new LinkedList<LOTToolUser>();
 	private Set<LOTFactoryState> factories = new HashSet<>();
 
-	private LOTPool pool = new LOTPool();
+	final private LOTPool pool;
 	private LOTRuntimeObject parent;
 
 	private Set<LOTPartState> parts = new HashSet<>();
@@ -43,15 +44,17 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		this.name = name;
 		runenv = new LOTRunEnvironmentImpl(client, env);
 		runenv.addRunObject("main", this);
+		pool = new LOTPool(runenv, this);
 		callStart();
 	}
 
-	public LOTFactoryState(final String name, final RunEnvironment runenv,
+	public LOTFactoryState(final String name, final LOTRunEnvironment runenv,
 			final LOTFactory nfactory, final LOTFactoryState factorystate) {
 		this.factory = nfactory;
 		this.runenv = runenv;
 		this.parent = factorystate;
 		this.name = name;
+		pool = new LOTPool(this.runenv, this);
 		callStart();
 	}
 
@@ -198,12 +201,12 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return new LinkedList<>(toolusers);
 	}
 
-	public RunEnvironment getRunEnvironment() {
+	public LOTRunEnvironment getRunEnvironment() {
 		return this.runenv;
 	}
 
 	public LOTTask addTask(String task, LOTValues values) {
-		return runenv.addTask(getScript(task), this, values);
+		return runenv.addTask(getScript(task), values);
 	}
 
 	public boolean call(String string) {
@@ -211,9 +214,9 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	}
 
 	public boolean call(String string, LOTValues values) {
-		LOTScript s = getScript(string);
+		LOTScriptRunnerImpl s = getScript(string);
 		getLog().info("calling " + string + " " + s);
-		return s.run(runenv, this, values);
+		return s.run(values);
 	}
 
 	public String getParameter(String name) {
@@ -227,8 +230,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return param;
 	}
 
-	private LOTScript getScript(String string) {
-		return factory.getScript(string);
+	private LOTScriptRunnerImpl getScript(String string) {
+		return pool.getScript(factory.getScript(string));
 	}
 
 	public Set<LOTPartState> getParts() {

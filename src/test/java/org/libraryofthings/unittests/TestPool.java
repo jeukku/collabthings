@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.environment.LOTPool;
+import org.libraryofthings.environment.impl.LOTPool;
 import org.xml.sax.SAXException;
 
 public final class TestPool extends LOTTestCase {
@@ -13,7 +13,7 @@ public final class TestPool extends LOTTestCase {
 		LOTClient e = getNewClient();
 		assertNotNull(e);
 		//
-		LOTPool p = new LOTPool();
+		LOTPool p = new LOTPool(null, null);
 		assertNull(p.getPart("null"));
 	}
 
@@ -21,7 +21,7 @@ public final class TestPool extends LOTTestCase {
 		LOTClient e = getNewClient();
 		assertNotNull(e);
 
-		LOTPool pool = new LOTPool();
+		LOTPool pool = new LOTPool(null, null);
 		pool.addPart("test", e.getObjectFactory().getPart());
 		//
 		assertNotNull(pool.getPart("test"));
@@ -32,7 +32,7 @@ public final class TestPool extends LOTTestCase {
 		LOTClient e = getNewClient();
 		assertNotNull(e);
 
-		LOTPool pool = new LOTPool();
+		LOTPool pool = new LOTPool(null, null);
 		pool.addPart("test", e.getObjectFactory().getPart());
 		//
 		assertNotNull(pool.getPart("test"));
@@ -44,7 +44,7 @@ public final class TestPool extends LOTTestCase {
 		LOTClient e = getNewClient();
 		assertNotNull(e);
 
-		LOTPool pool = new LOTPool();
+		LOTPool pool = new LOTPool(null, null);
 		pool.addPart("test1", e.getObjectFactory().getPart());
 		pool.addPart("test2", e.getObjectFactory().getPart());
 		//
@@ -57,7 +57,7 @@ public final class TestPool extends LOTTestCase {
 		final LOTClient e = getNewClient();
 		assertNotNull(e);
 
-		final LOTPool pool = new LOTPool();
+		final LOTPool pool = new LOTPool(null, null);
 		new Thread(() -> {
 			pool.addPart("test", e.getObjectFactory().getPart());
 		}).start();

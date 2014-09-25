@@ -1,4 +1,4 @@
-package org.libraryofthings.environment;
+package org.libraryofthings.environment.impl;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,6 +9,10 @@ import java.util.Set;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.LOTScriptRunner;
+import org.libraryofthings.environment.LOTTask;
+import org.libraryofthings.environment.RunEnvironmentListener;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTRuntimeObject;
@@ -17,7 +21,7 @@ import org.libraryofthings.model.LOTValues;
 
 import waazdoh.client.model.MID;
 
-public class LOTRunEnvironmentImpl implements RunEnvironment {
+public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 	private Map<String, String> params = new HashMap<String, String>();
 	private List<LOTTask> tasks = new LinkedList<LOTTask>();
 	private List<LOTTask> runningtasks = new LinkedList<LOTTask>();
@@ -53,7 +57,7 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 			s.append("" + t + ";");
 		}
 		s.append("tasks: ");
-		for (LOTTask t : new LinkedList<LOTTask>(this.tasks)) {
+		for (LOTTask t : new LinkedList<>(this.tasks)) {
 			s.append("" + t + ";");
 		}
 		//
@@ -94,7 +98,7 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	}
 
 	private void runTask(LOTTask task) {
-		if (!task.run(this)) {
+		if (!task.run()) {
 			fireTaskFailed(this, task);
 		}
 
@@ -103,7 +107,7 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 		}
 	}
 
-	private void fireTaskFailed(RunEnvironment runenv, LOTTask task) {
+	private void fireTaskFailed(LOTRunEnvironment runenv, LOTTask task) {
 		for (RunEnvironmentListener listener : listeners) {
 			listener.taskFailed(this, task);
 		}
@@ -153,13 +157,12 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 	}
 
 	@Override
-	public LOTTask addTask(LOTScript script) {
-		return addTask(script, null, new LOTValues());
+	public LOTTask addTask(LOTScriptRunner s) {
+		return addTask(s, new LOTValues());
 	}
 
 	@Override
-	public LOTTask addTask(final LOTScript s,
-			final LOTRuntimeObject runtimeobject, final LOTValues values) {
+	public LOTTask addTask(final LOTScriptRunner s, final LOTValues values) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("addTask " + s + "\n");
 		if (values != null) {
@@ -173,7 +176,7 @@ public class LOTRunEnvironmentImpl implements RunEnvironment {
 
 		log.info(sb.toString());
 		//
-		LOTTask task = new LOTTask(s, runtimeobject, values);
+		LOTTaskImpl task = new LOTTaskImpl(s, values);
 		synchronized (tasks) {
 			tasks.add(task);
 		}

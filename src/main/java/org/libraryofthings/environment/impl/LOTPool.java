@@ -1,4 +1,4 @@
-package org.libraryofthings.environment;
+package org.libraryofthings.environment.impl;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -6,12 +6,24 @@ import java.util.List;
 import java.util.Map;
 
 import org.libraryofthings.LLog;
+import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.model.LOTPart;
+import org.libraryofthings.model.LOTRuntimeObject;
+import org.libraryofthings.model.LOTScript;
 
 public class LOTPool {
-	private Map<String, List<LOTPart>> parts = new HashMap<>();
+	final private Map<String, List<LOTPart>> parts = new HashMap<>();
+	final private Map<LOTScript, LOTScriptRunnerImpl> scriptrunners = new HashMap<>();
+	final private LOTRuntimeObject runtimeobject;
+	final private LOTRunEnvironment runenv;
+
 	private LLog log = LLog.getLogger(this);
 
+	public LOTPool(LOTRunEnvironment nrunenv, LOTRuntimeObject nruntimeobject) {
+		this.runenv = nrunenv;
+		this.runtimeobject = nruntimeobject;
+	}
+	
 	public synchronized LOTPart getPart(String string) {
 		try {
 			List<LOTPart> list = parts.get(string);
@@ -59,5 +71,15 @@ public class LOTPool {
 		} catch (InterruptedException e) {
 			LLog.getLogger(this).error(this, "wait", e);
 		}
+	}
+
+	public LOTScriptRunnerImpl getScript(LOTScript script) {
+		LOTScriptRunnerImpl runner = scriptrunners.get(script);
+		if (runner == null) {
+			runner = new LOTScriptRunnerImpl(script, this.runenv,
+					this.runtimeobject);
+			scriptrunners.put(script, runner);
+		}
+		return runner;
 	}
 }

@@ -1,6 +1,7 @@
-package org.libraryofthings.environment;
+package org.libraryofthings.environment.impl;
 
 import org.libraryofthings.LLog;
+import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTRuntimeObject;
@@ -11,11 +12,11 @@ public class LOTPartState implements LOTRuntimeObject {
 	private LVector location = new LVector();
 	//
 	private LLog log = LLog.getLogger(this);
-	private RunEnvironment runenv;
+	private LOTRunEnvironment runenv;
 	//
 	private LOTFactoryState factory;
 
-	public LOTPartState(final RunEnvironment runenv,
+	public LOTPartState(final LOTRunEnvironment runenv,
 			final LOTFactoryState factory, final LOTPart part) {
 		this.part = part;
 		this.runenv = runenv;

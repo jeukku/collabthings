@@ -26,13 +26,13 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.environment.LOTFactoryState;
-import org.libraryofthings.environment.LOTPartState;
+import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.environment.LOTTask;
-import org.libraryofthings.environment.LOTToolState;
-import org.libraryofthings.environment.LOTToolUser;
-import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.environment.RunEnvironmentListener;
+import org.libraryofthings.environment.impl.LOTFactoryState;
+import org.libraryofthings.environment.impl.LOTPartState;
+import org.libraryofthings.environment.impl.LOTToolState;
+import org.libraryofthings.environment.impl.LOTToolUser;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTRuntimeObject;
 
@@ -41,7 +41,7 @@ public class ViewSimulation implements RunEnvironmentListener {
 	private static final double ZOOMSPEED_MINIMUM = 0.8;
 	private static final int ZOOM_MAXIMUM = 1000;
 	private static final double ZOOM_MINIMUM = 0.000001;
-	private RunEnvironment env;
+	private LOTRunEnvironment env;
 	private Group scenegroup;
 	private PerspectiveCamera camera;
 	private Group cameraGroup;
@@ -64,7 +64,7 @@ public class ViewSimulation implements RunEnvironmentListener {
 	private Scene scene;
 	private double camerarotate;
 
-	public ViewSimulation(RunEnvironment env) {
+	public ViewSimulation(LOTRunEnvironment env) {
 		this.env = env;
 		env.addListener(this);
 		//
@@ -111,7 +111,7 @@ public class ViewSimulation implements RunEnvironmentListener {
 		//
 	}
 
-	private void addRuntimeObjects(RunEnvironment env) {
+	private void addRuntimeObjects(LOTRunEnvironment env) {
 		Set<LOTRuntimeObject> runos = env.getRunObjects();
 		for (LOTRuntimeObject runo : runos) {
 			addRuntimeObject(runo);
@@ -194,7 +194,7 @@ public class ViewSimulation implements RunEnvironmentListener {
 	}
 
 	@Override
-	public void taskFailed(RunEnvironment runenv, LOTTask task) {
+	public void taskFailed(LOTRunEnvironment runenv, LOTTask task) {
 
 	}
 

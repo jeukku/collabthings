@@ -1,6 +1,7 @@
-package org.libraryofthings.environment;
+package org.libraryofthings.environment.impl;
 
 import org.libraryofthings.LLog;
+import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.math.LVector;
 
 public class ReallySimpleSuperheroRobot implements LOTToolUser {
@@ -9,7 +10,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private static final float MOVING_LOCATION_LENGTH_TRIGGER = 0.000000001f;
 	private static final double LOCATION_PRINTOUT = 20000;
 	//
-	private RunEnvironment simenv;
+	private LOTRunEnvironment simenv;
 	private LOTToolState tool;
 	private LVector targetnormal;
 	private LVector targetlocation;
@@ -22,7 +23,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private double speed = 1;
 	private LOTFactoryState factory;
 
-	public ReallySimpleSuperheroRobot(RunEnvironment simenv,
+	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
 			LOTFactoryState factory) {
 		this.simenv = simenv;
 		this.factory = factory;
