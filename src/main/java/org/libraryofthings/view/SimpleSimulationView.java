@@ -18,10 +18,10 @@ import org.libraryofthings.environment.LOTPartState;
 import org.libraryofthings.environment.LOTToolUser;
 import org.libraryofthings.environment.RunEnvironment;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTBoundingBox;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTSubPart;
-import org.libraryofthings.model.impl.LOTBoundingBox;
 
 public class SimpleSimulationView {
 
@@ -70,7 +70,10 @@ public class SimpleSimulationView {
 		panel.add(zcanvas);
 		panel.add(info);
 
+		f.setAutoRequestFocus(true);
+		f.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		f.setVisible(true);
+		f.toFront();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
@@ -88,25 +91,65 @@ public class SimpleSimulationView {
 
 	private class VCanvas extends JPanel {
 		private TransformV t;
-		private double zoom = 3.0;
+		private double zoom = 100.0;
 		private int framecount;
 		private String name;
+		private boolean somethingoutofscreen;
+		private int screen_right;
+		private int screen_left;
+		private int screen_top;
+		private int screen_bottom;
+		private double zoomspeed = 1;
 
 		public VCanvas(TransformV transform, String name) {
 			super();
 			this.name = name;
 			t = transform;
-			setBackground(Color.getHSBColor((float) Math.random(), 1, 1));
 		}
 
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.setColor(Color.black);
-			g.drawString("" + name + " frame:" + (framecount++), 20, 20);
+			g.drawString("" + name + " frame:" + (framecount++) + " zoom:"
+					+ zoom + " zspeed:" + zoomspeed, 20, 20);
+
+			somethingoutofscreen = false;
+			int widthmargin = getSize().width / 10;
+			int heightmargin = getSize().height / 10;
+
+			screen_left = widthmargin;
+			screen_top = heightmargin;
+			screen_right = getSize().width - widthmargin;
+			screen_bottom = getSize().height - heightmargin;
+
 			Set<LOTRuntimeObject> os = runenv.getRunObjects();
 			drawObjects(g, os);
+
+			checkZoom();
+
 			repaint();
+		}
+
+		private void checkZoom() {
+			if (somethingoutofscreen) {
+				zoomspeed *= 0.999;
+			} else {
+				zoomspeed *= 1.1;
+			}
+
+			if (zoomspeed < 0.9) {
+				zoomspeed = 0.9;
+			} else if (zoomspeed > 1.0) {
+				zoomspeed = 1.0;
+			}
+
+			zoom += (zoomspeed - 1);
+			if (zoom < 0.01) {
+				zoom = 0.01;
+			} else if (zoom > 100) {
+				zoom = 100;
+			}
 		}
 
 		private void drawObjects(Graphics g, Set<LOTRuntimeObject> os) {
@@ -147,7 +190,9 @@ public class SimpleSimulationView {
 
 		private void drawPartState(Graphics g, LOTPartState partstate) {
 			LOTPart part = partstate.getPart();
-			drawPart(g, partstate, part);
+			if (part != null) {
+				drawPart(g, partstate, part);
+			}
 		}
 
 		private void drawPart(Graphics g, LOTPartState partstate, LOTPart part) {
@@ -155,16 +200,25 @@ public class SimpleSimulationView {
 			LOTBoundingBox bbox = part.getBoundingBox();
 			if (bbox != null) {
 				drawBoundingBox(g, l, bbox);
-			} else {
-				g.drawOval(getSX(l) - 2, getSY(l) - 2, 4, 4);
 			}
+
+			g.setColor(Color.lightGray);
+			g.drawString("" + part, getSX(l), getSY(l) - 10);
 			//
+			g.setColor(Color.red);
 			List<LOTSubPart> subparts = part.getSubParts();
 			for (LOTSubPart lotSubPart : subparts) {
 				LVector subpartlocation = lotSubPart.getLocation().getAdd(l);
-				LVector a = t.transform(subpartlocation);
-				g.drawRect(getSX(a), getSY(subpartlocation), 4, 4);
+				drawCenterSquare(g, subpartlocation);
 			}
+		}
+
+		private void drawCenterSquare(Graphics g, LVector subpartlocation) {
+			LVector a = t.transform(subpartlocation);
+			int sx = getSX(a);
+			int sy = getSY(a);
+			checkOutOfScreen(sx, sy);
+			g.drawRect(sx - 2, sy - 2, 4, 4);
 		}
 
 		private void drawBoundingBox(Graphics g, LVector l, LOTBoundingBox bbox) {
@@ -179,19 +233,43 @@ public class SimpleSimulationView {
 			int w = bsx - asx;
 			int h = bsy - asy;
 
+			if (w < 0) {
+				asx = bsx;
+				w = -w;
+			}
+
+			if (h < 0) {
+				asy = bsy;
+				h = -h;
+			}
+
+			g.setColor(Color.gray);
 			g.drawRect(asx, asy, w, h);
 		}
 
 		private void drawToolUser(Graphics g, LOTToolUser tooluser) {
 			LVector l = tooluser.getLocation().copy();
+			drawCenterCircle(g, l);
+		}
+
+		private void drawCenterCircle(Graphics g, LVector l) {
 			l = t.transform(l);
 			int sx = getSX(l);
 			int sy = getSY(l);
+			checkOutOfScreen(sx, sy);
+			g.setColor(Color.blue);
 			g.drawOval(sx - 5, sy - 5, 10, 10);
 		}
 
+		private void checkOutOfScreen(int sx, int sy) {
+			if (sx > screen_right || sx < screen_left || sy < screen_top
+					|| sy > screen_bottom) {
+				this.somethingoutofscreen = true;
+			}
+		}
+
 		private int getSY(LVector l) {
-			return (int) ((zoom * l.getY()) + getHeight() / 2);
+			return (int) ((-zoom * l.getY()) + getHeight() / 2);
 		}
 
 		private int getSX(LVector l) {
