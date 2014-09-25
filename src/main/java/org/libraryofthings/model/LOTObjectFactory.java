@@ -16,4 +16,8 @@ public interface LOTObjectFactory {
 
 	LOTFactory getFactory(MStringID stringID);
 
+	LOT3DModel getModel(MStringID modelid);
+
+	LOT3DModel getModel();
+
 }

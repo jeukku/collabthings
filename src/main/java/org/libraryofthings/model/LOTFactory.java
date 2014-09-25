@@ -34,4 +34,6 @@ public interface LOTFactory extends LOTObject {
 
 	void setBoundingBox(LVector lVector, LVector lVector2);
 
+	void setModel(LOT3DModel model);
+
 }
