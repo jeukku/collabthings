@@ -52,11 +52,6 @@ public class LOTToolState implements LOTRuntimeObject {
 		return factory.getParameter(name);
 	}
 
-	@Override
-	public void setParent(LOTRuntimeObject nparent) {
-		//
-	}
-
 	public void call(final String scriptname, final LOTValues values)
 			throws LOTToolException {
 		LOTScript script = tool.getScript(scriptname);

@@ -91,6 +91,9 @@ public final class ITTestBuildABox extends LOTTestCase {
 		createAssemblyFactory(factory, client);
 		log.info("factory that uses boxes " + factory);
 
+		factory.setBoundingBox(new LVector(-100, 0, -100), new LVector(100, 10,
+				100));
+
 		LOTFactory boxfactory = factory.addFactory("source");
 		createBoxFactory(boxfactory, client);
 		boxfactory.setLocation(new LVector(20, 0, 0));
@@ -161,6 +164,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 				boxfactory.addFactory("source"), client, square);
 		platesource.setName("platesource");
 
+		boxfactory.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 10,
+				10));
 		log.info("platesource " + platesource + " with square " + square);
 		log.info("square bean " + square.getBean());
 		return boxfactory;
@@ -242,7 +247,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 				.setOrientation(new LVector(0, 2, 0), new LVector(0, 1, 0));
 
 		box.setBoundingBox(new LVector(-2, -2, -2), new LVector(2, 2, 2));
-		
+
 		return box;
 	}
 

@@ -7,10 +7,10 @@ import javax.script.ScriptException;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTBoundingBox;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
-import org.libraryofthings.model.impl.LOTBoundingBox;
 import org.xml.sax.SAXException;
 
 public final class TestFactory extends LOTTestCase {

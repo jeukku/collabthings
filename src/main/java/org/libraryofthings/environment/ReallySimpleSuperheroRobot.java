@@ -2,7 +2,6 @@ package org.libraryofthings.environment;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.math.LVector;
-import org.libraryofthings.model.LOTRuntimeObject;
 
 public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
@@ -21,10 +20,12 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	//
 	private double locationprintouttimer = 0;
 	private double speed = 1;
-	private LOTRuntimeObject parent;
+	private LOTFactoryState factory;
 
-	public ReallySimpleSuperheroRobot(RunEnvironment simenv) {
+	public ReallySimpleSuperheroRobot(RunEnvironment simenv,
+			LOTFactoryState factory) {
 		this.simenv = simenv;
+		this.factory = factory;
 	}
 
 	@Override
@@ -38,7 +39,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		targetlocation = l.copy();
 		targetnormal = n.copy();
 		log.info("Target location " + targetlocation);
-		log.info("factory " + this.parent);
+		log.info("factory " + this.factory);
 		//
 		while (simenv.isRunning()
 				&& targetlocation.getSub(location).length() > MOVING_LOCATION_LENGTH_TRIGGER) {
@@ -58,12 +59,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 	@Override
 	public String getParameter(String name) {
-		return parent.getParameter(name);
-	}
-
-	@Override
-	public void setParent(LOTRuntimeObject nparent) {
-		this.parent = nparent;
+		return factory.getParameter(name);
 	}
 
 	private void initLogger() {
@@ -78,8 +74,8 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	@Override
 	public LVector getAbsoluteLocation() {
 		LVector ret = new LVector();
-		if (parent != null) {
-			ret.add(parent.getAbsoluteLocation());
+		if (factory != null) {
+			ret.add(factory.getAbsoluteLocation());
 		}
 
 		ret.add(location);

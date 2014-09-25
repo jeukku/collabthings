@@ -13,11 +13,20 @@ public class LOTPartState implements LOTRuntimeObject {
 	private LLog log = LLog.getLogger(this);
 	private RunEnvironment runenv;
 	//
-	private LOTRuntimeObject parent;
+	private LOTFactoryState factory;
 
-	public LOTPartState(final RunEnvironment runenv, final LOTPart part) {
+	public LOTPartState(final RunEnvironment runenv,
+			final LOTFactoryState factory, final LOTPart part) {
 		this.part = part;
 		this.runenv = runenv;
+		this.factory = factory;
+	}
+
+	public void destroy() {
+		factory.remove(this);
+		part = null;
+		location = null;
+		factory = null;
 	}
 
 	public LVector getLocation() {
@@ -34,14 +43,9 @@ public class LOTPartState implements LOTRuntimeObject {
 		// nothing to do
 	}
 
-	@Override
-	public void setParent(final LOTRuntimeObject nparent) {
-		this.parent = nparent;
-	}
-
 	public LVector getAbsoluteLocation() {
-		if (parent != null) {
-			return parent.getLocation().copy().add(getLocation());
+		if (factory != null) {
+			return factory.getLocation().copy().add(getLocation());
 		} else {
 			return getLocation();
 		}
@@ -59,8 +63,8 @@ public class LOTPartState implements LOTRuntimeObject {
 
 	@Override
 	public String getParameter(String name) {
-		if (parent != null) {
-			return parent.getParameter(name);
+		if (factory != null) {
+			return factory.getParameter(name);
 		} else {
 			return null;
 		}

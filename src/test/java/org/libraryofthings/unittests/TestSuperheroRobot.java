@@ -26,9 +26,9 @@ public final class TestSuperheroRobot extends LOTTestCase {
 		RunEnvironment rune = new LOTRunEnvironmentImpl(e,
 				new LOTEnvironmentImpl(e));
 		final ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(
-				rune);
-		LOTToolState lotToolState = new LOTToolState("test", rune, new LOTToolImpl(
-				e), null);
+				rune, null);
+		LOTToolState lotToolState = new LOTToolState("test", rune,
+				new LOTToolImpl(e), null);
 		robot.setTool(lotToolState);
 
 		final MTimedFlag flag = new MTimedFlag(3000);

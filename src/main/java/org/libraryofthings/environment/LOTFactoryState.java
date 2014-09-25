@@ -72,11 +72,6 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return location;
 	}
 
-	@Override
-	public void setParent(LOTRuntimeObject nfactorystate) {
-		this.parent = nfactorystate;
-	}
-
 	public LOTPool getPool() {
 		return pool;
 	}
@@ -111,7 +106,6 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		getLog().info("addTool " + id + " tool:" + tool);
 		LOTToolState toolstate = new LOTToolState(id, runenv, tool, this);
 		tools.add(toolstate);
-		toolstate.setParent(this);
 		return toolstate;
 	}
 
@@ -150,7 +144,6 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 	public void addToolUser(LOTToolUser tooluser) {
 		this.toolusers.add(tooluser);
-		tooluser.setParent(this);
 	}
 
 	@Override
@@ -239,7 +232,9 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	}
 
 	public Set<LOTPartState> getParts() {
-		return new HashSet<>(this.parts);
+		synchronized (parts) {
+			return new HashSet<>(this.parts);
+		}
 	}
 
 	public LOTPart getPart(String s) {
@@ -247,10 +242,22 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	}
 
 	public LOTPartState newPart() {
-		LOTPartState partstate = new LOTPartState(runenv, runenv.getClient()
-				.getObjectFactory().getPart());
-		parts.add(partstate);
+		LOTPartState partstate = new LOTPartState(runenv, this, runenv
+				.getClient().getObjectFactory().getPart());
+		addPart(partstate);
 		return partstate;
+	}
+
+	private void addPart(LOTPartState partstate) {
+		synchronized (parts) {
+			parts.add(partstate);
+		}
+	}
+
+	public void remove(LOTPartState partstate) {
+		synchronized (parts) {
+			parts.remove(partstate);
+		}
 	}
 
 	public LOTFactory getFactory() {
@@ -266,6 +273,6 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	 * Will be removed in future version
 	 */
 	public void addSuperheroRobot() {
-		addToolUser(new ReallySimpleSuperheroRobot(runenv));
+		addToolUser(new ReallySimpleSuperheroRobot(runenv, this));
 	}
 }

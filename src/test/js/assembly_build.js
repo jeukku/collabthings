@@ -46,12 +46,15 @@ function run(runenv, factory, values) {
 	var pool = factory.getPool();
 	if(part.isAnEqualPart(destpart)) {
 		log.info("Adding part to " + poolid + " -pool");
-		pool.addPart(poolid, destpart);
+		pool.addPart(poolid, part);
+		destpart.destroy();
 	} else {
 		log.info("Parts are not equal.");
 		pool.addPart("trash", destpart);
 	}
-	
+
+	destpartstate.destroy();
+
 	log.info("Done.");
 }
 

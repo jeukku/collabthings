@@ -6,9 +6,9 @@ import java.io.IOException;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTBoundingBox;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
-import org.libraryofthings.model.impl.LOTBoundingBox;
 import org.libraryofthings.model.impl.LOTPartImpl;
 import org.xml.sax.SAXException;
 

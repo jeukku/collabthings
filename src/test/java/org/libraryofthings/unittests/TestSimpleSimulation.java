@@ -64,7 +64,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 				"testfactory", factory);
 		RunEnvironment rune = factorystate.getRunEnvironment();
 
-		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(rune);
+		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(rune,
+				factorystate);
 		factorystate.addToolUser(robot);
 		LOTToolState toolstate = factorystate.addTool("tool", new LOTToolImpl(
 				client));

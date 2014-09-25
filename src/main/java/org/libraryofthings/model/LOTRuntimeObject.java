@@ -8,8 +8,6 @@ public interface LOTRuntimeObject {
 
 	LVector getAbsoluteLocation();
 
-	void setParent(LOTRuntimeObject parent);
-
 	void step(double dtime);
 
 	void stop();

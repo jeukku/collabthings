@@ -38,7 +38,8 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	@Override
 	public String toString() {
-		return "LOTPart[" + name + "][" + subparts + "][" + getID() + "]";
+		return "LOTPart[" + name + "][" + subparts.size() + "][" + getID()
+				+ "]";
 	}
 
 	public boolean load(MStringID id) {
@@ -62,9 +63,9 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		return b;
 	}
 
-	private JBean getSubPartsBean() {
+	private synchronized JBean getSubPartsBean() {
 		JBean bparts = new JBean("parts");
-		for (LOTSubPart part : subparts) {
+		for (LOTSubPart part : getSubParts()) {
 			JBean bpart = bparts.add("part");
 			((LOTSubPartImpl) part).getBean(bpart);
 		}
@@ -93,7 +94,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		return getName() != null;
 	}
 
-	private void addPart(LOTSubPartImpl subpart) {
+	private synchronized void addPart(LOTSubPartImpl subpart) {
 		getLog().info("addPart " + subpart);
 		subparts.add(subpart);
 	}
@@ -164,7 +165,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		model = new LOT3DModelImpl(env);
 	}
 
-	public LOTSubPart newSubPart() {
+	public synchronized LOTSubPart newSubPart() {
 		LOTSubPartImpl spart = new LOTSubPartImpl(this, env);
 		subparts.add(spart);
 		getLog().info("New subpart " + spart);
@@ -172,8 +173,8 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	}
 
 	@Override
-	public List<LOTSubPart> getSubParts() {
-		return subparts;
+	public synchronized List<LOTSubPart> getSubParts() {
+		return new LinkedList<>(subparts);
 	}
 
 	public boolean importModel(File file) {
@@ -181,7 +182,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	}
 
 	@Override
-	public boolean isAnEqualPart(LOTPart p) {
+	public synchronized boolean isAnEqualPart(LOTPart p) {
 		if (p instanceof LOTPartImpl) {
 			LOTPartImpl impl = (LOTPartImpl) p;
 			JBean thisb = this.getSubPartsBean();
@@ -193,7 +194,17 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	}
 
 	@Override
-	public MID getID() {
-		return getServiceObject().getID();
+	public synchronized MID getID() {
+		if (getServiceObject() != null) {
+			return getServiceObject().getID();
+		} else {
+			return null;
+		}
+	}
+
+	public synchronized void destroy() {
+		this.boundingbox = null;
+		this.subparts.clear();
+		this.o = null;
 	}
 }
