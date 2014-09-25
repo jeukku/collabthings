@@ -174,11 +174,6 @@ public class ViewSimulation implements RunEnvironmentListener {
 			objectgroup.getChildren().add(g);
 
 			NodeInfo i = new NodeInfo();
-			/*
-			 * Text t = new Text("text"); t.setFont(Font.font(1));
-			 * t.setTranslateY(1.5); i.text = t;
-			 */
-			// g.getChildren().add(t);
 
 			i.group = g;
 
@@ -257,7 +252,6 @@ public class ViewSimulation implements RunEnvironmentListener {
 	}
 
 	public synchronized void step(double dtime) {
-		// rotatex += dtime * 0.01;
 		camerarotate += dtime * 0.1;
 
 		time += dtime;
@@ -284,13 +278,10 @@ public class ViewSimulation implements RunEnvironmentListener {
 			for (LOTRuntimeObject tu : nodes.keySet()) {
 				NodeInfo nodei = nodes.get(tu);
 				Group node = nodei.group;
-				// LVector location = tu.getAbsoluteLocation();
 				LVector location = tu.getLocation();
 				node.setTranslateX(location.getX());
 				node.setTranslateY(location.getY());
 				node.setTranslateZ(location.getZ());
-
-				// nodei.text.setText("" + location.asShortString());
 
 				Point2D screen = node.localToScreen(0, 0, 0);
 
@@ -324,6 +315,5 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 	private class NodeInfo {
 		Group group;
-		// Text text;
 	}
 }
