@@ -10,7 +10,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private static final float MOVING_LOCATION_LENGTH_TRIGGER = 0.000000001f;
 	private static final double LOCATION_PRINTOUT = 20000;
 	//
-	private LOTRunEnvironment simenv;
+	final private LOTRunEnvironment simenv;
 	private LOTToolState tool;
 	private LVector targetnormal;
 	private LVector targetlocation;
@@ -21,7 +21,14 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	//
 	private double locationprintouttimer = 0;
 	private double speed = 1;
-	private LOTFactoryState factory;
+	final private LOTFactoryState factory;
+
+	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
+			LOTFactoryState factory, LVector location) {
+		this.simenv = simenv;
+		this.factory = factory;
+		this.location = location.copy();
+	}
 
 	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
 			LOTFactoryState factory) {

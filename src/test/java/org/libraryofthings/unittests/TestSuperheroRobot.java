@@ -5,11 +5,15 @@ import java.io.IOException;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.impl.LOTFactoryState;
 import org.libraryofthings.environment.impl.LOTRunEnvironmentImpl;
 import org.libraryofthings.environment.impl.LOTToolState;
+import org.libraryofthings.environment.impl.LOTToolUser;
 import org.libraryofthings.environment.impl.ReallySimpleSuperheroRobot;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
+import org.libraryofthings.model.impl.LOTFactoryImpl;
 import org.libraryofthings.model.impl.LOTToolImpl;
 import org.xml.sax.SAXException;
 
@@ -52,5 +56,25 @@ public final class TestSuperheroRobot extends LOTTestCase {
 				targetlocation.getSub(robot.getLocation()).length() < MAX_DISTANCE);
 
 		rune.stop();
+	}
+
+	public void testSpawn() {
+		final LOTClient c = getNewClient();
+		assertNotNull(c);
+
+		LVector spawnlocation = new LVector(10, 10, 10);
+
+		LOTFactory f = new LOTFactoryImpl(c);
+		f.setToolUserSpawnLocation(spawnlocation);
+		
+		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
+		LOTRunEnvironment rune = new LOTRunEnvironmentImpl(c, e);
+		LOTFactoryState state = new LOTFactoryState(c, e, "test", f);
+		state.addSuperheroRobot();
+		assertTrue(state.getToolUsers().size() > 0);
+		LOTToolUser user = state.getToolUsers().get(0);
+		assertNotNull(user);
+		LVector l = user.getLocation();
+		assertReallyClose(spawnlocation, l);
 	}
 }

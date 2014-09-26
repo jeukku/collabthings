@@ -276,6 +276,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	 * Will be removed in future version
 	 */
 	public void addSuperheroRobot() {
-		addToolUser(new ReallySimpleSuperheroRobot(runenv, this));
+		ReallySimpleSuperheroRobot tooluser = new ReallySimpleSuperheroRobot(runenv, this, getFactory().getToolUserSpawnLocation());
+		addToolUser(tooluser);
 	}
 }

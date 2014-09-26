@@ -37,6 +37,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	private Map<String, LOTFactoryImpl> factories = new HashMap<>();
 	private LOTBoundingBox bbox;
 	private LOT3DModel model;
+	private LVector tooluserspawnlocation;
 
 	public LOTFactoryImpl(final LOTClient nclient) {
 		this.client = nclient;
@@ -59,9 +60,9 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		JBean b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
 		b.addValue(VALUENAME_ENVIRONMENTID, env.getID());
-		JBean locationbean = location.getBean();
-		locationbean.setName(VALUENAME_LOCATION);
-		b.add(locationbean);
+		addVectorBean(b, VALUENAME_LOCATION, location);
+		addVectorBean(b, VALUENAME_LOCATION, tooluserspawnlocation);
+
 		if (bbox != null) {
 			b.add(bbox.getBean());
 		}
@@ -75,6 +76,14 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		}
 		//
 		return b;
+	}
+
+	private void addVectorBean(JBean b, String valuename, LVector v) {
+		if (v != null) {
+			JBean vectorbean = v.getBean();
+			vectorbean.setName(valuename);
+			b.add(vectorbean);
+		}
 	}
 
 	public LOTScript getScript(String string) {
@@ -225,5 +234,19 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	public void setModel(LOT3DModel model) {
 		this.model = model;
+	}
+
+	@Override
+	public void setToolUserSpawnLocation(LVector spawnlocation) {
+		this.tooluserspawnlocation = spawnlocation;
+	}
+
+	@Override
+	public LVector getToolUserSpawnLocation() {
+		if (tooluserspawnlocation != null) {
+			return tooluserspawnlocation.copy();
+		} else {
+			return null;
+		}
 	}
 }

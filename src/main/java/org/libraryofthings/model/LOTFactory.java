@@ -36,4 +36,8 @@ public interface LOTFactory extends LOTObject {
 
 	void setModel(LOT3DModel model);
 
+	void setToolUserSpawnLocation(LVector spawnlocation);
+
+	LVector getToolUserSpawnLocation();
+
 }
