@@ -24,10 +24,12 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	final private LOTFactoryState factory;
 
 	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
-			LOTFactoryState factory, LVector location) {
+			LOTFactoryState factory, LVector nlocation) {
 		this.simenv = simenv;
 		this.factory = factory;
-		this.location = location.copy();
+		if (nlocation != null) {
+			this.location = nlocation.copy();
+		}
 	}
 
 	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
