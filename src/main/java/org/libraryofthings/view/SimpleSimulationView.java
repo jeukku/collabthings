@@ -209,6 +209,11 @@ public class SimpleSimulationView {
 			List<LOTSubPart> subparts = part.getSubParts();
 			for (LOTSubPart lotSubPart : subparts) {
 				LVector subpartlocation = lotSubPart.getLocation().getAdd(l);
+				LOTPart subpartpart = lotSubPart.getPart();
+				LOTBoundingBox subpartbbox = subpartpart.getBoundingBox();
+				if(subpartbbox!=null) {
+					drawBoundingBox(g, subpartlocation, subpartbbox);
+				}
 				drawCenterSquare(g, subpartlocation);
 			}
 		}
