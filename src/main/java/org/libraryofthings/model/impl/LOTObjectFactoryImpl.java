@@ -18,7 +18,6 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	private List<LOTToolImpl> tools = new LinkedList<>();
 	private List<LOTFactoryImpl> factories = new LinkedList<>();
 	private List<LOT3DModelImpl> models = new LinkedList<>();
-	//
 	private LLog log = LLog.getLogger(this);
 
 	public LOTObjectFactoryImpl(final LOTClient nenv) {
@@ -28,93 +27,109 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	@Override
 	public LOTFactoryImpl getFactory() {
 		LOTFactoryImpl f = new LOTFactoryImpl(client);
-		factories.add(f);
+		synchronized (factories) {
+			factories.add(f);
+		}
 		return f;
 	}
 
 	@Override
 	public LOTFactoryImpl getFactory(MStringID factoryid) {
-		for (LOTFactoryImpl factory : factories) {
-			if (factory.getID().equals(factoryid)) {
-				return factory;
-			}
-		}
+		synchronized (factories) {
 
-		LOTFactoryImpl factory = new LOTFactoryImpl(client, factoryid);
-		factories.add(factory);
-		return factory;
+			for (LOTFactoryImpl factory : factories) {
+				if (factory.getID().equals(factoryid)) {
+					return factory;
+				}
+			}
+
+			LOTFactoryImpl factory = new LOTFactoryImpl(client, factoryid);
+			factories.add(factory);
+			return factory;
+		}
 	}
 
 	@Override
 	public LOTToolImpl getTool() {
 		LOTToolImpl t = new LOTToolImpl(client);
-		tools.add(t);
-		return t;
+		synchronized (tools) {
+
+			tools.add(t);
+			return t;
+		}
 	}
 
 	@Override
 	public LOTTool getTool(MStringID toolid) {
-		for (LOTTool tool : tools) {
-			if (tool.getID().equals(toolid)) {
-				return tool;
+		synchronized (tools) {
+			for (LOTTool tool : tools) {
+				if (tool.getID().equals(toolid)) {
+					return tool;
+				}
 			}
-		}
 
-		LOTToolImpl tool = new LOTToolImpl(client, toolid);
-		tools.add(tool);
-		return tool;
+			LOTToolImpl tool = new LOTToolImpl(client, toolid);
+			tools.add(tool);
+			return tool;
+		}
 	}
 
 	@Override
 	public LOTPartImpl getPart() {
 		LOTPartImpl p = new LOTPartImpl(client);
 		log.info("new part " + p.getBean());
-		parts.add(p);
+		synchronized (parts) {
+			parts.add(p);
+		}
 		return p;
 	}
 
 	@Override
 	public LOTPartImpl getPart(final MStringID partid) {
-		for (LOTPartImpl part : parts) {
-			if (part.getID().equals(partid)) {
-				return part;
+		synchronized (parts) {
+			for (LOTPartImpl part : parts) {
+				if (part.getID().equals(partid)) {
+					return part;
+				}
 			}
-		}
 
-		LOTPartImpl part = new LOTPartImpl(client);
-		if (part.load(partid)) {
-			log.info("Load part " + part);
-			parts.add(part);
-			return part;
-		} else {
-			log.info("Failed to load part " + partid);
-			log.info("Current parts " + parts);
-			for (LOTPartImpl p : parts) {
-				log.info("Part " + p.getBean());
+			LOTPartImpl part = new LOTPartImpl(client);
+			if (part.load(partid)) {
+				log.info("Load part " + part);
+				parts.add(part);
+				return part;
+			} else {
+				log.info("Failed to load part " + partid);
+				log.info("Current parts " + parts);
+				for (LOTPartImpl p : parts) {
+					log.info("Part " + p.getBean());
+				}
+				return null;
 			}
-			return null;
 		}
 	}
 
 	@Override
 	public LOT3DModel getModel() {
 		LOT3DModelImpl model = new LOT3DModelImpl(this.client);
-		models.add(model);
+		synchronized (models) {
+			models.add(model);
+		}
 		return model;
 	}
 
 	@Override
 	public LOT3DModel getModel(MStringID modelid) {
-		for (LOT3DModelImpl model : models) {
-			if (model.getID().getStringID().equals(modelid)) {
-				return model;
+		synchronized (models) {
+			for (LOT3DModelImpl model : models) {
+				if (model.getID().getStringID().equals(modelid)) {
+					return model;
+				}
 			}
+			LOT3DModelImpl model = new LOT3DModelImpl(client);
+			model.load(modelid);
+			models.add(model);
+			return model;
 		}
-		//
-		LOT3DModelImpl model = new LOT3DModelImpl(client);
-		model.load(modelid);
-		models.add(model);
-		return model;
 	}
-
 }
