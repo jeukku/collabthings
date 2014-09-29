@@ -80,10 +80,10 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTScriptRunner runner = new LOTScriptRunnerImpl(script, rune,
 				factorystate);
 		rune.addTask(runner);
-		LOTSimulation s = new LOTSimpleSimulation(rune);
+		LOTSimulation s = new LOTSimpleSimulation(rune, true);
 
 		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
-		
+
 		assertTrue(factorystate.getParts().size() > 0);
 		//
 		LVector l = toolstate.getLocation();
