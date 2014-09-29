@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
@@ -20,7 +21,9 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	private static final String BEANNAME = "env";
 	private static final String VALUENAME_SCRIPTS = "scripts";
 	private static final String VALUENAME_TOOLS = "tools";
-	private static final String VALUENAME_PARAMS = "parameters";
+	private static final String VALUENAME_PARAMS = "params";
+	private static final String VALUENAME_VPARAMS = "vparams";
+	private static final String VALUENAME_MAPITEM = "item";
 	//
 	private LOTClient client;
 	private ServiceObject o;
@@ -28,6 +31,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	private Map<String, LOTScript> scripts = new HashMap<>();
 	private Map<String, LOTTool> tools = new HashMap<>();
 	private Map<String, String> parameters = new HashMap<>();
+	private Map<String, LVector> vparameters = new HashMap<>();
 
 	public LOTEnvironmentImpl(LOTClient nclient) {
 		this.client = nclient;
@@ -49,6 +53,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		getScriptsBean(b);
 		getToolsBean(b);
 		getParametersBean(b);
+		getVectorParametersBean(b);
 
 		return b;
 	}
@@ -75,12 +80,23 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		}
 	}
 
+	private void getVectorParametersBean(JBean b) {
+		JBean bean = b.add(VALUENAME_VPARAMS);
+		Set<String> names = vparameters.keySet();
+		for (String string : names) {
+			LVector v = getVectorParameter(string);
+			JBean sbean = bean.add(VALUENAME_MAPITEM);
+			sbean.addValue("name", string);
+			sbean.add("value", v.getBean(string));
+		}
+	}
+
 	private void getParametersBean(JBean b) {
 		JBean bean = b.add(VALUENAME_PARAMS);
 		Set<String> names = parameters.keySet();
 		for (String string : names) {
 			String s = getParameter(string);
-			JBean sbean = bean.add("parameter");
+			JBean sbean = bean.add(VALUENAME_MAPITEM);
 			sbean.addValue("name", string);
 			sbean.addValue("value", s);
 		}
@@ -91,6 +107,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		parseScripts(bean);
 		parseTools(bean);
 		parseParameters(bean);
+		parseVParameters(bean);
 		return true;
 	}
 
@@ -124,6 +141,17 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 			String name = b.getValue("name");
 			String value = b.getValue("value");
 			parameters.put(name, value);
+		}
+	}
+
+	private void parseVParameters(JBean bean) {
+		JBean pbean = bean.get(VALUENAME_VPARAMS);
+		List<JBean> pbeans = pbean.getChildren();
+		for (JBean b : pbeans) {
+			String name = b.getValue("name");
+			JBean value = b.get("value");
+			LVector v = new LVector(value);
+			vparameters.put(name, v);
 		}
 	}
 
@@ -165,6 +193,16 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	@Override
 	public String getParameter(String string) {
 		return parameters.get(string);
+	}
+
+	@Override
+	public void setVectorParameter(String string, LVector lVector) {
+		vparameters.put(string, lVector.copy());
+	}
+
+	@Override
+	public LVector getVectorParameter(String string) {
+		return vparameters.get(string);
 	}
 
 	@Override

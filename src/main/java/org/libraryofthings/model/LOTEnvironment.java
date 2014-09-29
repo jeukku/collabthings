@@ -1,5 +1,7 @@
 package org.libraryofthings.model;
 
+import org.libraryofthings.math.LVector;
+
 import waazdoh.client.model.MID;
 
 public interface LOTEnvironment extends LOTObject {
@@ -17,6 +19,10 @@ public interface LOTEnvironment extends LOTObject {
 	void setParameter(String string, String value);
 
 	String getParameter(String string);
+
+	void setVectorParameter(String string, LVector lVector);
+
+	LVector getVectorParameter(String name);
 
 	boolean isReady();
 

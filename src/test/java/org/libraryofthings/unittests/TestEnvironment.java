@@ -6,6 +6,7 @@ import javax.script.ScriptException;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
+import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
 import org.libraryofthings.model.impl.LOTScriptImpl;
@@ -91,5 +92,19 @@ public final class TestEnvironment extends LOTTestCase {
 				.getStringID());
 		assertNotNull(benv.getTool(testtool));
 		assertEquals(e.getTool(testtool), benv.getTool(testtool));
+	}
+
+	public void testVectorParameters() {
+		LOTClient c = getNewClient();
+		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
+		LVector lVector = new LVector(1, 1, 1);
+		String vname = "test";
+		e.setVectorParameter(vname, lVector);
+		e.save();
+		LOTEnvironmentImpl benv = new LOTEnvironmentImpl(c, e.getID()
+				.getStringID());
+		assertNotNull(benv.getVectorParameter(vname));
+		assertEquals(lVector, benv.getVectorParameter(vname));
+
 	}
 }
