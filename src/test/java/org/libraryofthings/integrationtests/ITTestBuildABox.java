@@ -46,6 +46,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		setupFactoryThatUsesBoxes(factory, client);
 
 		factory.setLocation(new LVector(0, 0, 0));
+		factory.setToolUserSpawnLocation(new LVector(20, 0, 20));
 		//
 		LOTPart line = getLineOfBoxes(client);
 		//
@@ -83,8 +84,6 @@ public final class ITTestBuildABox extends LOTTestCase {
 			IOException {
 		LOTRunEnvironment runenv = testBox();
 		assertNotNull(runenv);
-		LOTSimulation s = new LOTSimpleSimulation(runenv);
-		assertTrue(s.run(MAX_SIMULATION_RUNTIME));
 	}
 
 	private LOTFactory setupFactoryThatUsesBoxes(LOTFactory factory,
@@ -95,10 +94,14 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		factory.setBoundingBox(new LVector(-100, 0, -100), new LVector(100, 10,
 				100));
+		factory.getEnvironment().setVectorParameter("storage",
+				new LVector(100, 2, 10));
+		factory.getEnvironment().setVectorParameter("buildingpartlocation",
+				new LVector(20, 0, 0));
 
 		LOTFactory boxfactory = factory.addFactory("source");
 		createBoxFactory(boxfactory, client);
-		boxfactory.setLocation(new LVector(20, 0, 0));
+		boxfactory.setLocation(new LVector(-20, 0, 0));
 
 		return factory;
 	}
@@ -123,7 +126,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		//
 		String partid = boxfactory.getEnvironment().getParameter("partid");
 		//
-		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
+		LOTSimulation simulation = new LOTSimpleSimulation(runenv, true);
 		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
 
 		//
@@ -156,21 +159,34 @@ public final class ITTestBuildABox extends LOTTestCase {
 		// Create a plate object
 		LOTPart square = client.getObjectFactory().getPart();
 		square.setName("square");
+		square.setBoundingBox(new LVector(-1, 0, -1), new LVector(1, 0.1, 1));
 		log.info("Square " + square);
 
 		// Create a box object
 		LOTPart box = createBox(client, square);
+		box.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
 		boxfactory.getEnvironment().setParameter("partid", box.getID());
+		boxfactory.getEnvironment().setVectorParameter("storage",
+				new LVector(10, 8, 2));
+		boxfactory.getEnvironment().setVectorParameter("buildingpartlocation",
+				new LVector(0, 1, 0));
+
 		log.info("box " + box);
 
 		// Create a plate source
-		LOTFactory platesource = createPlateSource(
+		LOTFactory squarefactory = createPlateSource(
 				boxfactory.addFactory("source"), client, square);
-		platesource.setName("platesource");
+		squarefactory.setName("squarefactory");
+		squarefactory
+				.setBoundingBox(new LVector(-3, 0, -3), new LVector(3, 3, 3));
+		squarefactory.getEnvironment().setVectorParameter("storage",
+				new LVector(-3, 1, 0));		
+		squarefactory.getEnvironment().setVectorParameter("buildingpartlocation",
+				new LVector(-1, 1, 0));
 
 		boxfactory.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 10,
 				10));
-		log.info("platesource " + platesource + " with square " + square);
+		log.info("platesource " + squarefactory + " with square " + square);
 		log.info("square bean " + square.getBean());
 		return boxfactory;
 	}

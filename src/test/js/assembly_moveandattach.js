@@ -19,12 +19,13 @@ function run(runenv, factory, values) {
 	var pickupvalues = values.copy();
 	var partsource = factory.getFactory('source');
 
-	var ordervalues = values.copy();
+	// var ordervalues = values.copy();
 	// ordervalues.put('partid', subpartid)
-	partsource.call('order', ordervalues);
+	// partsource.call('order', ordervalues);
 
-	log.info("moving to partsource location " + partsource.getLocation());
-	tool.moveTo(partsource.getLocation());
+	log.info("moving to partsource location "
+					+ partsource.getVector("storage"));
+	tool.moveTo(partsource.getVector("storage"));
 	pickupvalues.put('source', partsource);
 	// pickupvalues.put('partid', subpartid);
 	tool.call('pickup', pickupvalues);

@@ -1,8 +1,10 @@
 package org.libraryofthings.environment.impl;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.libraryofthings.LLog;
@@ -21,22 +23,21 @@ import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MStringID;
 
 public class LOTFactoryState implements LOTRuntimeObject {
-	final private LOTFactory factory;
-	final private LOTRunEnvironment runenv;
-	//
+	private final LOTFactory factory;
+	private final LOTRunEnvironment runenv;
 	private LLog log;
-	//
-	final private String name;
+	private final String name;
 	private LVector location = new LVector();
 
 	private Set<LOTToolState> tools = new HashSet<LOTToolState>();
 	private List<LOTToolUser> toolusers = new LinkedList<LOTToolUser>();
 	private Set<LOTFactoryState> factories = new HashSet<>();
-
-	final private LOTPool pool;
-	private LOTRuntimeObject parent;
-
+	private Set<LOTRuntimeStepper> steppers = new HashSet<>();
+	private Map<String, String> params = new HashMap<>();
 	private Set<LOTPartState> parts = new HashSet<>();
+
+	private final LOTPool pool;
+	private LOTRuntimeObject parent;
 
 	public LOTFactoryState(final LOTClient client, LOTEnvironment env,
 			final String name, final LOTFactory factory) {
@@ -81,7 +82,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 	@Override
 	public String toString() {
-		return "FactoryState[" + factory + "][" + location + "]";
+		return "FS[" + factory + "]";
 	}
 
 	public LOTFactoryState addFactory(String id, LOTFactory f) {
@@ -128,7 +129,6 @@ public class LOTFactoryState implements LOTRuntimeObject {
 				return tool;
 			}
 		}
-		//
 		for (LOTToolState tool : tools) {
 			if (tool.getName().equals(id)) {
 				return tool;
@@ -154,13 +154,16 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		for (LOTToolUser tooluser : toolusers) {
 			tooluser.step(dtime);
 		}
-		//
 		for (LOTToolState tool : tools) {
 			tool.step(dtime);
 		}
-		//
 		for (LOTFactoryState f : factories) {
 			f.step(dtime);
+		}
+		for (LOTRuntimeStepper stepper : new HashSet<>(steppers)) {
+			if (stepper.step(dtime)) {
+				steppers.remove(stepper);
+			}
 		}
 	}
 
@@ -219,6 +222,14 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return s.run(values);
 	}
 
+	public void setStateParameter(String name, String value) {
+		params.put(name, value);
+	}
+
+	public String getStateParameter(String name) {
+		return params.get(name);
+	}
+
 	public String getParameter(String name) {
 		String param = this.runenv.getParameter(name);
 		if (param == null) {
@@ -271,12 +282,50 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return new LinkedList<LOTFactoryState>(this.factories);
 	}
 
+	public LVector getVector(String name) {
+		return getFactory().getEnvironment().getVectorParameter(name);
+	}
+
 	// TODO FIXME
-	/*
-	 * Will be removed in future version
+	/**
+	 * Will be removed in future version.
 	 */
 	public void addSuperheroRobot() {
-		ReallySimpleSuperheroRobot tooluser = new ReallySimpleSuperheroRobot(runenv, this, getFactory().getToolUserSpawnLocation());
+		ReallySimpleSuperheroRobot tooluser = new ReallySimpleSuperheroRobot(
+				runenv, this, getFactory().getToolUserSpawnLocation());
 		addToolUser(tooluser);
+	}
+
+	public void stepWhile(LOTRuntimeStepper r) {
+		log.info("stepWhile " + r);
+		addStepper(r);
+		waitStepperDone(r);
+	}
+
+	private void waitStepperDone(LOTRuntimeStepper r) {
+		try {
+			while (!isStepperDone(r)) {
+				synchronized (steppers) {
+					steppers.wait(100);
+				}
+			}
+		} catch (InterruptedException e) {
+			log.error(this, "waitStepperDone", e);
+		}
+	}
+
+	private boolean isStepperDone(LOTRuntimeStepper r) {
+		for (LOTRuntimeStepper stepper : steppers) {
+			if (stepper == r) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private void addStepper(LOTRuntimeStepper s) {
+		synchronized (steppers) {
+			steppers.add(s);
+		}
 	}
 }

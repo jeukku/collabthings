@@ -52,6 +52,9 @@ public class LOTSimpleSimulation implements LOTSimulation,
 		log.info("Stopping");
 		env.stop();
 		runner.stop();
+		if (view != null) {
+			view.close();
+		}
 	}
 
 	private void start() {

@@ -14,6 +14,8 @@ import javax.swing.SwingUtilities;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.LOTTask;
+import org.libraryofthings.environment.RunEnvironmentListener;
 import org.libraryofthings.environment.impl.LOTFactoryState;
 import org.libraryofthings.environment.impl.LOTPartState;
 import org.libraryofthings.environment.impl.LOTToolUser;
@@ -25,7 +27,7 @@ import org.libraryofthings.model.LOTSubPart;
 
 public class SimpleSimulationView {
 
-	private static final double MAX_TEXTUPDATETIME = 20000;
+	private static final double MAX_TEXTUPDATETIME = 2;
 	private LOTRunEnvironment runenv;
 	private VCanvas ycanvas;
 	private VCanvas xcanvas;
@@ -33,6 +35,7 @@ public class SimpleSimulationView {
 	private LLog log = LLog.getLogger(this);
 	private JTextArea infotext;
 	private double textupdatetime;
+	private JFrame f;
 
 	public SimpleSimulationView(LOTRunEnvironment runenv) {
 		this.runenv = runenv;
@@ -43,7 +46,7 @@ public class SimpleSimulationView {
 	 * @wbp.parser.entryPoint
 	 */
 	private void createFrame() {
-		JFrame f = new JFrame();
+		f = new JFrame();
 		f.setSize(800, 800);
 		ycanvas = new VCanvas((v) -> {
 			return new LVector(v.getX(), v.getZ(), 0);
@@ -74,7 +77,7 @@ public class SimpleSimulationView {
 		f.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		f.setVisible(true);
 		f.toFront();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 	public void step(double dtime) {
@@ -211,7 +214,7 @@ public class SimpleSimulationView {
 				LVector subpartlocation = lotSubPart.getLocation().getAdd(l);
 				LOTPart subpartpart = lotSubPart.getPart();
 				LOTBoundingBox subpartbbox = subpartpart.getBoundingBox();
-				if(subpartbbox!=null) {
+				if (subpartbbox != null) {
 					drawBoundingBox(g, subpartlocation, subpartbbox);
 				}
 				drawCenterSquare(g, subpartlocation);
@@ -284,5 +287,9 @@ public class SimpleSimulationView {
 
 	private interface TransformV {
 		LVector transform(LVector v);
+	}
+
+	public void close() {
+		f.dispose();
 	}
 }

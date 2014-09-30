@@ -17,13 +17,19 @@ public class LOTPool {
 	final private LOTRuntimeObject runtimeobject;
 	final private LOTRunEnvironment runenv;
 
-	private LLog log = LLog.getLogger(this);
+	private LLog log;
 
 	public LOTPool(LOTRunEnvironment nrunenv, LOTRuntimeObject nruntimeobject) {
 		this.runenv = nrunenv;
 		this.runtimeobject = nruntimeobject;
+		log = LLog.getLogger(this);
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Pool[" + runtimeobject + "]";
+	}
+
 	public synchronized LOTPart getPart(String string) {
 		try {
 			List<LOTPart> list = parts.get(string);

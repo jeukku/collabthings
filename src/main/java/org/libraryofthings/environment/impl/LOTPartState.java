@@ -34,6 +34,10 @@ public class LOTPartState implements LOTRuntimeObject {
 		return location;
 	}
 
+	public void setLocation(LVector v) {
+		location = v.copy();
+	}
+
 	@Override
 	public void step(double dtime) {
 		// nothing to do

@@ -180,7 +180,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	@Override
 	public String toString() {
-		return "LOTFactory[" + name + "]";
+		return "F[" + name + "]";
 	}
 
 	public LOTEnvironment getEnvironment() {
