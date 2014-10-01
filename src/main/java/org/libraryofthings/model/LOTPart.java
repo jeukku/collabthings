@@ -23,7 +23,7 @@ public interface LOTPart extends LOTObject {
 
 	boolean importModel(File file);
 
-	void setBoundingBox(LVector lVector, LVector lVector2);
+	void setBoundingBox(LVector LVector3d, LVector LVector3d2);
 
 	LOTBoundingBox getBoundingBox();
 

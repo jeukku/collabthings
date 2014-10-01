@@ -20,7 +20,7 @@ public interface LOTEnvironment extends LOTObject {
 
 	String getParameter(String string);
 
-	void setVectorParameter(String string, LVector lVector);
+	void setVectorParameter(String string, LVector LVector3d);
 
 	LVector getVectorParameter(String name);
 

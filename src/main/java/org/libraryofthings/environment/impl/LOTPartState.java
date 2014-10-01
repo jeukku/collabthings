@@ -35,7 +35,7 @@ public class LOTPartState implements LOTRuntimeObject {
 	}
 
 	public void setLocation(LVector v) {
-		location = v.copy();
+		location = v;
 	}
 
 	@Override
@@ -46,14 +46,6 @@ public class LOTPartState implements LOTRuntimeObject {
 	@Override
 	public void stop() {
 		// nothing to do
-	}
-
-	public LVector getAbsoluteLocation() {
-		if (factory != null) {
-			return factory.getLocation().copy().add(getLocation());
-		} else {
-			return getLocation();
-		}
 	}
 
 	public LOTPart getPart() {

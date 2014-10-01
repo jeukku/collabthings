@@ -82,17 +82,6 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	}
 
 	@Override
-	public LVector getAbsoluteLocation() {
-		LVector ret = new LVector();
-		if (factory != null) {
-			ret.add(factory.getAbsoluteLocation());
-		}
-
-		ret.add(location);
-		return ret;
-	}
-
-	@Override
 	public void stop() {
 		targetlocation = null;
 	}
@@ -113,7 +102,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 			if (distance > MOVING_LOCATION_LENGTH_TRIGGER) {
 				LVector direction = vdistance.getNormalized();
 
-				direction.mult(distance);
+				direction.scale(distance);
 				location.add(direction);
 				tool.setLocation(location, targetnormal);
 			}
@@ -127,8 +116,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 	private void debugInfo(double dtime) {
 		log.info("tool:" + tool + " location " + location + " normal " + normal
-				+ " step:" + dtime + " targetlocation:" + targetlocation
-				+ " abslocation:" + getAbsoluteLocation());
+				+ " step:" + dtime + " targetlocation:" + targetlocation);
 	}
 
 	private synchronized void waitAWhile() {

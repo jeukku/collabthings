@@ -72,9 +72,6 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return location;
 	}
 
-	public LVector getAbsoluteLocation() {
-		return location;
-	}
 
 	public LOTPool getPool() {
 		return pool;

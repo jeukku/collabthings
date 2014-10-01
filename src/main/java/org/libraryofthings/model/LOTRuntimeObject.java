@@ -6,8 +6,6 @@ public interface LOTRuntimeObject {
 
 	LVector getLocation();
 
-	LVector getAbsoluteLocation();
-
 	void step(double dtime);
 
 	void stop();

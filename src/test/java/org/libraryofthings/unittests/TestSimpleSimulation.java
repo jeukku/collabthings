@@ -7,6 +7,7 @@ import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.environment.LOTScriptRunner;
 import org.libraryofthings.environment.impl.LOTFactoryState;
+import org.libraryofthings.environment.impl.LOTPartState;
 import org.libraryofthings.environment.impl.LOTRunEnvironmentImpl;
 import org.libraryofthings.environment.impl.LOTScriptRunnerImpl;
 import org.libraryofthings.environment.impl.LOTToolState;
@@ -63,7 +64,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		LOTFactoryImpl factory = new LOTFactoryImpl(client);
-
+		factory.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
 		LOTFactoryState factorystate = new LOTFactoryState(client, env,
 				"testfactory", factory);
 		LOTRunEnvironment rune = factorystate.getRunEnvironment();
@@ -71,6 +72,9 @@ public class TestSimpleSimulation extends LOTTestCase {
 		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(rune,
 				factorystate);
 		factorystate.addToolUser(robot);
+		LOTPartState p = factorystate.newPart();
+		p.getPart().newSubPart();
+
 		LOTToolState toolstate = factorystate.addTool("tool", new LOTToolImpl(
 				client));
 		//

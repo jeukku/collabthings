@@ -80,8 +80,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	private void addVectorBean(JBean b, String valuename, LVector v) {
 		if (v != null) {
-			JBean vectorbean = v.getBean();
-			vectorbean.setName(valuename);
+			JBean vectorbean = v.getBean(valuename);
 			b.add(vectorbean);
 		}
 	}
@@ -221,7 +220,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	public void setLocation(LVector nloc) {
-		this.location = nloc.copy();
+		this.location = new LVector(nloc);
 	}
 
 	public LOTTool getTool(String name) {
@@ -244,7 +243,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	@Override
 	public LVector getToolUserSpawnLocation() {
 		if (tooluserspawnlocation != null) {
-			return tooluserspawnlocation.copy();
+			return tooluserspawnlocation;
 		} else {
 			return null;
 		}

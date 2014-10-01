@@ -14,8 +14,6 @@ import javax.swing.SwingUtilities;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.environment.LOTRunEnvironment;
-import org.libraryofthings.environment.LOTTask;
-import org.libraryofthings.environment.RunEnvironmentListener;
 import org.libraryofthings.environment.impl.LOTFactoryState;
 import org.libraryofthings.environment.impl.LOTPartState;
 import org.libraryofthings.environment.impl.LOTToolUser;
@@ -49,13 +47,13 @@ public class SimpleSimulationView {
 		f = new JFrame();
 		f.setSize(800, 800);
 		ycanvas = new VCanvas((v) -> {
-			return new LVector(v.getX(), v.getZ(), 0);
+			return new LVector(v.x, v.z, 0);
 		}, "Y");
 		xcanvas = new VCanvas((v) -> {
-			return new LVector(v.getZ(), v.getY(), 0);
+			return new LVector(v.z, v.y, 0);
 		}, "X");
 		zcanvas = new VCanvas((v) -> {
-			return new LVector(v.getX(), v.getY(), 0);
+			return new LVector(v.x, v.y, 0);
 		}, "Z");
 		f.getContentPane().setLayout(new BorderLayout(0, 0));
 
@@ -277,11 +275,11 @@ public class SimpleSimulationView {
 		}
 
 		private int getSY(LVector l) {
-			return (int) ((-zoom * l.getY()) + getHeight() / 2);
+			return (int) ((-zoom * l.y * getHeight() / 1000.0) + getHeight() / 2);
 		}
 
 		private int getSX(LVector l) {
-			return (int) ((zoom * l.getX()) + getWidth() / 2);
+			return (int) ((zoom * l.x * getHeight() / 1000.0) + getWidth() / 2);
 		}
 	}
 

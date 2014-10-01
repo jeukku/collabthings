@@ -28,11 +28,11 @@ public interface LOTFactory extends LOTObject {
 
 	LOTFactory getFactory(String string);
 
-	void setLocation(LVector lVector);
+	void setLocation(LVector LVector3d);
 
 	LOTBoundingBox getBoundingBox();
 
-	void setBoundingBox(LVector lVector, LVector lVector2);
+	void setBoundingBox(LVector LVector3d, LVector LVector3d2);
 
 	void setModel(LOT3DModel model);
 

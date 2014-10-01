@@ -63,6 +63,7 @@ public class ViewSimulation implements RunEnvironmentListener {
 	private LLog log = LLog.getLogger(this);
 	private Scene scene;
 	private double camerarotate;
+	private JFrame f;
 
 	public ViewSimulation(LOTRunEnvironment env) {
 		this.env = env;
@@ -77,7 +78,7 @@ public class ViewSimulation implements RunEnvironmentListener {
 	}
 
 	private synchronized void createFrame() {
-		JFrame f = new JFrame();
+		f = new JFrame();
 		f.setSize(800, 800);
 		f.getContentPane().setLayout(new BorderLayout());
 
@@ -279,9 +280,9 @@ public class ViewSimulation implements RunEnvironmentListener {
 				NodeInfo nodei = nodes.get(tu);
 				Group node = nodei.group;
 				LVector location = tu.getLocation();
-				node.setTranslateX(location.getX());
-				node.setTranslateY(location.getY());
-				node.setTranslateZ(location.getZ());
+				node.setTranslateX(location.x);
+				node.setTranslateY(location.y);
+				node.setTranslateZ(location.z);
 
 				Point2D screen = node.localToScreen(0, 0, 0);
 
@@ -315,5 +316,9 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 	private class NodeInfo {
 		Group group;
+	}
+
+	public void close() {
+		f.dispose();
 	}
 }

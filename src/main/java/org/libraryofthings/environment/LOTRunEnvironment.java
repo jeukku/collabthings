@@ -7,7 +7,6 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTRuntimeObject;
-import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTValues;
 
 import waazdoh.client.model.MID;

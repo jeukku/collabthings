@@ -42,7 +42,7 @@ function run(runenv, factory, values) {
 		callvalues.put('destpart', destpartstate);
 		callvalues.put('partid', subpart.getPart().getID());
 		factory.getFactory("source").call('order', callvalues);
-		
+
 		moveandattach(runenv, factory, callvalues);
 	});
 

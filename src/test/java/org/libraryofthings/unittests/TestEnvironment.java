@@ -97,14 +97,14 @@ public final class TestEnvironment extends LOTTestCase {
 	public void testVectorParameters() {
 		LOTClient c = getNewClient();
 		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
-		LVector lVector = new LVector(1, 1, 1);
+		LVector LVector3d = new LVector(1, 1, 1);
 		String vname = "test";
-		e.setVectorParameter(vname, lVector);
+		e.setVectorParameter(vname, LVector3d);
 		e.save();
 		LOTEnvironmentImpl benv = new LOTEnvironmentImpl(c, e.getID()
 				.getStringID());
 		assertNotNull(benv.getVectorParameter(vname));
-		assertEquals(lVector, benv.getVectorParameter(vname));
+		assertEquals(LVector3d, benv.getVectorParameter(vname));
 
 	}
 }

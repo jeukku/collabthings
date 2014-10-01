@@ -8,7 +8,6 @@ import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
-import org.libraryofthings.model.impl.LOTScriptImpl;
 import org.libraryofthings.model.impl.LOTToolImpl;
 import org.xml.sax.SAXException;
 

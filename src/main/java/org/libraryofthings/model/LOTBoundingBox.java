@@ -20,19 +20,18 @@ public class LOTBoundingBox {
 	}
 
 	public LVector getA() {
-		return a.copy();
+		return a;
 	}
 
 	public LVector getB() {
-		return b.copy();
+		return b;
 	}
 
 	public JBean getBean() {
 		JBean bean = new JBean(BEAN_NAME);
-		JBean beana = a.getBean();
-		beana.setName("a");
+		JBean beana = a.getBean("a");
 		bean.add(beana);
-		JBean beanb = b.getBean();
+		JBean beanb = b.getBean("b");
 		beanb.setName("b");
 		bean.add(beanb);
 		return bean;

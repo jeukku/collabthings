@@ -3,7 +3,7 @@ package org.libraryofthings.unittests;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.math.LVector;
 
-public final class TestMath extends LOTTestCase {
+public final class TestVector extends LOTTestCase {
 
 	private static final double LENGTH_1_1_1 = 1.7320508075688;
 
@@ -20,7 +20,7 @@ public final class TestMath extends LOTTestCase {
 
 	public void testMultiply() {
 		LVector v = getV();
-		v.mult(6);
+		v.scale(6);
 		assertReallyClose(v.length(), LENGTH_1_1_1 * 6);
 	}
 
@@ -35,7 +35,7 @@ public final class TestMath extends LOTTestCase {
 	}
 
 	public void testAdd() {
-		LVector v = new LVector(1, 1, 0).add(new LVector(0, 0, 1));
+		LVector v = new LVector(1, 1, 0).getAdd(new LVector(0, 0, 1));
 		assertReallyClose(v.length(), LENGTH_1_1_1);
 	}
 
@@ -43,5 +43,9 @@ public final class TestMath extends LOTTestCase {
 		LVector l = new LVector(2, 2, 2);
 		l.normalize();
 		assertReallyClose(l.length(), 1.0);
+	}
+
+	public void testShortString() {
+		assertEquals("[0,00, 0,00, 0,00]", new LVector().asShortString());
 	}
 }

@@ -87,7 +87,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 			LVector v = getVectorParameter(string);
 			JBean sbean = bean.add(VALUENAME_MAPITEM);
 			sbean.addValue("name", string);
-			sbean.add("value", v.getBean(string));
+			sbean.add(v.getBean("value"));
 		}
 	}
 
@@ -196,8 +196,8 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	}
 
 	@Override
-	public void setVectorParameter(String string, LVector lVector) {
-		vparameters.put(string, lVector.copy());
+	public void setVectorParameter(String string, LVector v) {
+		vparameters.put(string, new LVector(v));
 	}
 
 	@Override

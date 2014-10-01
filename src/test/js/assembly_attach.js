@@ -13,7 +13,7 @@ function run(e, factory, values) {
 	log.info("Attach subpart " + subpart);
 	log.info("Attach destination " + destpart);
 	
-	var loc = destpart.getAbsoluteLocation().copy();
+	var loc = destpart.getLocation().copy();
 	loc.add(subpart.getLocation());
 	log.info("attaching to " + loc);
 	// should move tool to exact place so that subpart is correct orientation 

@@ -23,14 +23,15 @@ function run(runenv, factory, values) {
 	// ordervalues.put('partid', subpartid)
 	// partsource.call('order', ordervalues);
 
-	log.info("moving to partsource location "
+	log
+			.info("moving to partsource location "
 					+ partsource.getVector("storage"));
 	tool.moveTo(partsource.getVector("storage"));
 	pickupvalues.put('source', partsource);
 	// pickupvalues.put('partid', subpartid);
 	tool.call('pickup', pickupvalues);
 	//
-	var destination = destpart.getAbsoluteLocation();
+	var destination = destpart.getLocation();
 	destination.add(subpart.getLocation());
 	log.info("moveandattach part destination " + destination);
 

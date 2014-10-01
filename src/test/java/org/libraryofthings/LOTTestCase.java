@@ -172,9 +172,9 @@ public class LOTTestCase extends TestCase {
 	}
 
 	protected void assertReallyClose(LVector a, LVector b) {
-		assertReallyClose(a.getX(), b.getX());
-		assertReallyClose(a.getY(), b.getY());
-		assertReallyClose(a.getZ(), b.getZ());
+		assertReallyClose(a.x, b.x);
+		assertReallyClose(a.y, b.y);
+		assertReallyClose(a.z, b.z);
 	}
 
 	protected void assertReallyClose(double valuea, double valueb) {

@@ -80,14 +80,6 @@ public class LOTToolState implements LOTRuntimeObject {
 		moveTo(l, normal);
 	}
 
-	public LVector getAbsoluteLocation() {
-		if (factory != null) {
-			return factory.getLocation().copy().add(location);
-		} else {
-			return location;
-		}
-	}
-
 	public void moveTo(LVector l, LVector n) {
 		log.info("moveTo " + l + " " + n);
 		this.factory.requestMove(this, l, n);

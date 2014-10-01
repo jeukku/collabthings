@@ -13,7 +13,5 @@ public interface LOTToolUser extends LOTRuntimeObject {
 
 	LVector getLocation();
 
-	LVector getAbsoluteLocation();
-
 	boolean isAvailable(LOTToolState toolstate);
 }

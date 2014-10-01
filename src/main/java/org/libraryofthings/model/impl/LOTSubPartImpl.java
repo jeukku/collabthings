@@ -41,8 +41,8 @@ public final class LOTSubPartImpl implements LOTSubPart {
 
 	public void getBean(JBean bpart) {
 		bpart.addValue("id", part.getID());
-		bpart.add("p", p.getBean());
-		bpart.add("n", n.getBean());
+		bpart.add(p.getBean("p"));
+		bpart.add(n.getBean("n"));
 	}
 
 	@Override
