@@ -6,8 +6,14 @@ import javax.script.ScriptException;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
+import org.libraryofthings.LOTToolException;
+import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.impl.LOTRunEnvironmentImpl;
+import org.libraryofthings.environment.impl.LOTToolState;
+import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
+import org.libraryofthings.model.impl.LOTEnvironmentImpl;
 import org.libraryofthings.model.impl.LOTToolImpl;
 import org.xml.sax.SAXException;
 
@@ -74,10 +80,27 @@ public final class TestTool extends LOTTestCase {
 		assertTrue(b.toString().indexOf("LOTTool") >= 0);
 	}
 
-	public void testCallUnknownScript() throws IOException, SAXException {
+	public void testGetUnknownScript() throws IOException, SAXException {
 		LOTClient e = getNewClient();
 		LOTTool tool = e.getObjectFactory().getTool();
 		assertNull(tool.getScript("FAIL"));
+	}
+
+	public void testCallUnknownScript() {
+		LOTClient c = getNewClient();
+		LOTTool tool = c.getObjectFactory().getTool();
+		LOTEnvironment env = new LOTEnvironmentImpl(c);
+		LOTRunEnvironment runenv = new LOTRunEnvironmentImpl(c, env);
+		LOTToolState ts = new LOTToolState("test", runenv, tool, null);
+		//
+		boolean ecaught = false;
+		try {
+			ts.call("fail", null);
+		} catch (LOTToolException e) {
+			assertNotNull(e);
+			ecaught = true;
+		}
+		assertTrue(ecaught);
 	}
 
 	public void testAddGetScript() {

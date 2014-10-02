@@ -81,7 +81,7 @@ public class LOTPool {
 
 	public LOTScriptRunnerImpl getScript(LOTScript script) {
 		LOTScriptRunnerImpl runner = scriptrunners.get(script);
-		if (runner == null) {
+		if (runner == null && script != null) {
 			runner = new LOTScriptRunnerImpl(script, this.runenv,
 					this.runtimeobject);
 			scriptrunners.put(script, runner);
