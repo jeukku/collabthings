@@ -46,6 +46,6 @@ public final class TestVector extends LOTTestCase {
 	}
 
 	public void testShortString() {
-		assertEquals("[0,00, 0,00, 0,00]", new LVector().asShortString());
+		assertEquals("[0.00. 0.00. 0.00]", new LVector().asShortString().replace(',', '.'));
 	}
 }

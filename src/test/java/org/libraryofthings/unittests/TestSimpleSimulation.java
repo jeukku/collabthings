@@ -58,7 +58,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 		runenv.addTask((values) -> {
 			long st = System.currentTimeMillis();
-			while ((System.currentTimeMillis() - st) < 1000) {
+			while ((System.currentTimeMillis() - st) < MAX_SIMUALTION_RUNTIME) {
 				try {
 					wait(200);					
 				} catch (Exception e) {

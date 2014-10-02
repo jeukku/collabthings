@@ -178,7 +178,7 @@ public class LOTTestCase extends TestCase {
 	}
 
 	protected void assertReallyClose(double valuea, double valueb) {
-		assertTrue("expecting " + valuea + ",but is " + valueb,
+		assertTrue("expecting " + valuea + ", but is " + valueb,
 				Math.abs(valuea - valueb) < ACCEPTED_DIFFERENCE);
 	}
 }
