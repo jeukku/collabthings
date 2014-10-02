@@ -3,6 +3,7 @@ package org.libraryofthings.environment.impl;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTToolException;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTTool;
@@ -83,6 +84,13 @@ public class LOTToolState implements LOTRuntimeObject {
 	public void moveTo(LVector l, LVector n) {
 		log.info("moveTo " + l + " " + n);
 		this.factory.requestMove(this, l, n);
+	}
+
+	@Override
+	public LTransformation getTransformation() {
+		LTransformation t = new LTransformation();
+		t.mult(LTransformation.getTranslate(location));
+		return t;
 	}
 
 	public LVector getLocation() {

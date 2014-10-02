@@ -1,10 +1,13 @@
 package org.libraryofthings.model.impl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.model.LOTBoundingBox;
@@ -24,7 +27,11 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	private static final String VALUENAME_NAME = "name";
 	private static final String VALUENAME_MODELID = "model3did";
 	private static final String VALUENAME_ENVIRONMENTID = "environmentid";
-	private static final String VALUENAME_LOCATION = "location";
+	private static final String VALUENAME_SPAWNLOCATION = "toolspawn";
+	private static final String BEANNAME_ORIENTATION = "orientation";
+	private static final String VALUENAME_ORIENTATION_LOCATION = "location";
+	private static final String VALUENAME_ORIENTATION_NORMAL = "normal";
+	private static final String VALUENAME_ORIENTATION_ANGLE = "angle";
 	//
 	private static int counter = 0;
 	//
@@ -33,11 +40,14 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	private LOTClient client;
 	private LOTEnvironment env;
 	//
-	private LVector location = new LVector();
 	private Map<String, LOTFactoryImpl> factories = new HashMap<>();
 	private LOTBoundingBox bbox;
 	private LOT3DModel model;
 	private LVector tooluserspawnlocation;
+	// orientation and location
+	private LVector location = new LVector();
+	private LVector orientationnormal = new LVector(0, 1, 0);
+	private double orientationangle;
 
 	public LOTFactoryImpl(final LOTClient nclient) {
 		this.client = nclient;
@@ -60,8 +70,11 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		JBean b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
 		b.addValue(VALUENAME_ENVIRONMENTID, env.getID());
-		addVectorBean(b, VALUENAME_LOCATION, location);
-		addVectorBean(b, VALUENAME_LOCATION, tooluserspawnlocation);
+		addVectorBean(b, VALUENAME_SPAWNLOCATION, tooluserspawnlocation);
+		JBean ob = b.add(BEANNAME_ORIENTATION);
+		ob.add(location.getBean(VALUENAME_ORIENTATION_LOCATION));
+		ob.add(orientationnormal.getBean(VALUENAME_ORIENTATION_NORMAL));
+		ob.addValue(VALUENAME_ORIENTATION_ANGLE, orientationangle);
 
 		if (bbox != null) {
 			b.add(bbox.getBean());
@@ -96,7 +109,17 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		if (modelid != null) {
 			model = client.getObjectFactory().getModel(modelid);
 		}
-		location = new LVector(bean.get(VALUENAME_LOCATION));
+
+		JBean beansl = bean.get(VALUENAME_SPAWNLOCATION);
+		if (beansl != null) {
+			tooluserspawnlocation = new LVector(beansl);
+		}
+		
+		JBean ob = bean.get(BEANNAME_ORIENTATION);
+		location = new LVector(ob.get(VALUENAME_ORIENTATION_LOCATION));
+		orientationnormal = new LVector(ob.get(VALUENAME_ORIENTATION_NORMAL));
+		orientationangle = ob.getDoubleValue(VALUENAME_ORIENTATION_ANGLE);
+
 		env = new LOTEnvironmentImpl(client,
 				bean.getIDValue(VALUENAME_ENVIRONMENTID));
 		JBean bbbox = bean.get(LOTBoundingBox.BEAN_NAME);
@@ -219,8 +242,27 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return this.factories.get(name);
 	}
 
+	@Override
+	public Set<String> getFactories() {
+		return new HashSet<>(factories.keySet());
+	}
+
 	public void setLocation(LVector nloc) {
 		this.location = new LVector(nloc);
+	}
+
+	@Override
+	public void setOrientation(LVector n, double d) {
+		this.orientationnormal = n;
+		this.orientationangle = d;
+	}
+
+	@Override
+	public LTransformation getTransformation() {
+		LTransformation t = LTransformation.getRotate(orientationnormal,
+				orientationangle);
+		t.mult(LTransformation.getTranslate(location.x, location.y, location.z));
+		return t;
 	}
 
 	public LOTTool getTool(String name) {

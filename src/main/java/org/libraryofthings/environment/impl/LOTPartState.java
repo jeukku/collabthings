@@ -2,6 +2,7 @@ package org.libraryofthings.environment.impl;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTRuntimeObject;
@@ -21,6 +22,13 @@ public class LOTPartState implements LOTRuntimeObject {
 		this.part = part;
 		this.runenv = runenv;
 		this.factory = factory;
+	}
+
+	@Override
+	public LTransformation getTransformation() {
+		LTransformation t = new LTransformation();
+		t.mult(LTransformation.getTranslate(location));
+		return t;
 	}
 
 	public void destroy() {

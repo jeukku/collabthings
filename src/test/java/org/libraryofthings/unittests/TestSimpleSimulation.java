@@ -14,6 +14,7 @@ import org.libraryofthings.environment.impl.LOTToolState;
 import org.libraryofthings.environment.impl.ReallySimpleSuperheroRobot;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
+import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
 import org.libraryofthings.model.impl.LOTFactoryImpl;
 import org.libraryofthings.model.impl.LOTScriptImpl;
@@ -25,6 +26,50 @@ import org.xml.sax.SAXException;
 public class TestSimpleSimulation extends LOTTestCase {
 
 	private static final int MAX_SIMUALTION_RUNTIME = 2000000;
+
+	public void testSimpleTransformation() {
+		LOTClient client = getNewClient();
+		LOTEnvironment env = new LOTEnvironmentImpl(client);
+
+		LOTFactory f1 = client.getObjectFactory().getFactory();
+		f1.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 10, 10));
+
+		LOTFactory f2 = f1.addFactory("f2");
+		f2.setBoundingBox(new LVector(-3, 0, -3), new LVector(3, 3, 3));
+		f2.setLocation(new LVector(5, 0, 0));
+		f2.setOrientation(new LVector(1, 1, 0), Math.PI / 6);
+
+		LOTFactory f21 = f2.addFactory("f21");
+		f21.setBoundingBox(new LVector(-1, 0, -1), new LVector(1, 1, 1));
+		f21.setLocation(new LVector(2, 0, 0));
+
+		LOTFactory f3 = f1.addFactory("f3");
+		f3.setBoundingBox(new LVector(-2, 0, -2), new LVector(2, 1.5, 2));
+		f3.setLocation(new LVector(-3, 2, -3));
+
+		LOTFactoryState f1s = new LOTFactoryState(client, env, "f1s", f1);
+		
+		LOTPartState p = f1s.getFactories().get(0).getFactories().get(0)
+				.newPart();
+		// to zoom out the view
+		p.setLocation(new LVector(20, 0, 0));
+
+		LOTRunEnvironment runenv = f1s.getRunEnvironment();
+
+		runenv.addTask((values) -> {
+			long st = System.currentTimeMillis();
+			while ((System.currentTimeMillis() - st) < 1000) {
+				try {
+					wait(200);					
+				} catch (Exception e) {
+				}
+			}
+			return true;
+		});
+
+		LOTSimulation simulation = new LOTSimpleSimulation(runenv, true);
+		assertTrue(simulation.run(MAX_SIMUALTION_RUNTIME));
+	}
 
 	public void testFailingScript() throws IOException, SAXException {
 		LOTClient client = getNewClient();

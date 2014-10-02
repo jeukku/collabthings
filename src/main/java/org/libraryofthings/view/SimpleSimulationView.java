@@ -9,14 +9,16 @@ import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.vecmath.Vector3d;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.environment.impl.LOTFactoryState;
 import org.libraryofthings.environment.impl.LOTPartState;
 import org.libraryofthings.environment.impl.LOTToolUser;
+import org.libraryofthings.math.LTransformation;
+import org.libraryofthings.math.LTransformationStack;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTBoundingBox;
 import org.libraryofthings.model.LOTPart;
@@ -30,10 +32,12 @@ public class SimpleSimulationView {
 	private VCanvas ycanvas;
 	private VCanvas xcanvas;
 	private VCanvas zcanvas;
+	private VCanvas freecanvas;
+	private double freeangle;
+
 	private LLog log = LLog.getLogger(this);
-	private JTextArea infotext;
-	private double textupdatetime;
 	private JFrame f;
+	private LTransformation freetransform;
 
 	public SimpleSimulationView(LOTRunEnvironment runenv) {
 		this.runenv = runenv;
@@ -44,50 +48,51 @@ public class SimpleSimulationView {
 	 * @wbp.parser.entryPoint
 	 */
 	private void createFrame() {
-		f = new JFrame();
-		f.setSize(800, 800);
-		ycanvas = new VCanvas((v) -> {
-			return new LVector(v.x, v.z, 0);
-		}, "Y");
-		xcanvas = new VCanvas((v) -> {
-			return new LVector(v.z, v.y, 0);
-		}, "X");
-		zcanvas = new VCanvas((v) -> {
-			return new LVector(v.x, v.y, 0);
-		}, "Z");
-		f.getContentPane().setLayout(new BorderLayout(0, 0));
+		if (runenv.isRunning()) {
+			f = new JFrame();
+			f.setSize(800, 800);
+			ycanvas = new VCanvas((v) -> {
+				v.y = v.z;
+				v.z = 0;
+			}, "Y");
+			xcanvas = new VCanvas((v) -> {
+				v.x = v.z;
+				v.z = 0;
+			}, "X");
+			zcanvas = new VCanvas((v) -> {
+				v.z = 0;
+			}, "Z");
+			freecanvas = new VCanvas((v) -> {
+				freetransform.transform(v);
+			}, "Z");
 
-		JPanel panel = new JPanel();
-		f.getContentPane().add(panel);
-		panel.setLayout(new GridLayout(2, 2));
+			f.getContentPane().setLayout(new BorderLayout(0, 0));
 
-		JPanel info = new JPanel();
-		info.setLayout(new BorderLayout());
-		infotext = new JTextArea();
-		info.add(infotext);
+			JPanel panel = new JPanel();
+			f.getContentPane().add(panel);
+			panel.setLayout(new GridLayout(2, 2));
 
-		panel.add(ycanvas);
-		panel.add(xcanvas);
-		panel.add(zcanvas);
-		panel.add(info);
+			panel.add(ycanvas);
+			panel.add(xcanvas);
+			panel.add(zcanvas);
+			panel.add(freecanvas);
 
-		f.setAutoRequestFocus(true);
-		f.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		f.setVisible(true);
-		f.toFront();
-		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			f.setAutoRequestFocus(true);
+			f.setExtendedState(JFrame.MAXIMIZED_BOTH);
+			f.setVisible(true);
+			f.toFront();
+			f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		}
 	}
 
 	public void step(double dtime) {
-		if (infotext != null && textupdatetime > MAX_TEXTUPDATETIME) {
-			textupdatetime = 0.0;
-			StringBuilder sb = new StringBuilder();
-			sb.append("step:" + dtime + " ");
-			sb.append("env:" + this.runenv);
-			infotext.setText(sb.toString());
-		} else {
-			textupdatetime += dtime;
-		}
+		freeangle += dtime * 0.00002;
+		LTransformation nfreetransform = new LTransformation();
+		nfreetransform.mult(LTransformation.getRotate(new Vector3d(1, 0, 0),
+				0.4));
+		nfreetransform.mult(LTransformation.getRotate(new Vector3d(0, 1, 0),
+				freeangle));
+		freetransform = nfreetransform;
 	}
 
 	private class VCanvas extends JPanel {
@@ -101,6 +106,9 @@ public class SimpleSimulationView {
 		private int screen_top;
 		private int screen_bottom;
 		private double zoomspeed = 1;
+
+		private LVector a = new LVector();
+		private LVector b = new LVector();
 
 		public VCanvas(TransformV transform, String name) {
 			super();
@@ -124,12 +132,13 @@ public class SimpleSimulationView {
 			screen_right = getSize().width - widthmargin;
 			screen_bottom = getSize().height - heightmargin;
 
+			LTransformationStack tstack = new LTransformationStack();
 			Set<LOTRuntimeObject> os = runenv.getRunObjects();
-			drawObjects(g, os);
+			drawObjects(g, tstack, os);
 
 			checkZoom();
 
-			repaint();
+			repaint(100);
 		}
 
 		private void checkZoom() {
@@ -153,85 +162,139 @@ public class SimpleSimulationView {
 			}
 		}
 
-		private void drawObjects(Graphics g, Set<LOTRuntimeObject> os) {
+		private void drawObjects(Graphics g, LTransformationStack tstack,
+				Set<LOTRuntimeObject> os) {
 			for (LOTRuntimeObject o : os) {
-				drawObject(g, o);
+				drawObject(g, tstack, o);
 			}
 		}
 
-		private void drawObject(Graphics g, LOTRuntimeObject o) {
+		private void drawObject(Graphics g, LTransformationStack tstack,
+				LOTRuntimeObject o) {
 			if (o instanceof LOTFactoryState) {
-				drawFactoryState(g, (LOTFactoryState) o);
+				drawFactoryState(g, tstack, (LOTFactoryState) o);
 			} else {
 				log.info("unknown object " + o);
 			}
 		}
 
-		private void drawFactoryState(Graphics g, LOTFactoryState o) {
+		private void drawFactoryState(Graphics g, LTransformationStack tstack,
+				LOTFactoryState o) {
+			tstack.push(o.getTransformation());
+
 			LOTBoundingBox bbox = o.getFactory().getBoundingBox();
 			if (bbox != null) {
-				drawBoundingBox(g, o.getLocation(), bbox);
+				drawBoundingBox(g, tstack, bbox);
 			}
 			// child factories
 			List<LOTFactoryState> fs = o.getFactories();
 			for (LOTFactoryState lotFactoryState : fs) {
-				drawFactoryState(g, lotFactoryState);
+				drawFactoryState(g, tstack, lotFactoryState);
 			}
 			//
 			List<LOTToolUser> tus = o.getToolUsers();
 			for (LOTToolUser lotToolUser : tus) {
-				drawToolUser(g, lotToolUser);
+				drawToolUser(g, tstack, lotToolUser);
 			}
 
 			Set<LOTPartState> parts = o.getParts();
 			for (LOTPartState partstate : parts) {
-				drawPartState(g, partstate);
+				drawPartState(g, tstack, partstate);
 			}
+
+			tstack.pull();
 		}
 
-		private void drawPartState(Graphics g, LOTPartState partstate) {
+		private void drawPartState(Graphics g, LTransformationStack tstack,
+				LOTPartState partstate) {
 			LOTPart part = partstate.getPart();
 			if (part != null) {
-				drawPart(g, partstate, part);
+				drawPart(g, tstack, partstate, part);
 			}
 		}
 
-		private void drawPart(Graphics g, LOTPartState partstate, LOTPart part) {
-			LVector l = partstate.getLocation();
+		private void drawPart(Graphics g, LTransformationStack tstack,
+				LOTPartState partstate, LOTPart part) {
 			LOTBoundingBox bbox = part.getBoundingBox();
 			if (bbox != null) {
-				drawBoundingBox(g, l, bbox);
+				drawBoundingBox(g, tstack, bbox);
 			}
 
+			a.set(partstate.getLocation());
+			tstack.current().transform(a);
+
 			g.setColor(Color.lightGray);
-			g.drawString("" + part, getSX(l), getSY(l) - 10);
+			g.drawString("" + part, getSX(a), getSY(a) - 10);
 			//
 			g.setColor(Color.red);
 			List<LOTSubPart> subparts = part.getSubParts();
-			for (LOTSubPart lotSubPart : subparts) {
-				LVector subpartlocation = lotSubPart.getLocation().getAdd(l);
-				LOTPart subpartpart = lotSubPart.getPart();
-				LOTBoundingBox subpartbbox = subpartpart.getBoundingBox();
-				if (subpartbbox != null) {
-					drawBoundingBox(g, subpartlocation, subpartbbox);
+			if (subparts.size() > 0) {
+				for (LOTSubPart lotSubPart : subparts) {
+					LVector subpartlocation = lotSubPart.getLocation()
+							.getAdd(a);
+					LOTPart subpartpart = lotSubPart.getPart();
+					LOTBoundingBox subpartbbox = subpartpart.getBoundingBox();
+					if (subpartbbox != null) {
+						drawBoundingBox(g, tstack, subpartbbox);
+					}
+					drawCenterSquare(g, subpartlocation);
 				}
-				drawCenterSquare(g, subpartlocation);
+			} else {
+				drawCenterSquare(g, a);
 			}
 		}
 
-		private void drawCenterSquare(Graphics g, LVector subpartlocation) {
-			LVector a = t.transform(subpartlocation);
+		private void drawCenterSquare(Graphics g, LVector l) {
+			a.set(l);
+			t.transform(a);
 			int sx = getSX(a);
 			int sy = getSY(a);
 			checkOutOfScreen(sx, sy);
 			g.drawRect(sx - 2, sy - 2, 4, 4);
 		}
 
-		private void drawBoundingBox(Graphics g, LVector l, LOTBoundingBox bbox) {
-			LVector a = bbox.getA().getAdd(l);
-			LVector b = bbox.getB().getAdd(l);
-			a = t.transform(a);
-			b = t.transform(b);
+		private void drawBoundingBox(Graphics g, LTransformationStack tstack,
+				LOTBoundingBox bbox) {
+			a.set(bbox.getA());
+			b.set(bbox.getB());
+
+			g.setColor(Color.gray);
+
+			drawLine(g, tstack, new LVector(a.x, a.y, a.z), new LVector(a.x,
+					b.y, a.z));
+			drawLine(g, tstack, new LVector(a.x, b.y, a.z), new LVector(a.x,
+					b.y, b.z));
+			drawLine(g, tstack, new LVector(a.x, b.y, b.z), new LVector(a.x,
+					a.y, b.z));
+			drawLine(g, tstack, new LVector(a.x, a.y, b.z), new LVector(a.x,
+					a.y, a.z));
+
+			drawLine(g, tstack, new LVector(b.x, a.y, a.z), new LVector(b.x,
+					b.y, a.z));
+			drawLine(g, tstack, new LVector(b.x, b.y, a.z), new LVector(b.x,
+					b.y, b.z));
+			drawLine(g, tstack, new LVector(b.x, b.y, b.z), new LVector(b.x,
+					a.y, b.z));
+			drawLine(g, tstack, new LVector(b.x, a.y, b.z), new LVector(b.x,
+					a.y, a.z));
+
+			drawLine(g, tstack, new LVector(a.x, a.y, a.z), new LVector(b.x,
+					a.y, a.z));
+			drawLine(g, tstack, new LVector(a.x, b.y, a.z), new LVector(b.x,
+					b.y, a.z));
+			drawLine(g, tstack, new LVector(a.x, b.y, b.z), new LVector(b.x,
+					b.y, b.z));
+			drawLine(g, tstack, new LVector(a.x, a.y, b.z), new LVector(b.x,
+					a.y, b.z));
+		}
+
+		private void drawLine(Graphics g, LTransformationStack tstack,
+				LVector a, LVector b) {
+			tstack.current().transform(a);
+			tstack.current().transform(b);
+
+			t.transform(a);
+			t.transform(b);
 			int asx = getSX(a);
 			int asy = getSY(a);
 			int bsx = getSX(b);
@@ -239,27 +302,18 @@ public class SimpleSimulationView {
 			int w = bsx - asx;
 			int h = bsy - asy;
 
-			if (w < 0) {
-				asx = bsx;
-				w = -w;
-			}
-
-			if (h < 0) {
-				asy = bsy;
-				h = -h;
-			}
-
-			g.setColor(Color.gray);
-			g.drawRect(asx, asy, w, h);
+			g.drawLine(asx, asy, bsx, bsy);
 		}
 
-		private void drawToolUser(Graphics g, LOTToolUser tooluser) {
-			LVector l = tooluser.getLocation().copy();
-			drawCenterCircle(g, l);
+		private void drawToolUser(Graphics g, LTransformationStack tstack,
+				LOTToolUser tooluser) {
+			a.set(tooluser.getLocation());
+			tstack.current().transform(a);
+			drawCenterCircle(g, a);
 		}
 
 		private void drawCenterCircle(Graphics g, LVector l) {
-			l = t.transform(l);
+			t.transform(l);
 			int sx = getSX(l);
 			int sy = getSY(l);
 			checkOutOfScreen(sx, sy);
@@ -284,10 +338,12 @@ public class SimpleSimulationView {
 	}
 
 	private interface TransformV {
-		LVector transform(LVector v);
+		void transform(LVector v);
 	}
 
 	public void close() {
-		f.dispose();
+		if (f != null) {
+			f.dispose();
+		}
 	}
 }

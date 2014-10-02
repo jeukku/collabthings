@@ -7,7 +7,6 @@ function run(e, factory, values) {
 	var f = values.get('factory');
 	
 	factory.addTool("tool", f.getTool("pickuptool"));
-	factory.addFactory("source", f.getFactory("source"));
 	factory.addSuperheroRobot();
 	
 	log.info("start done");

@@ -11,6 +11,7 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.environment.LOTTask;
+import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
@@ -27,17 +28,17 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	private final LOTRunEnvironment runenv;
 	private LLog log;
 	private final String name;
-	private LVector location = new LVector();
 
 	private Set<LOTToolState> tools = new HashSet<LOTToolState>();
 	private List<LOTToolUser> toolusers = new LinkedList<LOTToolUser>();
-	private Set<LOTFactoryState> factories = new HashSet<>();
+	private List<LOTFactoryState> factories = new LinkedList<>();
 	private Set<LOTRuntimeStepper> steppers = new HashSet<>();
 	private Map<String, String> params = new HashMap<>();
 	private Set<LOTPartState> parts = new HashSet<>();
 
 	private final LOTPool pool;
 	private LOTRuntimeObject parent;
+	private LTransformation transformation;
 
 	public LOTFactoryState(final LOTClient client, LOTEnvironment env,
 			final String name, final LOTFactory factory) {
@@ -46,7 +47,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		runenv = new LOTRunEnvironmentImpl(client, env);
 		runenv.addRunObject("main", this);
 		pool = new LOTPool(runenv, this);
-		callStart();
+		init();
 	}
 
 	public LOTFactoryState(final String name, final LOTRunEnvironment runenv,
@@ -55,11 +56,18 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		this.runenv = runenv;
 		this.parent = factorystate;
 		this.name = name;
+
 		pool = new LOTPool(this.runenv, this);
-		callStart();
+		init();
 	}
 
-	private void callStart() {
+	private void init() {
+		transformation = factory.getTransformation();
+
+		for (String fname : getFactory().getFactories()) {
+			addFactory(fname, getFactory().getFactory(fname));
+		}
+
 		LOTValues values = new LOTValues("factory", factory);
 		call("start", values);
 	}
@@ -68,10 +76,9 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return true;
 	}
 
-	public LVector getLocation() {
-		return location;
+	public LTransformation getTransformation() {
+		return transformation;
 	}
-
 
 	public LOTPool getPool() {
 		return pool;
@@ -82,7 +89,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return "FS[" + factory + "]";
 	}
 
-	public LOTFactoryState addFactory(String id, LOTFactory f) {
+	private LOTFactoryState addFactory(String id, LOTFactory f) {
 		getLog().info("addFactory " + id + " factory:" + f);
 		LOTFactoryState state = new LOTFactoryState(id, runenv, f, this);
 		factories.add(state);
@@ -95,6 +102,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 				return f;
 			}
 		}
+
+		log.info("returing null factory with id " + id);
 
 		return null;
 	}

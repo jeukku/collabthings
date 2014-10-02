@@ -1,10 +1,10 @@
 package org.libraryofthings.model;
 
-import org.libraryofthings.math.LVector;
+import org.libraryofthings.math.LTransformation;
 
 public interface LOTRuntimeObject {
 
-	LVector getLocation();
+	LTransformation getTransformation();
 
 	void step(double dtime);
 

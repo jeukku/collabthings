@@ -33,6 +33,7 @@ import org.libraryofthings.environment.impl.LOTFactoryState;
 import org.libraryofthings.environment.impl.LOTPartState;
 import org.libraryofthings.environment.impl.LOTToolState;
 import org.libraryofthings.environment.impl.LOTToolUser;
+import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTRuntimeObject;
 
@@ -279,7 +280,10 @@ public class ViewSimulation implements RunEnvironmentListener {
 			for (LOTRuntimeObject tu : nodes.keySet()) {
 				NodeInfo nodei = nodes.get(tu);
 				Group node = nodei.group;
-				LVector location = tu.getLocation();
+				LTransformation t = tu.getTransformation();
+				LVector l = new LVector();
+				t.transform(l);
+				LVector location = l;
 				node.setTranslateX(location.x);
 				node.setTranslateY(location.y);
 				node.setTranslateZ(location.z);

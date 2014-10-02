@@ -1,5 +1,8 @@
 package org.libraryofthings.model;
 
+import java.util.Set;
+
+import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 
 import waazdoh.client.model.MID;
@@ -28,7 +31,11 @@ public interface LOTFactory extends LOTObject {
 
 	LOTFactory getFactory(String string);
 
+	Set<String> getFactories();
+
 	void setLocation(LVector LVector3d);
+
+	void setOrientation(LVector lVector, double d);
 
 	LOTBoundingBox getBoundingBox();
 
@@ -39,5 +46,7 @@ public interface LOTFactory extends LOTObject {
 	void setToolUserSpawnLocation(LVector spawnlocation);
 
 	LVector getToolUserSpawnLocation();
+
+	LTransformation getTransformation();
 
 }

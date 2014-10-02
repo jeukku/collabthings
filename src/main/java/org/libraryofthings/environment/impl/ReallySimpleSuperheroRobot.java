@@ -2,6 +2,7 @@ package org.libraryofthings.environment.impl;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 
 public class ReallySimpleSuperheroRobot implements LOTToolUser {
@@ -79,6 +80,13 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	@Override
 	public LVector getLocation() {
 		return location.copy();
+	}
+
+	@Override
+	public LTransformation getTransformation() {
+		LTransformation t = new LTransformation();
+		t.mult(LTransformation.getTranslate(location));
+		return t;
 	}
 
 	@Override
