@@ -1,10 +1,20 @@
 package org.libraryofthings.unittests;
 
+import javax.vecmath.Vector3d;
+
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 
 public final class TestTransformation extends LOTTestCase {
+
+	public void testNormalRotationAndTranslation() {
+		LVector v = new LVector(1, 0, 0);
+		LTransformation t = new LTransformation(new LVector(2, 0, 0),
+				new LVector(0, 1, 0), Math.PI / 2);
+		t.transform(v);
+		assertReallyClose(new LVector(2, 0, -1), v);
+	}
 
 	public void testRotate() {
 		LVector v = new LVector(1, 0, 0);
@@ -41,20 +51,20 @@ public final class TestTransformation extends LOTTestCase {
 	public void testRotateTranslateRotate() {
 		LVector v = new LVector(1, 0, 0);
 		LTransformation t1 = LTransformation.getRotateY(-Math.PI / 2); // 90
-		LTransformation t2 = LTransformation.getTranslate(2,0,0); // 90
+		LTransformation t2 = LTransformation.getTranslate(2, 0, 0); // 90
 		LTransformation t3 = LTransformation.getRotateY(-Math.PI / 2); // 90
 
 		t1.mult(t2);
 		t1.mult(t3);
-		
+
 		//
 		v = t1.transform(v);
-		
+
 		assertClose(-1.0, v.x);
 		assertClose(0.0, v.y);
 		assertClose(2.0, v.z);
 	}
-	
+
 	private void assertClose(double z, double d) {
 		assertTrue("" + z + " was " + d, Math.abs(z - d) < 0.000000001);
 	}

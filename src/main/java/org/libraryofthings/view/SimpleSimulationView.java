@@ -215,6 +215,8 @@ public class SimpleSimulationView {
 
 		private void drawPart(Graphics g, LTransformationStack tstack,
 				LOTPartState partstate, LOTPart part) {
+			tstack.push(partstate.getTransformation());
+
 			LOTBoundingBox bbox = part.getBoundingBox();
 			if (bbox != null) {
 				drawBoundingBox(g, tstack, bbox);
@@ -230,18 +232,27 @@ public class SimpleSimulationView {
 			List<LOTSubPart> subparts = part.getSubParts();
 			if (subparts.size() > 0) {
 				for (LOTSubPart lotSubPart : subparts) {
-					LVector subpartlocation = lotSubPart.getLocation()
-							.getAdd(a);
+					tstack.push(lotSubPart.getTransformation());
+
 					LOTPart subpartpart = lotSubPart.getPart();
 					LOTBoundingBox subpartbbox = subpartpart.getBoundingBox();
 					if (subpartbbox != null) {
 						drawBoundingBox(g, tstack, subpartbbox);
 					}
-					drawCenterSquare(g, subpartlocation);
+
+					a.set(0, 0, 0);
+					tstack.current().transform(a);
+					drawCenterSquare(g, a);
+
+					tstack.pull();
 				}
 			} else {
+				a.set(0, 0, 0);
+				tstack.current().transform(a);
 				drawCenterSquare(g, a);
 			}
+
+			tstack.pull();
 		}
 
 		private void drawCenterSquare(Graphics g, LVector l) {

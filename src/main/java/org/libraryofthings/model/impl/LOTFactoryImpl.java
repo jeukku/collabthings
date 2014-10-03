@@ -114,7 +114,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		if (beansl != null) {
 			tooluserspawnlocation = new LVector(beansl);
 		}
-		
+
 		JBean ob = bean.get(BEANNAME_ORIENTATION);
 		location = new LVector(ob.get(VALUENAME_ORIENTATION_LOCATION));
 		orientationnormal = new LVector(ob.get(VALUENAME_ORIENTATION_NORMAL));
@@ -259,10 +259,8 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	@Override
 	public LTransformation getTransformation() {
-		LTransformation t = LTransformation.getRotate(orientationnormal,
+		return new LTransformation(location, orientationnormal,
 				orientationangle);
-		t.mult(LTransformation.getTranslate(location.x, location.y, location.z));
-		return t;
 	}
 
 	public LOTTool getTool(String name) {

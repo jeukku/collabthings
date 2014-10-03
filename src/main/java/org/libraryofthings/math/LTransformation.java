@@ -6,9 +6,33 @@ import javax.vecmath.Vector3d;
 
 public class LTransformation {
 	private Matrix4d m = new Matrix4d();
+	public static final Vector3d UP = new Vector3d(0, 1, 0);
 
 	public LTransformation() {
 		m.setIdentity();
+	}
+
+	public LTransformation(LVector location, LVector orientationnormal,
+			double orientationangle) {
+		m.setIdentity();
+
+		// RotationAxis = cross(N, N')
+		// RotationAngle = arccos(dot(N, N') / (|N| * |N'|))
+
+		mult(LTransformation.getTranslate(location.x, location.y, location.z));
+
+		Vector3d cross = new Vector3d();
+		cross.cross(UP, orientationnormal);
+		if (cross.length() > 0) {
+			cross.normalize();
+			Vector3d dot = new Vector3d(UP);
+			double angle = Math.acos(dot.dot(orientationnormal));
+			mult(LTransformation.getRotate(orientationnormal, orientationangle));
+			mult(LTransformation.getRotate(cross, angle));
+		} else {
+			mult(LTransformation.getRotate(UP, orientationangle));
+		}
+
 	}
 
 	@Override
@@ -38,7 +62,7 @@ public class LTransformation {
 	public static LTransformation getTranslate(LVector v) {
 		return LTransformation.getTranslate(v.x, v.y, v.z);
 	}
-	
+
 	public void translate(double x, double y, double z) {
 		m.setTranslation(new Vector3d(x, y, z));
 	}

@@ -1,6 +1,7 @@
 package org.libraryofthings.model.impl;
 
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
@@ -17,6 +18,7 @@ public final class LOTSubPartImpl implements LOTSubPart {
 	private final LVector p = new LVector();
 	private final LVector n = new LVector();
 	private final LOTClient client;
+	private LTransformation transformation;
 
 	/**
 	 * @param nparent
@@ -50,9 +52,20 @@ public final class LOTSubPartImpl implements LOTSubPart {
 		this.part = (LOTPartImpl) part2;
 	}
 
+	@Override
+	public LTransformation getTransformation() {
+		if (transformation == null) {
+			transformation = new LTransformation(getLocation(), getNormal(), 0); // TODO
+																					// fix
+																					// angle
+		}
+		return transformation;
+	}
+
 	public void setOrientation(LVector location, LVector normal) {
 		this.p.set(location);
 		this.n.set(normal);
+		transformation = null;
 	}
 
 	public LVector getNormal() {

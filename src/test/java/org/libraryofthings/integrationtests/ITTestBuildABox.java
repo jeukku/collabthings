@@ -269,7 +269,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		box.setBoundingBox(new LVector(-2, -2, -2), new LVector(2, 2, 2));
 
 		return box;
-	}
+	} 
 
 	private LOTScript loadScript(LOTScript lots, String scriptname)
 			throws IOException {
