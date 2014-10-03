@@ -10,7 +10,7 @@ import org.libraryofthings.model.LOTSubPart;
 
 public class LOTPartState implements LOTRuntimeObject {
 	private LOTPart part;
-	private LVector location = new LVector();
+	private final LVector location = new LVector();
 	//
 	private LLog log = LLog.getLogger(this);
 	private LOTRunEnvironment runenv;
@@ -34,16 +34,15 @@ public class LOTPartState implements LOTRuntimeObject {
 	public void destroy() {
 		factory.remove(this);
 		part = null;
-		location = null;
 		factory = null;
 	}
 
 	public LVector getLocation() {
-		return location;
+		return location.copy();
 	}
 
 	public void setLocation(LVector v) {
-		location = v;
+		location.set(v);
 	}
 
 	@Override

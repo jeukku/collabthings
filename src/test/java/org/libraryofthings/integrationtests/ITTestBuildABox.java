@@ -92,8 +92,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 		createAssemblyFactory(factory, client);
 		log.info("factory that uses boxes " + factory);
 
-		factory.setBoundingBox(new LVector(-100, 0, -100), new LVector(100,
-				10, 100));
+		factory.setBoundingBox(new LVector(-100, 0, -100), new LVector(100, 10,
+				100));
 		factory.getEnvironment().setVectorParameter("storage",
 				new LVector(100, 2, 10));
 		factory.getEnvironment().setVectorParameter("buildingpartlocation",
@@ -177,15 +177,15 @@ public final class ITTestBuildABox extends LOTTestCase {
 		LOTFactory squarefactory = createPlateSource(
 				boxfactory.addFactory("source"), client, square);
 		squarefactory.setName("squarefactory");
-		squarefactory.setBoundingBox(new LVector(-3, 0, -3), new LVector(3,
-				3, 3));
+		squarefactory.setBoundingBox(new LVector(-3, 0, -3), new LVector(3, 3,
+				3));
 		squarefactory.getEnvironment().setVectorParameter("storage",
 				new LVector(-3, 1, 0));
 		squarefactory.getEnvironment().setVectorParameter(
 				"buildingpartlocation", new LVector(-1, 1, 0));
 
-		boxfactory.setBoundingBox(new LVector(-10, 0, -10), new LVector(10,
-				10, 10));
+		boxfactory.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 10,
+				10));
 		log.info("platesource " + squarefactory + " with square " + square);
 		log.info("square bean " + square.getBean());
 		return boxfactory;
@@ -254,22 +254,22 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		int partindex = 0;
 		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(0, -2, 0), new LVector(0, 1, 0));
+				.setOrientation(new LVector(0, -1, 0), new LVector(0, 1, 0));
 		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(-2, 0, 0), new LVector(-1, 0, 0));
+				.setOrientation(new LVector(-1, 0, 0), new LVector(-1, 0, 0));
 		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(2, 0, 0), new LVector(1, 0, 0));
+				.setOrientation(new LVector(1, 0, 0), new LVector(1, 0, 0));
 		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(0, 0, -2), new LVector(0, 0, -1));
+				.setOrientation(new LVector(0, 0, -1), new LVector(0, 0, -1));
 		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(0, 0, 2), new LVector(0, 0, 1));
+				.setOrientation(new LVector(0, 0, 1), new LVector(0, 0, 1));
 		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(0, 2, 0), new LVector(0, 1, 0));
+				.setOrientation(new LVector(0, 1, 0), new LVector(0, 1, 0));
 
-		box.setBoundingBox(new LVector(-2, -2, -2), new LVector(2, 2, 2));
+		box.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
 
 		return box;
-	} 
+	}
 
 	private LOTScript loadScript(LOTScript lots, String scriptname)
 			throws IOException {

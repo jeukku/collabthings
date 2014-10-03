@@ -138,7 +138,7 @@ public class SimpleSimulationView {
 
 			checkZoom();
 
-			repaint(100);
+			repaint(1000);
 		}
 
 		private void checkZoom() {
@@ -224,11 +224,11 @@ public class SimpleSimulationView {
 
 			a.set(partstate.getLocation());
 			tstack.current().transform(a);
+			t.transform(a);
 
 			g.setColor(Color.lightGray);
 			g.drawString("" + part, getSX(a), getSY(a) - 10);
 			//
-			g.setColor(Color.red);
 			List<LOTSubPart> subparts = part.getSubParts();
 			if (subparts.size() > 0) {
 				for (LOTSubPart lotSubPart : subparts) {
@@ -240,6 +240,7 @@ public class SimpleSimulationView {
 						drawBoundingBox(g, tstack, subpartbbox);
 					}
 
+					g.setColor(Color.red);
 					a.set(0, 0, 0);
 					tstack.current().transform(a);
 					drawCenterSquare(g, a);
@@ -247,6 +248,7 @@ public class SimpleSimulationView {
 					tstack.pull();
 				}
 			} else {
+				g.setColor(Color.green);
 				a.set(0, 0, 0);
 				tstack.current().transform(a);
 				drawCenterSquare(g, a);

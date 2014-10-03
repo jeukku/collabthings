@@ -38,8 +38,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	@Override
 	public String toString() {
-		return "LOTPart[" + name + "][" + subparts.size() + "][" + getID()
-				+ "]";
+		return "P[" + name + "][sub:" + subparts.size() + "][" + getID() + "]";
 	}
 
 	public boolean load(MStringID id) {

@@ -31,8 +31,7 @@ function run(runenv, factory, values) {
 	// pickupvalues.put('partid', subpartid);
 	tool.call('pickup', pickupvalues);
 	//
-	var destination = destpart.getLocation();
-	destination.add(subpart.getLocation());
+	var destination = destpart.getLocation().getAdd(subpart.getLocation());
 	log.info("moveandattach part destination " + destination);
 
 	tool.moveTo(destination);
