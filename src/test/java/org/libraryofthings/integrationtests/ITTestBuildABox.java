@@ -95,13 +95,13 @@ public final class ITTestBuildABox extends LOTTestCase {
 		factory.setBoundingBox(new LVector(-100, 0, -100), new LVector(100, 10,
 				100));
 		factory.getEnvironment().setVectorParameter("storage",
-				new LVector(100, 2, 10));
+				new LVector(10, 0, 50));
 		factory.getEnvironment().setVectorParameter("buildingpartlocation",
-				new LVector(20, 0, 0));
+				new LVector(15, 1, 0));
 
 		LOTFactory boxfactory = factory.addFactory("source");
 		createBoxFactory(boxfactory, client);
-		boxfactory.setLocation(new LVector(-20, 0, 0));
+		boxfactory.setLocation(new LVector(-5, 0, 0));
 
 		return factory;
 	}
@@ -167,7 +167,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		box.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
 		boxfactory.getEnvironment().setParameter("partid", box.getID());
 		boxfactory.getEnvironment().setVectorParameter("storage",
-				new LVector(10, 8, 2));
+				new LVector(10, 3, 2));
 		boxfactory.getEnvironment().setVectorParameter("buildingpartlocation",
 				new LVector(0, 1, 0));
 
@@ -241,6 +241,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		LOTTool tool = client.getObjectFactory().getTool();
 		loadScript(tool.addScript("pickup"), "assembly_pickup.js");
 		loadScript(tool.addScript("attach"), "assembly_attach.js");
+		loadScript(tool.addScript("draw"), "assembly_drawtool.js");
 		return tool;
 	}
 

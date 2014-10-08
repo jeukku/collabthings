@@ -32,6 +32,7 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 		env = new LOTEnvironmentImpl(nclient);
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
 				nclient.getVersion(), nclient.getPrefix());
+		addScript("draw");
 	}
 
 	public LOTToolImpl(final LOTClient nclient, final MStringID id) {

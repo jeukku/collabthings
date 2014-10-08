@@ -1,9 +1,12 @@
 package org.libraryofthings.view;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Stroke;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +16,9 @@ import javax.swing.SwingUtilities;
 import javax.vecmath.Vector3d;
 
 import org.libraryofthings.LLog;
+import org.libraryofthings.LOTToolException;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.SimulationView;
 import org.libraryofthings.environment.impl.LOTFactoryState;
 import org.libraryofthings.environment.impl.LOTPartState;
 import org.libraryofthings.environment.impl.LOTToolUser;
@@ -50,7 +55,7 @@ public class SimpleSimulationView {
 	private void createFrame() {
 		if (runenv.isRunning()) {
 			f = new JFrame();
-			f.setSize(800, 800);
+			f.setSize(800, 500);
 			ycanvas = new VCanvas((v) -> {
 				v.y = v.z;
 				v.z = 0;
@@ -78,7 +83,7 @@ public class SimpleSimulationView {
 			panel.add(freecanvas);
 
 			f.setAutoRequestFocus(true);
-			f.setExtendedState(JFrame.MAXIMIZED_BOTH);
+			// f.setExtendedState(JFrame.MAXIMIZED_BOTH);
 			f.setVisible(true);
 			f.toFront();
 			f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -95,7 +100,7 @@ public class SimpleSimulationView {
 		freetransform = nfreetransform;
 	}
 
-	private class VCanvas extends JPanel {
+	public class VCanvas extends JPanel implements SimulationView {
 		private TransformV t;
 		private double zoom = 100.0;
 		private int framecount;
@@ -110,6 +115,10 @@ public class SimpleSimulationView {
 		private LVector a = new LVector();
 		private LVector b = new LVector();
 
+		private float[] boundingboxdash = { 5.0f };
+
+		private Graphics2D g;
+
 		public VCanvas(TransformV transform, String name) {
 			super();
 			this.name = name;
@@ -119,6 +128,8 @@ public class SimpleSimulationView {
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
+			this.g = (Graphics2D) g;
+
 			g.setColor(Color.black);
 			g.drawString("" + name + " frame:" + (framecount++) + " zoom:"
 					+ zoom + " zspeed:" + zoomspeed, 20, 20);
@@ -134,7 +145,7 @@ public class SimpleSimulationView {
 
 			LTransformationStack tstack = new LTransformationStack();
 			Set<LOTRuntimeObject> os = runenv.getRunObjects();
-			drawObjects(g, tstack, os);
+			drawObjects(tstack, os);
 
 			checkZoom();
 
@@ -162,67 +173,70 @@ public class SimpleSimulationView {
 			}
 		}
 
-		private void drawObjects(Graphics g, LTransformationStack tstack,
+		private void drawObjects(LTransformationStack tstack,
 				Set<LOTRuntimeObject> os) {
 			for (LOTRuntimeObject o : os) {
-				drawObject(g, tstack, o);
+				drawObject(tstack, o);
 			}
 		}
 
-		private void drawObject(Graphics g, LTransformationStack tstack,
-				LOTRuntimeObject o) {
+		private void drawObject(LTransformationStack tstack, LOTRuntimeObject o) {
 			if (o instanceof LOTFactoryState) {
-				drawFactoryState(g, tstack, (LOTFactoryState) o);
+				drawFactoryState(tstack, (LOTFactoryState) o);
 			} else {
 				log.info("unknown object " + o);
 			}
 		}
 
-		private void drawFactoryState(Graphics g, LTransformationStack tstack,
+		private void drawFactoryState(LTransformationStack tstack,
 				LOTFactoryState o) {
 			tstack.push(o.getTransformation());
 
 			LOTBoundingBox bbox = o.getFactory().getBoundingBox();
 			if (bbox != null) {
-				drawBoundingBox(g, tstack, bbox);
+				drawBoundingBox(tstack, bbox);
 			}
 			// child factories
 			List<LOTFactoryState> fs = o.getFactories();
 			for (LOTFactoryState lotFactoryState : fs) {
-				drawFactoryState(g, tstack, lotFactoryState);
+				drawFactoryState(tstack, lotFactoryState);
 			}
 			//
 			List<LOTToolUser> tus = o.getToolUsers();
 			for (LOTToolUser lotToolUser : tus) {
-				drawToolUser(g, tstack, lotToolUser);
+				drawToolUser(tstack, lotToolUser);
 			}
 
 			Set<LOTPartState> parts = o.getParts();
 			for (LOTPartState partstate : parts) {
-				drawPartState(g, tstack, partstate);
+				drawPartState(tstack, partstate);
 			}
 
 			tstack.pull();
 		}
 
-		private void drawPartState(Graphics g, LTransformationStack tstack,
+		private void drawPartState(LTransformationStack tstack,
 				LOTPartState partstate) {
 			LOTPart part = partstate.getPart();
 			if (part != null) {
-				drawPart(g, tstack, partstate, part);
+				drawPart(tstack, partstate, part);
 			}
 		}
 
-		private void drawPart(Graphics g, LTransformationStack tstack,
-				LOTPartState partstate, LOTPart part) {
-			tstack.push(partstate.getTransformation());
+		public void drawPart() {
+			log.info("GFOO!!!");
+		}
+
+		public void drawPart(LTransformationStack tstack,
+				LOTRuntimeObject runo, LOTPart part) {
+			tstack.push(runo.getTransformation());
 
 			LOTBoundingBox bbox = part.getBoundingBox();
 			if (bbox != null) {
-				drawBoundingBox(g, tstack, bbox);
+				drawBoundingBox(tstack, bbox);
 			}
 
-			a.set(partstate.getLocation());
+			a.set(0, 0, 0);
 			tstack.current().transform(a);
 			t.transform(a);
 
@@ -237,13 +251,13 @@ public class SimpleSimulationView {
 					LOTPart subpartpart = lotSubPart.getPart();
 					LOTBoundingBox subpartbbox = subpartpart.getBoundingBox();
 					if (subpartbbox != null) {
-						drawBoundingBox(g, tstack, subpartbbox);
+						drawBoundingBox(tstack, subpartbbox);
 					}
 
 					g.setColor(Color.red);
 					a.set(0, 0, 0);
 					tstack.current().transform(a);
-					drawCenterSquare(g, a);
+					drawCenterSquare(a);
 
 					tstack.pull();
 				}
@@ -251,13 +265,17 @@ public class SimpleSimulationView {
 				g.setColor(Color.green);
 				a.set(0, 0, 0);
 				tstack.current().transform(a);
-				drawCenterSquare(g, a);
+				drawCenterSquare(a);
 			}
 
 			tstack.pull();
 		}
 
-		private void drawCenterSquare(Graphics g, LVector l) {
+		private void drawCenterSquare(LVector l) {
+			Graphics2D g2 = (Graphics2D) g;
+			Stroke st = new BasicStroke(2);
+			g2.setStroke(st);
+
 			a.set(l);
 			t.transform(a);
 			int sx = getSX(a);
@@ -266,43 +284,47 @@ public class SimpleSimulationView {
 			g.drawRect(sx - 2, sy - 2, 4, 4);
 		}
 
-		private void drawBoundingBox(Graphics g, LTransformationStack tstack,
+		private void drawBoundingBox(LTransformationStack tstack,
 				LOTBoundingBox bbox) {
 			a.set(bbox.getA());
 			b.set(bbox.getB());
 
+			Graphics2D g2 = (Graphics2D) g;
+			Stroke st = new BasicStroke(1, BasicStroke.CAP_BUTT,
+					BasicStroke.JOIN_MITER, 10.0f, boundingboxdash, 0.0f);
+			g2.setStroke(st);
+
 			g.setColor(Color.gray);
 
-			drawLine(g, tstack, new LVector(a.x, a.y, a.z), new LVector(a.x,
-					b.y, a.z));
-			drawLine(g, tstack, new LVector(a.x, b.y, a.z), new LVector(a.x,
-					b.y, b.z));
-			drawLine(g, tstack, new LVector(a.x, b.y, b.z), new LVector(a.x,
-					a.y, b.z));
-			drawLine(g, tstack, new LVector(a.x, a.y, b.z), new LVector(a.x,
-					a.y, a.z));
+			drawLine(tstack, new LVector(a.x, a.y, a.z), new LVector(a.x, b.y,
+					a.z));
+			drawLine(tstack, new LVector(a.x, b.y, a.z), new LVector(a.x, b.y,
+					b.z));
+			drawLine(tstack, new LVector(a.x, b.y, b.z), new LVector(a.x, a.y,
+					b.z));
+			drawLine(tstack, new LVector(a.x, a.y, b.z), new LVector(a.x, a.y,
+					a.z));
 
-			drawLine(g, tstack, new LVector(b.x, a.y, a.z), new LVector(b.x,
-					b.y, a.z));
-			drawLine(g, tstack, new LVector(b.x, b.y, a.z), new LVector(b.x,
-					b.y, b.z));
-			drawLine(g, tstack, new LVector(b.x, b.y, b.z), new LVector(b.x,
-					a.y, b.z));
-			drawLine(g, tstack, new LVector(b.x, a.y, b.z), new LVector(b.x,
-					a.y, a.z));
+			drawLine(tstack, new LVector(b.x, a.y, a.z), new LVector(b.x, b.y,
+					a.z));
+			drawLine(tstack, new LVector(b.x, b.y, a.z), new LVector(b.x, b.y,
+					b.z));
+			drawLine(tstack, new LVector(b.x, b.y, b.z), new LVector(b.x, a.y,
+					b.z));
+			drawLine(tstack, new LVector(b.x, a.y, b.z), new LVector(b.x, a.y,
+					a.z));
 
-			drawLine(g, tstack, new LVector(a.x, a.y, a.z), new LVector(b.x,
-					a.y, a.z));
-			drawLine(g, tstack, new LVector(a.x, b.y, a.z), new LVector(b.x,
-					b.y, a.z));
-			drawLine(g, tstack, new LVector(a.x, b.y, b.z), new LVector(b.x,
-					b.y, b.z));
-			drawLine(g, tstack, new LVector(a.x, a.y, b.z), new LVector(b.x,
-					a.y, b.z));
+			drawLine(tstack, new LVector(a.x, a.y, a.z), new LVector(b.x, a.y,
+					a.z));
+			drawLine(tstack, new LVector(a.x, b.y, a.z), new LVector(b.x, b.y,
+					a.z));
+			drawLine(tstack, new LVector(a.x, b.y, b.z), new LVector(b.x, b.y,
+					b.z));
+			drawLine(tstack, new LVector(a.x, a.y, b.z), new LVector(b.x, a.y,
+					b.z));
 		}
 
-		private void drawLine(Graphics g, LTransformationStack tstack,
-				LVector a, LVector b) {
+		private void drawLine(LTransformationStack tstack, LVector a, LVector b) {
 			tstack.current().transform(a);
 			tstack.current().transform(b);
 
@@ -318,14 +340,20 @@ public class SimpleSimulationView {
 			g.drawLine(asx, asy, bsx, bsy);
 		}
 
-		private void drawToolUser(Graphics g, LTransformationStack tstack,
+		private void drawToolUser(LTransformationStack tstack,
 				LOTToolUser tooluser) {
 			a.set(tooluser.getLocation());
 			tstack.current().transform(a);
-			drawCenterCircle(g, a);
+			drawCenterCircle(a);
+			//
+			try {
+				tooluser.callDraw(this, tstack);
+			} catch (LOTToolException e) {
+				log.error(this, "drawtooluser", e);
+			}
 		}
 
-		private void drawCenterCircle(Graphics g, LVector l) {
+		private void drawCenterCircle(LVector l) {
 			t.transform(l);
 			int sx = getSX(l);
 			int sy = getSY(l);

@@ -1,9 +1,13 @@
 package org.libraryofthings.environment.impl;
 
 import org.libraryofthings.LLog;
+import org.libraryofthings.LOTToolException;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.SimulationView;
 import org.libraryofthings.math.LTransformation;
+import org.libraryofthings.math.LTransformationStack;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTValues;
 
 public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
@@ -138,5 +142,14 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	@Override
 	public boolean isAvailable(LOTToolState toolstate) {
 		return this.tool == toolstate || tool == null;
+	}
+
+	@Override
+	public void callDraw(SimulationView view, LTransformationStack tstack)
+			throws LOTToolException {
+		if (tool != null) {
+			LOTValues values = new LOTValues("view", view, "tstack", tstack);
+			this.tool.call("draw", values);
+		}
 	}
 }

@@ -20,6 +20,7 @@ function run(e, factory, values) {
 	// and location relative to parent part
 	tool.moveTo(loc, subpart.getNormal());
 	
+	var pickedup = tool.getPool().getPart("pickedup");
 	destpart.addPart(subpart);
 	
 	log.info("attach done");

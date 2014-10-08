@@ -80,6 +80,12 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return transformation;
 	}
 
+	public LVector getTransformedVector(LVector l) {
+		l = l.copy();
+		getTransformation().transform(l);
+		return l;
+	}
+
 	public LOTPool getPool() {
 		return pool;
 	}

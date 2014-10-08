@@ -30,6 +30,15 @@ public class LOTPool {
 		return "Pool[" + runtimeobject + "]";
 	}
 
+	public LOTPart peekPart(String string) {
+		List<LOTPart> list = parts.get(string);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		} else {
+			return null;
+		}
+	}
+
 	public synchronized LOTPart getPart(String string) {
 		try {
 			List<LOTPart> list = parts.get(string);

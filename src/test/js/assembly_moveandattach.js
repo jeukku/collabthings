@@ -26,16 +26,39 @@ function run(runenv, factory, values) {
 	log
 			.info("moving to partsource location "
 					+ partsource.getVector("storage"));
-	tool.moveTo(partsource.getVector("storage"));
+
+	var storagelocation = partsource.getVector("storage");
+	storagelocation = partsource.getTransformedVector(storagelocation);
+
+	tool.moveTo(storagelocation);
 	pickupvalues.put('source', partsource);
 	// pickupvalues.put('partid', subpartid);
 	tool.call('pickup', pickupvalues);
 	//
-	var destination = destpart.getLocation().getAdd(subpart.getLocation());
-	log.info("moveandattach part destination " + destination);
 
+	var normaldestdot = subpart.getNormal().dot(subpart.getLocation());
+	var normalv = subpart.getNormal().copy();
+	if (normaldestdot < 0.1) {
+		normaldestdot = 2;
+	}
+
+	normalv.scale(normaldestdot * 2);
+
+	log.info("dot " + normaldestdot + " " + normalv);
+
+	var adestination = destpart.getLocation().getAdd(
+			subpart.getLocation().getAdd(normalv));
+	var destination = destpart.getLocation().getAdd(subpart.getLocation());
+
+	log.info("moveandattach part first destination " + adestination);
+	tool.moveTo(adestination);
+
+	log.info("moveandattach part destination " + destination);
 	tool.moveTo(destination);
 	tool.call('attach', values.copy());
+
+	tool.moveTo(adestination);
+
 	tool.setAvailable();
 
 	log.info("moveandattach done");
