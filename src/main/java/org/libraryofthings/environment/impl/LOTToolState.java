@@ -3,6 +3,7 @@ package org.libraryofthings.environment.impl;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTToolException;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.math.LOrientation;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTRuntimeObject;
@@ -14,10 +15,8 @@ public class LOTToolState implements LOTRuntimeObject {
 	private LOTRunEnvironment env;
 	private LOTFactoryState factory;
 
+	private final LOrientation o = new LOrientation();
 	private LOTTool tool;
-	private LVector location = new LVector();
-	private LVector normal = new LVector(1, 0, 0);
-	private double orientationangle;
 	//
 	private LLog log = LLog.getLogger(this);
 	private boolean inuse;
@@ -72,7 +71,7 @@ public class LOTToolState implements LOTRuntimeObject {
 	}
 
 	public void moveTo(LVector l) {
-		moveTo(l, normal, orientationangle);
+		moveTo(l, o.normal, o.angle);
 	}
 
 	public void moveTo(LVector l, LVector n, double angle) {
@@ -82,17 +81,17 @@ public class LOTToolState implements LOTRuntimeObject {
 
 	@Override
 	public LTransformation getTransformation() {
-		return new LTransformation(location, normal, orientationangle);
+		return new LTransformation(o);
 	}
 
 	public LVector getLocation() {
-		return location;
+		return o.location;
 	}
 
 	public void setOrientation(LVector l, LVector n, double angle) {
-		this.location.set(l);
-		this.normal.set(n);
-		this.orientationangle = angle;
+		o.location.set(l);
+		o.normal.set(n);
+		o.angle = angle;
 	}
 
 	public void setAvailable() {
@@ -113,6 +112,6 @@ public class LOTToolState implements LOTRuntimeObject {
 
 	@Override
 	public String toString() {
-		return "LOTToolState[" + this.tool + "][" + this.location + "]";
+		return "LOTToolState[" + this.tool + "][" + this.o + "]";
 	}
 }

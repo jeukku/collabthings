@@ -12,6 +12,10 @@ public class LTransformation {
 		m.setIdentity();
 	}
 
+	public LTransformation(LOrientation o) {
+		this(o.location, o.normal, o.angle);
+	}
+	
 	public LTransformation(LVector location, LVector orientationnormal,
 			double orientationangle) {
 		m.setIdentity();

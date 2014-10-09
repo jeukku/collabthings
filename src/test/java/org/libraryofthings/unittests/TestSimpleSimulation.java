@@ -124,7 +124,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 				client));
 		//
 		LOTScriptImpl script = new LOTScriptImpl(client);
-		String nscript = "function info(){} function run(e, factory) { factory.newPart(); factory.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0)); } ";
+		String nscript = "function info(){} function run(e, factory) { factory.newPart(); factory.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0), 6); } ";
 		assertTrue(script.setScript(nscript));
 		LOTScriptRunner runner = new LOTScriptRunnerImpl(script, rune,
 				factorystate);
