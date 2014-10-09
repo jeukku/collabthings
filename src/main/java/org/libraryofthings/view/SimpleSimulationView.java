@@ -173,7 +173,7 @@ public class SimpleSimulationView {
 			}
 		}
 
-		private void drawObjects(LTransformationStack tstack,
+		private synchronized void drawObjects(LTransformationStack tstack,
 				Set<LOTRuntimeObject> os) {
 			for (LOTRuntimeObject o : os) {
 				drawObject(tstack, o);
@@ -217,20 +217,17 @@ public class SimpleSimulationView {
 
 		private void drawPartState(LTransformationStack tstack,
 				LOTPartState partstate) {
+
 			LOTPart part = partstate.getPart();
 			if (part != null) {
+				tstack.push(partstate.getTransformation());
 				drawPart(tstack, partstate, part);
+				tstack.pull();
 			}
 		}
 
-		public void drawPart() {
-			log.info("GFOO!!!");
-		}
-
-		public void drawPart(LTransformationStack tstack,
+		public synchronized void drawPart(LTransformationStack tstack,
 				LOTRuntimeObject runo, LOTPart part) {
-			tstack.push(runo.getTransformation());
-
 			LOTBoundingBox bbox = part.getBoundingBox();
 			if (bbox != null) {
 				drawBoundingBox(tstack, bbox);
@@ -256,27 +253,24 @@ public class SimpleSimulationView {
 
 					g.setColor(Color.red);
 					a.set(0, 0, 0);
-					tstack.current().transform(a);
-					drawCenterSquare(a);
+					drawCenterSquare(tstack, a);
 
 					tstack.pull();
 				}
 			} else {
 				g.setColor(Color.green);
 				a.set(0, 0, 0);
-				tstack.current().transform(a);
-				drawCenterSquare(a);
+				drawCenterSquare(tstack, a);
 			}
-
-			tstack.pull();
 		}
 
-		private void drawCenterSquare(LVector l) {
+		private void drawCenterSquare(LTransformationStack tstack, LVector l) {
 			Graphics2D g2 = (Graphics2D) g;
 			Stroke st = new BasicStroke(2);
 			g2.setStroke(st);
 
 			a.set(l);
+			tstack.current().transform(a);
 			t.transform(a);
 			int sx = getSX(a);
 			int sy = getSY(a);
@@ -342,19 +336,24 @@ public class SimpleSimulationView {
 
 		private void drawToolUser(LTransformationStack tstack,
 				LOTToolUser tooluser) {
-			a.set(tooluser.getLocation());
-			tstack.current().transform(a);
-			drawCenterCircle(a);
-			//
+			tstack.push(tooluser.getTransformation());
+
+			a.set(0, 0, 0);
+			drawCenterCircle(tstack, a);
+
 			try {
 				tooluser.callDraw(this, tstack);
 			} catch (LOTToolException e) {
 				log.error(this, "drawtooluser", e);
 			}
+
+			tstack.pull();
 		}
 
-		private void drawCenterCircle(LVector l) {
-			t.transform(l);
+		private void drawCenterCircle(LTransformationStack tstack, LVector l) {
+			a.set(l);
+			tstack.current().transform(a);
+			t.transform(a);
 			int sx = getSX(l);
 			int sy = getSY(l);
 			checkOutOfScreen(sx, sy);

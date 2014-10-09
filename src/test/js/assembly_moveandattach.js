@@ -51,7 +51,7 @@ function run(runenv, factory, values) {
 	var destination = destpart.getLocation().getAdd(subpart.getLocation());
 
 	log.info("moveandattach part first destination " + adestination);
-	tool.moveTo(adestination);
+	tool.moveTo(adestination, subpart.getNormal(), subpart.getAngle());
 
 	log.info("moveandattach part destination " + destination);
 	tool.moveTo(destination);

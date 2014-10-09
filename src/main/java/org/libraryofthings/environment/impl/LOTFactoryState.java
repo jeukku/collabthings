@@ -163,18 +163,26 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 	@Override
 	public void step(double dtime) {
-		for (LOTToolUser tooluser : toolusers) {
-			tooluser.step(dtime);
+		synchronized (toolusers) {
+			for (LOTToolUser tooluser : toolusers) {
+				tooluser.step(dtime);
+			}
 		}
-		for (LOTToolState tool : tools) {
-			tool.step(dtime);
+		synchronized (tools) {
+			for (LOTToolState tool : tools) {
+				tool.step(dtime);
+			}
 		}
-		for (LOTFactoryState f : factories) {
-			f.step(dtime);
+		synchronized (factories) {
+			for (LOTFactoryState f : factories) {
+				f.step(dtime);
+			}
 		}
-		for (LOTRuntimeStepper stepper : new HashSet<>(steppers)) {
-			if (stepper.step(dtime)) {
-				steppers.remove(stepper);
+		synchronized (steppers) {
+			for (LOTRuntimeStepper stepper : new HashSet<>(steppers)) {
+				if (stepper.step(dtime)) {
+					steppers.remove(stepper);
+				}
 			}
 		}
 	}
@@ -189,12 +197,13 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		}
 	}
 
-	public void requestMove(LOTToolState lotToolState, LVector l, LVector n) {
+	public void requestMove(LOTToolState lotToolState, LVector l, LVector n,
+			double angle) {
 		LOTToolUser tooluser = getToolUser(lotToolState, l);
 		getLog().info(
 				"requestMove " + tooluser + " " + l + " tool:" + lotToolState);
 		tooluser.setTool(lotToolState);
-		tooluser.move(l, n);
+		tooluser.move(l, n, angle);
 	}
 
 	public LOTToolUser getToolUser(final LOTToolState lotToolState, LVector l) {
@@ -327,9 +336,11 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	}
 
 	private boolean isStepperDone(LOTRuntimeStepper r) {
-		for (LOTRuntimeStepper stepper : steppers) {
-			if (stepper == r) {
-				return false;
+		synchronized (steppers) {
+			for (LOTRuntimeStepper stepper : steppers) {
+				if (stepper == r) {
+					return false;
+				}
 			}
 		}
 		return true;

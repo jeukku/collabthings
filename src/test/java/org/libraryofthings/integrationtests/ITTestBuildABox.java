@@ -254,18 +254,30 @@ public final class ITTestBuildABox extends LOTTestCase {
 		}
 
 		int partindex = 0;
-		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(0, -1, 0), new LVector(0, 1, 0));
-		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(-1, 0, 0), new LVector(-1, 0, 0));
-		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(1, 0, 0), new LVector(1, 0, 0));
-		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(0, 0, -1), new LVector(0, 0, -1));
-		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(0, 0, 1), new LVector(0, 0, 1));
-		box.getSubParts().get(partindex++)
-				.setOrientation(new LVector(0, 1, 0), new LVector(0, 1, 0));
+		box.getSubParts()
+				.get(partindex++)
+				.setOrientation(new LVector(0, -1, 0), new LVector(0, -1, 0),
+						Math.PI);
+		box.getSubParts()
+				.get(partindex++)
+				.setOrientation(new LVector(-1, 0, 0), new LVector(-1, 0, 0),
+						Math.PI);
+		box.getSubParts()
+				.get(partindex++)
+				.setOrientation(new LVector(1, 0, 0), new LVector(1, 0, 0),
+						Math.PI);
+		box.getSubParts()
+				.get(partindex++)
+				.setOrientation(new LVector(0, 0, -1), new LVector(0, 0, -1),
+						Math.PI);
+		box.getSubParts()
+				.get(partindex++)
+				.setOrientation(new LVector(0, 0, 1), new LVector(0, 0, 1),
+						Math.PI);
+		box.getSubParts()
+				.get(partindex++)
+				.setOrientation(new LVector(0, 1, 0), new LVector(0, 1, 0),
+						Math.PI);
 
 		box.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
 

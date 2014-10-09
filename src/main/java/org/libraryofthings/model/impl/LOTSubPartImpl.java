@@ -17,6 +17,7 @@ public final class LOTSubPartImpl implements LOTSubPart {
 	private LOTPart part;
 	private final LVector p = new LVector();
 	private final LVector n = new LVector();
+	private double angle = 0;
 	private final LOTClient client;
 	private LTransformation transformation;
 
@@ -55,13 +56,20 @@ public final class LOTSubPartImpl implements LOTSubPart {
 	@Override
 	public LTransformation getTransformation() {
 		if (transformation == null) {
-			transformation = new LTransformation(getLocation(), getNormal(), 0); // TODO
-																					// fix
-																					// angle
+			transformation = new LTransformation(getLocation(), getNormal(),
+					angle); // TODO
+							// fix
+							// angle
 		}
 		return transformation;
 	}
 
+	public void setOrientation(LVector location, LVector normal, double angle) {
+		setOrientation(location, normal);
+		this.angle = angle;
+	}
+
+	@Override
 	public void setOrientation(LVector location, LVector normal) {
 		this.p.set(location);
 		this.n.set(normal);
@@ -74,6 +82,10 @@ public final class LOTSubPartImpl implements LOTSubPart {
 
 	public LVector getLocation() {
 		return p;
+	}
+
+	public double getAngle() {
+		return angle;
 	}
 
 	@Override

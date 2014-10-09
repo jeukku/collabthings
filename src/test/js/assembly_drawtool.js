@@ -11,10 +11,10 @@ function run(runenv, tool, values) {
 	var p = tool.getPool().peekPart("pickedup");
 	if (p) {
 		var log = runenv.log().instance("draw");
-		log.info("view " + view);
-		log.info("tstack " + tstack);
-		log.info("tool " + tool);
-		log.info("p " + p);
+		// log.info("view " + view);
+		// log.info("tstack " + tstack);
+		// log.info("tool " + tool);
+		// log.info("p " + p);
 		view.drawPart(tstack, tool, p);
 	}
 }

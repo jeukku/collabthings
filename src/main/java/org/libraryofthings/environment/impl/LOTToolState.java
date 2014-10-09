@@ -17,6 +17,7 @@ public class LOTToolState implements LOTRuntimeObject {
 	private LOTTool tool;
 	private LVector location = new LVector();
 	private LVector normal = new LVector(1, 0, 0);
+	private double orientationangle;
 	//
 	private LLog log = LLog.getLogger(this);
 	private boolean inuse;
@@ -68,32 +69,30 @@ public class LOTToolState implements LOTRuntimeObject {
 			throw new LOTToolException("Script called '" + scriptname
 					+ "' does not exist in " + this);
 		}
-		log.info("call " + scriptname + " done");
 	}
 
 	public void moveTo(LVector l) {
-		moveTo(l, normal);
+		moveTo(l, normal, orientationangle);
 	}
 
-	public void moveTo(LVector l, LVector n) {
+	public void moveTo(LVector l, LVector n, double angle) {
 		log.info("moveTo " + l + " " + n);
-		this.factory.requestMove(this, l, n);
+		this.factory.requestMove(this, l, n, angle);
 	}
 
 	@Override
 	public LTransformation getTransformation() {
-		LTransformation t = new LTransformation();
-		t.mult(LTransformation.getTranslate(location));
-		return t;
+		return new LTransformation(location, normal, orientationangle);
 	}
 
 	public LVector getLocation() {
 		return location;
 	}
 
-	public void setLocation(LVector l, LVector n) {
+	public void setOrientation(LVector l, LVector n, double angle) {
 		this.location.set(l);
 		this.normal.set(n);
+		this.orientationangle = angle;
 	}
 
 	public void setAvailable() {

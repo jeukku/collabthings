@@ -62,7 +62,7 @@ public class LOTPartState implements LOTRuntimeObject {
 	public void addPart(LOTSubPart np) {
 		LOTSubPart nsp = part.newSubPart();
 		nsp.setPart(np.getPart());
-		nsp.setOrientation(np.getLocation(), np.getNormal());
+		nsp.setOrientation(np.getLocation(), np.getNormal(), np.getAngle());
 	}
 
 	@Override

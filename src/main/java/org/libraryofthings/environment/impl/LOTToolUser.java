@@ -8,7 +8,7 @@ import org.libraryofthings.model.LOTRuntimeObject;
 
 public interface LOTToolUser extends LOTRuntimeObject {
 
-	void move(LVector l, LVector n);
+	void move(LVector l, LVector n, double angle);
 
 	void setTool(LOTToolState lotToolState);
 
@@ -20,4 +20,5 @@ public interface LOTToolUser extends LOTRuntimeObject {
 
 	void callDraw(SimulationView view, LTransformationStack tstack)
 			throws LOTToolException;
+
 }

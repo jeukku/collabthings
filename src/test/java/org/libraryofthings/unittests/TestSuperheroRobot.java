@@ -49,7 +49,7 @@ public final class TestSuperheroRobot extends LOTTestCase {
 		}).start();
 
 		LVector targetlocation = new LVector(10, 0, 0);
-		robot.move(targetlocation, new LVector(0, 1, 0));
+		robot.move(targetlocation, new LVector(0, 1, 0), Math.PI / 2);
 
 		assertTrue(
 				"" + targetlocation + " " + robot.getLocation(),
@@ -66,7 +66,7 @@ public final class TestSuperheroRobot extends LOTTestCase {
 
 		LOTFactory f = new LOTFactoryImpl(c);
 		f.setToolUserSpawnLocation(spawnlocation);
-		
+
 		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
 		LOTRunEnvironment rune = new LOTRunEnvironmentImpl(c, e);
 		LOTFactoryState state = new LOTFactoryState(c, e, "test", f);
