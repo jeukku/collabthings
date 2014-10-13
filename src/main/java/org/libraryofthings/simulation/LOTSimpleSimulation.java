@@ -4,7 +4,7 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.environment.RunEnvironmentListener;
-import org.libraryofthings.view.SwingSimulationView;
+import org.libraryofthings.view.SwingSimulationFrame;
 
 import waazdoh.util.ConditionWaiter;
 
@@ -18,7 +18,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	private boolean allsuccess = true;
 	private LOTStepRunner runner;
 	//
-	private SwingSimulationView view;
+	private SwingSimulationFrame view;
 
 	public LOTSimpleSimulation(LOTRunEnvironment runenv) {
 		this.env = runenv;
@@ -28,7 +28,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	public LOTSimpleSimulation(LOTRunEnvironment runenv, boolean b) {
 		this(runenv);
 		if (b) {
-			view = new SwingSimulationView(runenv);
+			view = new SwingSimulationFrame(runenv);
 		}
 	}
 

@@ -26,16 +26,6 @@ public class SwingRunEnvironmentView extends JPanel implements LOTGraphics {
 	}
 
 	@Override
-	public int getHeight() {
-		return getSize().height;
-	}
-
-	@Override
-	public int getWidth() {
-		return getSize().height;
-	}
-
-	@Override
 	public void setStroke(Stroke st) {
 		g2.setStroke(st);
 	}
