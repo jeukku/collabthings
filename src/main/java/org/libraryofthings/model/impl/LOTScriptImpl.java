@@ -141,7 +141,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	 * @throws NoSuchMethodException
 	 * @throws ScriptException
 	 */
-	public String getInfo() throws LOTScriptException {
+	public String getInfo() {
 		return info;
 	}
 
