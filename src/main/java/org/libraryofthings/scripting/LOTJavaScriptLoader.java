@@ -32,7 +32,8 @@ public class LOTJavaScriptLoader implements ScriptLoader {
 
 	private LOTJavaScriptLoader(LOTClient c, String npath) {
 		this.path = npath;
-		String words = c.getGlobalSetting(LOTClient.JAVASCRIPT_FORBIDDENWORDS);
+		String words = ""
+				+ c.getGlobalSetting(LOTClient.JAVASCRIPT_FORBIDDENWORDS);
 		StringTokenizer st = new StringTokenizer(words);
 		while (st.hasMoreTokens()) {
 			String word = st.nextToken();
@@ -53,10 +54,9 @@ public class LOTJavaScriptLoader implements ScriptLoader {
 				.getEngineByName("JavaScript");
 
 		try {
-			e.eval(new FileReader(path + "lib" + File.separatorChar + "js"
-					+ File.separatorChar + "underscore-min.js"));
-			e.eval(new FileReader(path + "lib" + File.separatorChar + "js"
-					+ File.separatorChar + "lib.js"));
+			e.eval(new FileReader(path + File.separatorChar
+					+ "underscore-min.js"));
+			e.eval(new FileReader(path + File.separatorChar + "lib.js"));
 			e.eval(s);
 			Invocable inv = (Invocable) e;
 
