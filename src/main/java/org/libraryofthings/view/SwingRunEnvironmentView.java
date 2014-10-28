@@ -21,8 +21,6 @@ public class SwingRunEnvironmentView extends JPanel implements LOTGraphics {
 		super.paintComponent(g);
 		g2 = (Graphics2D) g;
 		drawer.draw(this);
-		//
-		repaint(1000);
 	}
 
 	@Override
@@ -53,6 +51,10 @@ public class SwingRunEnvironmentView extends JPanel implements LOTGraphics {
 	@Override
 	public void drawOval(int x, int y, int w, int h) {
 		g2.drawOval(x, y, w, h);
+	}
+
+	public void callRepaint() {
+		repaint(1000);
 	}
 
 }

@@ -11,6 +11,10 @@ import org.libraryofthings.math.LTransformation;
 public class SwingSimulation4xView extends JPanel {
 	private LTransformation freetransform;
 	private double freeangle;
+	private SwingRunEnvironmentView yview;
+	private SwingRunEnvironmentView zview;
+	private SwingRunEnvironmentView xview;
+	private SwingRunEnvironmentView fview;
 
 	public SwingSimulation4xView(LOTRunEnvironment runenv) {
 		super();
@@ -33,10 +37,22 @@ public class SwingSimulation4xView extends JPanel {
 
 		setLayout(new GridLayout(2, 2));
 
-		add(new SwingRunEnvironmentView(ycanvas));
-		add(new SwingRunEnvironmentView(xcanvas));
-		add(new SwingRunEnvironmentView(zcanvas));
-		add(new SwingRunEnvironmentView(freecanvas));
+		yview = new SwingRunEnvironmentView(ycanvas);
+		add(yview);
+		xview = new SwingRunEnvironmentView(xcanvas);
+		add(xview);
+		zview = new SwingRunEnvironmentView(zcanvas);
+		add(zview);
+		fview = new SwingRunEnvironmentView(freecanvas);
+		add(fview);
+
+	}
+
+	public void doRepaint() {
+		yview.callRepaint();
+		xview.callRepaint();
+		zview.callRepaint();
+		fview.callRepaint();
 	}
 
 	public void step(double dtime) {
@@ -47,5 +63,7 @@ public class SwingSimulation4xView extends JPanel {
 		nfreetransform.mult(LTransformation.getRotate(new Vector3d(0, 1, 0),
 				freeangle));
 		freetransform = nfreetransform;
+		//
+		doRepaint();
 	}
 }

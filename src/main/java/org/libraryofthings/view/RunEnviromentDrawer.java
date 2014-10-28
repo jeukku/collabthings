@@ -1,8 +1,6 @@
 package org.libraryofthings.view;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Stroke;
 import java.util.List;
 import java.util.Set;
 
@@ -138,7 +136,6 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 		}
 	}
 
-
 	private void drawToolUser(LTransformationStack tstack, LOTToolUser tooluser) {
 		tstack.push(tooluser.getTransformation());
 
@@ -152,6 +149,10 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 		}
 
 		tstack.pull();
+	}
+
+	public void setRunEnvironment(LOTRunEnvironment runenv2) {
+		this.runenv = runenv2;
 	}
 
 }
