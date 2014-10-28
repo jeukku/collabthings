@@ -75,7 +75,7 @@ public class LOTTestCase extends TestCase {
 			throws MalformedURLException, SAXException {
 		//
 		MPreferences p = new StaticTestPreferences("lottests", email);
-		p.set(LOTScriptImpl.PREFERENCES_SCRIPTSPATH, "");
+		p.set(LOTScriptImpl.PREFERENCES_SCRIPTSPATH, "lib/js");
 
 		MBinarySource binarysource = getBinarySource(p, bind);
 		LOTClient c = new LOTClientImpl(p, binarysource, getTestService(email,
