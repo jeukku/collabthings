@@ -39,7 +39,8 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	private LOTEnvironment env;
 	//
 	private Map<String, LOTFactoryImpl> factories = new HashMap<>();
-	private LOTBoundingBox bbox;
+	private final LOTBoundingBox bbox = new LOTBoundingBox(new LVector(),
+			new LVector());
 	private LOT3DModel model;
 	private LVector tooluserspawnlocation;
 	// orientation and location
@@ -116,7 +117,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 				bean.getIDValue(VALUENAME_ENVIRONMENTID));
 		JBean bbbox = bean.get(LOTBoundingBox.BEAN_NAME);
 		if (bbbox != null) {
-			bbox = new LOTBoundingBox(bbbox);
+			bbox.set(bbbox);
 		}
 		JBean bchildfactories = bean.get("factories");
 		List<JBean> bcfs = bchildfactories.getChildren();
@@ -157,7 +158,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	@Override
 	public void setBoundingBox(LVector a, LVector b) {
-		bbox = new LOTBoundingBox(a, b);
+		bbox.set(a,b);
 	}
 
 	@Override
@@ -241,6 +242,10 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	public void setLocation(LVector nloc) {
 		orientation.location.set(nloc);
+	}
+
+	public LOrientation getOrientation() {
+		return orientation;
 	}
 
 	@Override

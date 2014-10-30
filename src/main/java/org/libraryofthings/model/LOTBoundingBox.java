@@ -15,8 +15,7 @@ public class LOTBoundingBox {
 	}
 
 	public LOTBoundingBox(JBean beanboundingbox) {
-		a = new LVector(beanboundingbox.get("a"));
-		b = new LVector(beanboundingbox.get("b"));
+		set(beanboundingbox);
 	}
 
 	public LVector getA() {
@@ -35,5 +34,15 @@ public class LOTBoundingBox {
 		beanb.setName("b");
 		bean.add(beanb);
 		return bean;
+	}
+
+	public void set(JBean bean) {
+		a = new LVector(bean.get("a"));
+		b = new LVector(bean.get("b"));
+	}
+
+	public void set(LVector a2, LVector b2) {
+		a.set(a2);
+		b.set(b2);
 	}
 }
