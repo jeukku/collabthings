@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
+import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.model.impl.LOT3DModelImpl;
 import org.xml.sax.SAXException;
@@ -22,15 +23,19 @@ public final class Test3DModel extends LOTTestCase {
 		LOTClient env = getNewClient();
 		assertNotNull(env);
 		//
-		LOT3DModel s = new LOT3DModelImpl(env);
-		s.setName("TEST");
-		s.publish();
+		LOT3DModel am = new LOT3DModelImpl(env);
+		am.setName("TEST");
+		am.setTranslation(new LVector(1, 0, 1));
+		am.setScale(10);
+		
+		am.publish();
 		//
 		LOTClient benv = getNewClient();
 		assertNotNull(benv);
-		LOT3DModelImpl bs = new LOT3DModelImpl(benv);
-		bs.load(s.getID().getStringID());
-		assertEquals(s.getName(), bs.getName());
+		LOT3DModelImpl bm = new LOT3DModelImpl(benv);
+		bm.load(am.getID().getStringID());
+		assertEquals(am.getName(), bm.getName());
+		assertEquals(am, bm);
 	}
 
 	public void testSaveAndLoadBinary() throws IOException, SAXException {

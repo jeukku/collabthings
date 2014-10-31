@@ -57,7 +57,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	public LOTFactoryImpl(final LOTClient nclient, final MStringID id) {
 		this.client = nclient;
-		env = new LOTEnvironmentImpl(nclient);
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
 				nclient.getVersion(), nclient.getPrefix());
 		o.load(id);
@@ -156,9 +155,13 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return bbox;
 	}
 
+	public void setBoundingBox(LOTBoundingBox box) {
+		this.bbox.set(box.getA(), box.getB());
+	}
+
 	@Override
 	public void setBoundingBox(LVector a, LVector b) {
-		bbox.set(a,b);
+		bbox.set(a, b);
 	}
 
 	@Override
@@ -176,8 +179,14 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	public void save() {
-		env.save();
+
+		if (model != null) {
+			model.save();
+		}
+
+		getEnvironment().save();
 		getServiceObject().save();
+
 		for (LOTFactoryImpl cf : factories.values()) {
 			cf.save();
 		}
@@ -186,8 +195,13 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	public void publish() {
 		save();
 
+		if (model != null) {
+			model.publish();
+		}
+
 		getEnvironment().publish();
 		getServiceObject().publish();
+
 		for (LOTFactoryImpl cf : factories.values()) {
 			cf.publish();
 		}
@@ -199,9 +213,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	public LOTEnvironment getEnvironment() {
-		if (this.env == null) {
-			this.env = new LOTEnvironmentImpl(client);
-		}
 		return this.env;
 	}
 
@@ -260,10 +271,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	public LOTTool getTool(String name) {
 		return env.getTool(name);
-	}
-
-	public String getParameter(String name) {
-		return getEnvironment().getParameter(name);
 	}
 
 	public void setModel(LOT3DModel model) {

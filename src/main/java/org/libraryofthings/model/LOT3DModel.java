@@ -25,4 +25,8 @@ public interface LOT3DModel extends LOTObject {
 
 	File getModelFile() throws SAXException, IOException;
 
+	void setTranslation(LVector lVector);
+
+	void setScale(double i);
+
 }

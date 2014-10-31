@@ -43,7 +43,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	private String name = "3dmodel" + (LOT3DModelImpl.counter++);
 	private MBinaryID binaryid;
 	private final LOTClient env;
-	private LLog log = LLog.getLogger(this);
+	final private LLog log;
 	private List<Binary> childbinaries = new LinkedList<Binary>();
 	private double scale = 1.0;
 	private LVector translation = new LVector();
@@ -52,6 +52,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		this.env = nenv;
 		o = new ServiceObject(BEANNAME, nenv.getClient(), this,
 				nenv.getVersion(), nenv.getPrefix());
+		log = LLog.getLogger(this);
 		newBinary();
 	}
 
@@ -63,7 +64,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	public JBean getBean() {
 		JBean b = o.getBean();
 		b.addValue(NAME, name);
-		b.addValue(BINARYID, getBinaryID().toString());
+		b.addValue(BINARYID, "" + getBinaryID());
 		b.addValue(SCALE, scale);
 		b.add(translation.getBean(TRANSLATION));
 		//
@@ -321,5 +322,20 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 
 	public void setTranslation(LVector t) {
 		translation.set(t);
+	}
+
+	@Override
+	public int hashCode() {
+		return getBean().toXML().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object b) {
+		if (b instanceof LOT3DModelImpl) {
+			LOT3DModelImpl bmodel = (LOT3DModelImpl) b;
+			return getBean().toXML().equals(bmodel.getBean().toXML());
+		} else {
+			return false;
+		}
 	}
 }

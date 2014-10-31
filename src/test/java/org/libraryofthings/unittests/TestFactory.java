@@ -39,12 +39,14 @@ public final class TestFactory extends LOTTestCase {
 		f.setName("testing changing name");
 		f.save();
 		//
-
 		LOTScript lotScript = f.addScript("test");
 		lotScript
 				.setScript("function info() { return \"testing tool script\"; }");
 		// model
 		f.setModel(env.getObjectFactory().getModel());
+		//
+		f.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
+		f.setToolUserSpawnLocation(new LVector(4, 4, 4));
 		//
 		f.save();
 		f.publish();
@@ -59,6 +61,32 @@ public final class TestFactory extends LOTTestCase {
 		LOTScript bscript = bfact.getScript("test");
 		assertNotNull(bscript);
 		assertEquals(lotScript.getScript(), bscript.getScript());
+		//
+		assertEquals(bfact.getBoundingBox().getA(), f.getBoundingBox().getA());
+		assertEquals(bfact.getBoundingBox().getB(), f.getBoundingBox().getB());
+		//
+		assertEquals(f.getToolUserSpawnLocation(),
+				bfact.getToolUserSpawnLocation());
+
+		assertEquals(f.getBean(), bfact.getBean());
+		assertEquals(f.hashCode(), bfact.hashCode());
+	}
+
+	public void testNotEqual() {
+		LOTClient ac = getNewClient();
+		LOTFactory af = ac.getObjectFactory().getFactory();
+		af.publish();
+		LOTClient bc = getNewClient();
+		LOTFactory bf = bc.getObjectFactory().getFactory(
+				af.getID().getStringID());
+		assertEquals(af, bf);
+		assertNotSame(af, bf);
+		assertTrue(af.getBean().equals(bf.getBean()));
+		af.setLocation(new LVector(1, 1, 1));
+		assertFalse(af.getBean().equals(bf.getBean()));
+		bf.setLocation(new LVector(1, 1, 1));
+		assertEquals(af, bf);
+		assertTrue(af.getBean().equals(bf.getBean()));
 	}
 
 	public void testChildFactory() {
@@ -90,6 +118,15 @@ public final class TestFactory extends LOTTestCase {
 		LOTBoundingBox bbox = bf.getBoundingBox();
 		assertEquals(f.getBoundingBox().getBean().toText(), bbox.getBean()
 				.toText());
+	}
+
+	public void testBoundingBoxInstance() {
+		LOTClient c = getNewClient();
+		LOTFactory f = c.getObjectFactory().getFactory();
+		LVector va = f.getBoundingBox().getA();
+		f.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 1, 10));
+		f.setBoundingBox(new LOTBoundingBox(new LVector(), new LVector()));
+		assertSame(va, f.getBoundingBox().getA());
 	}
 
 	public void testCallUnknownScript() throws IOException, SAXException {
