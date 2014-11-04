@@ -232,8 +232,16 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	@Override
+	public LOTFactory addFactory() {
+		return addFactory("child" + this.factories.size());
+	}
+
+	@Override
 	public LOTFactory addFactory(String string) {
-		return addFactory(string, new LOTFactoryImpl(client));
+		LOTFactoryImpl childfactory = new LOTFactoryImpl(client);
+		childfactory.setBoundingBox(getBoundingBox().getA().getScaled(0.5),
+				getBoundingBox().getB().getScaled(0.5));
+		return addFactory(string, childfactory);
 	}
 
 	public LOTFactory addFactory(final String factoryname,

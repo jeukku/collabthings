@@ -29,6 +29,8 @@ public interface LOTFactory extends LOTObject {
 
 	LOTFactory addFactory(String string);
 
+	LOTFactory addFactory();
+
 	LOTFactory getFactory(String string);
 
 	Set<String> getFactories();

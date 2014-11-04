@@ -61,4 +61,10 @@ public class LVector extends Vector3d {
 		return String.format("[%.2f, %.2f, %.2f]", x, y, z);
 	}
 
+	public LVector getScaled(double d) {
+		LVector l = copy();
+		l.scale(d);
+		return l;
+	}
+
 }
