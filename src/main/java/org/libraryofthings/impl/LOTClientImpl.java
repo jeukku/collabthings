@@ -21,7 +21,6 @@ public final class LOTClientImpl implements LOTClient {
 			CMService service) {
 		client = new WClient(p, binarysource, service);
 		this.factory = new LOTObjectFactoryImpl(this);
-		log.info("resources " + getClass().getResource("/").getPath());
 	}
 
 	public WClient getClient() {

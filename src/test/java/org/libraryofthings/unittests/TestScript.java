@@ -8,7 +8,6 @@ import org.libraryofthings.environment.impl.LOTScriptRunnerImpl;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
 import org.libraryofthings.model.impl.LOTScriptImpl;
-import org.libraryofthings.scripting.LOTJavaScriptLoader;
 
 public final class TestScript extends LOTTestCase {
 
@@ -116,13 +115,4 @@ public final class TestScript extends LOTTestCase {
 		assertFalse(runner.run());
 	}
 
-	public void testFailAtLoadingLibraries() {
-		LOTClient env = getNewClient();
-		LOTJavaScriptLoader.reset();
-		env.getPreferences().set(LOTScriptImpl.PREFERENCES_SCRIPTSPATH,
-				"FAILPATH");
-		LOTScriptImpl s = getWorkingScriptExample(env);
-		assertNull(s);
-		LOTJavaScriptLoader.reset();
-	}
 }

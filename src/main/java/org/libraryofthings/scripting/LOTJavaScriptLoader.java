@@ -1,8 +1,11 @@
 package org.libraryofthings.scripting;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -16,34 +19,67 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 
 public class LOTJavaScriptLoader implements ScriptLoader {
-	private String path;
+	private static LOTJavaScriptLoader loader;
+
 	private LLog log = LLog.getLogger(this);
 	//
 	private Set<String> forbiddenwords = new HashSet<>();
+	private Set<String> libraries = new HashSet<>();
 
-	private static LOTJavaScriptLoader loader;
-
-	public static ScriptLoader get(LOTClient env, String string) {
+	public static ScriptLoader get(LOTClient env) {
 		if (loader == null) {
-			loader = new LOTJavaScriptLoader(env, string);
+			LOTJavaScriptLoader nloader = new LOTJavaScriptLoader();
+			if (nloader.init(env)) {
+				loader = nloader;
+			}
 		}
 		return loader;
 	}
 
-	private LOTJavaScriptLoader(LOTClient c, String npath) {
-		this.path = npath;
-		String words = ""
-				+ c.getGlobalSetting(LOTClient.JAVASCRIPT_FORBIDDENWORDS);
-		StringTokenizer st = new StringTokenizer(words);
-		while (st.hasMoreTokens()) {
-			String word = st.nextToken();
-			forbiddenwords.add(word);
+	private boolean init(LOTClient c) {
+		try {
+			String words = ""
+					+ c.getGlobalSetting(LOTClient.JAVASCRIPT_FORBIDDENWORDS);
+			StringTokenizer st = new StringTokenizer(words);
+			while (st.hasMoreTokens()) {
+				String word = st.nextToken();
+				forbiddenwords.add(word);
+			}
+			//
+			forbiddenwords.add("import");
+			forbiddenwords.add("java");
+			forbiddenwords.add("io");
+			forbiddenwords.add("new");
+			//
+			initLibraries();
+			return true;
+		} catch (IOException e) {
+			log.error(this, "init", e);
+			return false;
 		}
-		//
-		forbiddenwords.add("import");
-		forbiddenwords.add("java");
-		forbiddenwords.add("io");
-		forbiddenwords.add("new");
+	}
+
+	private void initLibraries() throws IOException {
+		addLibrary("js/lib.js");
+		addLibrary("js/underscore-min.js");
+	}
+
+	private void addLibrary(String name) throws IOException {
+		InputStream is = ClassLoader.getSystemResourceAsStream(name);
+		BufferedReader r = new BufferedReader(new InputStreamReader(is));
+
+		StringBuilder sb = new StringBuilder();
+
+		while (true) {
+			String line = r.readLine();
+			if (line == null) {
+				break;
+			}
+			sb.append(line);
+			sb.append("\n");
+		}
+
+		libraries.add(sb.toString());
 	}
 
 	@Override
@@ -53,18 +89,14 @@ public class LOTJavaScriptLoader implements ScriptLoader {
 		ScriptEngine e = new ScriptEngineManager()
 				.getEngineByName("JavaScript");
 
-		try {
-			e.eval(new FileReader(path + File.separatorChar
-					+ "underscore-min.js"));
-			e.eval(new FileReader(path + File.separatorChar + "lib.js"));
-			e.eval(s);
-			Invocable inv = (Invocable) e;
-
-			return inv;
-		} catch (FileNotFoundException e1) {
-			LLog.getLogger(this).error(this, "load", e1);
-			return null;
+		for (String script : libraries) {
+			e.eval(script);
 		}
+
+		e.eval(s);
+		Invocable inv = (Invocable) e;
+
+		return inv;
 	}
 
 	private void checkScript(String s) {

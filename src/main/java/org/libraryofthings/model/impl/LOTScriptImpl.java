@@ -22,7 +22,6 @@ import waazdoh.util.MStringID;
 public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	private static final String SCRIPT = "value";
 	private static final String BEANNAME = "script";
-	public static final String PREFERENCES_SCRIPTSPATH = "lot.script.path";
 	//
 	private ServiceObject o;
 	private String script;
@@ -79,10 +78,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	public Invocable getInvocable() {
 		if (inv == null) {
 			try {
-				ScriptLoader loader = LOTJavaScriptLoader.get(
-						this.client,
-						this.client.getPreferences().get(
-								LOTScriptImpl.PREFERENCES_SCRIPTSPATH, ""));
+				ScriptLoader loader = LOTJavaScriptLoader.get(this.client);
 				inv = loader.load(script);
 				if (inv != null) {
 					// invoke the global function named "hello"
