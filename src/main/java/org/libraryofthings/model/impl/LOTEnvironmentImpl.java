@@ -171,6 +171,11 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	}
 
 	@Override
+	public Set<String> getScripts() {
+		return this.scripts.keySet();
+	}
+
+	@Override
 	public void addTool(String string, LOTTool tool) {
 		tools.put(string, tool);
 	}

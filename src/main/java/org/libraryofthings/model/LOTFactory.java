@@ -15,17 +15,19 @@ public interface LOTFactory extends LOTObject {
 
 	void save();
 
+	void publish();
+
 	MID getID();
+
+	String getName();
 
 	void setName(String string);
 
 	LOTScript addScript(String string, LOTScript lotScript);
 
-	void publish();
-
-	String getName();
-
 	LOTScript addScript(String string);
+
+	Set<String> getScripts();
 
 	LOTFactory addFactory(String string);
 

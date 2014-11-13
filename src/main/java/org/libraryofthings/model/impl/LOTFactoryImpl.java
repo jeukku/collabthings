@@ -92,10 +92,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		}
 	}
 
-	public LOTScript getScript(String string) {
-		return env.getScript(string.toLowerCase());
-	}
-
 	@Override
 	public boolean parseBean(JBean bean) {
 		setName(bean.getValue(VALUENAME_NAME));
@@ -131,6 +127,15 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	@Override
 	public LOTScript addScript(String string) {
 		return addScript(string, new LOTScriptImpl(client));
+	}
+	
+	@Override
+	public Set<String> getScripts() {
+		return env.getScripts();
+	}
+
+	public LOTScript getScript(String string) {
+		return env.getScript(string.toLowerCase());
 	}
 
 	private ServiceObject getServiceObject() {

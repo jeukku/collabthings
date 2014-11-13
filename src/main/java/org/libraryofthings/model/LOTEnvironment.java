@@ -1,5 +1,7 @@
 package org.libraryofthings.model;
 
+import java.util.Set;
+
 import org.libraryofthings.math.LVector;
 
 import waazdoh.client.model.MID;
@@ -7,6 +9,8 @@ import waazdoh.client.model.MID;
 public interface LOTEnvironment extends LOTObject {
 
 	LOTScript getScript(String string);
+
+	Set<String> getScripts();
 
 	void addScript(String scriptname, LOTScript lotScript);
 
