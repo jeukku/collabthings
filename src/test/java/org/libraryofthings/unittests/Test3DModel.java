@@ -27,7 +27,7 @@ public final class Test3DModel extends LOTTestCase {
 		am.setName("TEST");
 		am.setTranslation(new LVector(1, 0, 1));
 		am.setScale(10);
-		
+
 		am.publish();
 		//
 		LOTClient benv = getNewClient();
@@ -58,7 +58,7 @@ public final class Test3DModel extends LOTTestCase {
 		//
 		waitObject(bs);
 		//
-		String sdata = new String(bs.getBinary().asByteBuffer());
+		String sdata = readString(bs.getBinary().getInputStream());
 		assertEquals(testbinarydatastring, sdata);
 	}
 

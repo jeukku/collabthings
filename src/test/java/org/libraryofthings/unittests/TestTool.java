@@ -64,8 +64,8 @@ public final class TestTool extends LOTTestCase {
 		assertNotNull(bscript);
 		assertEquals(lotScript.getScript(), bscript.getScript());
 		//
-		String sdata = new String(btool.getPart().getModel().getBinary()
-				.asByteBuffer());
+		String sdata = readString(btool.getPart().getModel().getBinary()
+				.getInputStream());
 		assertEquals(testbinarydatastring, sdata);
 	}
 

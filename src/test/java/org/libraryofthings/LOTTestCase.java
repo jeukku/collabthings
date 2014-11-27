@@ -3,6 +3,8 @@ package org.libraryofthings;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.util.HashSet;
@@ -16,7 +18,7 @@ import org.libraryofthings.model.LOTObject;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.WClientAppLogin;
-import waazdoh.client.binaries.MBinarySource;
+import waazdoh.client.binaries.BinarySource;
 import waazdoh.client.model.CMService;
 import waazdoh.cp2p.P2PBinarySource;
 import waazdoh.service.rest.RestServiceClient;
@@ -75,7 +77,7 @@ public class LOTTestCase extends TestCase {
 		//
 		MPreferences p = new StaticTestPreferences("lottests", email);
 
-		MBinarySource binarysource = getBinarySource(p, bind);
+		BinarySource binarysource = getBinarySource(p, bind);
 		LOTClient c = new LOTClientImpl(p, binarysource, getTestService(email,
 				p, binarysource));
 
@@ -95,7 +97,7 @@ public class LOTTestCase extends TestCase {
 		}
 	}
 
-	public MBinarySource getBinarySource(MPreferences p, boolean bind) {
+	public BinarySource getBinarySource(MPreferences p, boolean bind) {
 		P2PBinarySource testsource = new P2PBinarySource(p, bind);
 		if (bind) {
 			testsource.setDownloadEverything(true);
@@ -108,7 +110,7 @@ public class LOTTestCase extends TestCase {
 	}
 
 	private CMService getTestService(String username, MPreferences p,
-			MBinarySource source) throws SAXException {
+			BinarySource source) throws SAXException {
 		if (p.getBoolean(LOTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
 			try {
 				RestServiceClient client = new RestServiceClient(p.get(
@@ -179,4 +181,19 @@ public class LOTTestCase extends TestCase {
 		assertTrue("expecting " + valuea + ", but is " + valueb,
 				Math.abs(valuea - valueb) < ACCEPTED_DIFFERENCE);
 	}
+
+	protected String readString(InputStream inputStream) throws IOException {
+		InputStreamReader r = new InputStreamReader(inputStream);
+		StringBuilder sb = new StringBuilder();
+		char cs[] = new char[20000];
+		while (true) {
+			int c = r.read(cs);
+			if (c == 0) {
+				break;
+			}
+			sb.append(cs);
+		}
+		return sb.toString();
+	}
+
 }

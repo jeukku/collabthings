@@ -43,7 +43,7 @@ public final class TestPart extends LOTTestCase {
 		assertEquals(part.getName(), bpart.getName());
 		waitObject(bpart);
 		//
-		String sdata = new String(bpart.getModel().getBinary().asByteBuffer());
+		String sdata = readString(bpart.getModel().getBinary().getInputStream());
 		assertEquals(testbinarydatastring, sdata);
 		//
 		LOTSubPart bsubpart = part.getSubParts().get(0);

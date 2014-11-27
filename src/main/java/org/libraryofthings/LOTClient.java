@@ -3,7 +3,7 @@ package org.libraryofthings;
 import org.libraryofthings.model.LOTObjectFactory;
 
 import waazdoh.client.WClient;
-import waazdoh.client.binaries.MBinarySource;
+import waazdoh.client.binaries.BinarySource;
 import waazdoh.util.MPreferences;
 
 public interface LOTClient {
@@ -18,7 +18,7 @@ public interface LOTClient {
 
 	WClient getClient();
 
-	MBinarySource getBinarySource();
+	BinarySource getBinarySource();
 
 	void stop();
 

@@ -6,7 +6,7 @@ import org.libraryofthings.model.LOTObjectFactory;
 import org.libraryofthings.model.impl.LOTObjectFactoryImpl;
 
 import waazdoh.client.WClient;
-import waazdoh.client.binaries.MBinarySource;
+import waazdoh.client.binaries.BinarySource;
 import waazdoh.client.model.CMService;
 import waazdoh.util.MPreferences;
 
@@ -17,7 +17,7 @@ public final class LOTClientImpl implements LOTClient {
 	private LOTObjectFactory factory;
 	private LLog log = LLog.getLogger(this);
 
-	public LOTClientImpl(MPreferences p, MBinarySource binarysource,
+	public LOTClientImpl(MPreferences p, BinarySource binarysource,
 			CMService service) {
 		client = new WClient(p, binarysource, service);
 		this.factory = new LOTObjectFactoryImpl(this);
@@ -27,7 +27,7 @@ public final class LOTClientImpl implements LOTClient {
 		return client;
 	}
 
-	public MBinarySource getBinarySource() {
+	public BinarySource getBinarySource() {
 		return client.getBinarySource();
 	}
 

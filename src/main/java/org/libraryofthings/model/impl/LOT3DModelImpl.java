@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.CharBuffer;
 import java.nio.file.Files;
@@ -188,7 +189,9 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 			log.fine("importing " + b.toText());
 			if (importModel(b)) {
 				newBinary();
-				getBinary().set(0, b.toXML().toString().getBytes());
+				getBinary().load(
+						new ByteArrayInputStream(b.toXML().toString()
+								.getBytes()));
 				getBinary().setReady();
 				return true;
 			} else {
@@ -273,18 +276,24 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 
 	public InputStream getModelStream() throws SAXException {
 		if (isReady()) {
-			env.getBinarySource().saveBinaries();
-			XML xml = new XML(new String(getBinary().asByteBuffer()));
-			log.info("getModelStream parsing " + xml);
-			JBean b = new JBean(xml);
-			// FIXME TODO
-			b.find("X3D").setAttribute("xmlns:xsd",
-					"http://www.w3.org/2001/XMLSchema-instance");
+			XML xml;
+			try {
+				xml = new XML(new InputStreamReader(getBinary()
+						.getInputStream()));
+				log.info("getModelStream parsing " + xml);
+				JBean b = new JBean(xml);
+				// FIXME TODO
+				b.find("X3D").setAttribute("xmlns:xsd",
+						"http://www.w3.org/2001/XMLSchema-instance");
 
-			convertURLs(b);
-			log.info("getModelStream returning " + b.toXML().toString());
-			return new BufferedInputStream(new ByteArrayInputStream(b.toXML()
-					.toString().getBytes()));
+				convertURLs(b);
+				log.info("getModelStream returning " + b.toXML().toString());
+				return new BufferedInputStream(new ByteArrayInputStream(b
+						.toXML().toString().getBytes()));
+			} catch (IOException e) {
+				log.error(this, "getModelStream", e);
+				return null;
+			}
 		} else {
 			return null;
 		}
