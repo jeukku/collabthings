@@ -188,10 +188,10 @@ public class LOTTestCase extends TestCase {
 		char cs[] = new char[20000];
 		while (true) {
 			int c = r.read(cs);
-			if (c == 0) {
+			if (c <= 0) {
 				break;
 			}
-			sb.append(cs);
+			sb.append(cs, 0, c);
 		}
 		return sb.toString();
 	}
