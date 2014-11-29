@@ -72,7 +72,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		line.setName("line");
 		assertNotNull(line);
 		//
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 3; i++) {
 			LOTSubPart sb = line.newSubPart();
 			sb.setPart(box);
 			sb.setOrientation(new LVector(i * 2, 0, 0), new LVector(0, 1, 0));
