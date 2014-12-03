@@ -10,7 +10,8 @@ import waazdoh.util.ConditionWaiter;
 
 public class LOTSimpleSimulation implements LOTSimulation,
 		RunEnvironmentListener {
-	private static final double MAX_STEP = 0.01;
+	private static final double MAX_STEP = 0.02;
+	private static final double MIN_STEP = 0.01;
 	//
 
 	private LOTRunEnvironment env;
@@ -58,7 +59,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	}
 
 	private void start() {
-		runner = new LOTStepRunner(MAX_STEP, dtime -> step(dtime));
+		runner = new LOTStepRunner(MAX_STEP, MIN_STEP, dtime -> step(dtime));
 		log.info("started " + runner);
 	}
 

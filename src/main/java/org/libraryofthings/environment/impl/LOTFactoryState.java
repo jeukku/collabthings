@@ -163,26 +163,42 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 	@Override
 	public void step(double dtime) {
-		synchronized (toolusers) {
-			for (LOTToolUser tooluser : toolusers) {
-				tooluser.step(dtime);
-			}
-		}
-		synchronized (tools) {
-			for (LOTToolState tool : tools) {
-				tool.step(dtime);
-			}
-		}
-		synchronized (factories) {
-			for (LOTFactoryState f : factories) {
-				f.step(dtime);
-			}
-		}
+		stepToolUsers(dtime);
+		stepTools(dtime);
+		stepFactories(dtime);
+		stepSteppers(dtime);
+	}
+
+	private void stepSteppers(double dtime) {
 		synchronized (steppers) {
 			for (LOTRuntimeStepper stepper : new HashSet<>(steppers)) {
 				if (stepper.step(dtime)) {
 					steppers.remove(stepper);
 				}
+			}
+		}
+	}
+
+	private void stepFactories(double dtime) {
+		synchronized (factories) {
+			for (LOTFactoryState f : factories) {
+				f.step(dtime);
+			}
+		}
+	}
+
+	private void stepTools(double dtime) {
+		synchronized (tools) {
+			for (LOTToolState tool : tools) {
+				tool.step(dtime);
+			}
+		}
+	}
+
+	private void stepToolUsers(double dtime) {
+		synchronized (toolusers) {
+			for (LOTToolUser tooluser : toolusers) {
+				tooluser.step(dtime);
 			}
 		}
 	}

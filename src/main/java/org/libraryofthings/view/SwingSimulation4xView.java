@@ -18,6 +18,7 @@ public class SwingSimulation4xView extends JPanel {
 
 	public SwingSimulation4xView(LOTRunEnvironment runenv) {
 		super();
+		setupFreeTransform();
 
 		RunEnviromentDrawer ycanvas = new RunEnviromentDrawer(runenv, (v) -> {
 			v.y = v.z;
@@ -57,13 +58,17 @@ public class SwingSimulation4xView extends JPanel {
 
 	public void step(double dtime) {
 		freeangle += dtime * 0.00002;
+		setupFreeTransform();
+		//
+		doRepaint();
+	}
+
+	private void setupFreeTransform() {
 		LTransformation nfreetransform = new LTransformation();
 		nfreetransform.mult(LTransformation.getRotate(new Vector3d(1, 0, 0),
 				0.4));
 		nfreetransform.mult(LTransformation.getRotate(new Vector3d(0, 1, 0),
 				freeangle));
 		freetransform = nfreetransform;
-		//
-		doRepaint();
 	}
 }

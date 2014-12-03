@@ -8,6 +8,8 @@ public class LTransformation {
 	private Matrix4d m = new Matrix4d();
 	public static final Vector3d UP = new Vector3d(0, 1, 0);
 
+	final private AxisAngle4d a = new AxisAngle4d();
+
 	public LTransformation() {
 		m.setIdentity();
 	}
@@ -15,7 +17,7 @@ public class LTransformation {
 	public LTransformation(LOrientation o) {
 		this(o.location, o.normal, o.angle);
 	}
-	
+
 	public LTransformation(LVector location, LVector orientationnormal,
 			double orientationangle) {
 		m.setIdentity();
@@ -77,7 +79,7 @@ public class LTransformation {
 	}
 
 	public void rotate(Vector3d v, double d) {
-		AxisAngle4d a = new AxisAngle4d(v, d);
+		a.set(v, d);
 		m.set(a);
 	}
 

@@ -63,7 +63,7 @@ function run(runenv, factory, values) {
 				return true;
 			} else {
 				ab.normalize();
-				ab.scale(step * 0.003);
+				ab.scale(step * 3);
 				destpartstate.setLocation(partl.getAdd(ab));
 				return false;
 			}

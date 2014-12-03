@@ -27,7 +27,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private LLog log = LLog.getLogger(this);
 	//
 	private double locationprintouttimer = 0;
-	private double speed = 1;
+	private double speed = 10;
 	final private LOTFactoryState factory;
 
 	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
@@ -60,13 +60,19 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		log.info("factory " + this.factory);
 		//
 		while (simenv.isRunning()
+				&& targetlocation != null
 				&& targetlocation.getSub(location).length() > MOVING_LOCATION_LENGTH_TRIGGER) {
 			waitAWhile();
 		}
-		tool.setOrientation(targetlocation, targetorientationnormal,
-				targetorientationangle);
 
-		log.info("Moved to " + targetlocation + " " + location);
+		if (targetlocation != null) {
+			tool.setOrientation(targetlocation, targetorientationnormal,
+					targetorientationangle);
+
+			log.info("Moved to " + targetlocation + " " + location);
+		} else {
+			log.info("No target location. Propably stopped.");
+		}
 	}
 
 	@Override
@@ -97,61 +103,69 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	}
 
 	@Override
-	public void stop() {
+	public synchronized void stop() {
 		targetlocation = null;
 	}
 
 	@Override
-	public void step(double dtime) {
+	public synchronized void step(double dtime) {
 		locationprintouttimer += dtime;
 
 		if (targetlocation != null) {
 			LVector vdistance = targetlocation.getSub(location);
 			double distance = vdistance.length();
-			double maxdistance = dtime * speed / 1000;
+			double maxdistance = dtime * speed;
 			if (distance > maxdistance) {
 				distance = maxdistance;
 			}
 
 			double dangle = targetorientationangle - orientationangle;
-			dangle *= dtime * speed / 1000;
+			dangle *= dtime * speed;
 			orientationangle += dangle;
 
 			LVector nnormal = targetorientationnormal.getNormalized();
 
 			// slow moving if orientation is not right
 			double normaldot = nnormal.dot(orientationnormal);
+			if(normaldot<-0.9) {
+				nnormal.x += nnormal.y;
+				nnormal.y += nnormal.z;
+				nnormal.z += nnormal.x;
+				nnormal.normalize();
+				normaldot = nnormal.dot(orientationnormal);
+			}
+			
 			if (normaldot < 0) {
-				normaldot = 0;
+				normaldot = 0.1;
 			}
 			distance *= normaldot;
 
-			nnormal.scale(dtime * speed / 1000);
+			nnormal.scale(dtime * speed);
 
 			orientationnormal.add(nnormal);
 			orientationnormal.normalize();
 
 			// checking distance because we cannot normalize zero length vector
 			if (distance > MOVING_LOCATION_LENGTH_TRIGGER) {
-				// this is a bit random, but going straight from a to b.
+				// this is a bit random, but not going straight from a to b.
 				LVector direction = vdistance.getNormalized();
 				double ddot = direction.dot(targetorientationnormal);
 				if (ddot > 0) {
 					direction.add(new LVector(direction.y, direction.z,
 							direction.x));
-				} else if(ddot>-0.99) {
+				} else if (ddot > -0.99) {
 					LVector cross = new LVector();
 					cross.cross(direction, targetorientationnormal);
 					direction.add(cross);
 				}
 
 				direction.normalize();
-				
+
 				direction.scale(distance);
 				location.add(direction);
-				tool.setOrientation(location, orientationnormal,
-						orientationangle);
+				tool.setOrientation(location, orientationnormal, orientationangle);
 			}
+
 		}
 
 		if (locationprintouttimer > LOCATION_PRINTOUT) {

@@ -37,8 +37,9 @@ public final class ITTestBuildABox extends LOTTestCase {
 	private LOTPart box;
 	private LLog log = LLog.getLogger(this);
 
-	public void testBoxLine() throws NoSuchMethodException, IOException,
-			SAXException, ScriptException, LOTToolException {
+	public synchronized void testBoxLine() throws NoSuchMethodException, IOException,
+ SAXException, ScriptException, LOTToolException,
+			InterruptedException {
 		LOTClient client = getNewClient();
 
 		LOTEnvironment env = new LOTEnvironmentImpl(client);

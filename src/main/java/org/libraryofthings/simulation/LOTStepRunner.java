@@ -6,11 +6,17 @@ public class LOTStepRunner {
 
 	private Thread thread;
 	private double maxstep;
+	private double minstep;
+
 	private LLog log = LLog.getLogger(this);
 	private boolean stopped;
+	private double totaltime;
+	private int totalcount;
 
-	public LOTStepRunner(final double maxstep, final StepListener listener) {
+	public LOTStepRunner(final double maxstep, final double minstep,
+			final StepListener listener) {
 		this.maxstep = maxstep;
+		this.minstep = minstep;
 		this.thread = new Thread(() -> launchLoop(listener));
 		this.thread.start();
 	}
@@ -29,17 +35,40 @@ public class LOTStepRunner {
 		}
 	}
 
-	private void runLoop(final StepListener listener) {
+	private synchronized void runLoop(final StepListener listener) {
 		double lasttime = System.currentTimeMillis();
 		while (!stopped) {
-			double dt = System.currentTimeMillis() - lasttime;
-			if (dt > maxstep) {
-				dt = maxstep;
-			}
+			double now = System.currentTimeMillis();
+			double dt = (now - lasttime) / 1000.0;
+			if (dt > minstep) {
+				lasttime = now;
 
-			boolean isstillrunning = listener.step(dt);
-			if (!isstillrunning) {
-				break;
+				if (dt > maxstep) {
+					dt = maxstep;
+				}
+
+				if (totalcount % 10000 == 0) {
+					printInfo();
+				}
+				totaltime += dt;
+				totalcount++;
+
+				boolean isstillrunning = listener.step(dt);
+				if (!isstillrunning) {
+					break;
+				}
+			} else {
+				double ddt = minstep - dt;
+				try {
+					int timeout = (int) (ddt * 1000);
+					if (timeout <= 0) {
+						timeout = (int) (minstep / 2 * 1000);
+						timeout++;
+					}
+					wait(timeout);
+				} catch (InterruptedException e) {
+					log.error(this, "step", e);
+				}
 			}
 		}
 		thread = null;
@@ -47,6 +76,15 @@ public class LOTStepRunner {
 		//
 		synchronized (this) {
 			this.notifyAll();
+		}
+
+		printInfo();
+	}
+
+	private void printInfo() {
+		if (totalcount > 0) {
+			log.info("Stepper count:" + totalcount + " time:" + totaltime
+					+ " avg.step:" + (totaltime / totalcount));
 		}
 	}
 

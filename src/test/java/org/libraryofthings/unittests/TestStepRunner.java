@@ -7,10 +7,35 @@ import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MTimedFlag;
 
 public final class TestStepRunner extends LOTTestCase {
+	class Values {
+		int count = 0;
+		double totaltime = 0;
+
+	}
+
+	public void testRun() throws InterruptedException {
+		Values v = new Values();
+
+		MTimedFlag f = new MTimedFlag(20000);
+		LOTStepRunner runner = new LOTStepRunner(0.02, 0.001, (double step) -> {
+			v.count++;
+			v.totaltime += step;
+
+			if (v.count > 1000) {
+				f.trigger();
+			}
+
+			return !f.isTriggered();
+		});
+
+		f.waitTimer();
+
+		assertTrue("" + v.count, v.count >= 1000);
+	}
 
 	public void testStop() throws InterruptedException {
 		MTimedFlag f = new MTimedFlag(2000000);
-		LOTStepRunner runner = new LOTStepRunner(0.01, (double step) -> {
+		LOTStepRunner runner = new LOTStepRunner(0.02, 0.01, (double step) -> {
 			return !f.isTriggered();
 		});
 		assertFalse(runner.isStopped());
@@ -29,7 +54,7 @@ public final class TestStepRunner extends LOTTestCase {
 
 	public void testExceptionInTest() throws InterruptedException {
 		MTimedFlag f = new MTimedFlag(2000000);
-		LOTStepRunner runner = new LOTStepRunner(0.01, (double step) -> {
+		LOTStepRunner runner = new LOTStepRunner(0.02, 0.01, (double step) -> {
 			throw new RuntimeException();
 		});
 		assertFalse(runner.isStopped());
