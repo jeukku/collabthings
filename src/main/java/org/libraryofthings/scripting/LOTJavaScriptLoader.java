@@ -84,19 +84,24 @@ public class LOTJavaScriptLoader implements ScriptLoader {
 
 	@Override
 	public Invocable load(String s) throws ScriptException {
-		checkScript(s);
-		//
-		ScriptEngine e = new ScriptEngineManager()
-				.getEngineByName("JavaScript");
+		if (s != null) {
+			checkScript(s);
+			//
+			ScriptEngine e = new ScriptEngineManager()
+					.getEngineByName("JavaScript");
 
-		for (String script : libraries) {
-			e.eval(script);
+			for (String script : libraries) {
+				e.eval(script);
+			}
+
+			e.eval(s);
+			Invocable inv = (Invocable) e;
+
+			return inv;
+		} else {
+			log.info("Null script given");
+			return null;
 		}
-
-		e.eval(s);
-		Invocable inv = (Invocable) e;
-
-		return inv;
 	}
 
 	private void checkScript(String s) {

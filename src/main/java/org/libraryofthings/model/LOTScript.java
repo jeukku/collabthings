@@ -14,4 +14,6 @@ public interface LOTScript extends LOTObject {
 
 	Invocable getInvocable();
 
+	String getError();
+
 }
