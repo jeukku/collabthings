@@ -1,6 +1,7 @@
 package org.libraryofthings.model.impl;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -178,6 +179,11 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	public boolean importModel(File file) {
 		return getModel().importModel(file);
+	}
+
+	@Override
+	public boolean importModel(InputStream is) {
+		return getModel().importModel(is);
 	}
 
 	@Override

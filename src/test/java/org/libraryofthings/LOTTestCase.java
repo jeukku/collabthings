@@ -33,6 +33,8 @@ public class LOTTestCase extends TestCase {
 	//
 	private static final double ACCEPTED_DIFFERENCE = 0.000000000001;
 
+	protected String cubemodelpath = "/models/cube.x3d";
+
 	//
 	private Set<LOTClient> clients = new HashSet<LOTClient>();
 	LLog log = LLog.getLogger(this);

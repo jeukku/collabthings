@@ -38,25 +38,30 @@ public class LOTScriptRunnerImpl implements LOTScriptRunner {
 	 * 
 	 */
 	public boolean run(LOTValues values) {
+		if (script != null) {
+			return AccessController
+					.doPrivileged(new PrivilegedAction<Boolean>() {
 
-		return AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+						public Boolean run() {
+							try {
 
-			public Boolean run() {
-				try {
-
-					Invocable i = script.getInvocable();
-					if (i != null) {
-						i.invokeFunction("run", runenv, runo, values);
-						return true;
-					} else {
-						return false;
-					}
-				} catch (NoSuchMethodException | ScriptException e1) {
-					handleException(e1);
-					return false;
-				}
-			}
-		});
+								Invocable i = script.getInvocable();
+								if (i != null) {
+									i.invokeFunction("run", runenv, runo,
+											values);
+									return true;
+								} else {
+									return false;
+								}
+							} catch (NoSuchMethodException | ScriptException e1) {
+								handleException(e1);
+								return false;
+							}
+						}
+					});
+		} else {
+			return false;
+		}
 	}
 
 	private void handleException(Exception e1) {

@@ -8,8 +8,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
-import java.nio.CharBuffer;
 import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -165,41 +165,60 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		getServiceObject().save();
 	}
 
+	@Override
+	public boolean importModel(InputStream is) {
+		Reader r = new InputStreamReader(is);
+		try {
+			return importModel(r);
+		} catch (IOException | SAXException e) {
+			log.error(this, "importModel InputStream", e);
+			return false;
+		}
+	}
+
 	public boolean importModel(File file) {
 		log.info("Importing " + file);
-		FileReader fr;
 		try {
+			Reader fr;
 			fr = new FileReader(file);
-			CharBuffer sb = CharBuffer.allocate((int) file.length());
-			while (fr.read(sb) > 0) {
-				// reading the whole file
-				;
-			}
-
-			fr.close();
-			sb.rewind();
-			String s = sb.toString();
-			log.fine("importing string " + s);
-			//
-			s = s.replace("http://www.web3d.org", findSpecificationsResources());
-			log.fine("importing converted string " + s);
-			//
-			XML xml = new XML(s);
-			JBean b = new JBean(xml);
-			log.fine("importing " + b.toText());
-			if (importModel(b)) {
-				newBinary();
-				getBinary().load(
-						new ByteArrayInputStream(b.toXML().toString()
-								.getBytes()));
-				getBinary().setReady();
-				return true;
-			} else {
-				return false;
-			}
-
+			return importModel(fr);
 		} catch (IOException | SAXException e) {
 			log.error(this, "import model", e);
+			return false;
+		}
+	}
+
+	private boolean importModel(Reader fr) throws IOException, SAXException {
+		StringBuilder sb = new StringBuilder();
+		char[] chb = new char[1000];
+		while (true) {
+			// reading the whole file
+			int count = fr.read(chb);
+			if (count < 0) {
+				break;
+			}
+
+			sb.append(chb, 0, count);
+		}
+
+		fr.close();
+
+		String s = sb.toString();
+		log.fine("importing string " + s);
+		//
+		s = s.replace("http://www.web3d.org", findSpecificationsResources());
+		log.fine("importing converted string " + s);
+		//
+		XML xml = new XML(s);
+		JBean b = new JBean(xml);
+		log.fine("importing " + b.toText());
+		if (importModel(b)) {
+			newBinary();
+			getBinary().load(
+					new ByteArrayInputStream(b.toXML().toString().getBytes()));
+			getBinary().setReady();
+			return true;
+		} else {
 			return false;
 		}
 	}
@@ -247,11 +266,18 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		surl = surl.replace("\"", "");
 		log.info("loading binary " + surl);
 		File file = new File(surl);
+		InputStream is;
+		if (file.exists()) {
+			is = new FileInputStream(file);
+		} else {
+			log.info("Getting resource " + surl);
+			is = getClass().getResourceAsStream(surl);
+		}
 		//
 		String extensions = surl.substring(surl.lastIndexOf('.') + 1);
 		Binary childbinary = this.env.getBinarySource().newBinary(surl,
 				extensions);
-		childbinary.importStream(new FileInputStream(file));
+		childbinary.importStream(is);
 		addChildBinary(childbinary);
 		b.setAttribute("url", childbinary.getID().toString());
 	}

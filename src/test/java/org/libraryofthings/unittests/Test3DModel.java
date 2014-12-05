@@ -73,10 +73,10 @@ public final class Test3DModel extends LOTTestCase {
 	}
 
 	public void testImport() throws IOException, SAXException {
+
 		LOTClient env = getNewClient();
 		LOT3DModelImpl m = new LOT3DModelImpl(env);
-		assertTrue(m
-				.importModel(new File("src/test/resources/models/cube.x3d")));
+		assertTrue(m.importModel(getClass().getResourceAsStream(cubemodelpath)));
 		new ConditionWaiter(() -> m.isReady(), 5000);
 		//
 		assertTrue(m.isReady());

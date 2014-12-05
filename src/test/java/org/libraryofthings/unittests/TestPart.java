@@ -97,7 +97,7 @@ public final class TestPart extends LOTTestCase {
 	public void testImportModel() throws IOException, SAXException {
 		LOTClient e = getNewClient();
 		LOTPart p = e.getObjectFactory().getPart();
-		p.importModel(new File("src/test/resources/models/cube.x3d"));
+		p.importModel(getClass().getResourceAsStream(cubemodelpath));
 		assertNotNull(p.getModel());
 		assertTrue(p.getModel().getBinary().length() > 0);
 	}

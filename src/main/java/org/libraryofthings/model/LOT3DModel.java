@@ -2,6 +2,7 @@ package org.libraryofthings.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.libraryofthings.math.LVector;
 import org.xml.sax.SAXException;
@@ -28,5 +29,7 @@ public interface LOT3DModel extends LOTObject {
 	void setTranslation(LVector lVector);
 
 	void setScale(double i);
+
+	boolean importModel(InputStream is);
 
 }
