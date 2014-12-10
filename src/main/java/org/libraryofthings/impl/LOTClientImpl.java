@@ -61,4 +61,9 @@ public final class LOTClientImpl implements LOTClient {
 	public String toString() {
 		return "" + this.client;
 	}
+	
+	@Override
+	public CMService getService() {
+		return getClient().getService();
+	}
 }
