@@ -70,13 +70,15 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	}
 
 	private void getScriptsBean(JBean b) {
-		JBean scriptbean = b.add(VALUENAME_SCRIPTS);
-		Set<String> scriptnames = scripts.keySet();
-		for (String string : scriptnames) {
-			LOTScript s = getScript(string);
-			JBean sbean = scriptbean.add("script");
-			sbean.addValue("name", string);
-			sbean.addValue("id", s.getID());
+		synchronized (scripts) {
+			JBean scriptbean = b.add(VALUENAME_SCRIPTS);
+			Set<String> scriptnames = scripts.keySet();
+			for (String string : scriptnames) {
+				LOTScript s = getScript(string);
+				JBean sbean = scriptbean.add("script");
+				sbean.addValue("name", string);
+				sbean.addValue("id", s.getID());
+			}
 		}
 	}
 
@@ -112,14 +114,16 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	}
 
 	private void parseScripts(JBean bean) {
-		JBean ssbean = bean.get(VALUENAME_SCRIPTS);
-		List<JBean> sbeans = ssbean.getChildren();
-		for (JBean sbean : sbeans) {
-			String scriptname = sbean.getValue("name");
-			MStringID id = sbean.getIDValue("id");
-			LOTScriptImpl script = new LOTScriptImpl(client);
-			script.load(id);
-			scripts.put(scriptname, script);
+		synchronized (scripts) {
+			JBean ssbean = bean.get(VALUENAME_SCRIPTS);
+			List<JBean> sbeans = ssbean.getChildren();
+			for (JBean sbean : sbeans) {
+				String scriptname = sbean.getValue("name");
+				MStringID id = sbean.getIDValue("id");
+				LOTScriptImpl script = new LOTScriptImpl(client);
+				script.load(id);
+				scripts.put(scriptname, script);
+			}
 		}
 	}
 
@@ -161,18 +165,39 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	}
 
 	@Override
+	public void renameScript(String oldname, String newname) {
+		synchronized (scripts) {
+			LOTScript s = scripts.remove(oldname);
+			scripts.put(newname, s);
+		}
+	}
+
+	@Override
+	public void deleteScript(String string) {
+		synchronized (scripts) {
+			scripts.remove(string);
+		}
+	}
+
+	@Override
 	public void addScript(String scriptname, LOTScript lotScript) {
-		scripts.put(scriptname, lotScript);
+		synchronized (scripts) {
+			scripts.put(scriptname, lotScript);
+		}
 	}
 
 	@Override
 	public LOTScript getScript(String string) {
-		return scripts.get(string);
+		synchronized (scripts) {
+			return scripts.get(string);
+		}
 	}
 
 	@Override
 	public Set<String> getScripts() {
-		return this.scripts.keySet();
+		synchronized (scripts) {
+			return this.scripts.keySet();
+		}
 	}
 
 	@Override
