@@ -256,7 +256,11 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	public boolean call(String string, LOTValues values) {
 		LOTScriptRunnerImpl s = getScript(string);
 		getLog().info("calling " + string + " " + s);
-		return s.run(values);
+		if (s != null) {
+			return s.run(values);
+		} else {
+			return false;
+		}
 	}
 
 	public void setStateParameter(String name, String value) {
