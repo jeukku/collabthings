@@ -38,13 +38,16 @@ public class LOTJavaScriptLoader implements ScriptLoader {
 
 	private boolean init(LOTClient c) {
 		try {
-			String words = ""
-					+ c.getGlobalSetting(LOTClient.JAVASCRIPT_FORBIDDENWORDS);
-			StringTokenizer st = new StringTokenizer(words);
-			while (st.hasMoreTokens()) {
-				String word = st.nextToken();
-				forbiddenwords.add(word);
+			String words = c
+					.getGlobalSetting(LOTClient.JAVASCRIPT_FORBIDDENWORDS);
+			if (words != null) {
+				StringTokenizer st = new StringTokenizer(words);
+				while (st.hasMoreTokens()) {
+					String word = st.nextToken();
+					forbiddenwords.add(word);
+				}
 			}
+			
 			//
 			forbiddenwords.add("import");
 			forbiddenwords.add("java");
