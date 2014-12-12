@@ -54,4 +54,7 @@ public class LLog {
 		}
 	}
 
+	public void warning(String string) {
+		log.warning(getLine(string));
+	}
 }

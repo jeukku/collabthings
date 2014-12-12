@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
@@ -32,6 +33,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	private Map<String, LOTTool> tools = new HashMap<>();
 	private Map<String, String> parameters = new HashMap<>();
 	private Map<String, LVector> vparameters = new HashMap<>();
+	private LLog log;
 
 	public LOTEnvironmentImpl(LOTClient nclient) {
 		this.client = nclient;
@@ -75,9 +77,13 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 			Set<String> scriptnames = scripts.keySet();
 			for (String string : scriptnames) {
 				LOTScript s = getScript(string);
-				JBean sbean = scriptbean.add("script");
-				sbean.addValue("name", string);
-				sbean.addValue("id", s.getID());
+				if (s != null) {
+					JBean sbean = scriptbean.add("script");
+					sbean.addValue("name", string);
+					sbean.addValue("id", s.getID());
+				} else {
+					getLogger().warning("script \"" + string + "\" null");
+				}
 			}
 		}
 	}
@@ -268,5 +274,12 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	@Override
 	public MID getID() {
 		return getServiceObject().getID();
+	}
+
+	private LLog getLogger() {
+		if (log == null) {
+			this.log = LLog.getLogger(this);
+		}
+		return log;
 	}
 }
