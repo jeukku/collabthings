@@ -14,6 +14,8 @@ public interface LOTEnvironment extends LOTObject {
 
 	void addScript(String scriptname, LOTScript lotScript);
 
+	void renameScript(String oldname, String newname);
+
 	void addTool(String string, LOTTool partsource);
 
 	LOTTool getTool(String string);
@@ -31,5 +33,7 @@ public interface LOTEnvironment extends LOTObject {
 	boolean isReady();
 
 	MID getID();
+
+	void deleteScript(String string);
 
 }
