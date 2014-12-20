@@ -48,6 +48,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		factory.setLocation(new LVector(0, 0, 0));
 		factory.setToolUserSpawnLocation(new LVector(20, 0, 20));
+		factory.publish();
 		//
 		LOTPart line = getLineOfBoxes(client);
 		//
@@ -231,6 +232,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		platesource.setName("platesource");
 
 		platesource.getEnvironment().setParameter("plateid", square.getID());
+//		loadScript(platesource.addScript("start"), "platesource_start.js");
 		loadScript(platesource.addScript("order"), "platesource_order.js");
 		loadScript(platesource.addScript("build"), "platesource_build.js");
 

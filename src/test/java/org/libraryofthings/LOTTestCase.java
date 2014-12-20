@@ -24,7 +24,9 @@ import waazdoh.cp2p.P2PBinarySource;
 import waazdoh.service.rest.RestServiceClient;
 import waazdoh.testing.ServiceMock;
 import waazdoh.testing.StaticTestPreferences;
+import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MPreferences;
+import waazdoh.util.MStringID;
 
 public class LOTTestCase extends TestCase {
 	private static final int DEFAULT_WAITTIME = 100;
@@ -89,7 +91,16 @@ public class LOTTestCase extends TestCase {
 			return c;
 		} else {
 			WClientAppLogin applogin = c.getClient().requestAppLogin();
+			MStringID apploginid = applogin.getId();
+			log.info("applogin url " + applogin.getURL());
+			
+			new ConditionWaiter(() -> {
+				WClientAppLogin al = c.getClient().checkAppLogin(apploginid);
+				return al.getSessionId() != null;
+			}, 100000);
+
 			applogin = c.getClient().checkAppLogin(applogin.getId());
+
 			if (applogin != null && applogin.getSessionId() != null) {
 				p.set("session", applogin.getSessionId());
 				return c;

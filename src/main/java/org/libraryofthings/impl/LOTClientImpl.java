@@ -2,6 +2,7 @@ package org.libraryofthings.impl;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.LOTStorage;
 import org.libraryofthings.model.LOTObjectFactory;
 import org.libraryofthings.model.impl.LOTObjectFactoryImpl;
 
@@ -13,14 +14,16 @@ import waazdoh.util.MPreferences;
 public final class LOTClientImpl implements LOTClient {
 	private final String prefix = "LOT";
 	//
-	private WClient client;
-	private LOTObjectFactory factory;
+	private final WClient client;
+	private final LOTStorage storage;
+	private final LOTObjectFactory factory;
 	private LLog log = LLog.getLogger(this);
 
 	public LOTClientImpl(MPreferences p, BinarySource binarysource,
 			CMService service) {
 		client = new WClient(p, binarysource, service);
 		this.factory = new LOTObjectFactoryImpl(this);
+		this.storage = new LOTStorageImpl(service);
 	}
 
 	public WClient getClient() {
@@ -33,6 +36,11 @@ public final class LOTClientImpl implements LOTClient {
 
 	public LOTObjectFactory getObjectFactory() {
 		return factory;
+	}
+
+	@Override
+	public LOTStorage getStorage() {
+		return storage;
 	}
 
 	public String getVersion() {
@@ -61,7 +69,7 @@ public final class LOTClientImpl implements LOTClient {
 	public String toString() {
 		return "" + this.client;
 	}
-	
+
 	@Override
 	public CMService getService() {
 		return getClient().getService();

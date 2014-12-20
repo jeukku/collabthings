@@ -28,4 +28,7 @@ public interface LOTClient {
 	String getGlobalSetting(String name);
 
 	CMService getService();
+
+	LOTStorage getStorage();
+
 }
