@@ -4,13 +4,13 @@ import java.util.Set;
 
 import org.libraryofthings.LOTStorage;
 
-import waazdoh.client.model.CMService;
+import waazdoh.client.model.WService;
 
 public class LOTStorageImpl implements LOTStorage {
 
-	private CMService service;
+	private WService service;
 
-	public LOTStorageImpl(CMService service) {
+	public LOTStorageImpl(WService service) {
 		this.service = service;
 	}
 

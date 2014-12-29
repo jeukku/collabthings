@@ -9,11 +9,11 @@ import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTValues;
 
-import waazdoh.client.model.MID;
+import waazdoh.client.model.ObjectID;
 
 public interface LOTRunEnvironment {
 
-	void setParameter(String string, MID id);
+	void setParameter(String string, ObjectID id);
 
 	void setParameter(String string, String value);
 

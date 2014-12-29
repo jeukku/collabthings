@@ -19,8 +19,8 @@ import org.libraryofthings.model.LOTTool;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.client.model.JBean;
-import waazdoh.client.model.MID;
+import waazdoh.client.model.WData;
+import waazdoh.client.model.ObjectID;
 import waazdoh.util.MStringID;
 
 public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
@@ -63,8 +63,8 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	@Override
-	public JBean getBean() {
-		JBean b = o.getBean();
+	public WData getBean() {
+		WData b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
 		b.addValue(VALUENAME_ENVIRONMENTID, env.getID());
 		addVectorBean(b, VALUENAME_SPAWNLOCATION, tooluserspawnlocation);
@@ -76,7 +76,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		if (model != null) {
 			b.addValue(VALUENAME_MODELID, model.getID());
 		}
-		JBean bchildfactories = b.add("factories");
+		WData bchildfactories = b.add("factories");
 		for (String cfname : factories.keySet()) {
 			LOTFactoryImpl cf = factories.get(cfname);
 			bchildfactories.addValue(cfname, cf.getID().toString());
@@ -85,38 +85,38 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return b;
 	}
 
-	private void addVectorBean(JBean b, String valuename, LVector v) {
+	private void addVectorBean(WData b, String valuename, LVector v) {
 		if (v != null) {
-			JBean vectorbean = v.getBean(valuename);
+			WData vectorbean = v.getBean(valuename);
 			b.add(vectorbean);
 		}
 	}
 
 	@Override
-	public boolean parseBean(JBean bean) {
+	public boolean parseBean(WData bean) {
 		setName(bean.getValue(VALUENAME_NAME));
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
 		if (modelid != null) {
 			model = client.getObjectFactory().getModel(modelid);
 		}
 
-		JBean beansl = bean.get(VALUENAME_SPAWNLOCATION);
+		WData beansl = bean.get(VALUENAME_SPAWNLOCATION);
 		if (beansl != null) {
 			tooluserspawnlocation = new LVector(beansl);
 		}
 
-		JBean ob = bean.get(BEANNAME_ORIENTATION);
+		WData ob = bean.get(BEANNAME_ORIENTATION);
 		orientation = new LOrientation(ob);
 
 		env = new LOTEnvironmentImpl(client,
 				bean.getIDValue(VALUENAME_ENVIRONMENTID));
-		JBean bbbox = bean.get(LOTBoundingBox.BEAN_NAME);
+		WData bbbox = bean.get(LOTBoundingBox.BEAN_NAME);
 		if (bbbox != null) {
 			bbox.set(bbbox);
 		}
-		JBean bchildfactories = bean.get("factories");
-		List<JBean> bcfs = bchildfactories.getChildren();
-		for (JBean bchildfactory : bcfs) {
+		WData bchildfactories = bean.get("factories");
+		List<WData> bcfs = bchildfactories.getChildren();
+		for (WData bchildfactory : bcfs) {
 			String cfname = bchildfactory.getName();
 			addFactory(cfname, new LOTFactoryImpl(this.client, new MStringID(
 					bchildfactory.getText())));
@@ -143,7 +143,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	@Override
-	public MID getID() {
+	public ObjectID getID() {
 		return getServiceObject().getID();
 	}
 

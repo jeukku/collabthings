@@ -6,7 +6,7 @@ import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
 
-import waazdoh.client.model.JBean;
+import waazdoh.client.model.WData;
 import waazdoh.util.MStringID;
 
 public final class LOTSubPartImpl implements LOTSubPart {
@@ -35,14 +35,14 @@ public final class LOTSubPartImpl implements LOTSubPart {
 		return part;
 	}
 
-	public void parse(JBean bpart) {
+	public void parse(WData bpart) {
 		MStringID partid = bpart.getIDValue("id");
 		part = this.client.getObjectFactory().getPart(partid);
 		p.set(bpart.get("p"));
 		n.set(bpart.get("n"));
 	}
 
-	public void getBean(JBean bpart) {
+	public void getBean(WData bpart) {
 		bpart.addValue("id", part.getID());
 		bpart.add(p.getBean("p"));
 		bpart.add(n.getBean("n"));

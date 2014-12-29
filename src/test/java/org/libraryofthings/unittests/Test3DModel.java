@@ -12,7 +12,7 @@ import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.model.impl.LOT3DModelImpl;
 import org.xml.sax.SAXException;
 
-import waazdoh.client.model.JBean;
+import waazdoh.client.model.WData;
 import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MStringID;
 import waazdoh.util.xml.XML;
@@ -83,8 +83,8 @@ public final class Test3DModel extends LOTTestCase {
 		assertTrue(!m.getChildBinaries().isEmpty());
 		//
 		InputStream is = m.getModelStream();
-		JBean b = new JBean(new XML(new InputStreamReader(is)));
-		JBean imgtxt = b.find("ImageTexture");
+		WData b = new WData(new XML(new InputStreamReader(is)));
+		WData imgtxt = b.find("ImageTexture");
 		String nurl = imgtxt.getAttribute("url");
 		assertNotNull(nurl);
 		// make sure binary is saved to disk.

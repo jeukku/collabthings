@@ -1,6 +1,6 @@
 package org.libraryofthings.math;
 
-import waazdoh.client.model.JBean;
+import waazdoh.client.model.WData;
 
 public class LOrientation {
 	private static final String VALUENAME_ORIENTATION_LOCATION = "location";
@@ -11,7 +11,7 @@ public class LOrientation {
 	public final LVector normal = new LVector(0, 1, 0);
 	public double angle = 0.0;
 
-	public LOrientation(JBean ob) {
+	public LOrientation(WData ob) {
 		location.set(new LVector(ob.get(VALUENAME_ORIENTATION_LOCATION)));
 		normal.set(new LVector(ob.get(VALUENAME_ORIENTATION_NORMAL)));
 		angle = ob.getDoubleValue(VALUENAME_ORIENTATION_ANGLE);
@@ -26,8 +26,8 @@ public class LOrientation {
 		return "[O:(" + location + ")(" + normal + ")(" + angle + ")]";
 	}
 
-	public JBean getBean(String beannameOrientation) {
-		JBean ob = new JBean(beannameOrientation);
+	public WData getBean(String beannameOrientation) {
+		WData ob = new WData(beannameOrientation);
 		ob.add(location.getBean(VALUENAME_ORIENTATION_LOCATION));
 		ob.add(normal.getBean(VALUENAME_ORIENTATION_NORMAL));
 		ob.addValue(VALUENAME_ORIENTATION_ANGLE, angle);

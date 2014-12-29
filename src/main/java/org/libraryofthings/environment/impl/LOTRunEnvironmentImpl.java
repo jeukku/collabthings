@@ -18,7 +18,7 @@ import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTValues;
 
-import waazdoh.client.model.MID;
+import waazdoh.client.model.ObjectID;
 
 public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 	private Map<String, String> params = new HashMap<String, String>();
@@ -136,7 +136,7 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 	}
 
 	@Override
-	public void setParameter(String key, MID id) {
+	public void setParameter(String key, ObjectID id) {
 		setParameter(key, id.getStringID().toString());
 	}
 

@@ -4,7 +4,7 @@ import org.libraryofthings.model.LOTObjectFactory;
 
 import waazdoh.client.WClient;
 import waazdoh.client.binaries.BinarySource;
-import waazdoh.client.model.CMService;
+import waazdoh.client.model.WService;
 import waazdoh.util.MPreferences;
 
 public interface LOTClient {
@@ -27,7 +27,7 @@ public interface LOTClient {
 
 	String getGlobalSetting(String name);
 
-	CMService getService();
+	WService getService();
 
 	LOTStorage getStorage();
 

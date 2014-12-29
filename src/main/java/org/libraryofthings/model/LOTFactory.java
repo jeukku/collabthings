@@ -5,7 +5,7 @@ import java.util.Set;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 
-import waazdoh.client.model.MID;
+import waazdoh.client.model.ObjectID;
 
 public interface LOTFactory extends LOTObject {
 
@@ -17,7 +17,7 @@ public interface LOTFactory extends LOTObject {
 
 	void publish();
 
-	MID getID();
+	ObjectID getID();
 
 	String getName();
 

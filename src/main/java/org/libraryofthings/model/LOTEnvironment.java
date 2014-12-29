@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.libraryofthings.math.LVector;
 
-import waazdoh.client.model.MID;
+import waazdoh.client.model.ObjectID;
 
 public interface LOTEnvironment extends LOTObject {
 
@@ -20,7 +20,7 @@ public interface LOTEnvironment extends LOTObject {
 
 	LOTTool getTool(String string);
 
-	void setParameter(String string, MID id);
+	void setParameter(String string, ObjectID id);
 
 	void setParameter(String string, String value);
 
@@ -32,7 +32,7 @@ public interface LOTEnvironment extends LOTObject {
 
 	boolean isReady();
 
-	MID getID();
+	ObjectID getID();
 
 	void deleteScript(String string);
 

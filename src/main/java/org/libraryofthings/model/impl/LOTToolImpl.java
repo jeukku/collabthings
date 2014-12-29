@@ -9,8 +9,8 @@ import org.libraryofthings.model.LOTTool;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.client.model.JBean;
-import waazdoh.client.model.MID;
+import waazdoh.client.model.WData;
+import waazdoh.client.model.ObjectID;
 import waazdoh.util.MStringID;
 
 public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool {
@@ -43,8 +43,8 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 	}
 
 	@Override
-	public JBean getBean() {
-		JBean b = o.getBean();
+	public WData getBean() {
+		WData b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
 		if (part != null) {
 			b.addValue(VALUENAME_MODELID, part.getID());
@@ -60,7 +60,7 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 	}
 
 	@Override
-	public boolean parseBean(JBean bean) {
+	public boolean parseBean(WData bean) {
 		setName(bean.getValue(VALUENAME_NAME));
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
 		if (modelid != null) {
@@ -80,7 +80,7 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 	}
 
 	@Override
-	public MID getID() {
+	public ObjectID getID() {
 		return getServiceObject().getID();
 	}
 

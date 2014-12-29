@@ -25,9 +25,9 @@ import org.xml.sax.SAXException;
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.client.model.Binary;
-import waazdoh.client.model.JBean;
-import waazdoh.client.model.MBinaryID;
-import waazdoh.client.model.MID;
+import waazdoh.client.model.WData;
+import waazdoh.client.model.BinaryID;
+import waazdoh.client.model.ObjectID;
 import waazdoh.util.MStringID;
 import waazdoh.util.xml.XML;
 
@@ -42,7 +42,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	//
 	private final ServiceObject o;
 	private String name = "3dmodel" + (LOT3DModelImpl.counter++);
-	private MBinaryID binaryid;
+	private BinaryID binaryid;
 	private final LOTClient env;
 	final private LLog log;
 	private List<Binary> childbinaries = new LinkedList<Binary>();
@@ -62,35 +62,35 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	}
 
 	@Override
-	public JBean getBean() {
-		JBean b = o.getBean();
+	public WData getBean() {
+		WData b = o.getBean();
 		b.addValue(NAME, name);
 		b.addValue(BINARYID, "" + getBinaryID());
 		b.addValue(SCALE, scale);
 		b.add(translation.getBean(TRANSLATION));
 		//
-		JBean bb = b.add("binaries");
+		WData bb = b.add("binaries");
 		for (Binary binary : childbinaries) {
 			bb.add("binary").setValue(binary.getID().toString());
 		}
 		return b;
 	}
 
-	private MBinaryID getBinaryID() {
+	private BinaryID getBinaryID() {
 		return binaryid;
 	}
 
 	@Override
-	public boolean parseBean(JBean bean) {
+	public boolean parseBean(WData bean) {
 		name = bean.getValue("name");
-		binaryid = new MBinaryID(bean.getIDValue(BINARYID));
+		binaryid = new BinaryID(bean.getIDValue(BINARYID));
 		scale = bean.getDoubleValue(SCALE);
 		translation = new LVector(bean.get(TRANSLATION));
 		//
-		JBean bs = bean.get("binaries");
-		List<JBean> bchildbinaries = bs.getChildren();
-		for (JBean bchildbinary : bchildbinaries) {
-			MBinaryID childbinaryid = new MBinaryID(bchildbinary.getText());
+		WData bs = bean.get("binaries");
+		List<WData> bchildbinaries = bs.getChildren();
+		for (WData bchildbinary : bchildbinaries) {
+			BinaryID childbinaryid = new BinaryID(bchildbinary.getText());
 			addChildBinary(env.getBinarySource().getOrDownload(childbinaryid));
 		}
 		//
@@ -102,7 +102,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	}
 
 	@Override
-	public MID getID() {
+	public ObjectID getID() {
 		return getServiceObject().getID();
 	}
 
@@ -210,7 +210,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		log.fine("importing converted string " + s);
 		//
 		XML xml = new XML(s);
-		JBean b = new JBean(xml);
+		WData b = new WData(xml);
 		log.fine("importing " + b.toText());
 		if (importModel(b)) {
 			newBinary();
@@ -241,14 +241,14 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		return null;
 	}
 
-	private boolean importModel(JBean b) throws IOException {
+	private boolean importModel(WData b) throws IOException {
 		String urlattribute = b.getAttribute("url");
 		if (urlattribute != null) {
 			importReplaceURLAttribute(b, urlattribute);
 		}
 		//
-		List<JBean> cs = b.getChildren();
-		for (JBean cb : cs) {
+		List<WData> cs = b.getChildren();
+		for (WData cb : cs) {
 			if (!importModel(cb)) {
 				return false;
 			}
@@ -257,7 +257,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		return true;
 	}
 
-	private void importReplaceURLAttribute(JBean b, String urlattribute)
+	private void importReplaceURLAttribute(WData b, String urlattribute)
 			throws IOException {
 		log.info("Found URL attribute " + urlattribute);
 		log.info("current dir " + new File(".").getAbsolutePath());
@@ -307,7 +307,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 				xml = new XML(new InputStreamReader(getBinary()
 						.getInputStream()));
 				log.info("getModelStream parsing " + xml);
-				JBean b = new JBean(xml);
+				WData b = new WData(xml);
 				// FIXME TODO
 				b.find("X3D").setAttribute("xmlns:xsd",
 						"http://www.w3.org/2001/XMLSchema-instance");
@@ -325,11 +325,11 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		}
 	}
 
-	private void convertURLs(JBean b) {
+	private void convertURLs(WData b) {
 		String surl = b.getAttribute("url");
 		if (surl != null) {
 			Binary cbin = env.getBinarySource().getOrDownload(
-					new MBinaryID(surl));
+					new BinaryID(surl));
 			//
 			String path = env.getBinarySource().getBinaryFile(cbin)
 					.getAbsolutePath();
@@ -337,8 +337,8 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 			b.setAttribute("url", stextureurl);
 		}
 		//
-		List<JBean> cbs = b.getChildren();
-		for (JBean cb : cbs) {
+		List<WData> cbs = b.getChildren();
+		for (WData cb : cbs) {
 			convertURLs(cb);
 		}
 	}

@@ -12,7 +12,7 @@ import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.impl.LOTPartImpl;
 import org.xml.sax.SAXException;
 
-import waazdoh.client.model.JBean;
+import waazdoh.client.model.WData;
 import waazdoh.util.MStringID;
 
 public final class TestPart extends LOTTestCase {
@@ -75,7 +75,7 @@ public final class TestPart extends LOTTestCase {
 	public void testParseFalseBean() throws IOException, SAXException {
 		LOTClient e = getNewClient();
 		LOTPartImpl p = (LOTPartImpl) e.getObjectFactory().getPart();
-		JBean bean = new JBean("part");
+		WData bean = new WData("part");
 		bean.add("parts");
 		p.parseBean(bean);
 	}

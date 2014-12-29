@@ -14,8 +14,8 @@ import org.libraryofthings.model.LOTSubPart;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.client.model.JBean;
-import waazdoh.client.model.MID;
+import waazdoh.client.model.WData;
+import waazdoh.client.model.ObjectID;
 import waazdoh.util.MStringID;
 
 public final class LOTPartImpl implements ServiceObjectData, LOTPart {
@@ -47,15 +47,15 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	}
 
 	@Override
-	public JBean getBean() {
-		JBean b = o.getBean();
+	public WData getBean() {
+		WData b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
 		b.addValue(VALUENAME_MODELID, getModel().getID());
 		if (getBoundingBox() != null) {
 			b.add(getBoundingBox().getBean());
 		}
 		//
-		JBean bparts = getSubPartsBean();
+		WData bparts = getSubPartsBean();
 		//
 		b.add(bparts);
 
@@ -63,29 +63,29 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		return b;
 	}
 
-	private synchronized JBean getSubPartsBean() {
-		JBean bparts = new JBean("parts");
+	private synchronized WData getSubPartsBean() {
+		WData bparts = new WData("parts");
 		for (LOTSubPart part : getSubParts()) {
-			JBean bpart = bparts.add("part");
+			WData bpart = bparts.add("part");
 			((LOTSubPartImpl) part).getBean(bpart);
 		}
 		return bparts;
 	}
 
 	@Override
-	public boolean parseBean(JBean bean) {
+	public boolean parseBean(WData bean) {
 		setName(bean.getValue(VALUENAME_NAME));
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
 		model = new LOT3DModelImpl(env);
 		model.load(modelid);
 		//
-		JBean beanboundingbox = bean.get(LOTBoundingBox.BEAN_NAME);
+		WData beanboundingbox = bean.get(LOTBoundingBox.BEAN_NAME);
 		if (beanboundingbox != null) {
 			boundingbox = new LOTBoundingBox(beanboundingbox);
 		}
 		//
-		JBean bparts = bean.get("parts");
-		for (JBean bpart : bparts.getChildren()) {
+		WData bparts = bean.get("parts");
+		for (WData bpart : bparts.getChildren()) {
 			LOTSubPartImpl subpart = new LOTSubPartImpl(this, env);
 			subpart.parse(bpart);
 			addPart(subpart);
@@ -190,8 +190,8 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	public synchronized boolean isAnEqualPart(LOTPart p) {
 		if (p instanceof LOTPartImpl) {
 			LOTPartImpl impl = (LOTPartImpl) p;
-			JBean thisb = this.getSubPartsBean();
-			JBean thatb = impl.getSubPartsBean();
+			WData thisb = this.getSubPartsBean();
+			WData thatb = impl.getSubPartsBean();
 			return thisb.equals(thatb);
 		} else {
 			return false;
@@ -199,7 +199,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	}
 
 	@Override
-	public synchronized MID getID() {
+	public synchronized ObjectID getID() {
 		if (getServiceObject() != null) {
 			return getServiceObject().getID();
 		} else {

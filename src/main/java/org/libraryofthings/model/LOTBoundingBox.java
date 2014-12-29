@@ -2,7 +2,7 @@ package org.libraryofthings.model;
 
 import org.libraryofthings.math.LVector;
 
-import waazdoh.client.model.JBean;
+import waazdoh.client.model.WData;
 
 public class LOTBoundingBox {
 	public static final String BEAN_NAME = "bbox";
@@ -14,7 +14,7 @@ public class LOTBoundingBox {
 		this.b = b;
 	}
 
-	public LOTBoundingBox(JBean beanboundingbox) {
+	public LOTBoundingBox(WData beanboundingbox) {
 		set(beanboundingbox);
 	}
 
@@ -26,17 +26,17 @@ public class LOTBoundingBox {
 		return b;
 	}
 
-	public JBean getBean() {
-		JBean bean = new JBean(BEAN_NAME);
-		JBean beana = a.getBean("a");
+	public WData getBean() {
+		WData bean = new WData(BEAN_NAME);
+		WData beana = a.getBean("a");
 		bean.add(beana);
-		JBean beanb = b.getBean("b");
+		WData beanb = b.getBean("b");
 		beanb.setName("b");
 		bean.add(beanb);
 		return bean;
 	}
 
-	public void set(JBean bean) {
+	public void set(WData bean) {
 		a = new LVector(bean.get("a"));
 		b = new LVector(bean.get("b"));
 	}

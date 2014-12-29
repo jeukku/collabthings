@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
 
 import waazdoh.client.WClientAppLogin;
 import waazdoh.client.binaries.BinarySource;
-import waazdoh.client.model.CMService;
+import waazdoh.client.model.WService;
 import waazdoh.cp2p.P2PBinarySource;
 import waazdoh.service.rest.RestServiceClient;
 import waazdoh.testing.ServiceMock;
@@ -122,7 +122,7 @@ public class LOTTestCase extends TestCase {
 		return p.get("session", "");
 	}
 
-	private CMService getTestService(String username, MPreferences p,
+	private WService getTestService(String username, MPreferences p,
 			BinarySource source) throws SAXException {
 		if (p.getBoolean(LOTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
 			try {

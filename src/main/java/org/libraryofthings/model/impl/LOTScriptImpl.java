@@ -11,7 +11,7 @@ import org.libraryofthings.scripting.ScriptLoader;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.client.model.JBean;
+import waazdoh.client.model.WData;
 import waazdoh.util.MStringID;
 
 /**
@@ -51,15 +51,15 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	}
 
 	@Override
-	public JBean getBean() {
-		JBean b = o.getBean();
+	public WData getBean() {
+		WData b = o.getBean();
 		b.setBase64Value(SCRIPT, script);
 		b.addValue("name", name);
 		return b;
 	}
 
 	@Override
-	public boolean parseBean(final JBean bean) {
+	public boolean parseBean(final WData bean) {
 		String sscript = bean.getBase64Value(SCRIPT);
 		this.name = bean.getValue("name");
 		return setScript(sscript);
@@ -123,7 +123,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 		return o;
 	}
 
-	public waazdoh.client.model.MID getID() {
+	public waazdoh.client.model.ObjectID getID() {
 		return getServiceObject().getID();
 	}
 

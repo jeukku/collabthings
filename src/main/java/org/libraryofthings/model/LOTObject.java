@@ -1,7 +1,7 @@
 package org.libraryofthings.model;
 
-import waazdoh.client.model.JBean;
-import waazdoh.client.model.MID;
+import waazdoh.client.model.WData;
+import waazdoh.client.model.ObjectID;
 
 public interface LOTObject {
 
@@ -11,8 +11,8 @@ public interface LOTObject {
 
 	void save();
 
-	MID getID();
+	ObjectID getID();
 
-	JBean getBean();
+	WData getBean();
 
 }

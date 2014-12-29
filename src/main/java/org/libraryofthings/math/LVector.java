@@ -2,7 +2,7 @@ package org.libraryofthings.math;
 
 import javax.vecmath.Vector3d;
 
-import waazdoh.client.model.JBean;
+import waazdoh.client.model.WData;
 
 public class LVector extends Vector3d {
 	public LVector(LVector v) {
@@ -17,7 +17,7 @@ public class LVector extends Vector3d {
 		super(0, 0, 0);
 	}
 
-	public LVector(JBean b) {
+	public LVector(WData b) {
 		set(b);
 	}
 
@@ -43,15 +43,15 @@ public class LVector extends Vector3d {
 		return n;
 	}
 
-	public JBean getBean(String name) {
-		JBean b = new JBean(name);
+	public WData getBean(String name) {
+		WData b = new WData(name);
 		b.addValue("x", x);
 		b.addValue("y", y);
 		b.addValue("z", z);
 		return b;
 	}
 
-	public void set(JBean b) {
+	public void set(WData b) {
 		x = b.getDoubleValue("x");
 		y = b.getDoubleValue("y");
 		z = b.getDoubleValue("z");
