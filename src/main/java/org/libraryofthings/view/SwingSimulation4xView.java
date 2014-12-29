@@ -15,10 +15,13 @@ public class SwingSimulation4xView extends JPanel {
 	private SwingRunEnvironmentView zview;
 	private SwingRunEnvironmentView xview;
 	private SwingRunEnvironmentView fview;
+	private double freeanglespeed;
 
 	public SwingSimulation4xView(LOTRunEnvironment runenv) {
 		super();
 		setupFreeTransform();
+		freeanglespeed = runenv.getClient().getPreferences()
+				.getDouble("simulation.view.freeangle.speed", 0.2);
 
 		RunEnviromentDrawer ycanvas = new RunEnviromentDrawer(runenv, (v) -> {
 			v.y = v.z;
@@ -57,7 +60,7 @@ public class SwingSimulation4xView extends JPanel {
 	}
 
 	public void step(double dtime) {
-		freeangle += dtime * 0.00002;
+		freeangle += dtime * freeanglespeed;
 		setupFreeTransform();
 		//
 		doRepaint();
