@@ -37,8 +37,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 	private LOTPart box;
 	private LLog log = LLog.getLogger(this);
 
-	public synchronized void testBoxLine() throws NoSuchMethodException, IOException,
- SAXException, ScriptException, LOTToolException,
+	public synchronized void testBoxLine() throws NoSuchMethodException,
+			IOException, SAXException, ScriptException, LOTToolException,
 			InterruptedException {
 		LOTClient client = getNewClient();
 
@@ -186,6 +186,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 		squarefactory.getEnvironment().setVectorParameter(
 				"buildingpartlocation", new LVector(-1, 1, 0));
 
+		squarefactory.publish();
+
 		boxfactory.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 10,
 				10));
 		log.info("platesource " + squarefactory + " with square " + square);
@@ -232,7 +234,6 @@ public final class ITTestBuildABox extends LOTTestCase {
 		platesource.setName("platesource");
 
 		platesource.getEnvironment().setParameter("plateid", square.getID());
-//		loadScript(platesource.addScript("start"), "platesource_start.js");
 		loadScript(platesource.addScript("order"), "platesource_order.js");
 		loadScript(platesource.addScript("build"), "platesource_build.js");
 
