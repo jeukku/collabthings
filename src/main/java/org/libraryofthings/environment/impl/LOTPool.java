@@ -12,6 +12,7 @@ import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTScript;
 
 public class LOTPool {
+	private static final int MAX_WAIT_TIME = 100000;
 	final private Map<String, List<LOTPart>> parts = new HashMap<>();
 	final private Map<LOTScript, LOTScriptRunnerImpl> scriptrunners = new HashMap<>();
 	final private LOTRuntimeObject runtimeobject;
@@ -64,12 +65,19 @@ public class LOTPool {
 		this.notifyAll();
 	}
 
-	public synchronized void waitForPart(String pool) {
+	public void waitForPart(String string) {
+		waitForPart(string, LOTPool.MAX_WAIT_TIME);
+	}
+
+	public synchronized void waitForPart(String pool, int maxtime) {
+		long st = System.currentTimeMillis();
+
 		if (isPartPoolEmpty(pool)) {
 			log.info("waiting for part " + pool);
 		}
 
-		while (isPartPoolEmpty(pool)) {
+		while (isPartPoolEmpty(pool)
+				&& (System.currentTimeMillis() - st) < maxtime) {
 			waitABit();
 		}
 

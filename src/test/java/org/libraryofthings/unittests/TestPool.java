@@ -61,12 +61,12 @@ public final class TestPool extends LOTTestCase {
 		new Thread(() -> {
 			pool.addPart("test", e.getObjectFactory().getPart());
 		}).start();
-		pool.waitForPart("test");
+		pool.waitForPart("test", 3000);
 		// to test when pool exists, but is empty
 		new Thread(() -> {
 			pool.addPart("test", e.getObjectFactory().getPart());
 		}).start();
-		pool.waitForPart("test");
+		pool.waitForPart("test", 3000);
 		//
 		assertNotNull(pool.getPart("test"));
 	}

@@ -21,6 +21,7 @@ import waazdoh.client.WClientAppLogin;
 import waazdoh.client.binaries.BinarySource;
 import waazdoh.client.model.WService;
 import waazdoh.cp2p.P2PBinarySource;
+import waazdoh.cp2p.network.MBeanStorage;
 import waazdoh.service.rest.RestServiceClient;
 import waazdoh.testing.ServiceMock;
 import waazdoh.testing.StaticTestPreferences;
@@ -93,7 +94,7 @@ public class LOTTestCase extends TestCase {
 			WClientAppLogin applogin = c.getClient().requestAppLogin();
 			MStringID apploginid = applogin.getId();
 			log.info("applogin url " + applogin.getURL());
-			
+
 			new ConditionWaiter(() -> {
 				WClientAppLogin al = c.getClient().checkAppLogin(apploginid);
 				return al.getSessionId() != null;
@@ -111,7 +112,8 @@ public class LOTTestCase extends TestCase {
 	}
 
 	public BinarySource getBinarySource(MPreferences p, boolean bind) {
-		P2PBinarySource testsource = new P2PBinarySource(p, bind);
+		MBeanStorage bstorage = new MBeanStorage(p);
+		P2PBinarySource testsource = new P2PBinarySource(p, bstorage, bind);
 		if (bind) {
 			testsource.setDownloadEverything(true);
 		}
