@@ -19,9 +19,9 @@ import org.xml.sax.SAXException;
 
 import waazdoh.client.WClientAppLogin;
 import waazdoh.client.binaries.BinarySource;
+import waazdoh.client.impl.FileBeanStorage;
 import waazdoh.client.model.WService;
 import waazdoh.cp2p.P2PBinarySource;
-import waazdoh.cp2p.network.MBeanStorage;
 import waazdoh.service.rest.RestServiceClient;
 import waazdoh.testing.ServiceMock;
 import waazdoh.testing.StaticTestPreferences;
@@ -112,7 +112,7 @@ public class LOTTestCase extends TestCase {
 	}
 
 	public BinarySource getBinarySource(MPreferences p, boolean bind) {
-		MBeanStorage bstorage = new MBeanStorage(p);
+		FileBeanStorage bstorage = new FileBeanStorage(p);
 		P2PBinarySource testsource = new P2PBinarySource(p, bstorage, bind);
 		if (bind) {
 			testsource.setDownloadEverything(true);
@@ -129,7 +129,8 @@ public class LOTTestCase extends TestCase {
 		if (p.getBoolean(LOTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
 			try {
 				RestServiceClient client = new RestServiceClient(p.get(
-						MPreferences.SERVICE_URL, "unknown_service"), source);
+						MPreferences.SERVICE_URL, "unknown_service"),
+						new FileBeanStorage(p), source);
 				if (client.isConnected()) {
 					return client;
 				}
