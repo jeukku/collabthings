@@ -42,6 +42,7 @@ public class LOTTestCase extends TestCase {
 	private Set<LOTClient> clients = new HashSet<LOTClient>();
 	LLog log = LLog.getLogger(this);
 	private int usercounter = 0;
+	private FileBeanStorage beanstorage;
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -83,8 +84,8 @@ public class LOTTestCase extends TestCase {
 		MPreferences p = new StaticTestPreferences("lottests", email);
 
 		BinarySource binarysource = getBinarySource(p, bind);
-		LOTClient c = new LOTClientImpl(p, binarysource, getTestService(email,
-				p, binarysource));
+		LOTClient c = new LOTClientImpl(p, binarysource, beanstorage,
+				getTestService(email, p, binarysource));
 
 		boolean setsession = c.getClient().setSession(getSession(p));
 		if (setsession) {
@@ -112,8 +113,8 @@ public class LOTTestCase extends TestCase {
 	}
 
 	public BinarySource getBinarySource(MPreferences p, boolean bind) {
-		FileBeanStorage bstorage = new FileBeanStorage(p);
-		P2PBinarySource testsource = new P2PBinarySource(p, bstorage, bind);
+		beanstorage = new FileBeanStorage(p);
+		P2PBinarySource testsource = new P2PBinarySource(p, beanstorage, bind);
 		if (bind) {
 			testsource.setDownloadEverything(true);
 		}
@@ -130,7 +131,7 @@ public class LOTTestCase extends TestCase {
 			try {
 				RestServiceClient client = new RestServiceClient(p.get(
 						MPreferences.SERVICE_URL, "unknown_service"),
-						new FileBeanStorage(p), source);
+						new FileBeanStorage(p));
 				if (client.isConnected()) {
 					return client;
 				}
