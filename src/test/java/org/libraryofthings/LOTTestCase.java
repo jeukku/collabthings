@@ -17,12 +17,12 @@ import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTObject;
 import org.xml.sax.SAXException;
 
+import waazdoh.client.BinarySource;
 import waazdoh.client.WClientAppLogin;
-import waazdoh.client.binaries.BinarySource;
-import waazdoh.client.impl.FileBeanStorage;
-import waazdoh.client.model.WService;
+import waazdoh.client.service.WService;
+import waazdoh.client.service.rest.RestService;
+import waazdoh.client.storage.local.FileBeanStorage;
 import waazdoh.cp2p.P2PBinarySource;
-import waazdoh.service.rest.RestServiceClient;
 import waazdoh.testing.ServiceMock;
 import waazdoh.testing.StaticTestPreferences;
 import waazdoh.util.ConditionWaiter;
@@ -129,7 +129,7 @@ public class LOTTestCase extends TestCase {
 			BinarySource source) throws SAXException {
 		if (p.getBoolean(LOTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
 			try {
-				RestServiceClient client = new RestServiceClient(p.get(
+				RestService client = new RestService(p.get(
 						MPreferences.SERVICE_URL, "unknown_service"),
 						new FileBeanStorage(p));
 				if (client.isConnected()) {

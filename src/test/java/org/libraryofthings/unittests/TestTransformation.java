@@ -1,7 +1,5 @@
 package org.libraryofthings.unittests;
 
-import javax.vecmath.Vector3d;
-
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;

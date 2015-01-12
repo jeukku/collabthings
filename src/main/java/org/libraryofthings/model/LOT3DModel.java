@@ -7,7 +7,7 @@ import java.io.InputStream;
 import org.libraryofthings.math.LVector;
 import org.xml.sax.SAXException;
 
-import waazdoh.client.model.Binary;
+import waazdoh.client.model.objects.Binary;
 import waazdoh.util.MStringID;
 
 public interface LOT3DModel extends LOTObject {

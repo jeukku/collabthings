@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.libraryofthings.LOTStorage;
 
-import waazdoh.client.model.WService;
+import waazdoh.client.service.WService;
 
 public class LOTStorageImpl implements LOTStorage {
 

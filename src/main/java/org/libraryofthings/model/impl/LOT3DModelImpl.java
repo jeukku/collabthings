@@ -24,12 +24,12 @@ import org.xml.sax.SAXException;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.client.model.Binary;
-import waazdoh.client.model.WData;
 import waazdoh.client.model.BinaryID;
 import waazdoh.client.model.ObjectID;
+import waazdoh.client.model.WData;
+import waazdoh.client.model.objects.Binary;
 import waazdoh.util.MStringID;
-import waazdoh.util.xml.XML;
+import waazdoh.util.XML;
 
 public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	private static final String BEANNAME = "model3d";
@@ -331,8 +331,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 			Binary cbin = env.getBinarySource().getOrDownload(
 					new BinaryID(surl));
 			//
-			String path = env.getBinarySource().getBinaryFile(cbin)
-					.getAbsolutePath();
+			String path = cbin.getFile().getAbsolutePath();
 			String stextureurl = path.replace('\\', '/');
 			b.setAttribute("url", stextureurl);
 		}

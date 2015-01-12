@@ -1,6 +1,5 @@
 package org.libraryofthings.unittests;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.libraryofthings.LOTClient;

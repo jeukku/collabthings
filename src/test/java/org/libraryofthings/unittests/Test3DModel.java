@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 import waazdoh.client.model.WData;
 import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MStringID;
-import waazdoh.util.xml.XML;
+import waazdoh.util.XML;
 
 public final class Test3DModel extends LOTTestCase {
 

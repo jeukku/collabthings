@@ -6,12 +6,12 @@ import org.libraryofthings.LOTStorage;
 import org.libraryofthings.model.LOTObjectFactory;
 import org.libraryofthings.model.impl.LOTObjectFactoryImpl;
 
-import waazdoh.client.BeanStorage;
+import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
-import waazdoh.client.binaries.BinarySource;
 import waazdoh.client.model.User;
 import waazdoh.client.model.UserID;
-import waazdoh.client.model.WService;
+import waazdoh.client.service.WService;
+import waazdoh.client.storage.BeanStorage;
 import waazdoh.util.MPreferences;
 
 public final class LOTClientImpl implements LOTClient {

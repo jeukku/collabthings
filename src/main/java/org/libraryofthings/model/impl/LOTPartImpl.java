@@ -14,8 +14,8 @@ import org.libraryofthings.model.LOTSubPart;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.client.model.WData;
 import waazdoh.client.model.ObjectID;
+import waazdoh.client.model.WData;
 import waazdoh.util.MStringID;
 
 public final class LOTPartImpl implements ServiceObjectData, LOTPart {
