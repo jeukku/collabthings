@@ -9,6 +9,8 @@ import org.libraryofthings.model.impl.LOTObjectFactoryImpl;
 import waazdoh.client.BeanStorage;
 import waazdoh.client.WClient;
 import waazdoh.client.binaries.BinarySource;
+import waazdoh.client.model.User;
+import waazdoh.client.model.UserID;
 import waazdoh.client.model.WService;
 import waazdoh.util.MPreferences;
 
@@ -74,5 +76,10 @@ public final class LOTClientImpl implements LOTClient {
 	@Override
 	public WService getService() {
 		return getClient().getService();
+	}
+	
+	@Override
+	public User getUser(UserID userID) {
+		return getClient().getUser(userID);
 	}
 }
