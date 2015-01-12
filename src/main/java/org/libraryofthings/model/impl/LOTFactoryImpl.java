@@ -24,7 +24,7 @@ import waazdoh.client.model.ObjectID;
 import waazdoh.util.MStringID;
 
 public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
-	private static final String BEANNAME = "factory";
+	public static final String BEANNAME = "factory";
 	private static final String VALUENAME_NAME = "name";
 	private static final String VALUENAME_MODELID = "model3did";
 	private static final String VALUENAME_ENVIRONMENTID = "environmentid";
@@ -128,7 +128,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	public LOTScript addScript(String string) {
 		return addScript(string, new LOTScriptImpl(client));
 	}
-	
+
 	@Override
 	public Set<String> getScripts() {
 		return env.getScripts();
