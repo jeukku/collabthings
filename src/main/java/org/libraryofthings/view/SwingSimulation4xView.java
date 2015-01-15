@@ -9,6 +9,8 @@ import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.math.LTransformation;
 
 public class SwingSimulation4xView extends JPanel {
+	private static final long serialVersionUID = -6344995091052142118L;
+
 	private LTransformation freetransform;
 	private double freeangle;
 	private SwingRunEnvironmentView yview;
