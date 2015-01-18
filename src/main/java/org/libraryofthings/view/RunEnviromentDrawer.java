@@ -113,7 +113,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 		super.drawString(tstack, "" + part, a);
 		//
 		List<LOTSubPart> subparts = part.getSubParts();
-		if (subparts.size() > 0) {
+		if (!subparts.isEmpty()) {
 			for (LOTSubPart lotSubPart : subparts) {
 				tstack.push(lotSubPart.getTransformation());
 

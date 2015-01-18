@@ -9,26 +9,32 @@ import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTBoundingBox;
 
 public class LOTEnvironmentDrawer {
+	private static final int INFOTEXT_Y = 20;
+	private static final int INFOTEXT_X = 20;
+	private static final double DEFAULT_ZOOM = 100.0;
+	private static final double DEFAULT_ZOOMSPEED = 1;
+
 	private LOTGraphics g;
 
 	private float[] boundingboxdash = { 5.0f };
 
-	private int screen_right;
-	private int screen_left;
-	private int screen_top;
-	private int screen_bottom;
+	private int screenright;
+	private int screenleft;
+	private int screentop;
+	private int screenbottom;
 
 	private LVector a = new LVector();
 	private LVector b = new LVector();
 
 	private EnvironmentDrawerTransform t;
-	private double zoom = 100.0;
+	private double zoom = DEFAULT_ZOOM;
 	private int framecount;
 	private String name;
 	private boolean somethingoutofscreen;
-	private double zoomspeed = 1;
+	private double zoomspeed = DEFAULT_ZOOMSPEED;
 
-	public LOTEnvironmentDrawer(String nname, EnvironmentDrawerTransform transform) {
+	public LOTEnvironmentDrawer(String nname,
+			EnvironmentDrawerTransform transform) {
 		this.name = nname;
 		this.t = transform;
 	}
@@ -37,16 +43,16 @@ public class LOTEnvironmentDrawer {
 		getGraphics().setColor(Color.black);
 		getGraphics().drawString(
 				"" + name + " frame:" + (framecount++) + " zoom:" + zoom
-						+ " zspeed:" + zoomspeed, 20, 20);
+						+ " zspeed:" + zoomspeed, INFOTEXT_X, INFOTEXT_Y);
 
 		somethingoutofscreen = false;
 		int widthmargin = getGraphics().getWidth() / 10;
 		int heightmargin = getGraphics().getHeight() / 10;
 
-		screen_left = widthmargin;
-		screen_top = heightmargin;
-		screen_right = getGraphics().getWidth() - widthmargin;
-		screen_bottom = getGraphics().getHeight() - heightmargin;
+		screenleft = widthmargin;
+		screentop = heightmargin;
+		screenright = getGraphics().getWidth() - widthmargin;
+		screenbottom = getGraphics().getHeight() - heightmargin;
 	}
 
 	@Override
@@ -109,8 +115,8 @@ public class LOTEnvironmentDrawer {
 	}
 
 	private void checkOutOfScreen(int sx, int sy) {
-		if (sx > screen_right || sx < screen_left || sy < screen_top
-				|| sy > screen_bottom) {
+		if (sx > screenright || sx < screenleft || sy < screentop
+				|| sy > screenbottom) {
 			this.somethingoutofscreen = true;
 		}
 	}

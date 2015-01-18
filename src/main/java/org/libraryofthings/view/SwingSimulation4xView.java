@@ -33,13 +33,10 @@ public class SwingSimulation4xView extends JPanel {
 			v.x = v.z;
 			v.z = 0;
 		}, "X");
-		RunEnviromentDrawer zcanvas = new RunEnviromentDrawer(runenv, (v) -> {
-			v.z = 0;
-		}, "Z");
+		RunEnviromentDrawer zcanvas = new RunEnviromentDrawer(runenv,
+				(v) -> v.z = 0, "Z");
 		RunEnviromentDrawer freecanvas = new RunEnviromentDrawer(runenv,
-				(v) -> {
-					freetransform.transform(v);
-				}, "Z");
+				(v) -> freetransform.transform(v), "Z");
 
 		setLayout(new GridLayout(2, 2));
 

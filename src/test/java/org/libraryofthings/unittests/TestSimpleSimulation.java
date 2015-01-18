@@ -133,7 +133,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
 
-		assertTrue(factorystate.getParts().size() > 0);
+		assertFalse(factorystate.getParts().isEmpty() );
 		//
 		LVector l = toolstate.getLocation();
 		assertReallyClose(new LVector(10, 0, 0), l);

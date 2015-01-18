@@ -33,7 +33,7 @@ public class LOTPool {
 
 	public LOTPart peekPart(String string) {
 		List<LOTPart> list = parts.get(string);
-		if (list != null && list.size() > 0) {
+		if (list != null && !list.isEmpty() ) {
 			return list.get(0);
 		} else {
 			return null;
