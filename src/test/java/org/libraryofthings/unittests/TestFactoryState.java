@@ -19,7 +19,7 @@ public final class TestFactoryState extends LOTTestCase {
 		LOTPartState p = state.getParts().iterator().next();
 		p.destroy();
 		//
-		assertTrue(state.getParts().size() == 0);
+		assertTrue(state.getParts().isEmpty());
 	}
 
 	public void testGetFactory() {

@@ -10,9 +10,6 @@ import waazdoh.client.model.WData;
 import waazdoh.util.MStringID;
 
 public final class LOTSubPartImpl implements LOTSubPart {
-	/**
-	 * 
-	 */
 	private final LOTPart parent;
 	private LOTPart part;
 	private final LVector p = new LVector();

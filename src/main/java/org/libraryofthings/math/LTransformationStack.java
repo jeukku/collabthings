@@ -1,9 +1,10 @@
 package org.libraryofthings.math;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class LTransformationStack {
-	private Stack<LTransformation> stack = new Stack<>();
+	private Deque<LTransformation> stack = new ArrayDeque<>();
 
 	public LTransformationStack() {
 		LTransformation t = new LTransformation();

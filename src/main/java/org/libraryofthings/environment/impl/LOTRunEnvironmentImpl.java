@@ -98,7 +98,7 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 
 	private void runTask(LOTTask task) {
 		if (!task.run()) {
-			fireTaskFailed(this, task);
+			fireTaskFailed(task);
 		}
 
 		synchronized (this) {
@@ -106,7 +106,7 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 		}
 	}
 
-	private void fireTaskFailed(LOTRunEnvironment runenv, LOTTask task) {
+	private void fireTaskFailed(LOTTask task) {
 		for (RunEnvironmentListener listener : listeners) {
 			listener.taskFailed(this, task);
 		}
@@ -166,8 +166,9 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 		sb.append("addTask " + s + "\n");
 		if (values != null) {
 			sb.append("\tparameters: ");
-			for (String name : values.keys()) {
-				sb.append("\t\t" + name + " -> " + values.get(name) + "\n");
+			for (String valuename : values.keys()) {
+				sb.append("\t\t" + valuename + " -> " + values.get(valuename)
+						+ "\n");
 			}
 		} else {
 			sb.append("Parameters null\n");

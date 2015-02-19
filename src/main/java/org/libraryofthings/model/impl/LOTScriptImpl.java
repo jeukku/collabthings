@@ -82,24 +82,8 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 				ScriptLoader loader = LOTJavaScriptLoader.get(this.client);
 				inv = loader.load(script);
 				if (inv != null) {
-					// invoke the global function named "hello"
 					info = "" + inv.invokeFunction("info");
 					log.info("load a script " + info);
-
-					// TODO
-					// to test for syntax errors.
-					try {
-						inv.invokeFunction("run", null, null, null);
-					} catch (ScriptException e) {
-						if (e.getMessage().indexOf(
-								"TypeError: null has no such function") == 0) {
-							// that's just fine
-						} else {
-							log.info("got scriptexception " + e.getMessage());
-							throw (e);
-						}
-					}
-
 					error = null;
 				} else {
 					script = null;

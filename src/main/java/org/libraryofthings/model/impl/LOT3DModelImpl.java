@@ -44,8 +44,8 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	private String name = "3dmodel" + (LOT3DModelImpl.counter++);
 	private BinaryID binaryid;
 	private final LOTClient env;
-	final private LLog log;
-	private List<Binary> childbinaries = new LinkedList<Binary>();
+	private final LLog log;
+	private final List<Binary> childbinaries = new LinkedList<Binary>();
 	private double scale = 1.0;
 	private LVector translation = new LVector();
 

@@ -92,8 +92,9 @@ public final class TestFactory extends LOTTestCase {
 	public void testChildFactory() {
 		LOTClient c = getNewClient();
 		LOTFactory f = c.getObjectFactory().getFactory();
-		LOTFactory childf = f.addFactory("test");
-		String childfactoryname = "testchildfactory";
+		String childfactoryid = "testchildfactory";
+		LOTFactory childf = f.addFactory(childfactoryid);
+		String childfactoryname = "some child factory";
 		childf.setName(childfactoryname);
 		childf.addScript("testscript");
 		f.publish();
@@ -102,8 +103,9 @@ public final class TestFactory extends LOTTestCase {
 		LOTFactory bf = bc.getObjectFactory().getFactory(
 				f.getID().getStringID());
 		assertEquals(f.getBean().toText(), bf.getBean().toText());
-		LOTFactory bchildf = bf.getFactory(childfactoryname);
+		LOTFactory bchildf = bf.getFactory(childfactoryid);
 		assertNotNull(bchildf);
+		assertEquals(childfactoryname, bchildf.getName());
 		assertEquals(childf.getBean().toText(), bchildf.getBean().toText());
 	}
 
