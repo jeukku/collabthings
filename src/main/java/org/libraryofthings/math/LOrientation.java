@@ -7,14 +7,14 @@ public class LOrientation {
 	private static final String VALUENAME_ORIENTATION_NORMAL = "normal";
 	private static final String VALUENAME_ORIENTATION_ANGLE = "angle";
 
-	public final LVector location = new LVector();
-	public final LVector normal = new LVector(0, 1, 0);
-	public double angle = 0.0;
+	private final LVector location = new LVector();
+	private final LVector normal = new LVector(0, 1, 0);
+	private double angle = 0.0;
 
 	public LOrientation(WData ob) {
-		location.set(new LVector(ob.get(VALUENAME_ORIENTATION_LOCATION)));
-		normal.set(new LVector(ob.get(VALUENAME_ORIENTATION_NORMAL)));
-		angle = ob.getDoubleValue(VALUENAME_ORIENTATION_ANGLE);
+		getLocation().set(new LVector(ob.get(VALUENAME_ORIENTATION_LOCATION)));
+		getNormal().set(new LVector(ob.get(VALUENAME_ORIENTATION_NORMAL)));
+		setAngle(ob.getDoubleValue(VALUENAME_ORIENTATION_ANGLE));
 	}
 
 	public LOrientation() {
@@ -23,19 +23,36 @@ public class LOrientation {
 
 	@Override
 	public String toString() {
-		return "[O:(" + location + ")(" + normal + ")(" + angle + ")]";
+		return "[O:(" + getLocation() + ")(" + getNormal() + ")(" + getAngle()
+				+ ")]";
 	}
 
 	public WData getBean(String beannameOrientation) {
 		WData ob = new WData(beannameOrientation);
-		ob.add(location.getBean(VALUENAME_ORIENTATION_LOCATION));
-		ob.add(normal.getBean(VALUENAME_ORIENTATION_NORMAL));
-		ob.addValue(VALUENAME_ORIENTATION_ANGLE, angle);
+		ob.add(getLocation().getBean(VALUENAME_ORIENTATION_LOCATION));
+		ob.add(getNormal().getBean(VALUENAME_ORIENTATION_NORMAL));
+		ob.addValue(VALUENAME_ORIENTATION_ANGLE, getAngle());
 		return ob;
 	}
 
 	public void set(LVector n, double d) {
-		normal.set(n);
-		angle = d;
+		getNormal().set(n);
+		setAngle(d);
+	}
+
+	public double getAngle() {
+		return angle;
+	}
+
+	public void setAngle(double angle) {
+		this.angle = angle;
+	}
+
+	public LVector getLocation() {
+		return location;
+	}
+
+	public LVector getNormal() {
+		return normal;
 	}
 }

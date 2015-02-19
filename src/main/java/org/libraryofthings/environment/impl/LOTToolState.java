@@ -71,7 +71,7 @@ public class LOTToolState implements LOTRuntimeObject {
 	}
 
 	public void moveTo(LVector l) {
-		moveTo(l, o.normal, o.angle);
+		moveTo(l, o.getNormal(), o.getAngle());
 	}
 
 	public void moveTo(LVector l, LVector n, double angle) {
@@ -85,13 +85,13 @@ public class LOTToolState implements LOTRuntimeObject {
 	}
 
 	public LVector getLocation() {
-		return o.location;
+		return o.getLocation();
 	}
 
 	public void setOrientation(LVector l, LVector n, double angle) {
-		o.location.set(l);
-		o.normal.set(n);
-		o.angle = angle;
+		o.getLocation().set(l);
+		o.getNormal().set(n);
+		o.setAngle(angle);
 	}
 
 	public void setAvailable() {

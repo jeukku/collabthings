@@ -15,7 +15,7 @@ import waazdoh.client.storage.BeanStorage;
 import waazdoh.util.MPreferences;
 
 public final class LOTClientImpl implements LOTClient {
-	private final String prefix = "LOT";
+	private final static String PREFIX = "LOT";
 	//
 	private final WClient client;
 	private final LOTStorage storage;
@@ -51,7 +51,7 @@ public final class LOTClientImpl implements LOTClient {
 	}
 
 	public String getPrefix() {
-		return prefix;
+		return PREFIX;
 	}
 
 	public MPreferences getPreferences() {
@@ -65,7 +65,7 @@ public final class LOTClientImpl implements LOTClient {
 	@Override
 	public String getGlobalSetting(String name) {
 		return client
-				.readStorageArea("/public/" + prefix + "/settings/" + name);
+				.readStorageArea("/public/" + PREFIX + "/settings/" + name);
 	}
 
 	@Override

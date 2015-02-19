@@ -102,7 +102,7 @@ public final class TestFactory extends LOTTestCase {
 		LOTFactory bf = bc.getObjectFactory().getFactory(
 				f.getID().getStringID());
 		assertEquals(f.getBean().toText(), bf.getBean().toText());
-		LOTFactory bchildf = bf.getFactory("test");
+		LOTFactory bchildf = bf.getFactory(childfactoryname);
 		assertNotNull(bchildf);
 		assertEquals(childf.getBean().toText(), bchildf.getBean().toText());
 	}

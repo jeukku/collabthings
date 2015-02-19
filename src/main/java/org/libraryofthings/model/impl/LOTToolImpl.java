@@ -18,9 +18,8 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 	private static final String VALUENAME_NAME = "value";
 	private static final String VALUENAME_MODELID = "model3did";
 	private static final String VALUENAME_ENVIRONMENTID = "environmentid";
-	//
+
 	private static int counter = 0;
-	//
 	private ServiceObject o;
 	private String name = "tool" + (LOTToolImpl.counter++);
 	private LOTPart part;

@@ -48,9 +48,10 @@ public class TestSimpleSimulation extends LOTTestCase {
 		f3.setLocation(new LVector(-3, 2, -3));
 
 		LOTFactoryState f1s = new LOTFactoryState(client, env, "f1s", f1);
-		
-		LOTPartState p = f1s.getFactories().get(0).getFactories().get(0)
-				.newPart();
+
+		LOTFactoryState f2s = f1s.getFactory("f2");
+		LOTFactoryState f21s = f2s.getFactory("f21");
+		LOTPartState p = f21s.newPart();
 		// to zoom out the view
 		p.setLocation(new LVector(20, 0, 0));
 
@@ -60,7 +61,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 			long st = System.currentTimeMillis();
 			while ((System.currentTimeMillis() - st) < 10000) {
 				try {
-					wait(200);					
+					wait(200);
 				} catch (Exception e) {
 				}
 			}
@@ -133,7 +134,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
 
-		assertFalse(factorystate.getParts().isEmpty() );
+		assertFalse(factorystate.getParts().isEmpty());
 		//
 		LVector l = toolstate.getLocation();
 		assertReallyClose(new LVector(10, 0, 0), l);

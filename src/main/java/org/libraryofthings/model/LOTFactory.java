@@ -37,6 +37,8 @@ public interface LOTFactory extends LOTObject {
 
 	Set<String> getFactories();
 
+	LOTFactory addFactory(String factoryname, LOTFactory f);
+
 	void setLocation(LVector LVector3d);
 
 	void setOrientation(LVector lVector, double d);

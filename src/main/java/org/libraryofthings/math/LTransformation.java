@@ -15,7 +15,7 @@ public class LTransformation {
 	}
 
 	public LTransformation(LOrientation o) {
-		this(o.location, o.normal, o.angle);
+		this(o.getLocation(), o.getNormal(), o.getAngle());
 	}
 
 	public LTransformation(LVector location, LVector orientationnormal,

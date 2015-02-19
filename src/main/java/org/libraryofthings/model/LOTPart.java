@@ -26,7 +26,7 @@ public interface LOTPart extends LOTObject {
 
 	boolean importModel(InputStream resourceAsStream);
 
-	void setBoundingBox(LVector LVector3d, LVector LVector3d2);
+	void setBoundingBox(LVector a, LVector b);
 
 	LOTBoundingBox getBoundingBox();
 

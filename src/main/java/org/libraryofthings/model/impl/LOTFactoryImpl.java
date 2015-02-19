@@ -38,7 +38,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	private LOTClient client;
 	private LOTEnvironment env;
 	//
-	private Map<String, LOTFactoryImpl> factories = new HashMap<>();
+	private Map<String, LOTFactory> factories = new HashMap<>();
 	private final LOTBoundingBox bbox = new LOTBoundingBox(new LVector(),
 			new LVector());
 	private LOT3DModel model;
@@ -77,9 +77,9 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 			b.addValue(VALUENAME_MODELID, model.getID());
 		}
 		WData bchildfactories = b.add("factories");
-		for (String cfname : factories.keySet()) {
-			LOTFactoryImpl cf = factories.get(cfname);
-			bchildfactories.addValue(cfname, cf.getID().toString());
+		for (String cname : factories.keySet()) {
+			LOTFactory cf = getFactory(cname);
+			bchildfactories.addValue(cname, cf.getID().toString());
 		}
 		//
 		return b;
@@ -192,7 +192,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		getEnvironment().save();
 		getServiceObject().save();
 
-		for (LOTFactoryImpl cf : factories.values()) {
+		for (LOTFactory cf : factories.values()) {
 			cf.save();
 		}
 	}
@@ -204,12 +204,12 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 			model.publish();
 		}
 
-		getEnvironment().publish();
-		getServiceObject().publish();
-
-		for (LOTFactoryImpl cf : factories.values()) {
+		for (LOTFactory cf : factories.values()) {
 			cf.publish();
 		}
+
+		getEnvironment().publish();
+		getServiceObject().publish();
 	}
 
 	@Override
@@ -249,14 +249,15 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return addFactory(string, childfactory);
 	}
 
+	@Override
 	public LOTFactory addFactory(final String factoryname,
-			final LOTFactoryImpl childfactory) {
+			final LOTFactory childfactory) {
 		this.factories.put(factoryname, childfactory);
 		return childfactory;
 	}
 
-	public LOTFactoryImpl getFactory(final String name) {
-		return this.factories.get(name);
+	public LOTFactory getFactory(final String name) {
+		return factories.get(name);
 	}
 
 	@Override
@@ -265,7 +266,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	public void setLocation(LVector nloc) {
-		orientation.location.set(nloc);
+		orientation.getLocation().set(nloc);
 	}
 
 	public LOrientation getOrientation() {

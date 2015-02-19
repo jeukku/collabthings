@@ -25,7 +25,6 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 	private LLog log = LLog.getLogger(this);
 
 	private final LVector a = new LVector();
-	private final LVector b = new LVector();
 
 	public RunEnviromentDrawer(final LOTRunEnvironment nrunenv,
 			EnvironmentDrawerTransform transform, String name) {
@@ -110,7 +109,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 		a.set(0, 0, 0);
 
 		getGraphics().setColor(Color.lightGray);
-		super.drawString(tstack, "" + part, a);
+		drawString(tstack, "" + runo, a);
 		//
 		List<LOTSubPart> subparts = part.getSubParts();
 		if (!subparts.isEmpty()) {

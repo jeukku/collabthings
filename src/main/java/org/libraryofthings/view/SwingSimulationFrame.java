@@ -37,7 +37,7 @@ public class SwingSimulationFrame {
 
 			f.getContentPane().add(view, BorderLayout.CENTER);
 			f.setAutoRequestFocus(true);
-			// f.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
 			f.setVisible(true);
 			f.toFront();
 			f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

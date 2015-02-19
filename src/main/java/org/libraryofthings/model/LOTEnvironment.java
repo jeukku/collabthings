@@ -12,7 +12,7 @@ public interface LOTEnvironment extends LOTObject {
 
 	Set<String> getScripts();
 
-	void addScript(String scriptname, LOTScript lotScript);
+	void addScript(String scriptname, LOTScript script);
 
 	void renameScript(String oldname, String newname);
 
@@ -26,7 +26,7 @@ public interface LOTEnvironment extends LOTObject {
 
 	String getParameter(String string);
 
-	void setVectorParameter(String string, LVector LVector3d);
+	void setVectorParameter(String string, LVector v);
 
 	LVector getVectorParameter(String name);
 

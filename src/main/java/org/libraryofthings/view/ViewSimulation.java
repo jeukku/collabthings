@@ -105,10 +105,9 @@ public class ViewSimulation implements RunEnvironmentListener {
 			timeline.play();
 			timer.start();
 		});
-		;
 
 		f.setVisible(true);
-		//
+		
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//
 	}

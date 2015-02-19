@@ -65,7 +65,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		transformation = factory.getTransformation();
 
 		for (String fname : getFactory().getFactories()) {
-			addFactory(fname, getFactory().getFactory(fname));
+			LOTFactory f = getFactory().getFactory(fname);
+			addFactory(fname, f);
 		}
 
 		LOTValues values = new LOTValues("factory", factory);
