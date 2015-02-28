@@ -49,8 +49,10 @@ public class LOTTestCase extends TestCase {
 		log.info("**************** STOP TEST " + getName() + " ************** ");
 		StaticTestPreferences.clearPorts();
 		for (LOTClient e : clients) {
+			log.info("** stopping " + e + " of " + clients);
 			e.stop();
 		}
+
 		log.info("**************** STOPPED TEST " + getName()
 				+ " ************** ");
 	}
