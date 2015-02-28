@@ -46,10 +46,13 @@ public class LOTTestCase extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+		log.info("**************** STOP TEST " + getName() + " ************** ");
 		StaticTestPreferences.clearPorts();
 		for (LOTClient e : clients) {
 			e.stop();
 		}
+		log.info("**************** STOPPED TEST " + getName()
+				+ " ************** ");
 	}
 
 	@Override
