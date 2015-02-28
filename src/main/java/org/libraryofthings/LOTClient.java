@@ -4,8 +4,6 @@ import org.libraryofthings.model.LOTObjectFactory;
 
 import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
-import waazdoh.client.model.User;
-import waazdoh.client.model.UserID;
 import waazdoh.client.service.WService;
 import waazdoh.util.MPreferences;
 
@@ -32,7 +30,5 @@ public interface LOTClient {
 	WService getService();
 
 	LOTStorage getStorage();
-
-	User getUser(UserID userID);
 
 }

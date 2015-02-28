@@ -1,6 +1,8 @@
 package org.libraryofthings.unittests;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
@@ -15,6 +17,7 @@ import org.libraryofthings.environment.impl.ReallySimpleSuperheroRobot;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
+import org.libraryofthings.model.LOTValues;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
 import org.libraryofthings.model.impl.LOTFactoryImpl;
 import org.libraryofthings.model.impl.LOTScriptImpl;
@@ -57,7 +60,14 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 		LOTRunEnvironment runenv = f1s.getRunEnvironment();
 
+		final Map<String, Object> valuesmap = new HashMap<String, Object>();
+
+		String name = "testvaluename";
+		String value = "testvalue";
+		
 		runenv.addTask((values) -> {
+			valuesmap.put(name, values.get(name));
+
 			long st = System.currentTimeMillis();
 			while ((System.currentTimeMillis() - st) < 10000) {
 				try {
@@ -66,10 +76,14 @@ public class TestSimpleSimulation extends LOTTestCase {
 				}
 			}
 			return true;
-		});
+		}, new LOTValues(name, value));
+
+		assertNotNull(runenv.getInfo());
 
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv, true);
 		assertTrue(simulation.run(MAX_SIMUALTION_RUNTIME));
+
+		assertEquals(value, valuesmap.get("testvaluename"));
 	}
 
 	public void testFailingScript() throws IOException, SAXException {

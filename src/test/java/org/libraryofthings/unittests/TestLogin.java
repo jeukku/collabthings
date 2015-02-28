@@ -13,6 +13,9 @@ public final class TestLogin extends LOTTestCase {
 	public void testClient() throws IOException, SAXException {
 		LOTClient c = getNewClient();
 		assertNotNull(c);
+
+		assertNotNull(c.getService());
+		assertNotNull(c.getClient().getUser(c.getService().getUserID()));
 	}
 
 	public void testAppLogin() throws IOException, SAXException {
