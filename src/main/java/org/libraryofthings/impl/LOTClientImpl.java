@@ -75,4 +75,13 @@ public final class LOTClientImpl implements LOTClient {
 	public WService getService() {
 		return getClient().getService();
 	}
+
+	public boolean isRunning() {
+		if (getClient().isRunning()) {
+			return true;
+		}
+
+		return false;
+	}
+
 }

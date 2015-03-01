@@ -47,6 +47,30 @@ public class LOTTestCase extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		log.info("**************** STOP TEST " + getName() + " ************** ");
+
+		new Thread(() -> {
+			while (true) {
+
+				Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+				for (Thread t : threadSet) {
+					StackTraceElement[] stackTrace = t.getStackTrace();
+					for (StackTraceElement e : stackTrace) {
+						log.info("Thread " + t + " " + e);
+					}
+				}
+
+				boolean running = false;
+				for (LOTClient e : clients) {
+					if (e.isRunning()) {
+						running = true;
+					}
+				}
+
+				if (running) {
+					break;
+				}
+			}
+		}).start();
 		StaticTestPreferences.clearPorts();
 		for (LOTClient e : clients) {
 			log.info("** stopping " + e + " of " + clients);

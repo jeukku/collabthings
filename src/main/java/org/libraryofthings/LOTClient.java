@@ -23,6 +23,8 @@ public interface LOTClient {
 
 	void stop();
 
+	boolean isRunning();
+
 	MPreferences getPreferences();
 
 	String getGlobalSetting(String name);
