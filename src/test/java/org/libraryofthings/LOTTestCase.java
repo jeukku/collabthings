@@ -28,6 +28,7 @@ import waazdoh.testing.StaticTestPreferences;
 import waazdoh.util.ConditionWaiter;
 import waazdoh.util.MPreferences;
 import waazdoh.util.MStringID;
+import waazdoh.util.ThreadChecker;
 
 public class LOTTestCase extends TestCase {
 	private static final int DEFAULT_WAITTIME = 100;
@@ -48,40 +49,17 @@ public class LOTTestCase extends TestCase {
 	protected void tearDown() throws Exception {
 		log.info("**************** STOP TEST " + getName() + " ************** ");
 
-		new Thread(
-				() -> {
-					synchronized (this) {
-						try {
-							this.wait(40000);
-						} catch (Exception e1) {
-							log.error(this, "", e1);
-						}
-					}
+		new ThreadChecker(() -> {
+			boolean running = false;
+			for (LOTClient e : clients) {
+				if (e.isRunning()) {
+					running = true;
+				}
+			}
 
-					while (true) {
-						boolean running = false;
-						for (LOTClient e : clients) {
-							if (e.isRunning()) {
-								running = true;
-							}
-						}
+			return running;
+		});
 
-						if (!running) {
-							break;
-						}
-
-						Set<Thread> threadSet = Thread.getAllStackTraces()
-								.keySet();
-						for (Thread t : threadSet) {
-							StackTraceElement[] stackTrace = t.getStackTrace();
-							for (StackTraceElement e : stackTrace) {
-								log.info("Thread " + t + " (" + t.getState()
-										+ ") " + e);
-							}
-						}
-
-					}
-				}).start();
 		StaticTestPreferences.clearPorts();
 		for (LOTClient e : clients) {
 			log.info("** stopping " + e + " of " + clients);
