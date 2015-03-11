@@ -23,6 +23,7 @@ import waazdoh.client.service.WService;
 import waazdoh.client.service.rest.RestService;
 import waazdoh.client.storage.local.FileBeanStorage;
 import waazdoh.cp2p.P2PBinarySource;
+import waazdoh.cp2p.P2PServer;
 import waazdoh.testing.ServiceMock;
 import waazdoh.testing.StaticTestPreferences;
 import waazdoh.util.ConditionWaiter;
@@ -44,6 +45,8 @@ public class LOTTestCase extends TestCase {
 	LLog log = LLog.getLogger(this);
 	private int usercounter = 0;
 	private FileBeanStorage beanstorage;
+	protected LOTClient clientb;
+	protected LOTClient clienta;
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -68,6 +71,9 @@ public class LOTTestCase extends TestCase {
 
 		log.info("**************** STOPPED TEST " + getName()
 				+ " ************** ");
+
+		clienta = null;
+		clientb = null;
 	}
 
 	@Override
@@ -75,6 +81,19 @@ public class LOTTestCase extends TestCase {
 		log.info("**************** SETUP TEST " + getName()
 				+ " ************** ");
 		super.setUp();
+	}
+
+	protected void createTwoClients() {
+		clientb = getNewClient(true);
+		clienta = getNewClient();
+		assertNotNull(clienta);
+		assertNotNull(clientb);
+
+		new ConditionWaiter(() -> {
+			return clientb.isRunning() && clienta.isRunning()
+					&& clienta.getBinarySource().isRunning()
+					&& clientb.isRunning();
+		}, getWaitTime());
 	}
 
 	public LOTClient getNewClient() {
@@ -132,10 +151,11 @@ public class LOTTestCase extends TestCase {
 
 	public BinarySource getBinarySource(MPreferences p, boolean bind) {
 		beanstorage = new FileBeanStorage(p);
-		P2PBinarySource testsource = new P2PBinarySource(p, beanstorage, bind);
 		if (bind) {
-			testsource.setDownloadEverything(true);
+			p.set(P2PServer.DOWNLOAD_EVERYTHING, true);
 		}
+		P2PBinarySource testsource = new P2PBinarySource(p, beanstorage, bind);
+
 		return testsource;
 	}
 
@@ -229,6 +249,10 @@ public class LOTTestCase extends TestCase {
 			sb.append(cs, 0, c);
 		}
 		return sb.toString();
+	}
+
+	private int getWaitTime() {
+		return 40000;
 	}
 
 }
