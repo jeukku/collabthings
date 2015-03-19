@@ -12,10 +12,10 @@ import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.model.impl.LOT3DModelImpl;
 import org.xml.sax.SAXException;
 
-import waazdoh.client.model.WData;
-import waazdoh.util.ConditionWaiter;
-import waazdoh.util.MStringID;
-import waazdoh.util.XML;
+import waazdoh.common.ConditionWaiter;
+import waazdoh.common.MStringID;
+import waazdoh.common.WData;
+import waazdoh.common.XML;
 
 public final class Test3DModel extends LOTTestCase {
 

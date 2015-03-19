@@ -6,7 +6,7 @@ import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.environment.RunEnvironmentListener;
 import org.libraryofthings.view.SwingSimulationFrame;
 
-import waazdoh.util.ConditionWaiter;
+import waazdoh.common.ConditionWaiter;
 
 public class LOTSimpleSimulation implements LOTSimulation,
 		RunEnvironmentListener {

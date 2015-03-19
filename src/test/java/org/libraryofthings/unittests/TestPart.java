@@ -11,8 +11,8 @@ import org.libraryofthings.model.LOTSubPart;
 import org.libraryofthings.model.impl.LOTPartImpl;
 import org.xml.sax.SAXException;
 
-import waazdoh.client.model.WData;
-import waazdoh.util.MStringID;
+import waazdoh.common.MStringID;
+import waazdoh.common.WData;
 
 public final class TestPart extends LOTTestCase {
 

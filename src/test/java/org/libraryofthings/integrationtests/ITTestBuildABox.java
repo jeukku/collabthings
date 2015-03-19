@@ -27,7 +27,7 @@ import org.libraryofthings.simulation.LOTSimpleSimulation;
 import org.libraryofthings.simulation.LOTSimulation;
 import org.xml.sax.SAXException;
 
-import waazdoh.util.MStringID;
+import waazdoh.common.MStringID;
 
 public final class ITTestBuildABox extends LOTTestCase {
 

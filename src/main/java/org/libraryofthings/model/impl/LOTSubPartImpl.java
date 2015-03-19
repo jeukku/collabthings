@@ -6,8 +6,8 @@ import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTSubPart;
 
-import waazdoh.client.model.WData;
-import waazdoh.util.MStringID;
+import waazdoh.common.MStringID;
+import waazdoh.common.WData;
 
 public final class LOTSubPartImpl implements LOTSubPart {
 	private final LOTPart parent;

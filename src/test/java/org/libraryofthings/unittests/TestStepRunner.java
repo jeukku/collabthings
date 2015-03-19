@@ -3,8 +3,8 @@ package org.libraryofthings.unittests;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.simulation.LOTStepRunner;
 
-import waazdoh.util.ConditionWaiter;
-import waazdoh.util.MTimedFlag;
+import waazdoh.common.ConditionWaiter;
+import waazdoh.common.MTimedFlag;
 
 public final class TestStepRunner extends LOTTestCase {
 	class Values {

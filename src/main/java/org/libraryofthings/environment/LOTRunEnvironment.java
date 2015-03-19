@@ -9,7 +9,7 @@ import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTValues;
 
-import waazdoh.client.model.ObjectID;
+import waazdoh.common.ObjectID;
 
 public interface LOTRunEnvironment {
 

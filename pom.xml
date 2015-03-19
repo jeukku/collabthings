@@ -206,7 +206,7 @@
 		<dependency>
 			<groupId>waazdoh</groupId>
 			<artifactId>waazdoh.client</artifactId>
-			<version>[1.4.7,)</version>
+			<version>1.4.8-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

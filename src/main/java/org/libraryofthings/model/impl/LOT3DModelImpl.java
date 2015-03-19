@@ -25,11 +25,11 @@ import org.xml.sax.SAXException;
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.client.model.BinaryID;
-import waazdoh.client.model.ObjectID;
-import waazdoh.client.model.WData;
 import waazdoh.client.model.objects.Binary;
-import waazdoh.util.MStringID;
-import waazdoh.util.XML;
+import waazdoh.common.MStringID;
+import waazdoh.common.ObjectID;
+import waazdoh.common.WData;
+import waazdoh.common.XML;
 
 public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	private static final String BEANNAME = "model3d";

@@ -1,7 +1,8 @@
 package org.libraryofthings.model;
 
-import waazdoh.client.model.ObjectID;
-import waazdoh.client.model.WData;
+import waazdoh.common.ObjectID;
+import waazdoh.common.WData;
+
 
 public interface LOTObject {
 

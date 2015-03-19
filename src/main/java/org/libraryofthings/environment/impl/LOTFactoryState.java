@@ -20,8 +20,8 @@ import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.model.LOTValues;
 
-import waazdoh.util.ConditionWaiter;
-import waazdoh.util.MStringID;
+import waazdoh.common.ConditionWaiter;
+import waazdoh.common.MStringID;
 
 public class LOTFactoryState implements LOTRuntimeObject {
 	private final LOTFactory factory;

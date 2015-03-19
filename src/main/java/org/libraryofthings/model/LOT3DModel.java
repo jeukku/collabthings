@@ -8,7 +8,7 @@ import org.libraryofthings.math.LVector;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.model.objects.Binary;
-import waazdoh.util.MStringID;
+import waazdoh.common.MStringID;
 
 public interface LOT3DModel extends LOTObject {
 

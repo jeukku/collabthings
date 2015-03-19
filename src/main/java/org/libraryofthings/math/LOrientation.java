@@ -1,6 +1,7 @@
 package org.libraryofthings.math;
 
-import waazdoh.client.model.WData;
+import waazdoh.common.WData;
+
 
 public class LOrientation {
 	private static final String VALUENAME_ORIENTATION_LOCATION = "location";

@@ -2,7 +2,7 @@ package org.libraryofthings.math;
 
 import javax.vecmath.Vector3d;
 
-import waazdoh.client.model.WData;
+import waazdoh.common.WData;
 
 public class LVector extends Vector3d {
 	public LVector(LVector v) {

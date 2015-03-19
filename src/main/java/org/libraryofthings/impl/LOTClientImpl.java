@@ -10,7 +10,7 @@ import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
 import waazdoh.client.service.WService;
 import waazdoh.client.storage.BeanStorage;
-import waazdoh.util.MPreferences;
+import waazdoh.common.WPreferences;
 
 public final class LOTClientImpl implements LOTClient {
 	private final static String PREFIX = "LOT";
@@ -20,7 +20,7 @@ public final class LOTClientImpl implements LOTClient {
 	private final LOTObjectFactory factory;
 	private LLog log = LLog.getLogger(this);
 
-	public LOTClientImpl(MPreferences p, BinarySource binarysource,
+	public LOTClientImpl(WPreferences p, BinarySource binarysource,
 			BeanStorage beanstorage, WService service) {
 		client = new WClient(p, binarysource, beanstorage, service);
 		this.factory = new LOTObjectFactoryImpl(this);
@@ -52,7 +52,7 @@ public final class LOTClientImpl implements LOTClient {
 		return PREFIX;
 	}
 
-	public MPreferences getPreferences() {
+	public WPreferences getPreferences() {
 		return client.getPreferences();
 	}
 

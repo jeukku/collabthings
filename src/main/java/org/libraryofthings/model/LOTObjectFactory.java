@@ -1,6 +1,7 @@
 package org.libraryofthings.model;
 
-import waazdoh.util.MStringID;
+import waazdoh.common.MStringID;
+
 
 public interface LOTObjectFactory {
 

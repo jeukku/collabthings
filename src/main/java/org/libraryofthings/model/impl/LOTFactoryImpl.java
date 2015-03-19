@@ -19,9 +19,9 @@ import org.libraryofthings.model.LOTTool;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.client.model.ObjectID;
-import waazdoh.client.model.WData;
-import waazdoh.util.MStringID;
+import waazdoh.common.MStringID;
+import waazdoh.common.ObjectID;
+import waazdoh.common.WData;
 
 public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	public static final String BEANNAME = "factory";

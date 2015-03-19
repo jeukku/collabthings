@@ -9,7 +9,7 @@ import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.model.LOTObjectFactory;
 import org.libraryofthings.model.LOTTool;
 
-import waazdoh.util.MStringID;
+import waazdoh.common.MStringID;
 
 public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 

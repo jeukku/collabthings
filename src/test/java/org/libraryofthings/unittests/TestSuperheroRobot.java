@@ -17,7 +17,7 @@ import org.libraryofthings.model.impl.LOTFactoryImpl;
 import org.libraryofthings.model.impl.LOTToolImpl;
 import org.xml.sax.SAXException;
 
-import waazdoh.util.MTimedFlag;
+import waazdoh.common.MTimedFlag;
 
 public final class TestSuperheroRobot extends LOTTestCase {
 

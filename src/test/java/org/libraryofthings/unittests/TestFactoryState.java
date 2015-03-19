@@ -9,7 +9,7 @@ import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
 import org.libraryofthings.simulation.LOTStepRunner;
 
-import waazdoh.util.MTimedFlag;
+import waazdoh.common.MTimedFlag;
 
 public final class TestFactoryState extends LOTTestCase {
 

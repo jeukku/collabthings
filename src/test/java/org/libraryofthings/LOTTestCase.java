@@ -22,14 +22,14 @@ import waazdoh.client.WClientAppLogin;
 import waazdoh.client.service.WService;
 import waazdoh.client.service.rest.RestService;
 import waazdoh.client.storage.local.FileBeanStorage;
+import waazdoh.common.ConditionWaiter;
+import waazdoh.common.MStringID;
+import waazdoh.common.ThreadChecker;
+import waazdoh.common.WPreferences;
 import waazdoh.cp2p.P2PBinarySource;
 import waazdoh.cp2p.P2PServer;
 import waazdoh.testing.ServiceMock;
 import waazdoh.testing.StaticTestPreferences;
-import waazdoh.util.ConditionWaiter;
-import waazdoh.util.MPreferences;
-import waazdoh.util.MStringID;
-import waazdoh.util.ThreadChecker;
 
 public class LOTTestCase extends TestCase {
 	private static final int DEFAULT_WAITTIME = 100;
@@ -105,7 +105,7 @@ public class LOTTestCase extends TestCase {
 		boolean bind = usercounter > 0 || forcebind ? true : false;
 
 		String username = "test_username_" + (usercounter) + "@localhost";
-		MPreferences p = new StaticTestPreferences("lottests", username);
+		WPreferences p = new StaticTestPreferences("lottests", username);
 		usercounter++;
 		try {
 			return getNewEnv(username, bind);
@@ -118,7 +118,7 @@ public class LOTTestCase extends TestCase {
 	public LOTClient getNewEnv(String email, boolean bind)
 			throws MalformedURLException, SAXException {
 		//
-		MPreferences p = new StaticTestPreferences("lottests", email);
+		WPreferences p = new StaticTestPreferences("lottests", email);
 
 		BinarySource binarysource = getBinarySource(p, bind);
 		LOTClient c = new LOTClientImpl(p, binarysource, beanstorage,
@@ -149,7 +149,7 @@ public class LOTTestCase extends TestCase {
 		}
 	}
 
-	public BinarySource getBinarySource(MPreferences p, boolean bind) {
+	public BinarySource getBinarySource(WPreferences p, boolean bind) {
 		beanstorage = new FileBeanStorage(p);
 		if (bind) {
 			p.set(P2PServer.DOWNLOAD_EVERYTHING, true);
@@ -159,16 +159,16 @@ public class LOTTestCase extends TestCase {
 		return testsource;
 	}
 
-	private String getSession(MPreferences p) {
+	private String getSession(WPreferences p) {
 		return p.get("session", "");
 	}
 
-	private WService getTestService(String username, MPreferences p,
+	private WService getTestService(String username, WPreferences p,
 			BinarySource source) throws SAXException {
 		if (p.getBoolean(LOTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
 			try {
 				RestService client = new RestService(p.get(
-						MPreferences.SERVICE_URL, "unknown_service"),
+						WPreferences.SERVICE_URL, "unknown_service"),
 						new FileBeanStorage(p));
 				if (client.isConnected()) {
 					return client;

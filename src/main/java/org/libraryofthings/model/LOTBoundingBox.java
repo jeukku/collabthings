@@ -2,7 +2,7 @@ package org.libraryofthings.model;
 
 import org.libraryofthings.math.LVector;
 
-import waazdoh.client.model.WData;
+import waazdoh.common.WData;
 
 public class LOTBoundingBox {
 	public static final String BEAN_NAME = "bbox";
