@@ -3,6 +3,7 @@ package org.libraryofthings.model;
 import waazdoh.common.MStringID;
 
 
+
 public interface LOTObjectFactory {
 
 	LOTPart getPart();

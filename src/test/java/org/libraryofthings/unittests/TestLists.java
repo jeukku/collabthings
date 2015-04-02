@@ -1,7 +1,7 @@
 package org.libraryofthings.unittests;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
@@ -15,7 +15,7 @@ public final class TestLists extends LOTTestCase {
 		//
 
 		e.getStorage().writeToStorage("testpath", "testname", "testvalue");
-		Set<String> list = e.getStorage().listStorage("testpath");
+		List<String> list = e.getStorage().listStorage("testpath");
 		assertEquals("testname", list.iterator().next());
 		assertEquals("testvalue",
 				e.getStorage().readStorage("testpath", "testname"));

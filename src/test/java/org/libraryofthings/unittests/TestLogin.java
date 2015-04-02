@@ -6,7 +6,7 @@ import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.xml.sax.SAXException;
 
-import waazdoh.client.WClientAppLogin;
+import waazdoh.common.vo.AppLoginVO;
 
 public final class TestLogin extends LOTTestCase {
 
@@ -15,17 +15,17 @@ public final class TestLogin extends LOTTestCase {
 		assertNotNull(c);
 
 		assertNotNull(c.getService());
-		assertNotNull(c.getClient().getUser(c.getService().getUserID()));
+		assertNotNull(c.getClient().getUser(c.getClient().getUserID()));
 	}
 
 	public void testAppLogin() throws IOException, SAXException {
 		LOTClient e = getNewClient();
 		assertNotNull(e);
-		WClientAppLogin applogin = e.getClient().requestAppLogin();
+		AppLoginVO applogin = e.getClient().requestAppLogin();
 		assertNotNull(applogin);
-		assertNotNull(applogin.getURL());
+		assertNotNull(applogin.getUrl());
 
-		e.getClient().getService().acceptAppLogin(applogin.getId());
+		e.getClient().getService().getUsers().acceptApplication(applogin.getId());
 		applogin = e.getClient().checkAppLogin(applogin.getId());
 	}
 }

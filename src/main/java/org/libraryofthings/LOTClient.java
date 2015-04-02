@@ -4,8 +4,8 @@ import org.libraryofthings.model.LOTObjectFactory;
 
 import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
-import waazdoh.client.service.WService;
 import waazdoh.common.WPreferences;
+import waazdoh.common.client.ServiceClient;
 
 public interface LOTClient {
 	public static final String VERSION = "0.0.1";
@@ -29,7 +29,7 @@ public interface LOTClient {
 
 	String getGlobalSetting(String name);
 
-	WService getService();
+	ServiceClient getService();
 
 	LOTStorage getStorage();
 

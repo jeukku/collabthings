@@ -18,17 +18,16 @@ import org.libraryofthings.model.LOTObject;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.BinarySource;
-import waazdoh.client.WClientAppLogin;
-import waazdoh.client.service.WService;
-import waazdoh.client.service.rest.RestService;
 import waazdoh.client.storage.local.FileBeanStorage;
 import waazdoh.common.ConditionWaiter;
-import waazdoh.common.MStringID;
 import waazdoh.common.ThreadChecker;
 import waazdoh.common.WPreferences;
+import waazdoh.common.client.RestServiceClient;
+import waazdoh.common.client.ServiceClient;
+import waazdoh.common.vo.AppLoginVO;
 import waazdoh.cp2p.P2PBinarySource;
 import waazdoh.cp2p.P2PServer;
-import waazdoh.testing.ServiceMock;
+import waazdoh.testing.StaticService;
 import waazdoh.testing.StaticTestPreferences;
 
 public class LOTTestCase extends TestCase {
@@ -129,19 +128,19 @@ public class LOTTestCase extends TestCase {
 			clients.add(c);
 			return c;
 		} else {
-			WClientAppLogin applogin = c.getClient().requestAppLogin();
-			MStringID apploginid = applogin.getId();
-			log.info("applogin url " + applogin.getURL());
+			AppLoginVO applogin = c.getClient().requestAppLogin();
+			String apploginid = applogin.getId();
+			log.info("applogin url " + applogin.getUrl() + "/" + apploginid);
 
 			new ConditionWaiter(() -> {
-				WClientAppLogin al = c.getClient().checkAppLogin(apploginid);
-				return al.getSessionId() != null;
+				AppLoginVO al = c.getClient().checkAppLogin(apploginid);
+				return al.getSessionid() != null;
 			}, 100000);
 
 			applogin = c.getClient().checkAppLogin(applogin.getId());
 
-			if (applogin != null && applogin.getSessionId() != null) {
-				p.set("session", applogin.getSessionId());
+			if (applogin != null && applogin.getSessionid() != null) {
+				p.set("session", applogin.getSessionid());
 				return c;
 			} else {
 				return null;
@@ -163,22 +162,17 @@ public class LOTTestCase extends TestCase {
 		return p.get("session", "");
 	}
 
-	private WService getTestService(String username, WPreferences p,
+	private ServiceClient getTestService(String username, WPreferences p,
 			BinarySource source) throws SAXException {
 		if (p.getBoolean(LOTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
-			try {
-				RestService client = new RestService(p.get(
-						WPreferences.SERVICE_URL, "unknown_service"),
-						new FileBeanStorage(p));
-				if (client.isConnected()) {
-					return client;
-				}
-			} catch (MalformedURLException e) {
-				log.error(this, "getTestService", e);
+			RestServiceClient client = new RestServiceClient(p.get(
+					WPreferences.SERVICE_URL, "unknown_service"));
+			if (client.getUsers().requestAppLogin() != null) {
+				return client;
 			}
 		}
-		ServiceMock mockservice = new ServiceMock(username, source);
-		mockservice.writeStorageArea(
+		StaticService mockservice = new StaticService(username);
+		mockservice.getStorageArea().write(
 				"/public/LOT/settings/lot.javascript.forbiddenwords",
 				"forbiddenword");
 		return mockservice;

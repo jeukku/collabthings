@@ -4,6 +4,7 @@ import waazdoh.common.ObjectID;
 import waazdoh.common.WData;
 
 
+
 public interface LOTObject {
 
 	boolean isReady();

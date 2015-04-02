@@ -8,9 +8,9 @@ import org.libraryofthings.model.impl.LOTObjectFactoryImpl;
 
 import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
-import waazdoh.client.service.WService;
 import waazdoh.client.storage.BeanStorage;
 import waazdoh.common.WPreferences;
+import waazdoh.common.client.ServiceClient;
 
 public final class LOTClientImpl implements LOTClient {
 	private final static String PREFIX = "LOT";
@@ -21,7 +21,7 @@ public final class LOTClientImpl implements LOTClient {
 	private LLog log = LLog.getLogger(this);
 
 	public LOTClientImpl(WPreferences p, BinarySource binarysource,
-			BeanStorage beanstorage, WService service) {
+			BeanStorage beanstorage, ServiceClient service) {
 		client = new WClient(p, binarysource, beanstorage, service);
 		this.factory = new LOTObjectFactoryImpl(this);
 		this.storage = new LOTStorageImpl(service);
@@ -72,7 +72,7 @@ public final class LOTClientImpl implements LOTClient {
 	}
 
 	@Override
-	public WService getService() {
+	public ServiceClient getService() {
 		return getClient().getService();
 	}
 

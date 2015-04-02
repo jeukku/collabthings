@@ -3,6 +3,7 @@ package org.libraryofthings.math;
 import waazdoh.common.WData;
 
 
+
 public class LOrientation {
 	private static final String VALUENAME_ORIENTATION_LOCATION = "location";
 	private static final String VALUENAME_ORIENTATION_NORMAL = "normal";
