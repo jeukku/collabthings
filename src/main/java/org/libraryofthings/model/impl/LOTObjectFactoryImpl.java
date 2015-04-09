@@ -7,6 +7,7 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.model.LOTObjectFactory;
+import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 
 import waazdoh.common.MStringID;
@@ -18,10 +19,28 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	private List<LOTToolImpl> tools = new LinkedList<>();
 	private List<LOTFactoryImpl> factories = new LinkedList<>();
 	private List<LOT3DModelImpl> models = new LinkedList<>();
+	private List<LOTScriptImpl> scripts = new LinkedList<>();
 	private LLog log = LLog.getLogger(this);
 
 	public LOTObjectFactoryImpl(final LOTClient nenv) {
 		this.client = nenv;
+	}
+
+	@Override
+	public LOTScript getScript(String sid) {
+		synchronized (scripts) {
+			MStringID id = new MStringID(sid);
+			for (LOTScriptImpl s : scripts) {
+				if (s.getID().getStringID().equals(id)) {
+					return s;
+				}
+			}
+
+			LOTScriptImpl s = new LOTScriptImpl(client);
+			s.load(id);
+			scripts.add(s);
+			return s;
+		}
 	}
 
 	@Override

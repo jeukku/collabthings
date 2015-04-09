@@ -2,8 +2,6 @@ package org.libraryofthings.model;
 
 import waazdoh.common.MStringID;
 
-
-
 public interface LOTObjectFactory {
 
 	LOTPart getPart();
@@ -21,5 +19,7 @@ public interface LOTObjectFactory {
 	LOT3DModel getModel(MStringID modelid);
 
 	LOT3DModel getModel();
+
+	LOTScript getScript(String id);
 
 }
