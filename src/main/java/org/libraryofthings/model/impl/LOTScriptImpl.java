@@ -45,8 +45,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	 */
 	public LOTScriptImpl(final LOTClient env) {
 		this.client = env;
-		o = new ServiceObject(BEANNAME, env.getClient(), this,
-				env.getVersion(), env.getPrefix());
+		o = new ServiceObject(BEANNAME, env.getClient(), this, env.getVersion(), env.getPrefix());
 		setName("script" + (LOTScriptImpl.namecounter++));
 		setScript("function run(env, values) { env.log().info('Running ' + this); } function info() { return 'default script'; } ");
 	}
@@ -137,6 +136,11 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	 */
 	public boolean isOK() {
 		return inv != null;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 
 	/**

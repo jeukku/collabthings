@@ -16,4 +16,6 @@ public interface LOTScript extends LOTObject {
 
 	String getError();
 
+	String getName();
+
 }
