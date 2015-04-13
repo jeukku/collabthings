@@ -39,8 +39,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	private LOTEnvironment env;
 	//
 	private Map<String, LOTFactory> factories = new HashMap<>();
-	private final LOTBoundingBox bbox = new LOTBoundingBox(new LVector(),
-			new LVector());
+	private final LOTBoundingBox bbox = new LOTBoundingBox(new LVector(), new LVector());
 	private LOT3DModel model;
 	private LVector tooluserspawnlocation;
 	// orientation and location
@@ -49,17 +48,25 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	public LOTFactoryImpl(final LOTClient nclient) {
 		this.client = nclient;
 		env = new LOTEnvironmentImpl(nclient);
-		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
-				nclient.getVersion(), nclient.getPrefix());
+		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(),
+				nclient.getPrefix());
 		addScript("start", new LOTScriptImpl(client));
 		setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
 	}
 
 	public LOTFactoryImpl(final LOTClient nclient, final MStringID id) {
 		this.client = nclient;
-		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
-				nclient.getVersion(), nclient.getPrefix());
+		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(),
+				nclient.getPrefix());
 		o.load(id);
+	}
+
+	public long getModifyTime() {
+		return o.getModifytime();
+	}
+	
+	public long getCreationTime() {
+		return o.getCreationtime();
 	}
 
 	@Override
@@ -108,8 +115,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		WData ob = bean.get(BEANNAME_ORIENTATION);
 		orientation = new LOrientation(ob);
 
-		env = new LOTEnvironmentImpl(client,
-				bean.getIDValue(VALUENAME_ENVIRONMENTID));
+		env = new LOTEnvironmentImpl(client, bean.getIDValue(VALUENAME_ENVIRONMENTID));
 		WData bbbox = bean.get(LOTBoundingBox.BEAN_NAME);
 		if (bbbox != null) {
 			bbox.set(bbbox);
@@ -118,8 +124,8 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		List<WData> bcfs = bchildfactories.getChildren();
 		for (WData bchildfactory : bcfs) {
 			String cfname = bchildfactory.getName();
-			addFactory(cfname, new LOTFactoryImpl(this.client, new MStringID(
-					bchildfactory.getText())));
+			addFactory(cfname,
+					new LOTFactoryImpl(this.client, new MStringID(bchildfactory.getText())));
 		}
 		return getName() != null;
 	}
@@ -244,14 +250,13 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	@Override
 	public LOTFactory addFactory(String string) {
 		LOTFactoryImpl childfactory = new LOTFactoryImpl(client);
-		childfactory.setBoundingBox(getBoundingBox().getA().getScaled(0.5),
-				getBoundingBox().getB().getScaled(0.5));
+		childfactory.setBoundingBox(getBoundingBox().getA().getScaled(0.5), getBoundingBox().getB()
+				.getScaled(0.5));
 		return addFactory(string, childfactory);
 	}
 
 	@Override
-	public LOTFactory addFactory(final String factoryname,
-			final LOTFactory childfactory) {
+	public LOTFactory addFactory(final String factoryname, final LOTFactory childfactory) {
 		this.factories.put(factoryname, childfactory);
 		return childfactory;
 	}
