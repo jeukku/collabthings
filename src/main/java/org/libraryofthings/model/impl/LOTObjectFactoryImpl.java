@@ -1,11 +1,14 @@
 package org.libraryofthings.model.impl;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOT3DModel;
+import org.libraryofthings.model.LOTInfo;
 import org.libraryofthings.model.LOTObjectFactory;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
@@ -22,8 +25,15 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	private List<LOTScriptImpl> scripts = new LinkedList<>();
 	private LLog log = LLog.getLogger(this);
 
+	private Set<LOTInfo> infolisteners = new HashSet<LOTInfo>();
+
 	public LOTObjectFactoryImpl(final LOTClient nenv) {
 		this.client = nenv;
+	}
+
+	@Override
+	public void addInfoListener(LOTInfo info) {
+		infolisteners.add(info);
 	}
 
 	@Override

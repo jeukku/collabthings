@@ -8,7 +8,7 @@ public interface LOTScript extends LOTObject {
 
 	String getScript();
 
-	boolean setScript(String string);
+	void setScript(String string);
 
 	void setName(String scriptname);
 

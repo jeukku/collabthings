@@ -29,28 +29,47 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	private LOTClient client;
 	private ServiceObject o;
 	//
-	private Map<String, LOTScript> scripts = new HashMap<>();
+	private Map<String, LOTScript> scripts;
 	private Map<String, LOTTool> tools = new HashMap<>();
 	private Map<String, String> parameters = new HashMap<>();
 	private Map<String, LVector> vparameters = new HashMap<>();
 	private LLog log;
 
+	private String name = "env";
+	private WData bean;
+
 	public LOTEnvironmentImpl(LOTClient nclient) {
 		this.client = nclient;
-		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
-				nclient.getVersion(), nclient.getPrefix());
+		scripts = new HashMap<String, LOTScript>();
+		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(),
+				nclient.getPrefix());
 	}
 
 	public LOTEnvironmentImpl(LOTClient nclient, MStringID idValue) {
 		this.client = nclient;
-		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
-				nclient.getVersion(), nclient.getPrefix());
+		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(),
+				nclient.getPrefix());
 		o.load(idValue);
+	}
+
+	@Override
+	public String toString() {
+		return "Environment";
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
 	public WData getBean() {
 		WData b = o.getBean();
+
+		b.addValue("name", getName());
 
 		getScriptsBean(b);
 		getToolsBean(b);
@@ -72,9 +91,9 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	}
 
 	private void getScriptsBean(WData b) {
-		synchronized (scripts) {
+		synchronized (getScriptsSet()) {
 			WData scriptbean = b.add(VALUENAME_SCRIPTS);
-			Set<String> scriptnames = scripts.keySet();
+			Set<String> scriptnames = getScriptsSet().keySet();
 			for (String string : scriptnames) {
 				LOTScript s = getScript(string);
 				if (s != null) {
@@ -112,24 +131,35 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 
 	@Override
 	public boolean parseBean(WData bean) {
-		parseScripts(bean);
+		this.bean = bean;
+
 		parseTools(bean);
 		parseParameters(bean);
 		parseVParameters(bean);
+
+		name = bean.getValue("name");
+
 		return true;
 	}
 
+	private Map<String, LOTScript> getScriptsSet() {
+		if (scripts == null) {
+			parseScripts(bean);
+		}
+
+		return scripts;
+	}
+
 	private void parseScripts(WData bean) {
-		synchronized (scripts) {
-			WData ssbean = bean.get(VALUENAME_SCRIPTS);
-			List<WData> sbeans = ssbean.getChildren();
-			for (WData sbean : sbeans) {
-				String scriptname = sbean.getValue("name");
-				MStringID id = sbean.getIDValue("id");
-				LOTScriptImpl script = new LOTScriptImpl(client);
-				script.load(id);
-				scripts.put(scriptname, script);
-			}
+		scripts = new HashMap<>();
+		WData ssbean = bean.get(VALUENAME_SCRIPTS);
+		List<WData> sbeans = ssbean.getChildren();
+		for (WData sbean : sbeans) {
+			String scriptname = sbean.getValue("name");
+			MStringID id = sbean.getIDValue("id");
+			LOTScriptImpl script = new LOTScriptImpl(client);
+			script.load(id);
+			getScriptsSet().put(scriptname, script);
 		}
 	}
 
@@ -172,37 +202,37 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 
 	@Override
 	public void renameScript(String oldname, String newname) {
-		synchronized (scripts) {
-			LOTScript s = scripts.remove(oldname);
-			scripts.put(newname, s);
+		synchronized (getScriptsSet()) {
+			LOTScript s = getScriptsSet().remove(oldname);
+			getScriptsSet().put(newname, s);
 		}
 	}
 
 	@Override
 	public void deleteScript(String string) {
-		synchronized (scripts) {
-			scripts.remove(string);
+		synchronized (getScriptsSet()) {
+			getScriptsSet().remove(string);
 		}
 	}
 
 	@Override
 	public void addScript(String scriptname, LOTScript lotScript) {
-		synchronized (scripts) {
-			scripts.put(scriptname, lotScript);
+		synchronized (getScriptsSet()) {
+			getScriptsSet().put(scriptname, lotScript);
 		}
 	}
 
 	@Override
 	public LOTScript getScript(String string) {
-		synchronized (scripts) {
-			return scripts.get(string);
+		synchronized (getScriptsSet()) {
+			return getScriptsSet().get(string);
 		}
 	}
 
 	@Override
 	public Set<String> getScripts() {
-		synchronized (scripts) {
-			return this.scripts.keySet();
+		synchronized (getScriptsSet()) {
+			return this.getScriptsSet().keySet();
 		}
 	}
 
@@ -214,6 +244,11 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	@Override
 	public LOTTool getTool(String string) {
 		return tools.get(string);
+	}
+
+	@Override
+	public Set<String> getTools() {
+		return tools.keySet();
 	}
 
 	@Override
@@ -243,7 +278,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 
 	@Override
 	public void save() {
-		for (LOTScript s : scripts.values()) {
+		for (LOTScript s : getScriptsSet().values()) {
 			s.save();
 		}
 
@@ -256,7 +291,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 
 	@Override
 	public void publish() {
-		for (LOTScript s : scripts.values()) {
+		for (LOTScript s : getScriptsSet().values()) {
 			s.publish();
 		}
 

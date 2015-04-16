@@ -68,7 +68,7 @@ public final class TestFactory extends LOTTestCase {
 		assertEquals(f.getToolUserSpawnLocation(),
 				bfact.getToolUserSpawnLocation());
 
-		assertEquals(f.getBean(), bfact.getBean());
+		assertEquals(f.getBean().toText(), bfact.getBean().toText());
 		assertEquals(f.hashCode(), bfact.hashCode());
 	}
 

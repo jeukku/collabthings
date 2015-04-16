@@ -22,4 +22,6 @@ public interface LOTObjectFactory {
 
 	LOTScript getScript(String id);
 
+	void addInfoListener(LOTInfo info);
+
 }

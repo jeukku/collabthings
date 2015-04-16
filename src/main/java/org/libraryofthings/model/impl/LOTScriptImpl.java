@@ -60,9 +60,10 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 
 	@Override
 	public boolean parseBean(final WData bean) {
-		String sscript = bean.getBase64Value(SCRIPT);
+		script = bean.getBase64Value(SCRIPT);
+		inv = null;
 		this.name = bean.getValue("name");
-		return setScript(sscript);
+		return name != null && script != null;
 	}
 
 	public boolean load(MStringID id) {
@@ -70,10 +71,9 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	}
 
 	@Override
-	public boolean setScript(final String nscript) {
+	public void setScript(final String nscript) {
 		this.script = nscript;
 		inv = null;
-		return getInvocable() != null;
 	}
 
 	public Invocable getInvocable() {
@@ -134,8 +134,10 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	 * 
 	 * @return true, if script is usable.
 	 */
+	
+	@Override
 	public boolean isOK() {
-		return inv != null;
+		return getInvocable() != null;
 	}
 
 	@Override
@@ -150,6 +152,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	 * @throws ScriptException
 	 */
 	public String getInfo() {
+		getInvocable();
 		return info;
 	}
 

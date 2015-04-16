@@ -64,7 +64,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 		String name = "testvaluename";
 		String value = "testvalue";
-		
+
 		runenv.addTask((values) -> {
 			valuesmap.put(name, values.get(name));
 
@@ -125,24 +125,21 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		LOTFactoryImpl factory = new LOTFactoryImpl(client);
 		factory.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
-		LOTFactoryState factorystate = new LOTFactoryState(client, env,
-				"testfactory", factory);
+		LOTFactoryState factorystate = new LOTFactoryState(client, env, "testfactory", factory);
 		LOTRunEnvironment rune = factorystate.getRunEnvironment();
 
-		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(rune,
-				factorystate);
+		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(rune, factorystate);
 		factorystate.addToolUser(robot);
 		LOTPartState p = factorystate.newPart();
 		p.getPart().newSubPart();
 
-		LOTToolState toolstate = factorystate.addTool("tool", new LOTToolImpl(
-				client));
+		LOTToolState toolstate = factorystate.addTool("tool", new LOTToolImpl(client));
 		//
 		LOTScriptImpl script = new LOTScriptImpl(client);
 		String nscript = "function info(){} function run(e, factory) { factory.newPart(); factory.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0), 6); } ";
-		assertTrue(script.setScript(nscript));
-		LOTScriptRunner runner = new LOTScriptRunnerImpl(script, rune,
-				factorystate);
+		script.setScript(nscript);
+		assertTrue(script.isOK());
+		LOTScriptRunner runner = new LOTScriptRunnerImpl(script, rune, factorystate);
 		rune.addTask(runner);
 		LOTSimulation s = new LOTSimpleSimulation(rune, true);
 
@@ -165,11 +162,11 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTScriptImpl taskscript = new LOTScriptImpl(client);
 		String nscript = "function info(){} function run(e, factory, values) { "
 				+ "e.log().info('calling tooltest'); factory.getTool('tool').call('tooltest', values); } ";
-		assertTrue(taskscript.setScript(nscript));
+		taskscript.setScript(nscript);
+		assertTrue(taskscript.isOK());
 		f.addScript("factorytest", taskscript);
 
-		LOTFactoryState factorystate = new LOTFactoryState(client, env,
-				"testfactory", f);
+		LOTFactoryState factorystate = new LOTFactoryState(client, env, "testfactory", f);
 		LOTRunEnvironment rune = factorystate.getRunEnvironment();
 		//
 		LOTToolImpl tool = new LOTToolImpl(client);

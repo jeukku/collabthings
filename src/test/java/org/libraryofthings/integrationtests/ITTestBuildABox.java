@@ -48,6 +48,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		factory.setLocation(new LVector(0, 0, 0));
 		factory.setToolUserSpawnLocation(new LVector(20, 0, 20));
+		factory.setName("boxsetfactory");
 		factory.publish();
 		//
 		LOTPart line = getLineOfBoxes(client);

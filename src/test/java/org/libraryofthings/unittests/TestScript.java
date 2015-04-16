@@ -12,10 +12,9 @@ import org.libraryofthings.model.impl.LOTScriptImpl;
 public final class TestScript extends LOTTestCase {
 
 	private static final String THIS_SHOULD_WORK = "this should work.";
-	private static final String SCRIPT_TEMPLATE = "function info() { return \""
-			+ THIS_SHOULD_WORK + "\"; } \n";
-	private static final String SCRIPT_ENV_TEST_VALUE = "testvalue "
-			+ Math.random();
+	private static final String SCRIPT_TEMPLATE = "function info() { return \"" + THIS_SHOULD_WORK
+			+ "\"; } \n";
+	private static final String SCRIPT_ENV_TEST_VALUE = "testvalue " + Math.random();
 	private static final String FAILING_SCRIPT = "FAIL";
 
 	public void testSaveAndLoad() {
@@ -40,7 +39,6 @@ public final class TestScript extends LOTTestCase {
 
 		assertEquals(SCRIPT_ENV_TEST_VALUE, runenv.getParameter("testvalue"));
 		//
-		//
 		assertEquals(THIS_SHOULD_WORK, bs.getInfo());
 	}
 
@@ -53,13 +51,14 @@ public final class TestScript extends LOTTestCase {
 
 	private LOTScriptImpl getWorkingScriptExample(LOTClient env) {
 		return getScript(env, SCRIPT_TEMPLATE
-				+ "function run(env) { env.setParameter(\"testvalue\", \""
-				+ SCRIPT_ENV_TEST_VALUE + "\" ); } ");
+				+ "function run(env) { env.setParameter(\"testvalue\", \"" + SCRIPT_ENV_TEST_VALUE
+				+ "\" ); } ");
 	}
 
 	private LOTScriptImpl getScript(LOTClient env, String script) {
 		LOTScriptImpl s = new LOTScriptImpl(env);
-		if (s.setScript(script)) {
+		s.setScript(script);
+		if (s.isOK()) {
 			return s;
 		} else {
 			return null;
@@ -82,10 +81,8 @@ public final class TestScript extends LOTTestCase {
 		LOTClient c = getNewClient();
 
 		try {
-			LOTScriptImpl s = getScript(
-					c,
-					SCRIPT_TEMPLATE
-							+ "function run(e) { r = new java.io.FileWriter('/jstest.txt'); r.flush(); }");
+			LOTScriptImpl s = getScript(c, SCRIPT_TEMPLATE
+					+ "function run(e) { r = new java.io.FileWriter('/jstest.txt'); r.flush(); }");
 			assertNull(s);
 		} catch (SecurityException ex) {
 			assertNotNull(ex);
@@ -107,8 +104,8 @@ public final class TestScript extends LOTTestCase {
 	public void testMissingRunMethod() {
 		LOTClient client = getNewClient();
 		LOTScriptImpl s = getScript(client, "function info() {}");
-		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client,
-				new LOTEnvironmentImpl(client));
+		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client, new LOTEnvironmentImpl(
+				client));
 		LOTScriptRunnerImpl runner = new LOTScriptRunnerImpl(s, runenv, null);
 		runner.run();
 
