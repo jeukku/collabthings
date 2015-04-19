@@ -12,4 +12,6 @@ public interface LOTRuntimeObject {
 
 	String getParameter(String name);
 
+	String getName();
+
 }

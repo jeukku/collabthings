@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.PrintOut;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTValues;
@@ -35,6 +36,8 @@ public interface LOTRunEnvironment {
 
 	String getInfo();
 
+	PrintOut printOut();
+
 	LOTEnvironment getEnvironment();
 
 	void stop();
@@ -46,5 +49,7 @@ public interface LOTRunEnvironment {
 	Set<LOTRuntimeObject> getRunObjects();
 
 	void addRunObject(String string, LOTRuntimeObject runo);
+
+	LOTRuntimeObject getRunObject(String string);
 
 }

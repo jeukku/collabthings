@@ -10,6 +10,7 @@ import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.model.LOTInfo;
 import org.libraryofthings.model.LOTObjectFactory;
+import org.libraryofthings.model.LOTRunEnvironmentBuilder;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 
@@ -23,6 +24,8 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	private List<LOTFactoryImpl> factories = new LinkedList<>();
 	private List<LOT3DModelImpl> models = new LinkedList<>();
 	private List<LOTScriptImpl> scripts = new LinkedList<>();
+	private List<LOTRunEnvironmentBuilder> runtimebuilders = new LinkedList<>();
+
 	private LLog log = LLog.getLogger(this);
 
 	private Set<LOTInfo> infolisteners = new HashSet<LOTInfo>();
@@ -159,6 +162,21 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 			model.load(modelid);
 			models.add(model);
 			return model;
+		}
+	}
+
+	@Override
+	public LOTRunEnvironmentBuilder getRuntimeBuilder(MStringID id) {
+		synchronized (runtimebuilders) {
+			for (LOTRunEnvironmentBuilder b : runtimebuilders) {
+				if (b.getID().equals(id)) {
+					return b;
+				}
+			}
+
+			LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(client, id);
+			runtimebuilders.add(b);
+			return b;
 		}
 	}
 }

@@ -2,6 +2,7 @@ package org.libraryofthings.model;
 
 import java.util.Set;
 
+import org.libraryofthings.PrintOut;
 import org.libraryofthings.math.LVector;
 
 import waazdoh.common.ObjectID;
@@ -37,5 +38,7 @@ public interface LOTEnvironment extends LOTObject {
 	ObjectID getID();
 
 	void deleteScript(String string);
+
+	PrintOut printOut();
 
 }

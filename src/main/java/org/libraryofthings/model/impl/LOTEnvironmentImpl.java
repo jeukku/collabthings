@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.PrintOut;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTScript;
@@ -316,5 +317,14 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 			this.log = LLog.getLogger(this);
 		}
 		return log;
+	}
+
+	@Override
+	public PrintOut printOut() {
+		PrintOut po = new PrintOut();
+
+		po.append(0, getBean().toText());
+
+		return po;
 	}
 }

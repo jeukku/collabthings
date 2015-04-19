@@ -17,8 +17,8 @@ public class LOTPartState implements LOTRuntimeObject {
 	//
 	private LOTFactoryState factory;
 
-	public LOTPartState(final LOTRunEnvironment runenv,
-			final LOTFactoryState factory, final LOTPart part) {
+	public LOTPartState(final LOTRunEnvironment runenv, final LOTFactoryState factory,
+			final LOTPart part) {
 		this.part = part;
 		this.runenv = runenv;
 		this.factory = factory;
@@ -29,6 +29,11 @@ public class LOTPartState implements LOTRuntimeObject {
 		LTransformation t = new LTransformation();
 		t.mult(LTransformation.getTranslate(location));
 		return t;
+	}
+
+	@Override
+	public String getName() {
+		return getParameter("name");
 	}
 
 	public void destroy() {

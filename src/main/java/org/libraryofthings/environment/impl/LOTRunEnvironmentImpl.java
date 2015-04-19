@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.PrintOut;
 import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.environment.LOTScriptRunner;
 import org.libraryofthings.environment.LOTTask;
@@ -47,30 +48,37 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 	}
 
 	@Override
-	public String getInfo() {
-		StringBuilder s = new StringBuilder();
-		s.append("LOTRunEnvironment(" + name + ");");
+	public PrintOut printOut() {
+		PrintOut po = new PrintOut();
+
+		po.append("LOTRunEnvironment(" + name + ");");
 		//
-		s.append("runningtasks: ");
+		po.append("runningtasks: ");
 		for (LOTTask t : new LinkedList<>(runningtasks)) {
-			s.append("" + t + ";");
+			po.append(1, "" + t);
 		}
-		s.append("tasks: ");
+
+		po.append("tasks: ");
 		for (LOTTask t : new LinkedList<>(this.tasks)) {
-			s.append("" + t + ";");
+			po.append(1, "" + t);
 		}
 		//
-		s.append("parameters:");
+		po.append("parameters:");
 		for (String p : params.keySet()) {
-			s.append(p + " -> " + getParameter(p) + ";");
+			po.append(1, p + " -> " + getParameter(p) + ";");
 		}
 
-		s.append("objects:");
+		po.append("objects:");
 		for (String p : objects.keySet()) {
-			s.append(p + " -> " + objects.get(p) + ";");
+			po.append(1, p + " -> " + objects.get(p) + ";");
 		}
 
-		return s.toString();
+		return po;
+	}
+
+	@Override
+	public String getInfo() {
+		return printOut().toText();
 	}
 
 	@Override
@@ -167,8 +175,7 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 		if (values != null) {
 			sb.append("\tparameters: ");
 			for (String valuename : values.keys()) {
-				sb.append("\t\t" + valuename + " -> " + values.get(valuename)
-						+ "\n");
+				sb.append("\t\t" + valuename + " -> " + values.get(valuename) + "\n");
 			}
 		} else {
 			sb.append("Parameters null\n");
@@ -212,6 +219,17 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 	@Override
 	public Set<LOTRuntimeObject> getRunObjects() {
 		return new HashSet<>(this.objects.values());
+	}
+
+	@Override
+	public LOTRuntimeObject getRunObject(String string) {
+		for (LOTRuntimeObject o : getRunObjects()) {
+			if (o.getName().equals(string)) {
+				return o;
+			}
+		}
+
+		return null;
 	}
 
 	@Override

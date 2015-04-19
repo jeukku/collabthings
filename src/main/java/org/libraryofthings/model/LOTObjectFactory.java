@@ -1,6 +1,7 @@
 package org.libraryofthings.model;
 
 import waazdoh.common.MStringID;
+import waazdoh.common.ObjectID;
 
 public interface LOTObjectFactory {
 
@@ -23,5 +24,7 @@ public interface LOTObjectFactory {
 	LOTScript getScript(String id);
 
 	void addInfoListener(LOTInfo info);
+
+	LOTRunEnvironmentBuilder getRuntimeBuilder(MStringID id);
 
 }

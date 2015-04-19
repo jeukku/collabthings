@@ -17,6 +17,7 @@ import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTRuntimeObject;
+import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.model.LOTValues;
 
@@ -40,8 +41,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	private LOTRuntimeObject parent;
 	private LTransformation transformation;
 
-	public LOTFactoryState(final LOTClient client, LOTEnvironment env,
-			final String name, final LOTFactory factory) {
+	public LOTFactoryState(final LOTClient client, LOTEnvironment env, final String name,
+			final LOTFactory factory) {
 		this.factory = factory;
 		this.name = name;
 		runenv = new LOTRunEnvironmentImpl(client, env);
@@ -115,7 +116,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return null;
 	}
 
-	private String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -214,18 +215,15 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		}
 	}
 
-	public void requestMove(LOTToolState lotToolState, LVector l, LVector n,
-			double angle) {
+	public void requestMove(LOTToolState lotToolState, LVector l, LVector n, double angle) {
 		LOTToolUser tooluser = getToolUser(lotToolState, l);
-		getLog().info(
-				"requestMove " + tooluser + " " + l + " tool:" + lotToolState);
+		getLog().info("requestMove " + tooluser + " " + l + " tool:" + lotToolState);
 		tooluser.setTool(lotToolState);
 		tooluser.move(l, n, angle);
 	}
 
 	public LOTToolUser getToolUser(final LOTToolState lotToolState, LVector l) {
-		new ConditionWaiter(() -> !isRunning()
-				|| getAvailableToolUser(lotToolState) != null, 0);
+		new ConditionWaiter(() -> !isRunning() || getAvailableToolUser(lotToolState) != null, 0);
 		return getAvailableToolUser(lotToolState);
 	}
 
@@ -284,7 +282,12 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	}
 
 	private LOTScriptRunnerImpl getScript(String string) {
-		return pool.getScript(factory.getScript(string));
+		LOTScript script = runenv.getEnvironment().getScript(string);
+		if (script == null) {
+			script = factory.getScript(string);
+		}
+
+		return pool.getScript(script);
 	}
 
 	public Set<LOTPartState> getParts() {
@@ -298,8 +301,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	}
 
 	public LOTPartState newPart() {
-		LOTPartState partstate = new LOTPartState(runenv, this, runenv
-				.getClient().getObjectFactory().getPart());
+		LOTPartState partstate = new LOTPartState(runenv, this, runenv.getClient()
+				.getObjectFactory().getPart());
 		addPart(partstate);
 		return partstate;
 	}
@@ -333,8 +336,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	 * Will be removed in future version.
 	 */
 	public void addSuperheroRobot() {
-		ReallySimpleSuperheroRobot tooluser = new ReallySimpleSuperheroRobot(
-				runenv, this, getFactory().getToolUserSpawnLocation());
+		ReallySimpleSuperheroRobot tooluser = new ReallySimpleSuperheroRobot(runenv, this,
+				getFactory().getToolUserSpawnLocation());
 		addToolUser(tooluser);
 	}
 
