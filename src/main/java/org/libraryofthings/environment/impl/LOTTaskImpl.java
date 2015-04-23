@@ -5,7 +5,7 @@ import org.libraryofthings.environment.LOTScriptRunner;
 import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.model.LOTValues;
 
-import waazdoh.common.ConditionWaiter;
+import waazdoh.client.utils.ConditionWaiter;
 
 public final class LOTTaskImpl implements LOTTask {
 	private LOTScriptRunner s;

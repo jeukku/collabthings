@@ -89,6 +89,10 @@ public final class LOTClientImpl implements LOTClient {
 		String path = "published/" + string;
 		path = path.replace("//", "/");
 
-		client.getService().getStorageArea().write(path, "" + o.getID());
+		String id = "" + o.getID();
+
+		log.info("writing " + path + " value:" + id);
+
+		client.getService().getStorageArea().write(path, id);
 	}
 }

@@ -12,7 +12,7 @@ import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.model.impl.LOT3DModelImpl;
 import org.xml.sax.SAXException;
 
-import waazdoh.common.ConditionWaiter;
+import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MStringID;
 import waazdoh.common.WData;
 import waazdoh.common.XML;

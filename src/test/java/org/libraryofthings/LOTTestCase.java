@@ -19,8 +19,8 @@ import org.xml.sax.SAXException;
 
 import waazdoh.client.BinarySource;
 import waazdoh.client.storage.local.FileBeanStorage;
-import waazdoh.common.ConditionWaiter;
-import waazdoh.common.ThreadChecker;
+import waazdoh.client.utils.ConditionWaiter;
+import waazdoh.client.utils.ThreadChecker;
 import waazdoh.common.WPreferences;
 import waazdoh.common.client.RestServiceClient;
 import waazdoh.common.client.ServiceClient;

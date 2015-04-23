@@ -10,7 +10,7 @@ import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.environment.RunEnvironmentListener;
 import org.libraryofthings.view.SwingSimulationFrame;
 
-import waazdoh.common.ConditionWaiter;
+import waazdoh.client.utils.ConditionWaiter;
 
 public class LOTSimpleSimulation implements LOTSimulation, RunEnvironmentListener {
 	private static final double MAX_STEP = 0.02;

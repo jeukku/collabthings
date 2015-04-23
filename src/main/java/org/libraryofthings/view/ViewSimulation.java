@@ -37,7 +37,6 @@ import org.libraryofthings.environment.impl.LOTToolUser;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTRuntimeObject;
-import org.libraryofthings.model.LOTValues;
 
 public class ViewSimulation implements RunEnvironmentListener {
 

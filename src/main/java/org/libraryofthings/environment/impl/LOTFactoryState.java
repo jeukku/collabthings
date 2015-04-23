@@ -21,7 +21,7 @@ import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.model.LOTValues;
 
-import waazdoh.common.ConditionWaiter;
+import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MStringID;
 
 public class LOTFactoryState implements LOTRuntimeObject {
