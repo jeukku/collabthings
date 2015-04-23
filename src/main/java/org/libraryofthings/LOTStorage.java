@@ -1,7 +1,8 @@
 package org.libraryofthings;
 
 import java.util.List;
-import java.util.Set;
+
+import waazdoh.common.vo.UserVO;
 
 public interface LOTStorage {
 	void writeToStorage(String path, String name, String data);
@@ -9,4 +10,8 @@ public interface LOTStorage {
 	List<String> listStorage(String string);
 
 	String readStorage(String path, String name);
+
+	List<String> getUserPublished(String userid, int start, int count);
+
+	String readStorage(UserVO u, String item);
 }

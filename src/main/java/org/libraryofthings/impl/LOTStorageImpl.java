@@ -5,6 +5,7 @@ import java.util.List;
 import org.libraryofthings.LOTStorage;
 
 import waazdoh.common.client.ServiceClient;
+import waazdoh.common.vo.UserVO;
 
 public class LOTStorageImpl implements LOTStorage {
 
@@ -27,5 +28,15 @@ public class LOTStorageImpl implements LOTStorage {
 	@Override
 	public String readStorage(String path, String name) {
 		return service.getStorageArea().read(path + "/" + name);
+	}
+
+	@Override
+	public List<String> getUserPublished(String userid, int start, int count) {
+		return service.getStorageArea().listNewItems(userid, start, count);
+	}
+
+	@Override
+	public String readStorage(UserVO u, String item) {
+		return service.getStorageArea().userRead(u.getUserid(), item);
 	}
 }
