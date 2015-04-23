@@ -11,6 +11,7 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.PrintOut;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.LOTRuntimeEvent;
 import org.libraryofthings.environment.LOTScriptRunner;
 import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.environment.RunEnvironmentListener;
@@ -45,6 +46,18 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 	@Override
 	public String toString() {
 		return "LOTRunEnvironmentImpl[" + this.name + "]";
+	}
+
+	@Override
+	public void recordEvent(LOTRuntimeObject runo, String string, LOTValues callvalues) {
+		fireEvent(runo, string, callvalues);
+	}
+	
+	private void fireEvent(LOTRuntimeObject runo, String string, LOTValues callvalues) {
+		for (RunEnvironmentListener listener : listeners) {
+			LOTRuntimeEvent e = new LOTRuntimeEvent(runo, string, callvalues);
+			listener.event(e);
+		}
 	}
 
 	@Override

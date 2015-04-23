@@ -52,4 +52,6 @@ public interface LOTRunEnvironment {
 
 	LOTRuntimeObject getRunObject(String string);
 
+	void recordEvent(LOTRuntimeObject runo, String string, LOTValues callvalues);
+
 }

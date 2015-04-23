@@ -62,6 +62,7 @@ public class LOTToolState implements LOTRuntimeObject {
 		callvalues.put("tool", this);
 
 		LOTScriptRunnerImpl script = pool.getScript(tool.getScript(scriptname));
+		this.env.recordEvent(this, "calling " + scriptname + " " + script, callvalues);
 		if (script != null) {
 			script.run(callvalues);
 		} else {
