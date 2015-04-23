@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.http.impl.BHttpConnectionBase;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LOrientation;
 import org.libraryofthings.math.LTransformation;
@@ -17,11 +18,14 @@ import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 
+import com.sun.java.swing.plaf.windows.resources.windows;
+
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
 import waazdoh.common.WData;
+import waazdoh.common.WLogger;
 
 public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	public static final String BEANNAME = "factory";
@@ -59,11 +63,10 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
 	}
 
-	public LOTFactoryImpl(final LOTClient nclient, final MStringID id) {
-		this.client = nclient;
-		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(),
-				nclient.getPrefix());
-		o.load(id);
+	public boolean load(MStringID id) {
+		o = new ServiceObject(BEANNAME, client.getClient(), this, client.getVersion(),
+				client.getPrefix());
+		return o.load(id);
 	}
 
 	public long getModifyTime() {
@@ -78,7 +81,11 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	public WData getBean() {
 		WData b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
-		b.addValue(VALUENAME_ENVIRONMENTID, getEnv().getID());
+
+		if (getEnv() != null) {
+			b.addValue(VALUENAME_ENVIRONMENTID, getEnv().getID());
+		}
+
 		addVectorBean(b, VALUENAME_SPAWNLOCATION, tooluserspawnlocation);
 		b.add(orientation.getBean(BEANNAME_ORIENTATION));
 
@@ -282,8 +289,13 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 			List<WData> bcfs = bchildfactories.getChildren();
 			for (WData bchildfactory : bcfs) {
 				String cfname = bchildfactory.getName();
-				addFactory(cfname,
-						new LOTFactoryImpl(this.client, new MStringID(bchildfactory.getText())));
+				LOTFactoryImpl f = new LOTFactoryImpl(this.client);
+				if (f.load(new MStringID(bchildfactory.getText()))) {
+					addFactory(cfname, f);
+				} else {
+					WLogger.getLogger(this).error(
+							"failed to load childfactory " + bchildfactory.getText());
+				}
 			}
 		}
 
@@ -313,7 +325,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	private LOTEnvironment getEnv() {
-		if (env == null) {
+		if (env == null && bean != null) {
 			env = new LOTEnvironmentImpl(client, bean.getIDValue(VALUENAME_ENVIRONMENTID));
 		}
 		return env;

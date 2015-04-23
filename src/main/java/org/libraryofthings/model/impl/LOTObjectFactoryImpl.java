@@ -75,9 +75,14 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 				}
 			}
 
-			LOTFactoryImpl factory = new LOTFactoryImpl(client, factoryid);
-			factories.add(factory);
-			return factory;
+			LOTFactoryImpl factory = new LOTFactoryImpl(client);
+			if (factory.load(factoryid)) {
+				factories.add(factory);
+				return factory;
+			} else {
+				log.info("Failed to load factory " + factoryid);
+				return null;
+			}
 		}
 	}
 
