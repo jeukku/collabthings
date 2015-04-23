@@ -1,6 +1,8 @@
 package org.libraryofthings;
 
+import org.libraryofthings.model.LOTObject;
 import org.libraryofthings.model.LOTObjectFactory;
+import org.libraryofthings.model.LOTRunEnvironmentBuilder;
 
 import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
@@ -32,5 +34,7 @@ public interface LOTClient {
 	ServiceClient getService();
 
 	LOTStorage getStorage();
+
+	void publish(String string, LOTObject o);
 
 }

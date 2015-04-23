@@ -3,6 +3,7 @@ package org.libraryofthings.impl;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTStorage;
+import org.libraryofthings.model.LOTObject;
 import org.libraryofthings.model.LOTObjectFactory;
 import org.libraryofthings.model.impl.LOTObjectFactoryImpl;
 
@@ -20,8 +21,8 @@ public final class LOTClientImpl implements LOTClient {
 	private final LOTObjectFactory factory;
 	private LLog log = LLog.getLogger(this);
 
-	public LOTClientImpl(WPreferences p, BinarySource binarysource,
-			BeanStorage beanstorage, ServiceClient service) {
+	public LOTClientImpl(WPreferences p, BinarySource binarysource, BeanStorage beanstorage,
+			ServiceClient service) {
 		client = new WClient(p, binarysource, beanstorage, service);
 		this.factory = new LOTObjectFactoryImpl(this);
 		this.storage = new LOTStorageImpl(service);
@@ -62,8 +63,7 @@ public final class LOTClientImpl implements LOTClient {
 
 	@Override
 	public String getGlobalSetting(String name) {
-		return client
-				.readStorageArea("/public/" + PREFIX + "/settings/" + name);
+		return client.readStorageArea("/public/" + PREFIX + "/settings/" + name);
 	}
 
 	@Override
@@ -84,4 +84,11 @@ public final class LOTClientImpl implements LOTClient {
 		return false;
 	}
 
+	@Override
+	public void publish(String string, LOTObject o) {
+		String path = "published/" + string;
+		path = path.replace("//", "/");
+
+		client.getService().getStorageArea().write(path, "" + o.getID());
+	}
 }

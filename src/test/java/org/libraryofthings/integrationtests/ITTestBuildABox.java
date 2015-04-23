@@ -117,6 +117,9 @@ public final class ITTestBuildABox extends LOTTestCase {
 				loadScript(new LOTScriptImpl(client), "boxfactory_runenv_init.js"));
 		builder.getEnvironment().addScript("addorder",
 				loadScript(new LOTScriptImpl(client), "boxfactory_runenv_order.js"));
+		builder.publish();
+		client.publish("boxfactory/builder", builder);
+		
 		LOTRunEnvironment runenv = builder.getRunEnvironment();
 
 		//

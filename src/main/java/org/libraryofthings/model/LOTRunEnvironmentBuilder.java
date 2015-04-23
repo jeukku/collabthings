@@ -3,9 +3,7 @@ package org.libraryofthings.model;
 import org.libraryofthings.PrintOut;
 import org.libraryofthings.environment.LOTRunEnvironment;
 
-import waazdoh.common.ObjectID;
-
-public interface LOTRunEnvironmentBuilder {
+public interface LOTRunEnvironmentBuilder extends LOTObject {
 
 	void save();
 
@@ -14,10 +12,6 @@ public interface LOTRunEnvironmentBuilder {
 	LOTEnvironment getEnvironment();
 
 	LOTRunEnvironment getRunEnvironment();
-
-	void publish();
-
-	ObjectID getID();
 
 	PrintOut printOut();
 

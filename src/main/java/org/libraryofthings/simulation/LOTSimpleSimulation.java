@@ -1,15 +1,18 @@
 package org.libraryofthings.simulation;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.libraryofthings.LLog;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.LOTRuntimeEvent;
 import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.environment.RunEnvironmentListener;
 import org.libraryofthings.view.SwingSimulationFrame;
 
 import waazdoh.common.ConditionWaiter;
 
-public class LOTSimpleSimulation implements LOTSimulation,
-		RunEnvironmentListener {
+public class LOTSimpleSimulation implements LOTSimulation, RunEnvironmentListener {
 	private static final double MAX_STEP = 0.02;
 	private static final double MIN_STEP = 0.01;
 	//
@@ -20,6 +23,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	private LOTStepRunner runner;
 	//
 	private SwingSimulationFrame view;
+	private List<LOTRuntimeEvent> events = new LinkedList<LOTRuntimeEvent>();
 
 	public LOTSimpleSimulation(LOTRunEnvironment runenv) {
 		this.env = runenv;
@@ -31,6 +35,11 @@ public class LOTSimpleSimulation implements LOTSimulation,
 		if (b) {
 			view = new SwingSimulationFrame(runenv);
 		}
+	}
+
+	@Override
+	public void event(LOTRuntimeEvent e) {
+		events.add(e);
 	}
 
 	@Override

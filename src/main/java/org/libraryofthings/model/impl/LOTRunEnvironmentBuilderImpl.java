@@ -74,7 +74,7 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 	public ObjectID getID() {
 		return this.o.getID();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "RunEnvironmentBuilder";
@@ -148,7 +148,7 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 		}
 
 		getLogger().info(po.toText());
-		
+
 		return po;
 	}
 }

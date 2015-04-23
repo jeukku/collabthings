@@ -27,6 +27,7 @@ import javax.swing.SwingUtilities;
 
 import org.libraryofthings.LLog;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.LOTRuntimeEvent;
 import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.environment.RunEnvironmentListener;
 import org.libraryofthings.environment.impl.LOTFactoryState;
@@ -36,6 +37,7 @@ import org.libraryofthings.environment.impl.LOTToolUser;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTRuntimeObject;
+import org.libraryofthings.model.LOTValues;
 
 public class ViewSimulation implements RunEnvironmentListener {
 
@@ -59,8 +61,7 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 	private double cameradistance = 170;
 	private Rotate camerarx = new Rotate(Math.PI / 4, Rotate.X_AXIS);
-	private Translate cameratr = new Translate(0, cameradistance,
-			-cameradistance);
+	private Translate cameratr = new Translate(0, cameradistance, -cameradistance);
 	private LLog log = LLog.getLogger(this);
 	private Scene scene;
 	private double camerarotate;
@@ -107,7 +108,7 @@ public class ViewSimulation implements RunEnvironmentListener {
 		});
 
 		f.setVisible(true);
-		
+
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//
 	}
@@ -289,11 +290,10 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 				Point2D screen = node.localToScreen(0, 0, 0);
 
-				if (screen.getX() < -w || screen.getX() > w
-						|| screen.getY() < -h || screen.getY() > h) {
+				if (screen.getX() < -w || screen.getX() > w || screen.getY() < -h
+						|| screen.getY() > h) {
 					somethingoutofscreen = true;
-					log.info("Out of screen " + screen + " w:" + w + " h:" + h
-							+ " object:" + tu);
+					log.info("Out of screen " + screen + " w:" + w + " h:" + h + " object:" + tu);
 				}
 
 			}
@@ -323,5 +323,9 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 	public void close() {
 		f.dispose();
+	}
+
+	@Override
+	public void event(LOTRuntimeEvent e) {
 	}
 }
