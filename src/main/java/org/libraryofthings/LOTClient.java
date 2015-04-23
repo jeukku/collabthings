@@ -1,5 +1,9 @@
 package org.libraryofthings;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.libraryofthings.model.LOTObject;
 import org.libraryofthings.model.LOTObjectFactory;
 
@@ -35,5 +39,11 @@ public interface LOTClient {
 	LOTStorage getStorage();
 
 	void publish(String string, LOTObject o);
+
+	public static String getDateTime() {
+		Date date = Calendar.getInstance().getTime();
+		SimpleDateFormat d = new SimpleDateFormat("yyyyMMdd");
+		return d.format(date);
+	}
 
 }

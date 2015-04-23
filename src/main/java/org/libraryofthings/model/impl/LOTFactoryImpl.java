@@ -1,12 +1,14 @@
 package org.libraryofthings.model.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.http.impl.BHttpConnectionBase;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LOrientation;
 import org.libraryofthings.math.LTransformation;
@@ -17,8 +19,6 @@ import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
-
-import com.sun.java.swing.plaf.windows.resources.windows;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -227,6 +227,9 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 		getEnvironment().publish();
 		getServiceObject().publish();
+
+		client.publish("last/factory", this);
+		client.publish("/factories/" + getName() + "/" + LOTClient.getDateTime(), this);
 	}
 
 	@Override
