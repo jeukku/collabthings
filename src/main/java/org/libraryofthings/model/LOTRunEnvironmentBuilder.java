@@ -15,4 +15,6 @@ public interface LOTRunEnvironmentBuilder extends LOTObject {
 
 	PrintOut printOut();
 
+	String getName();
+
 }

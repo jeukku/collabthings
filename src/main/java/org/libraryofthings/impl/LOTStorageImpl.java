@@ -26,17 +26,12 @@ public class LOTStorageImpl implements LOTStorage {
 	}
 
 	@Override
-	public String readStorage(String path, String name) {
-		return service.getStorageArea().read(path + "/" + name);
-	}
-
-	@Override
 	public List<String> getUserPublished(String userid, int start, int count) {
 		return service.getStorageArea().listNewItems(userid, start, count);
 	}
 
 	@Override
 	public String readStorage(UserVO u, String item) {
-		return service.getStorageArea().userRead(u.getUserid(), item);
+		return service.getStorageArea().read(u.getUsername(), item);
 	}
 }

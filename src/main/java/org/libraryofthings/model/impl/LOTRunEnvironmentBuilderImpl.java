@@ -121,8 +121,9 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 		env.publish();
 		o.publish();
 
-		client.publish("last/builder", this);
-		client.publish("/builders/" + getName() + "/" + LOTClient.getDateTime(), this);
+		client.publish("/builder/latest", this);
+		client.publish("/builder/" + getName() + "/" + LOTClient.getDateTime(), this);
+		client.publish("/builder/" + getName() + "/latest", this);
 	}
 
 	public ServiceObject getServiceObject() {
@@ -153,5 +154,15 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 		getLogger().info(po.toText());
 
 		return po;
+	}
+
+	public String readStorage(String path) {
+		String username = path.substring(0, path.indexOf('/'));
+		if("self".equals(username)) {
+			username = client.getService().getUser().getUsername();
+		}
+		
+		String npath = path.substring(path.indexOf('/') + 1);
+		return client.getStorage().readStorage(this.client.getService().getUser(username), npath);
 	}
 }

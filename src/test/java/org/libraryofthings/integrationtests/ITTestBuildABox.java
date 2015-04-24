@@ -110,13 +110,12 @@ public final class ITTestBuildABox extends LOTTestCase {
 		createBoxFactory(boxfactory, client);
 
 		LOTRunEnvironmentBuilder builder = new LOTRunEnvironmentBuilderImpl(client);
-		builder.getEnvironment().setParameter("boxfactoryid", boxfactory.getID());
+
 		builder.getEnvironment().addScript("init",
 				loadScript(new LOTScriptImpl(client), "boxfactory_runenv_init.js"));
 		builder.getEnvironment().addScript("addorder",
 				loadScript(new LOTScriptImpl(client), "boxfactory_runenv_order.js"));
 		builder.publish();
-		client.publish("boxfactory/builder", builder);
 		
 		LOTRunEnvironment runenv = builder.getRunEnvironment();
 
@@ -171,11 +170,11 @@ public final class ITTestBuildABox extends LOTTestCase {
 		squarefactory.getEnvironment().setVectorParameter("buildingpartlocation",
 				new LVector(-1, 1, 0));
 
-		squarefactory.publish();
-
 		boxfactory.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 10, 10));
 		log.info("platesource " + squarefactory + " with square " + square);
 		log.info("square bean " + square.getBean());
+
+		boxfactory.publish();
 		return boxfactory;
 	}
 

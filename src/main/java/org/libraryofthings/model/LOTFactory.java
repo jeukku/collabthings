@@ -2,6 +2,7 @@ package org.libraryofthings.model;
 
 import java.util.Set;
 
+import org.libraryofthings.PrintOut;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
 
@@ -56,5 +57,7 @@ public interface LOTFactory extends LOTObject {
 	LVector getToolUserSpawnLocation();
 
 	LTransformation getTransformation();
+
+	PrintOut printOut();
 
 }

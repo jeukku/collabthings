@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.script.ScriptException;
 
+import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.libraryofthings.math.LVector;
@@ -79,7 +80,13 @@ public final class TestFactory extends LOTTestCase {
 		LOTClient bc = getNewClient();
 		LOTFactory bf = bc.getObjectFactory().getFactory(
 				af.getID().getStringID());
-		assertEquals(af, bf);
+		
+		LLog.getLogger(af).info(af.getBean().toText());
+		LLog.getLogger(bf).info(bf.getBean().toText());
+		LLog.getLogger(af).info(af.printOut().toText());
+		LLog.getLogger(bf).info(bf.printOut().toText());
+		
+		assertEquals(af.getBean().toText(), bf.getBean().toText());
 		assertNotSame(af, bf);
 		assertTrue(af.getBean().equals(bf.getBean()));
 		af.setLocation(new LVector(1, 1, 1));

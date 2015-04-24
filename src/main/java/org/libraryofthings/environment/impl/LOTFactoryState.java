@@ -21,6 +21,8 @@ import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.model.LOTValues;
 
+import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
+
 import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MStringID;
 
@@ -258,6 +260,9 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		if (s != null) {
 			return s.run(values);
 		} else {
+			getLog().info("Script \"" + string + "\" doesn't exist");
+			getLog().info(runenv.printOut().toText());
+			getLog().info(factory.printOut().toText());
 			return false;
 		}
 	}

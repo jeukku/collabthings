@@ -1,7 +1,7 @@
 function run(envbuilder) {
 	envbuilder.printOut();
 
-	var boxid = envbuilder.getEnvironment().getParameter("boxfactoryid");
+	var boxid = envbuilder.readStorage("self/published/factory/boxfactory/latest");
 	var order = envbuilder.getEnvironment().getScript("addorder");
 
 	var state = envbuilder.createFactoryState("boxfactory", boxid);

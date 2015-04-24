@@ -1,8 +1,5 @@
 package org.libraryofthings.model.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.PrintOut;
 import org.libraryofthings.math.LOrientation;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
@@ -64,9 +62,22 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	public boolean load(MStringID id) {
+		env = null;
+		name = null;
+		factories = null;
+		
 		o = new ServiceObject(BEANNAME, client.getClient(), this, client.getVersion(),
 				client.getPrefix());
 		return o.load(id);
+	}
+
+	@Override
+	public PrintOut printOut() {
+		PrintOut p = new PrintOut();
+		p.append("Factory " + getName());
+		p.append(1, env.printOut());
+		p.append(1, "" + factories.keySet());
+		return p;
 	}
 
 	public long getModifyTime() {
@@ -228,8 +239,9 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		getEnvironment().publish();
 		getServiceObject().publish();
 
-		client.publish("last/factory", this);
-		client.publish("/factories/" + getName() + "/" + LOTClient.getDateTime(), this);
+		client.publish("/factory/latest", this);
+		client.publish("/factory/" + getName() + "/" + LOTClient.getDateTime(), this);
+		client.publish("/factory/" + getName() + "/latest", this);
 	}
 
 	@Override
