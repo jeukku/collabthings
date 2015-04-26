@@ -1,5 +1,8 @@
 package org.libraryofthings.model.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.script.ScriptException;
 
 import org.libraryofthings.LLog;
@@ -28,8 +31,9 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 	private LLog log;
 
 	private String name = "envbuilder";
-	private LOTRunEnvironment runenvironment;
 
+	private Map<String, String> storageread = new HashMap<>();
+	
 	public LOTRunEnvironmentBuilderImpl(LOTClient nclient) {
 		this.client = nclient;
 		env = new LOTEnvironmentImpl(nclient);
@@ -47,22 +51,18 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 	public LOTFactoryState createFactoryState(String name, String id) {
 		LOTFactory f = client.getObjectFactory().getFactory(new MStringID(id));
 		LOTFactoryState state = new LOTFactoryState(client, env, name, f);
-		this.runenvironment = state.getRunEnvironment();
 		return state;
 	}
 
 	@Override
 	public LOTRunEnvironment getRunEnvironment() {
-		if (runenvironment == null) {
-			LOTScript s = getEnvironment().getScript("init");
-			try {
-				s.getInvocable().invokeFunction("run", this);
-				// lets trust that script creates the runenvironment some how
-			} catch (NoSuchMethodException | ScriptException e) {
-				getLogger().error(this, "getRunEnvironment", e);
-			}
+		LOTScript s = getEnvironment().getScript("init");
+		try {
+			return (LOTRunEnvironment) s.getInvocable().invokeFunction("run", this);
+		} catch (NoSuchMethodException | ScriptException e) {
+			getLogger().error(this, "getRunEnvironment", e);
+			return null;
 		}
-		return runenvironment;
 	}
 
 	@Override
@@ -147,22 +147,27 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 		po.append(1, env.printOut());
 
 		po.append("RunEnv");
-		if (this.runenvironment != null) {
-			po.append(1, this.runenvironment.printOut());
-		}
 
 		getLogger().info(po.toText());
 
 		return po;
 	}
 
-	public String readStorage(String path) {
+	public String readStorage(String path) {		
 		String username = path.substring(0, path.indexOf('/'));
-		if("self".equals(username)) {
+		if ("self".equals(username)) {
 			username = client.getService().getUser().getUsername();
 		}
-		
+
 		String npath = path.substring(path.indexOf('/') + 1);
-		return client.getStorage().readStorage(this.client.getService().getUser(username), npath);
+		String value = client.getStorage().readStorage(this.client.getService().getUser(username), npath);
+		
+		addStorageRead(path, value);
+		
+		return value;
+	}
+
+	private void addStorageRead(String path, String value) {
+		storageread.put(path, value);
 	}
 }
