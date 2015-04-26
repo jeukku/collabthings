@@ -11,6 +11,7 @@ public final class LOTTaskImpl implements LOTTask {
 	private LOTScriptRunner s;
 	private LOTValues values;
 	private boolean isrun;
+	private String error;
 
 	public LOTTaskImpl(LOTScriptRunner s2, LOTValues values2) {
 		this.s = s2;
@@ -26,9 +27,14 @@ public final class LOTTaskImpl implements LOTTask {
 			return ret;
 		} catch (Exception e) {
 			LLog.getLogger(this).error(this, "run", e);
+			this.error = "" + e;
 			isrun = true;
 			return false;
 		}
+	}
+
+	public String getError() {
+		return error + " " + s.getError();
 	}
 
 	public void waitUntilFinished() {

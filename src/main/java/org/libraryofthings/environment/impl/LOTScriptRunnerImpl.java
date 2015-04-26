@@ -63,7 +63,8 @@ public class LOTScriptRunnerImpl implements LOTScriptRunner {
 	}
 
 	private void handleException(Exception e1) {
-		this.error = "ERROR " + e1 + " in script " + script;
+		this.error = "ERROR " + e1 + " in script " + script + " called in " + runenv
+				+ " in object " + runo;
 		log.info("Error in script " + script);
 		log.info("Error in script " + script + " exception " + e1);
 		log.error(this, "run", e1);

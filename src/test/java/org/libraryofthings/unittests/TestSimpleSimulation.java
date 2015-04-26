@@ -65,17 +65,26 @@ public class TestSimpleSimulation extends LOTTestCase {
 		String name = "testvaluename";
 		String value = "testvalue";
 
-		runenv.addTask((values) -> {
-			valuesmap.put(name, values.get(name));
+		runenv.addTask(new LOTScriptRunner() {
 
-			long st = System.currentTimeMillis();
-			while ((System.currentTimeMillis() - st) < 10000) {
-				try {
-					wait(200);
-				} catch (Exception e) {
+			@Override
+			public boolean run(LOTValues values) {
+				valuesmap.put(name, values.get(name));
+
+				long st = System.currentTimeMillis();
+				while ((System.currentTimeMillis() - st) < 10000) {
+					try {
+						wait(200);
+					} catch (Exception e) {
+					}
 				}
+				return true;
 			}
-			return true;
+
+			@Override
+			public String getError() {
+				return null;
+			}
 		}, new LOTValues(name, value));
 
 		assertNotNull(runenv.getInfo());

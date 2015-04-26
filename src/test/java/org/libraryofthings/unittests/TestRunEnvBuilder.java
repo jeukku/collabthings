@@ -35,6 +35,7 @@ public final class TestRunEnvBuilder extends LOTTestCase {
 		sb.append("var state = eb.createFactoryState(\"f\", eb.getEnvironment().getParameter(\"factoryid\"));");
 		sb.append("state.getRunEnvironment().getEnvironment().addScript(\"task\", task);");
 		sb.append("state.addTask(\"task\", null);");
+		sb.append("return state.getRunEnvironment();");
 		sb.append("}");
 
 		sb.append("function info() { return 'info'; }");
