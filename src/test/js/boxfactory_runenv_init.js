@@ -1,7 +1,8 @@
 function run(envbuilder) {
 	envbuilder.printOut();
 
-	var boxid = envbuilder.readStorage("self/published/factory/boxfactory/latest");
+	var boxid = envbuilder
+			.readStorage("self/published/factory/boxfactory/latest");
 	var order = envbuilder.getEnvironment().getScript("addorder");
 
 	var state = envbuilder.createFactoryState("boxfactory", boxid);
@@ -10,6 +11,8 @@ function run(envbuilder) {
 
 	state.getRunEnvironment().getEnvironment().addScript("ordertask", order);
 	state.addTask("ordertask", null);
+
+	return state.getRunEnvironment();
 }
 
 function info() {
