@@ -10,6 +10,7 @@ import java.util.Set;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.LOTRuntimeEvent;
 import org.libraryofthings.environment.LOTTask;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
@@ -20,8 +21,6 @@ import org.libraryofthings.model.LOTRuntimeObject;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.LOTTool;
 import org.libraryofthings.model.LOTValues;
-
-import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
 import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MStringID;
@@ -42,9 +41,10 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	private final LOTPool pool;
 	private LOTRuntimeObject parent;
 	private LTransformation transformation;
+	private LOTEvents events = new LOTEvents();
 
-	public LOTFactoryState(final LOTClient client, LOTEnvironment env, final String name,
-			final LOTFactory factory) {
+	public LOTFactoryState(final LOTClient client, LOTEnvironment env,
+			final String name, final LOTFactory factory) {
 		this.factory = factory;
 		this.name = name;
 		runenv = new LOTRunEnvironmentImpl(client, env);
@@ -217,15 +217,18 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		}
 	}
 
-	public void requestMove(LOTToolState lotToolState, LVector l, LVector n, double angle) {
+	public void requestMove(LOTToolState lotToolState, LVector l, LVector n,
+			double angle) {
 		LOTToolUser tooluser = getToolUser(lotToolState, l);
-		getLog().info("requestMove " + tooluser + " " + l + " tool:" + lotToolState);
+		getLog().info(
+				"requestMove " + tooluser + " " + l + " tool:" + lotToolState);
 		tooluser.setTool(lotToolState);
 		tooluser.move(l, n, angle);
 	}
 
 	public LOTToolUser getToolUser(final LOTToolState lotToolState, LVector l) {
-		new ConditionWaiter(() -> !isRunning() || getAvailableToolUser(lotToolState) != null, 0);
+		new ConditionWaiter(() -> !isRunning()
+				|| getAvailableToolUser(lotToolState) != null, 0);
 		return getAvailableToolUser(lotToolState);
 	}
 
@@ -258,6 +261,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		LOTScriptRunnerImpl s = getScript(string);
 		getLog().info("calling " + string + " " + s);
 		if (s != null) {
+			addEvent(string, values);
 			return s.run(values);
 		} else {
 			getLog().info("Script \"" + string + "\" doesn't exist");
@@ -306,8 +310,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	}
 
 	public LOTPartState newPart() {
-		LOTPartState partstate = new LOTPartState(runenv, this, runenv.getClient()
-				.getObjectFactory().getPart());
+		LOTPartState partstate = new LOTPartState(runenv, this, runenv
+				.getClient().getObjectFactory().getPart());
 		addPart(partstate);
 		return partstate;
 	}
@@ -341,8 +345,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	 * Will be removed in future version.
 	 */
 	public void addSuperheroRobot() {
-		ReallySimpleSuperheroRobot tooluser = new ReallySimpleSuperheroRobot(runenv, this,
-				getFactory().getToolUserSpawnLocation());
+		ReallySimpleSuperheroRobot tooluser = new ReallySimpleSuperheroRobot(
+				runenv, this, getFactory().getToolUserSpawnLocation());
 		addToolUser(tooluser);
 	}
 
@@ -379,5 +383,14 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		synchronized (steppers) {
 			steppers.add(s);
 		}
+	}
+
+	private void addEvent(String event, LOTValues callvalues) {
+		LOTRuntimeEvent e = new LOTRuntimeEvent(this, event, callvalues);
+		events.add(e);
+	}
+
+	public LOTEvents getEvents() {
+		return events;
 	}
 }

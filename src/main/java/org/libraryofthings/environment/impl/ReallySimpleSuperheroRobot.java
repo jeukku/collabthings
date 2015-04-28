@@ -3,6 +3,7 @@ package org.libraryofthings.environment.impl;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTToolException;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.LOTRuntimeEvent;
 import org.libraryofthings.environment.SimulationView;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LTransformationStack;
@@ -29,9 +30,10 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private double locationprintouttimer = 0;
 	private double speed = 10;
 	final private LOTFactoryState factory;
+	private LOTEvents events = new LOTEvents();
 
-	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv, LOTFactoryState factory,
-			LVector nlocation) {
+	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
+			LOTFactoryState factory, LVector nlocation) {
 		this.simenv = simenv;
 		this.factory = factory;
 		if (nlocation != null) {
@@ -39,7 +41,8 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		}
 	}
 
-	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv, LOTFactoryState factory) {
+	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
+			LOTFactoryState factory) {
 		this.simenv = simenv;
 		this.factory = factory;
 	}
@@ -51,24 +54,35 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 	@Override
 	public String toString() {
-		return "SuperHeroRobot[" + super.hashCode() + "][" + tool + "][" + location + "]";
+		return "SuperHeroRobot[" + super.hashCode() + "][" + tool + "]["
+				+ location + "]";
+	}
+
+	@Override
+	public LOTToolState getTool() {
+		return tool;
 	}
 
 	@Override
 	public synchronized void move(LVector l, LVector n, double angle) {
 		targetlocation = l.copy();
+		events.add(new LOTRuntimeEvent(this, "Moving to " + targetlocation,
+				null));
+
 		targetorientationnormal = n.copy();
 		targetorientationangle = angle;
 		log.info("Target location " + targetlocation);
 		log.info("factory " + this.factory);
 		//
-		while (simenv.isRunning() && targetlocation != null
+		while (simenv.isRunning()
+				&& targetlocation != null
 				&& targetlocation.getSub(location).length() > MOVING_LOCATION_LENGTH_TRIGGER) {
 			waitAWhile();
 		}
 
 		if (targetlocation != null) {
-			tool.setOrientation(targetlocation, targetorientationnormal, targetorientationangle);
+			tool.setOrientation(targetlocation, targetorientationnormal,
+					targetorientationangle);
 
 			log.info("Moved to " + targetlocation + " " + location);
 		} else {
@@ -78,6 +92,14 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 	@Override
 	public void setTool(LOTToolState lotToolState) {
+		String name;
+		if (tool != null) {
+			name = tool.getName();
+		} else {
+			name = null;
+		}
+		
+		events.add(new LOTRuntimeEvent(this, "set tool " + name, null));
 		log.info("setting tool " + lotToolState);
 		this.tool = lotToolState;
 		initLogger();
@@ -99,7 +121,13 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 	@Override
 	public LTransformation getTransformation() {
-		return new LTransformation(location, orientationnormal, this.orientationangle);
+		return new LTransformation(location, orientationnormal,
+				this.orientationangle);
+	}
+
+	@Override
+	public LTransformation getLocationTransformation() {
+		return LTransformation.getTranslate(location);
 	}
 
 	@Override
@@ -151,7 +179,8 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 				LVector direction = vdistance.getNormalized();
 				double ddot = direction.dot(targetorientationnormal);
 				if (ddot > 0) {
-					direction.add(new LVector(direction.y, direction.z, direction.x));
+					direction.add(new LVector(direction.y, direction.z,
+							direction.x));
 				} else if (ddot > -0.99) {
 					LVector cross = new LVector();
 					cross.cross(direction, targetorientationnormal);
@@ -162,7 +191,8 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 				direction.scale(distance);
 				location.add(direction);
-				tool.setOrientation(location, orientationnormal, orientationangle);
+				tool.setOrientation(location, orientationnormal,
+						orientationangle);
 			}
 
 		}
@@ -174,8 +204,9 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	}
 
 	private void debugInfo(double dtime) {
-		log.info("tool:" + tool + " location " + location + " normal " + orientationnormal
-				+ " step:" + dtime + " targetlocation:" + targetlocation);
+		log.info("tool:" + tool + " location " + location + " normal "
+				+ orientationnormal + " step:" + dtime + " targetlocation:"
+				+ targetlocation);
 	}
 
 	private synchronized void waitAWhile() {
@@ -192,10 +223,16 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	}
 
 	@Override
-	public void callDraw(SimulationView view, LTransformationStack tstack) throws LOTToolException {
+	public void callDraw(SimulationView view, LTransformationStack tstack)
+			throws LOTToolException {
 		if (tool != null) {
 			LOTValues values = new LOTValues("view", view, "tstack", tstack);
 			this.tool.call("draw", values);
 		}
+	}
+
+	@Override
+	public LOTEvents getEvents() {
+		return this.events;
 	}
 }

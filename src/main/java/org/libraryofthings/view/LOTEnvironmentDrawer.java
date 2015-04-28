@@ -132,9 +132,10 @@ public class LOTEnvironmentDrawer {
 	}
 
 	public void drawString(LTransformationStack tstack, String string, LVector l) {
+		a.set(l);
 		tstack.current().transform(a);
 		t.transform(a);
-		g.drawString(string, getSX(a), getSY(a));
+		getGraphics().drawString(string, getSX(a), getSY(a));
 	}
 
 	public void drawCenterSquare(LTransformationStack tstack, LVector l) {
@@ -148,7 +149,25 @@ public class LOTEnvironmentDrawer {
 		int sy = getSY(a);
 		checkOutOfScreen(sx, sy);
 
-		getGraphics().drawRect(sx - 2, sy - 2, 4, 4);
+		int w = 4;
+		int h = 4;
+
+		getGraphics().drawRect(sx - w / 2, sy - h / 2, w, h);
+	}
+
+	public void drawScreenRect(LTransformationStack tstack, LVector l, int w,
+			int h) {
+		Stroke st = new BasicStroke(2);
+		getGraphics().setStroke(st);
+
+		a.set(l);
+		tstack.current().transform(a);
+		t.transform(a);
+		int sx = getSX(a);
+		int sy = getSY(a);
+		checkOutOfScreen(sx, sy);
+
+		getGraphics().drawRect(sx, sy, w, h);
 	}
 
 	public void drawBoundingBox(LTransformationStack tstack, LOTBoundingBox bbox) {

@@ -8,8 +8,10 @@ public class LOTRuntimeEvent {
 	private LOTValues values;
 	private String name;
 	private LOTRuntimeObject object;
+	private long time = System.currentTimeMillis();
 
-	public LOTRuntimeEvent(LOTRuntimeObject runo, String string, LOTValues callvalues) {
+	public LOTRuntimeEvent(LOTRuntimeObject runo, String string,
+			LOTValues callvalues) {
 		this.setObject(runo);
 		this.setName(string);
 		this.setValues(callvalues);
@@ -17,6 +19,10 @@ public class LOTRuntimeEvent {
 
 	public LOTRuntimeObject getObject() {
 		return object;
+	}
+
+	public long getTime() {
+		return time;
 	}
 
 	public void setObject(LOTRuntimeObject object) {

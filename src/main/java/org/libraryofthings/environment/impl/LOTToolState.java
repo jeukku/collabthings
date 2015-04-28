@@ -3,6 +3,7 @@ package org.libraryofthings.environment.impl;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTToolException;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.LOTRuntimeEvent;
 import org.libraryofthings.math.LOrientation;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.math.LVector;
@@ -22,6 +23,7 @@ public class LOTToolState implements LOTRuntimeObject {
 	private boolean inuse;
 	private String name;
 	final private LOTPool pool;
+	private LOTEvents events = new LOTEvents();
 
 	public LOTToolState(final String name, final LOTRunEnvironment runenv,
 			final LOTTool ntool, final LOTFactoryState factorystate) {
@@ -62,7 +64,13 @@ public class LOTToolState implements LOTRuntimeObject {
 		callvalues.put("tool", this);
 
 		LOTScriptRunnerImpl script = pool.getScript(tool.getScript(scriptname));
-		this.env.recordEvent(this, "calling " + scriptname + " " + script, callvalues);
+		//TODO shouldn't be hard coded like this
+		if (!"draw".equals(scriptname)) {
+			this.env.recordEvent(this, "calling " + scriptname + " " + script,
+					callvalues);
+			events.add(new LOTRuntimeEvent(this, "" + scriptname, callvalues));
+		}
+		
 		if (script != null) {
 			script.run(callvalues);
 		} else {
@@ -114,5 +122,9 @@ public class LOTToolState implements LOTRuntimeObject {
 	@Override
 	public String toString() {
 		return "LOTToolState[" + this.tool + "][" + this.o + "]";
+	}
+
+	public LOTEvents getEvents() {
+		return events;
 	}
 }
