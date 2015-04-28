@@ -1,5 +1,7 @@
 package org.libraryofthings.environment.impl;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,6 +21,14 @@ public class LOTEvents {
 				list.add(e);
 			}
 		}
+
+		Collections.sort(list, new Comparator<LOTRuntimeEvent>() {
+			@Override
+			public int compare(LOTRuntimeEvent o1, LOTRuntimeEvent o2) {
+				return (int) (o2.getTime() - o1.getTime());
+			}
+		});
+
 		return list;
 	}
 }

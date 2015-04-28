@@ -191,7 +191,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 		double offset = 0;
 		for (LOTRuntimeEvent e : eventlist) {
 			drawEvent(tstack, e, new LVector(l.x, l.y + offset, l.z));
-			offset += 0.5;
+			offset += 0.7;
 		}
 	}
 
