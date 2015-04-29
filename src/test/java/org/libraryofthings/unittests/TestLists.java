@@ -3,7 +3,7 @@ package org.libraryofthings.unittests;
 import java.io.IOException;
 import java.util.List;
 
-import org.libraryofthings.LOTClient;
+import org.collabthings.LOTClient;
 import org.libraryofthings.LOTTestCase;
 import org.xml.sax.SAXException;
 

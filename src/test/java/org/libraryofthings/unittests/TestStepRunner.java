@@ -1,7 +1,7 @@
 package org.libraryofthings.unittests;
 
+import org.collabthings.simulation.LOTStepRunner;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.simulation.LOTStepRunner;
 
 import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MTimedFlag;

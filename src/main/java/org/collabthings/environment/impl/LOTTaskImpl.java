@@ -1,0 +1,51 @@
+package org.collabthings.environment.impl;
+
+import org.collabthings.LLog;
+import org.collabthings.environment.LOTScriptRunner;
+import org.collabthings.environment.LOTTask;
+import org.collabthings.model.LOTValues;
+
+import waazdoh.client.utils.ConditionWaiter;
+
+public final class LOTTaskImpl implements LOTTask {
+	private LOTScriptRunner s;
+	private LOTValues values;
+	private boolean isrun;
+	private String error;
+
+	public LOTTaskImpl(LOTScriptRunner s2, LOTValues values2) {
+		this.s = s2;
+		this.values = values2;
+		//
+		LLog.getLogger(this).info("LOTTask " + s);
+	}
+
+	public boolean run() {
+		try {
+			boolean ret = s.run(values);
+			isrun = true;
+			return ret;
+		} catch (Exception e) {
+			LLog.getLogger(this).error(this, "run", e);
+			this.error = "" + e;
+			isrun = true;
+			return false;
+		}
+	}
+
+	public String getError() {
+		return error + " " + s.getError();
+	}
+
+	public void waitUntilFinished() {
+		new ConditionWaiter(() -> this.isrun, 0);
+	}
+
+	public String toString() {
+		return "LOTTask[" + this.s + "][" + values + "]";
+	}
+
+	public boolean isRun() {
+		return isrun;
+	}
+}

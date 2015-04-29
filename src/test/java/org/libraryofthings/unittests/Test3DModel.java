@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.libraryofthings.LOTClient;
+import org.collabthings.LOTClient;
+import org.collabthings.math.LVector;
+import org.collabthings.model.LOT3DModel;
+import org.collabthings.model.impl.LOT3DModelImpl;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.math.LVector;
-import org.libraryofthings.model.LOT3DModel;
-import org.libraryofthings.model.impl.LOT3DModelImpl;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.utils.ConditionWaiter;

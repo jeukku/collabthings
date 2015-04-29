@@ -12,9 +12,11 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.libraryofthings.impl.LOTClientImpl;
-import org.libraryofthings.math.LVector;
-import org.libraryofthings.model.LOTObject;
+import org.collabthings.LLog;
+import org.collabthings.LOTClient;
+import org.collabthings.impl.LOTClientImpl;
+import org.collabthings.math.LVector;
+import org.collabthings.model.LOTObject;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.BinarySource;

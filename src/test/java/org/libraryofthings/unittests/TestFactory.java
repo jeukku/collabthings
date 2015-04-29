@@ -4,14 +4,14 @@ import java.io.IOException;
 
 import javax.script.ScriptException;
 
-import org.libraryofthings.LLog;
-import org.libraryofthings.LOTClient;
+import org.collabthings.LLog;
+import org.collabthings.LOTClient;
+import org.collabthings.math.LVector;
+import org.collabthings.model.LOTBoundingBox;
+import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTScript;
+import org.collabthings.model.LOTTool;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.math.LVector;
-import org.libraryofthings.model.LOTBoundingBox;
-import org.libraryofthings.model.LOTFactory;
-import org.libraryofthings.model.LOTScript;
-import org.libraryofthings.model.LOTTool;
 import org.xml.sax.SAXException;
 
 public final class TestFactory extends LOTTestCase {
