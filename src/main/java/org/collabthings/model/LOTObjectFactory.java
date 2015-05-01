@@ -22,6 +22,8 @@ public interface LOTObjectFactory {
 
 	LOTScript getScript(String id);
 
+	LOTScript getScript();
+
 	void addInfoListener(LOTInfo info);
 
 	LOTRunEnvironmentBuilder getRuntimeBuilder(MStringID id);

@@ -40,6 +40,11 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	}
 
 	@Override
+	public LOTScript getScript() {
+		return new LOTScriptImpl(client);
+	}
+
+	@Override
 	public LOTScript getScript(String sid) {
 		synchronized (scripts) {
 			MStringID id = new MStringID(sid);
@@ -179,7 +184,8 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 				}
 			}
 
-			LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(client, id);
+			LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(
+					client, id);
 			runtimebuilders.add(b);
 			return b;
 		}

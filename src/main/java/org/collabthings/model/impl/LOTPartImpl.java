@@ -85,10 +85,12 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		}
 		//
 		WData bparts = bean.get("parts");
-		for (WData bpart : bparts.getChildren()) {
-			LOTSubPartImpl subpart = new LOTSubPartImpl(this, env);
-			subpart.parse(bpart);
-			addPart(subpart);
+		if (bparts != null) {
+			for (WData bpart : bparts.getChildren()) {
+				LOTSubPartImpl subpart = new LOTSubPartImpl(this, env);
+				subpart.parse(bpart);
+				addPart(subpart);
+			}
 		}
 		//
 		return getName() != null;
