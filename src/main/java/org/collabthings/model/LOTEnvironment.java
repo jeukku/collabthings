@@ -23,6 +23,8 @@ public interface LOTEnvironment extends LOTObject {
 
 	Set<String> getTools();
 
+	Set<String> getParameters();
+
 	void setParameter(String string, ObjectID id);
 
 	void setParameter(String string, String value);

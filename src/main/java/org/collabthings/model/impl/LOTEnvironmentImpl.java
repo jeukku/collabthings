@@ -42,14 +42,14 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	public LOTEnvironmentImpl(LOTClient nclient) {
 		this.client = nclient;
 		scripts = new HashMap<String, LOTScript>();
-		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(),
-				nclient.getPrefix());
+		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
+				nclient.getVersion(), nclient.getPrefix());
 	}
 
 	public LOTEnvironmentImpl(LOTClient nclient, MStringID idValue) {
 		this.client = nclient;
-		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(),
-				nclient.getPrefix());
+		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
+				nclient.getVersion(), nclient.getPrefix());
 		o.load(idValue);
 	}
 
@@ -265,6 +265,11 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	@Override
 	public String getParameter(String string) {
 		return parameters.get(string);
+	}
+
+	@Override
+	public Set<String> getParameters() {
+		return parameters.keySet();
 	}
 
 	@Override

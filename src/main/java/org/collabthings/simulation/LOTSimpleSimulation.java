@@ -12,7 +12,8 @@ import org.collabthings.view.SwingSimulationFrame;
 
 import waazdoh.client.utils.ConditionWaiter;
 
-public class LOTSimpleSimulation implements LOTSimulation, RunEnvironmentListener {
+public class LOTSimpleSimulation implements LOTSimulation,
+		RunEnvironmentListener {
 	private static final double MAX_STEP = 0.02;
 	private static final double MIN_STEP = 0.01;
 	//
@@ -24,6 +25,7 @@ public class LOTSimpleSimulation implements LOTSimulation, RunEnvironmentListene
 	//
 	private SwingSimulationFrame view;
 	private List<LOTRuntimeEvent> events = new LinkedList<LOTRuntimeEvent>();
+	private boolean done;
 
 	public LOTSimpleSimulation(LOTRunEnvironment runenv) {
 		this.env = runenv;
@@ -49,6 +51,7 @@ public class LOTSimpleSimulation implements LOTSimulation, RunEnvironmentListene
 		new ConditionWaiter(() -> check(), maxruntime);
 		stop();
 
+		done = true;
 		return allsuccess;
 	}
 
@@ -86,5 +89,9 @@ public class LOTSimpleSimulation implements LOTSimulation, RunEnvironmentListene
 
 	private synchronized boolean isReady() {
 		return env.isReady();
+	}
+
+	public boolean isDone() {
+		return done;
 	}
 }
