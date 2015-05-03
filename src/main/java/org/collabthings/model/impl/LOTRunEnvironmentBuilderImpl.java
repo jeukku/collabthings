@@ -118,6 +118,8 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 
 	@Override
 	public void publish() {
+		save();
+		
 		env.publish();
 		o.publish();
 
