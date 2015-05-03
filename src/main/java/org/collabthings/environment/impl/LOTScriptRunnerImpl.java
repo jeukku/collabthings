@@ -21,10 +21,16 @@ public class LOTScriptRunnerImpl implements LOTScriptRunner {
 	private LLog log = LLog.getLogger(this);
 	private String error;
 
-	public LOTScriptRunnerImpl(LOTScript s, LOTRunEnvironment runenv, LOTRuntimeObject runtimeobject) {
+	public LOTScriptRunnerImpl(LOTScript s, LOTRunEnvironment runenv,
+			LOTRuntimeObject runtimeobject) {
 		this.script = s;
 		this.runenv = runenv;
 		this.runo = runtimeobject;
+	}
+
+	@Override
+	public String toString() {
+		return "ScriptRunner[" + script + "]";
 	}
 
 	public boolean run() {
@@ -39,32 +45,34 @@ public class LOTScriptRunnerImpl implements LOTScriptRunner {
 	 */
 	public boolean run(LOTValues values) {
 		if (script != null) {
-			return AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+			return AccessController
+					.doPrivileged(new PrivilegedAction<Boolean>() {
 
-				public Boolean run() {
-					try {
+						public Boolean run() {
+							try {
 
-						Invocable i = script.getInvocable();
-						if (i != null) {
-							i.invokeFunction("run", runenv, runo, values);
-							return true;
-						} else {
-							return false;
+								Invocable i = script.getInvocable();
+								if (i != null) {
+									i.invokeFunction("run", runenv, runo,
+											values);
+									return true;
+								} else {
+									return false;
+								}
+							} catch (NoSuchMethodException | ScriptException e1) {
+								handleException(e1);
+								return false;
+							}
 						}
-					} catch (NoSuchMethodException | ScriptException e1) {
-						handleException(e1);
-						return false;
-					}
-				}
-			});
+					});
 		} else {
 			return false;
 		}
 	}
 
 	private void handleException(Exception e1) {
-		this.error = "ERROR " + e1 + " in script " + script + " called in " + runenv
-				+ " in object " + runo;
+		this.error = "ERROR " + e1 + " in script " + script + " called in "
+				+ runenv + " in object " + runo;
 		log.info("Error in script " + script);
 		log.info("Error in script " + script + " exception " + e1);
 		log.error(this, "run", e1);

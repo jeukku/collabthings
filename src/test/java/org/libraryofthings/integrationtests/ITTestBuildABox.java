@@ -49,20 +49,34 @@ public final class ITTestBuildABox extends LOTTestCase {
 		factory.setLocation(new LVector(0, 0, 0));
 		factory.setToolUserSpawnLocation(new LVector(20, 0, 20));
 		factory.setName("boxsetfactory");
+
 		factory.publish();
 		//
 		LOTPart line = getLineOfBoxes(client);
 		//
-		LOTFactoryState factorystate = new LOTFactoryState(client, env,
-				"linefactory", factory);
-		LOTRunEnvironment runenv = factorystate.getRunEnvironment();
+		LOTRunEnvironmentBuilder builder = new LOTRunEnvironmentBuilderImpl(
+				client);
+		builder.getEnvironment().addScript(
+				"init",
+				loadScript(new LOTScriptImpl(client),
+						"linefactory_runenv_init.js"));
+		builder.getEnvironment().addScript(
+				"addorder",
+				loadScript(new LOTScriptImpl(client),
+						"linefactory_runenv_order.js"));
+		builder.getEnvironment().setParameter("partid", line.getID());
 
-		factorystate.addTask("order", new LOTValues("partid", line.getID()));
+		builder.publish();
+
+		LOTRunEnvironment runenv = builder.getRunEnvironment();
+
 		//
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv, true);
 
 		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
 		//
+		LOTFactoryState factorystate = ((LOTFactoryState) runenv
+				.getRunObject("boxsetfactory"));
 		LOTPart builtline = factorystate.getPool().getPart("" + line.getID());
 		assertNotNull(builtline);
 		//
@@ -80,6 +94,9 @@ public final class ITTestBuildABox extends LOTTestCase {
 			sb.setPart(box);
 			sb.setOrientation(new LVector(i * 2, 0, 0), new LVector(0, 1, 0));
 		}
+
+		line.publish();
+
 		return line;
 	}
 
