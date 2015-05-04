@@ -49,7 +49,11 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 	@Override
 	public String getName() {
-		return getParameter("name");
+		String name = getParameter("name");
+		if (name == null) {
+			name = "SuperHeroRobot";
+		}
+		return name;
 	}
 
 	@Override
@@ -98,7 +102,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		} else {
 			name = null;
 		}
-		
+
 		events.add(new LOTRuntimeEvent(this, "set tool " + name, null));
 		log.info("setting tool " + lotToolState);
 		this.tool = lotToolState;
