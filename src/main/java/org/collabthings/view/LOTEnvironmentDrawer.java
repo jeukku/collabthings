@@ -10,7 +10,7 @@ import org.collabthings.model.LOTBoundingBox;
 
 public class LOTEnvironmentDrawer {
 	private static final int INFOTEXT_Y = 20;
-	private static final int INFOTEXT_X = 20;
+	private static final int INFOTEXT_X = 5;
 	private static final double DEFAULT_ZOOM = 100.0;
 	private static final double DEFAULT_ZOOMSPEED = 1;
 

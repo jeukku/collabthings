@@ -132,7 +132,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 		l.set(0, 0, 0);
 
 		getGraphics().setColor(Color.lightGray);
-		drawString(tstack, "" + runo, l);
+		drawString(tstack, "" + runo.getName(), l);
 		//
 		List<LOTSubPart> subparts = part.getSubParts();
 		if (!subparts.isEmpty()) {
@@ -181,7 +181,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 			eventlist.addAll(tool.getEvents().getNewEvents(getNewEventTime()));
 		}
 
-		drawEvents(tstack, eventlist, new LVector(0, 0.6, 0));
+		// drawEvents(tstack, eventlist, new LVector(0, 0.6, 0));
 
 		tstack.pull();
 	}
