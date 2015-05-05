@@ -16,17 +16,19 @@ import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
 import org.collabthings.model.LOTValues;
+import org.collabthings.model.impl.LOTFactoryImpl;
 
 import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MStringID;
 
 public class LOTFactoryState implements LOTRuntimeObject {
-	private final LOTFactory factory;
+	private final LOTAttachedFactory factory;
 	private final LOTRunEnvironment runenv;
 	private LLog log;
 	private final String name;
@@ -44,7 +46,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	private LOTEvents events = new LOTEvents();
 
 	public LOTFactoryState(final LOTClient client, LOTEnvironment env,
-			final String name, final LOTFactory factory) {
+			final String name, final LOTAttachedFactory factory) {
 		this.factory = factory;
 		this.name = name;
 		runenv = new LOTRunEnvironmentImpl(client, env);
@@ -54,7 +56,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	}
 
 	public LOTFactoryState(final String name, final LOTRunEnvironment runenv,
-			final LOTFactory nfactory, final LOTFactoryState factorystate) {
+			final LOTAttachedFactory nfactory,
+			final LOTFactoryState factorystate) {
 		this.factory = nfactory;
 		this.runenv = runenv;
 		this.parent = factorystate;
@@ -64,15 +67,20 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		init();
 	}
 
+	public LOTFactoryState(LOTClient client, LOTEnvironment env, String name2,
+			LOTFactory factory) {
+		this(client, env, name2, new LOTAttachedFactory(factory));
+	}
+
 	private void init() {
 		transformation = factory.getTransformation();
 
 		for (String fname : getFactory().getFactories()) {
-			LOTFactory f = getFactory().getFactory(fname);
+			LOTAttachedFactory f = getFactory().getFactory(fname);
 			addFactory(fname, f);
 		}
 
-		LOTValues values = new LOTValues("factory", factory);
+		LOTValues values = new LOTValues("factory", getFactory());
 		call("start", values);
 	}
 
@@ -96,10 +104,10 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 	@Override
 	public String toString() {
-		return "FS[" + factory + "]";
+		return "FS[" + getFactory() + "]";
 	}
 
-	private LOTFactoryState addFactory(String id, LOTFactory f) {
+	private LOTFactoryState addFactory(String id, LOTAttachedFactory f) {
 		getLog().info("addFactory " + id + " factory:" + f);
 		LOTFactoryState state = new LOTFactoryState(id, runenv, f, this);
 		factories.add(state);
@@ -266,7 +274,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		} else {
 			getLog().info("Script \"" + string + "\" doesn't exist");
 			getLog().info(runenv.printOut().toText());
-			getLog().info(factory.printOut().toText());
+			getLog().info(getFactory().printOut().toText());
 			return false;
 		}
 	}
@@ -282,7 +290,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	public String getParameter(String name) {
 		String param = this.runenv.getParameter(name);
 		if (param == null) {
-			param = this.factory.getEnvironment().getParameter(name);
+			param = this.getFactory().getEnvironment().getParameter(name);
 		}
 		if (param == null && parent != null) {
 			param = parent.getParameter(name);
@@ -293,10 +301,14 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	private LOTScriptRunnerImpl getScript(String string) {
 		LOTScript script = runenv.getEnvironment().getScript(string);
 		if (script == null) {
-			script = factory.getScript(string);
+			script = getFactory().getScript(string);
 		}
 
 		return pool.getScript(script);
+	}
+
+	public LOTFactory getFactory() {
+		return factory.getFactory();
 	}
 
 	public Set<LOTPartState> getParts() {
@@ -326,10 +338,6 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		synchronized (parts) {
 			parts.remove(partstate);
 		}
-	}
-
-	public LOTFactory getFactory() {
-		return factory;
 	}
 
 	public List<LOTFactoryState> getFactories() {

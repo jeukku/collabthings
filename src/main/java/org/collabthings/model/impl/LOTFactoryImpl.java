@@ -8,13 +8,12 @@ import java.util.Set;
 
 import org.collabthings.LOTClient;
 import org.collabthings.PrintOut;
-import org.collabthings.math.LOrientation;
-import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOT3DModel;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
 
@@ -40,12 +39,11 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	private LOTClient client;
 	private LOTEnvironment env;
 	//
-	private Map<String, LOTFactory> factories;
-	private final LOTBoundingBox bbox = new LOTBoundingBox(new LVector(), new LVector());
+	private Map<String, LOTAttachedFactory> factories;
+	private final LOTBoundingBox bbox = new LOTBoundingBox(new LVector(),
+			new LVector());
 	private LOT3DModel model;
 	private LVector tooluserspawnlocation;
-	// orientation and location
-	private LOrientation orientation = new LOrientation();
 
 	// used as a proxy
 	private WData bean;
@@ -53,10 +51,10 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	public LOTFactoryImpl(final LOTClient nclient) {
 		this.client = nclient;
 		env = new LOTEnvironmentImpl(nclient);
-		factories = new HashMap<String, LOTFactory>();
+		factories = new HashMap<String, LOTAttachedFactory>();
 
-		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(),
-				nclient.getPrefix());
+		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
+				nclient.getVersion(), nclient.getPrefix());
 		addScript("start", new LOTScriptImpl(client));
 		setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
 	}
@@ -65,9 +63,9 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		env = null;
 		name = null;
 		factories = null;
-		
-		o = new ServiceObject(BEANNAME, client.getClient(), this, client.getVersion(),
-				client.getPrefix());
+
+		o = new ServiceObject(BEANNAME, client.getClient(), this,
+				client.getVersion(), client.getPrefix());
 		return o.load(id);
 	}
 
@@ -98,7 +96,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		}
 
 		addVectorBean(b, VALUENAME_SPAWNLOCATION, tooluserspawnlocation);
-		b.add(orientation.getBean(BEANNAME_ORIENTATION));
 
 		if (bbox != null) {
 			b.add(bbox.getBean());
@@ -108,8 +105,11 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		}
 		WData bchildfactories = b.add("factories");
 		for (String cname : getFactoryMap().keySet()) {
-			LOTFactory cf = getFactory(cname);
-			bchildfactories.addValue(cname, cf.getID().toString());
+			LOTAttachedFactory cf = getFactory(cname);
+			WData bchildfactory = bchildfactories.add("item");
+			bchildfactory.addValue("name", cname);
+			bchildfactory.addValue("id", cf.getFactory().getID().toString());
+			bchildfactory.add(cf.getOrientation().getBean("orientation"));
 		}
 		//
 		return b;
@@ -133,7 +133,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		}
 
 		WData ob = bean.get(BEANNAME_ORIENTATION);
-		orientation = new LOrientation(ob);
 
 		WData bbbox = bean.get(LOTBoundingBox.BEAN_NAME);
 		if (bbbox != null) {
@@ -210,8 +209,8 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		getEnvironment().save();
 		getServiceObject().save();
 
-		for (LOTFactory cf : getFactoryMap().values()) {
-			cf.save();
+		for (LOTAttachedFactory cf : getFactoryMap().values()) {
+			cf.getFactory().save();
 		}
 	}
 
@@ -232,15 +231,16 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 			model.publish();
 		}
 
-		for (LOTFactory cf : getFactoryMap().values()) {
-			cf.publish();
+		for (LOTAttachedFactory cf : getFactoryMap().values()) {
+			cf.getFactory().publish();
 		}
 
 		getEnvironment().publish();
 		getServiceObject().publish();
 
 		client.publish("/factory/latest", this);
-		client.publish("/factory/" + getName() + "/" + LOTClient.getDateTime(), this);
+		client.publish("/factory/" + getName() + "/" + LOTClient.getDateTime(),
+				this);
 		client.publish("/factory/" + getName() + "/latest", this);
 	}
 
@@ -269,25 +269,27 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	@Override
-	public LOTFactory addFactory() {
+	public LOTAttachedFactory addFactory() {
 		return addFactory("child" + this.getFactoryMap().size());
 	}
 
 	@Override
-	public LOTFactory addFactory(String string) {
+	public LOTAttachedFactory addFactory(String string) {
 		LOTFactoryImpl childfactory = new LOTFactoryImpl(client);
-		childfactory.setBoundingBox(getBoundingBox().getA().getScaled(0.5), getBoundingBox().getB()
-				.getScaled(0.5));
+		childfactory.setBoundingBox(getBoundingBox().getA().getScaled(0.5),
+				getBoundingBox().getB().getScaled(0.5));
 		return addFactory(string, childfactory);
 	}
 
 	@Override
-	public LOTFactory addFactory(final String factoryname, final LOTFactory childfactory) {
-		this.getFactoryMap().put(factoryname, childfactory);
-		return childfactory;
+	public LOTAttachedFactory addFactory(final String factoryname,
+			final LOTFactory factory) {
+		LOTAttachedFactory cfactory = new LOTAttachedFactory(factory);
+		this.getFactoryMap().put(factoryname, cfactory);
+		return cfactory;
 	}
 
-	public LOTFactory getFactory(final String name) {
+	public LOTAttachedFactory getFactory(final String name) {
 		return getFactoryMap().get(name);
 	}
 
@@ -296,43 +298,29 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return new HashSet<>(getFactoryMap().keySet());
 	}
 
-	private Map<String, LOTFactory> getFactoryMap() {
+	private Map<String, LOTAttachedFactory> getFactoryMap() {
 		if (factories == null) {
-			factories = new HashMap<String, LOTFactory>();
+			factories = new HashMap<String, LOTAttachedFactory>();
 
 			WData bchildfactories = bean.get("factories");
 			List<WData> bcfs = bchildfactories.getChildren();
 			for (WData bchildfactory : bcfs) {
-				String cfname = bchildfactory.getName();
+				String cfname = bchildfactory.getValue("name");
+				String cfid = bchildfactory.getValue("id");
+
 				LOTFactoryImpl f = new LOTFactoryImpl(this.client);
-				if (f.load(new MStringID(bchildfactory.getText()))) {
-					addFactory(cfname, f);
+				if (f.load(new MStringID(cfid))) {
+					LOTAttachedFactory cf = addFactory(cfname, f);
+					cf.set(bchildfactory.get("orientation"));
 				} else {
 					WLogger.getLogger(this).error(
-							"failed to load childfactory " + bchildfactory.getText());
+							"failed to load childfactory "
+									+ bchildfactory.getText());
 				}
 			}
 		}
 
 		return factories;
-	}
-
-	public void setLocation(LVector nloc) {
-		orientation.getLocation().set(nloc);
-	}
-
-	public LOrientation getOrientation() {
-		return orientation;
-	}
-
-	@Override
-	public void setOrientation(LVector n, double d) {
-		orientation.set(n, d);
-	}
-
-	@Override
-	public LTransformation getTransformation() {
-		return new LTransformation(orientation);
 	}
 
 	public LOTTool getTool(String name) {
@@ -341,7 +329,8 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	private LOTEnvironment getEnv() {
 		if (env == null && bean != null) {
-			env = new LOTEnvironmentImpl(client, bean.getIDValue(VALUENAME_ENVIRONMENTID));
+			env = new LOTEnvironmentImpl(client,
+					bean.getIDValue(VALUENAME_ENVIRONMENTID));
 		}
 		return env;
 	}

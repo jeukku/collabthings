@@ -14,6 +14,7 @@ import org.collabthings.environment.impl.LOTScriptRunnerImpl;
 import org.collabthings.environment.impl.LOTToolState;
 import org.collabthings.environment.impl.ReallySimpleSuperheroRobot;
 import org.collabthings.math.LVector;
+import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTValues;
@@ -37,17 +38,20 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTFactory f1 = client.getObjectFactory().getFactory();
 		f1.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 10, 10));
 
-		LOTFactory f2 = f1.addFactory("f2");
-		f2.setBoundingBox(new LVector(-3, 0, -3), new LVector(3, 3, 3));
+		LOTAttachedFactory f2 = f1.addFactory("f2");
+		f2.getFactory().setBoundingBox(new LVector(-3, 0, -3),
+				new LVector(3, 3, 3));
 		f2.setLocation(new LVector(5, 0, 0));
 		f2.setOrientation(new LVector(1, 1, 0), Math.PI / 6);
 
-		LOTFactory f21 = f2.addFactory("f21");
-		f21.setBoundingBox(new LVector(-1, 0, -1), new LVector(1, 1, 1));
+		LOTAttachedFactory f21 = f2.getFactory().addFactory("f21");
+		f21.getFactory().setBoundingBox(new LVector(-1, 0, -1),
+				new LVector(1, 1, 1));
 		f21.setLocation(new LVector(2, 0, 0));
 
-		LOTFactory f3 = f1.addFactory("f3");
-		f3.setBoundingBox(new LVector(-2, 0, -2), new LVector(2, 1.5, 2));
+		LOTAttachedFactory f3 = f1.addFactory("f3");
+		f3.getFactory().setBoundingBox(new LVector(-2, 0, -2),
+				new LVector(2, 1.5, 2));
 		f3.setLocation(new LVector(-3, 2, -3));
 
 		LOTFactoryState f1s = new LOTFactoryState(client, env, "f1s", f1);
@@ -134,21 +138,25 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		LOTFactoryImpl factory = new LOTFactoryImpl(client);
 		factory.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
-		LOTFactoryState factorystate = new LOTFactoryState(client, env, "testfactory", factory);
+		LOTFactoryState factorystate = new LOTFactoryState(client, env,
+				"testfactory", factory);
 		LOTRunEnvironment rune = factorystate.getRunEnvironment();
 
-		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(rune, factorystate);
+		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(rune,
+				factorystate);
 		factorystate.addToolUser(robot);
 		LOTPartState p = factorystate.newPart();
 		p.getPart().newSubPart();
 
-		LOTToolState toolstate = factorystate.addTool("tool", new LOTToolImpl(client));
+		LOTToolState toolstate = factorystate.addTool("tool", new LOTToolImpl(
+				client));
 		//
 		LOTScriptImpl script = new LOTScriptImpl(client);
 		String nscript = "function info(){} function run(e, factory) { factory.newPart(); factory.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0), 6); } ";
 		script.setScript(nscript);
 		assertTrue(script.isOK());
-		LOTScriptRunner runner = new LOTScriptRunnerImpl(script, rune, factorystate);
+		LOTScriptRunner runner = new LOTScriptRunnerImpl(script, rune,
+				factorystate);
 		rune.addTask(runner);
 		LOTSimulation s = new LOTSimpleSimulation(rune, true);
 
@@ -175,7 +183,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 		assertTrue(taskscript.isOK());
 		f.addScript("factorytest", taskscript);
 
-		LOTFactoryState factorystate = new LOTFactoryState(client, env, "testfactory", f);
+		LOTFactoryState factorystate = new LOTFactoryState(client, env,
+				"testfactory", f);
 		LOTRunEnvironment rune = factorystate.getRunEnvironment();
 		//
 		LOTToolImpl tool = new LOTToolImpl(client);

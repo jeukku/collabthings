@@ -3,7 +3,6 @@ package org.collabthings.model;
 import java.util.Set;
 
 import org.collabthings.PrintOut;
-import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
 
 import waazdoh.common.ObjectID;
@@ -30,19 +29,15 @@ public interface LOTFactory extends LOTObject {
 
 	Set<String> getScripts();
 
-	LOTFactory addFactory(String string);
+	LOTAttachedFactory addFactory(String string);
 
-	LOTFactory addFactory();
+	LOTAttachedFactory addFactory();
 
-	LOTFactory getFactory(String string);
+	LOTAttachedFactory getFactory(String string);
 
 	Set<String> getFactories();
 
-	LOTFactory addFactory(String factoryname, LOTFactory f);
-
-	void setLocation(LVector LVector3d);
-
-	void setOrientation(LVector lVector, double d);
+	LOTAttachedFactory addFactory(String factoryname, LOTFactory f);
 
 	LOTBoundingBox getBoundingBox();
 
@@ -56,8 +51,7 @@ public interface LOTFactory extends LOTObject {
 
 	LVector getToolUserSpawnLocation();
 
-	LTransformation getTransformation();
-
 	PrintOut printOut();
+
 
 }

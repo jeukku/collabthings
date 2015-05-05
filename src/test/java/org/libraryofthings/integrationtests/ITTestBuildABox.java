@@ -11,6 +11,7 @@ import org.collabthings.LOTToolException;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.math.LVector;
+import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTPart;
@@ -18,7 +19,6 @@ import org.collabthings.model.LOTRunEnvironmentBuilder;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTSubPart;
 import org.collabthings.model.LOTTool;
-import org.collabthings.model.LOTValues;
 import org.collabthings.model.impl.LOTEnvironmentImpl;
 import org.collabthings.model.impl.LOTRunEnvironmentBuilderImpl;
 import org.collabthings.model.impl.LOTScriptImpl;
@@ -46,7 +46,6 @@ public final class ITTestBuildABox extends LOTTestCase {
 		LOTFactory factory = client.getObjectFactory().getFactory();
 		setupFactoryThatUsesBoxes(factory, client);
 
-		factory.setLocation(new LVector(0, 0, 0));
 		factory.setToolUserSpawnLocation(new LVector(20, 0, 20));
 		factory.setName("boxsetfactory");
 
@@ -119,9 +118,13 @@ public final class ITTestBuildABox extends LOTTestCase {
 		factory.getEnvironment().setVectorParameter("buildingpartlocation",
 				new LVector(15, 1, 0));
 
-		LOTFactory boxfactory = factory.addFactory("source");
-		createBoxFactory(boxfactory, client);
-		boxfactory.setLocation(new LVector(-5, 0, 0));
+		LOTAttachedFactory boxfactory1 = factory.addFactory("source");
+		createBoxFactory(boxfactory1.getFactory(), client);
+		boxfactory1.setLocation(new LVector(-5, 0, 10));
+
+		LOTAttachedFactory boxfactory2 = factory.addFactory("source2",
+				boxfactory1.getFactory());
+		boxfactory2.setLocation(new LVector(-5, 0, -10));
 
 		return factory;
 	}
@@ -198,7 +201,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		// Create a plate source
 		LOTFactory squarefactory = createPlateSource(
-				boxfactory.addFactory("source"), client, square);
+				boxfactory.addFactory("source").getFactory(), client, square);
 		squarefactory.setName("squarefactory");
 		squarefactory.setBoundingBox(new LVector(-3, 0, -3), new LVector(3, 3,
 				3));
