@@ -45,4 +45,9 @@ public class LOTRuntimeEvent {
 		this.values = values;
 	}
 
+	@Override
+	public String toString() {
+		return "" + getName() + "[" + getTime() + "] " + getObject() + " with "
+				+ values;
+	}
 }
