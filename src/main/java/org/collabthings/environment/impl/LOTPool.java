@@ -33,7 +33,7 @@ public class LOTPool {
 
 	public LOTPart peekPart(String string) {
 		List<LOTPart> list = parts.get(string);
-		if (list != null && !list.isEmpty() ) {
+		if (list != null && !list.isEmpty()) {
 			return list.get(0);
 		} else {
 			return null;
@@ -86,6 +86,15 @@ public class LOTPool {
 
 	public boolean isPartPoolEmpty(String pool) {
 		return parts.get(pool) == null || parts.get(pool).isEmpty();
+	}
+
+	public int countPool(String pool) {
+		List<LOTPart> list = parts.get(pool);
+		if (list == null) {
+			return 0;
+		} else {
+			return list.size();
+		}
 	}
 
 	private synchronized void waitABit() {
