@@ -18,6 +18,10 @@ function run(runenv, factory, values) {
 
 	var pickupvalues = values.copy();
 	var partsource = factory.getFactory('source');
+	if (partsource.getPool().countParts(subpartid) == 0
+			&& factory.getFactory('source2') != null) {
+		partsource = factory.getFactory('source2');
+	}
 
 	// var ordervalues = values.copy();
 	// ordervalues.put('partid', subpartid)
@@ -54,7 +58,7 @@ function run(runenv, factory, values) {
 	tool.moveTo(adestination, subpart.getNormal(), subpart.getAngle());
 
 	log.info("moveandattach part destination " + destination);
-	tool.moveTo(destination);
+	tool.moveTo(destination, subpart.getNormal(), subpart.getAngle());
 	tool.call('attach', values.copy());
 
 	tool.moveTo(adestination);

@@ -1,7 +1,7 @@
 package org.libraryofthings.unittests;
 
+import org.collabthings.math.LVector;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.math.LVector;
 
 public final class TestVector extends LOTTestCase {
 

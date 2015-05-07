@@ -4,17 +4,17 @@ import java.io.IOException;
 
 import javax.script.ScriptException;
 
-import org.libraryofthings.LOTClient;
+import org.collabthings.LOTClient;
+import org.collabthings.LOTToolException;
+import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
+import org.collabthings.environment.impl.LOTToolState;
+import org.collabthings.model.LOTEnvironment;
+import org.collabthings.model.LOTScript;
+import org.collabthings.model.LOTTool;
+import org.collabthings.model.impl.LOTEnvironmentImpl;
+import org.collabthings.model.impl.LOTToolImpl;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.LOTToolException;
-import org.libraryofthings.environment.LOTRunEnvironment;
-import org.libraryofthings.environment.impl.LOTRunEnvironmentImpl;
-import org.libraryofthings.environment.impl.LOTToolState;
-import org.libraryofthings.model.LOTEnvironment;
-import org.libraryofthings.model.LOTScript;
-import org.libraryofthings.model.LOTTool;
-import org.libraryofthings.model.impl.LOTEnvironmentImpl;
-import org.libraryofthings.model.impl.LOTToolImpl;
 import org.xml.sax.SAXException;
 
 public final class TestTool extends LOTTestCase {

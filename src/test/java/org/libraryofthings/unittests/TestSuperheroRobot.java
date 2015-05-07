@@ -2,19 +2,19 @@ package org.libraryofthings.unittests;
 
 import java.io.IOException;
 
-import org.libraryofthings.LOTClient;
+import org.collabthings.LOTClient;
+import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.environment.impl.LOTFactoryState;
+import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
+import org.collabthings.environment.impl.LOTToolState;
+import org.collabthings.environment.impl.LOTToolUser;
+import org.collabthings.environment.impl.ReallySimpleSuperheroRobot;
+import org.collabthings.math.LVector;
+import org.collabthings.model.LOTFactory;
+import org.collabthings.model.impl.LOTEnvironmentImpl;
+import org.collabthings.model.impl.LOTFactoryImpl;
+import org.collabthings.model.impl.LOTToolImpl;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.environment.LOTRunEnvironment;
-import org.libraryofthings.environment.impl.LOTFactoryState;
-import org.libraryofthings.environment.impl.LOTRunEnvironmentImpl;
-import org.libraryofthings.environment.impl.LOTToolState;
-import org.libraryofthings.environment.impl.LOTToolUser;
-import org.libraryofthings.environment.impl.ReallySimpleSuperheroRobot;
-import org.libraryofthings.math.LVector;
-import org.libraryofthings.model.LOTFactory;
-import org.libraryofthings.model.impl.LOTEnvironmentImpl;
-import org.libraryofthings.model.impl.LOTFactoryImpl;
-import org.libraryofthings.model.impl.LOTToolImpl;
 import org.xml.sax.SAXException;
 
 import waazdoh.common.MTimedFlag;
