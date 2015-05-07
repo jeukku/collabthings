@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.collabthings.LLog;
+import org.collabthings.PrintOut;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTRuntimeObject;
@@ -88,13 +89,24 @@ public class LOTPool {
 		return parts.get(pool) == null || parts.get(pool).isEmpty();
 	}
 
-	public int countPool(String pool) {
+	public int countParts(String pool) {
 		List<LOTPart> list = parts.get(pool);
 		if (list == null) {
 			return 0;
 		} else {
 			return list.size();
 		}
+	}
+
+	public PrintOut printOut() {
+		PrintOut p = new PrintOut();
+		p.append("" + this);
+		p.append(1, "parts");
+		for (String pname : parts.keySet()) {
+			p.append(2, "count:" + countParts(pname));
+		}
+
+		return p;
 	}
 
 	private synchronized void waitABit() {

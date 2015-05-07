@@ -114,7 +114,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		factory.setBoundingBox(new LVector(-100, 0, -100), new LVector(100, 10,
 				100));
 		factory.getEnvironment().setVectorParameter("storage",
-				new LVector(10, 0, 50));
+				new LVector(15, 1, 50));
 		factory.getEnvironment().setVectorParameter("buildingpartlocation",
 				new LVector(15, 1, 0));
 
@@ -191,6 +191,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		box.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
 		box.publish();
 
+		boxfactory.getEnvironment().setParameter("fillpool", "2");
 		boxfactory.getEnvironment().setParameter("partid", box.getID());
 		boxfactory.getEnvironment().setVectorParameter("storage",
 				new LVector(10, 3, 2));

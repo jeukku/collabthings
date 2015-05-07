@@ -7,6 +7,11 @@ function run(runenv, factory, values) {
 
 	log.info("values " + values);
 
+	var partid = values.get('partid');
+	if (partid == null) {
+		partid = factory.getParameter('partid');
+	}
+
 	var pool = factory.getPool();
 	var poolid = values.get('poolid');
 	if (poolid == null) {
@@ -20,14 +25,16 @@ function run(runenv, factory, values) {
 
 	factory.setStateParameter("busy", "true");
 
-	while (pool.countPool(poolid) < 2) {
+	var fillpool = factory.getParameter("fillpool")
+	if(fillpool==null) {
+		fillpool = 1;
+	}
+	
+	while (pool.countParts(poolid) < fillpool) {
+		log.info("count pool " + poolid + " " + pool.countParts(poolid));
+		log.info("pool " + pool.printOut());
 
 		var toolstate = values.get('tool');
-
-		var partid = values.get('partid');
-		if (partid == null) {
-			partid = factory.getParameter('partid');
-		}
 
 		var part = factory.getPart(partid);
 		log.setInfo("Assembly build " + part.getName())
@@ -46,7 +53,11 @@ function run(runenv, factory, values) {
 			callvalues.put('destpart', destpartstate);
 			callvalues.put('partid', subpart.getPart().getID());
 			factory.getFactory("source").call('order', callvalues);
-
+			
+			if (factory.getFactory("source2") != null) {
+				factory.getFactory("source2").call('order', callvalues);
+			}
+			
 			moveandattach(runenv, factory, callvalues);
 		});
 
@@ -62,11 +73,12 @@ function run(runenv, factory, values) {
 				var partl = destpartstate.getLocation();
 				var ab = destlocation.getSub(partl);
 
-				if (ab.length() < 0.01) {
+				var movedistance = step  * 10;
+				if (ab.length() < movedistance) {
 					return true;
 				} else {
 					ab.normalize();
-					ab.scale(step * 3);
+					ab.scale(movedistance);
 					destpartstate.setLocation(partl.getAdd(ab));
 					return false;
 				}
