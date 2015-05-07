@@ -4,14 +4,14 @@ import java.io.IOException;
 
 import javax.script.ScriptException;
 
-import org.libraryofthings.LLog;
-import org.libraryofthings.LOTClient;
+import org.collabthings.LLog;
+import org.collabthings.LOTClient;
+import org.collabthings.math.LVector;
+import org.collabthings.model.LOTBoundingBox;
+import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTScript;
+import org.collabthings.model.LOTTool;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.math.LVector;
-import org.libraryofthings.model.LOTBoundingBox;
-import org.libraryofthings.model.LOTFactory;
-import org.libraryofthings.model.LOTScript;
-import org.libraryofthings.model.LOTTool;
 import org.xml.sax.SAXException;
 
 public final class TestFactory extends LOTTestCase {
@@ -80,18 +80,18 @@ public final class TestFactory extends LOTTestCase {
 		LOTClient bc = getNewClient();
 		LOTFactory bf = bc.getObjectFactory().getFactory(
 				af.getID().getStringID());
-		
+
 		LLog.getLogger(af).info(af.getBean().toText());
 		LLog.getLogger(bf).info(bf.getBean().toText());
 		LLog.getLogger(af).info(af.printOut().toText());
 		LLog.getLogger(bf).info(bf.printOut().toText());
-		
+
 		assertEquals(af.getBean().toText(), bf.getBean().toText());
 		assertNotSame(af, bf);
 		assertTrue(af.getBean().equals(bf.getBean()));
-		af.setLocation(new LVector(1, 1, 1));
+		af.setName("test");
 		assertFalse(af.getBean().equals(bf.getBean()));
-		bf.setLocation(new LVector(1, 1, 1));
+		bf.setName("test");
 		assertEquals(af, bf);
 		assertTrue(af.getBean().equals(bf.getBean()));
 	}
@@ -100,7 +100,7 @@ public final class TestFactory extends LOTTestCase {
 		LOTClient c = getNewClient();
 		LOTFactory f = c.getObjectFactory().getFactory();
 		String childfactoryid = "testchildfactory";
-		LOTFactory childf = f.addFactory(childfactoryid);
+		LOTFactory childf = f.addFactory(childfactoryid).getFactory();
 		String childfactoryname = "some child factory";
 		childf.setName(childfactoryname);
 		childf.addScript("testscript");
@@ -110,7 +110,7 @@ public final class TestFactory extends LOTTestCase {
 		LOTFactory bf = bc.getObjectFactory().getFactory(
 				f.getID().getStringID());
 		assertEquals(f.getBean().toText(), bf.getBean().toText());
-		LOTFactory bchildf = bf.getFactory(childfactoryid);
+		LOTFactory bchildf = bf.getFactory(childfactoryid).getFactory();
 		assertNotNull(bchildf);
 		assertEquals(childfactoryname, bchildf.getName());
 		assertEquals(childf.getBean().toText(), bchildf.getBean().toText());

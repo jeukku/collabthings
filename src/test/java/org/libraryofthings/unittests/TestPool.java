@@ -2,9 +2,9 @@ package org.libraryofthings.unittests;
 
 import java.io.IOException;
 
-import org.libraryofthings.LOTClient;
+import org.collabthings.LOTClient;
+import org.collabthings.environment.impl.LOTPool;
 import org.libraryofthings.LOTTestCase;
-import org.libraryofthings.environment.impl.LOTPool;
 import org.xml.sax.SAXException;
 
 public final class TestPool extends LOTTestCase {
