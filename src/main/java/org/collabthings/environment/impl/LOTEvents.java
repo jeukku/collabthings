@@ -10,11 +10,11 @@ import org.collabthings.environment.LOTRuntimeEvent;
 public class LOTEvents {
 	private List<LOTRuntimeEvent> events = new LinkedList<LOTRuntimeEvent>();
 
-	public void add(LOTRuntimeEvent e) {
+	public synchronized void add(LOTRuntimeEvent e) {
 		events.add(e);
 	}
 
-	public List<LOTRuntimeEvent> getNewEvents(long after) {
+	public synchronized List<LOTRuntimeEvent> getNewEvents(long after) {
 		List<LOTRuntimeEvent> list = new LinkedList<LOTRuntimeEvent>();
 		for (LOTRuntimeEvent e : events) {
 			if (e.getTime() > after) {
