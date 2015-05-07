@@ -31,6 +31,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private double speed = 10;
 	final private LOTFactoryState factory;
 	private LOTEvents events = new LOTEvents();
+	private long movestarttime;
 
 	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
 			LOTFactoryState factory, LVector nlocation) {
@@ -73,10 +74,12 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		events.add(new LOTRuntimeEvent(this, "Moving to " + targetlocation,
 				null));
 
+		movestarttime = System.currentTimeMillis();
+
 		targetorientationnormal = n.copy();
 		targetorientationangle = angle;
-		log.info("Target location " + targetlocation);
-		log.info("factory " + this.factory);
+		log("Target location " + targetlocation);
+		log("factory " + this.factory);
 		//
 		while (simenv.isRunning()
 				&& targetlocation != null
@@ -88,9 +91,11 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 			tool.setOrientation(targetlocation, targetorientationnormal,
 					targetorientationangle);
 
-			log.info("Moved to " + targetlocation + " " + location);
+			log("Moved to " + targetlocation + " " + location + " in "
+					+ (System.currentTimeMillis() - movestarttime) + "ms");
+			targetlocation = null;
 		} else {
-			log.info("No target location. Propably stopped.");
+			log("No target location. Propably stopped.");
 		}
 	}
 
@@ -104,7 +109,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		}
 
 		events.add(new LOTRuntimeEvent(this, "set tool " + name, null));
-		log.info("setting tool " + lotToolState);
+		log("setting tool " + lotToolState);
 		this.tool = lotToolState;
 		initLogger();
 	}
@@ -146,10 +151,8 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		if (targetlocation != null) {
 			LVector vdistance = targetlocation.getSub(location);
 			double distance = vdistance.length();
-			double maxdistance = dtime * speed;
-			if (distance > maxdistance) {
-				distance = maxdistance;
-			}
+			// log("step " + dtime + " l:" + location + " distance:" +
+			// distance);
 
 			double dangle = targetorientationangle - orientationangle;
 			dangle *= dtime * speed;
@@ -167,18 +170,28 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 				normaldot = nnormal.dot(orientationnormal);
 			}
 
-			if (normaldot < 0) {
-				normaldot = 0.1;
+			if (normaldot < 0.1) {
+				distance *= normaldot;
 			}
-			distance *= normaldot;
 
 			nnormal.scale(dtime * speed);
 
 			orientationnormal.add(nnormal);
 			orientationnormal.normalize();
 
-			// checking distance because we cannot normalize zero length vector
-			if (distance > MOVING_LOCATION_LENGTH_TRIGGER) {
+			double maxdistance = dtime * speed;
+			if (vdistance.length() < maxdistance) {
+				// just move to right direction
+				double scale = 0.8;
+				if (distance < maxdistance / 10) {
+					// close enough, just go there.
+					scale = 1;
+				}
+				LVector scaled = vdistance.getScaled(scale);
+				location.add(scaled);
+			} else if (distance > MOVING_LOCATION_LENGTH_TRIGGER) {
+				distance = maxdistance;
+
 				// this is a bit random, but not going straight from a to b.
 				LVector direction = vdistance.getNormalized();
 				double ddot = direction.dot(targetorientationnormal);
@@ -192,11 +205,14 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 				}
 
 				direction.normalize();
-
 				direction.scale(distance);
+
 				location.add(direction);
 				tool.setOrientation(location, orientationnormal,
 						orientationangle);
+			} else {
+				log("Distance less than trigger length");
+				this.notifyAll();
 			}
 
 		}
@@ -207,8 +223,13 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		}
 	}
 
+	private void log(String string) {
+		log.info("" + (System.currentTimeMillis() - movestarttime) + "ms -- "
+				+ string);
+	}
+
 	private void debugInfo(double dtime) {
-		log.info("tool:" + tool + " location " + location + " normal "
+		log("tool:" + tool + " location " + location + " normal "
 				+ orientationnormal + " step:" + dtime + " targetlocation:"
 				+ targetlocation);
 	}
