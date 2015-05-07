@@ -30,6 +30,8 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 
 	private final LVector l = new LVector();
 
+	private long lasttime;
+
 	public RunEnviromentDrawer(final LOTRunEnvironment nrunenv,
 			EnvironmentDrawerTransform transform, String name) {
 		super(name, transform);
@@ -38,6 +40,13 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 	}
 
 	public void draw(LOTGraphics g) {
+		long currentTimeMillis = System.currentTimeMillis();
+		if (lasttime == 0) {
+			lasttime = currentTimeMillis;
+		}
+		double dt = (currentTimeMillis - lasttime) / 1000.0;
+		lasttime = currentTimeMillis;
+		
 		setGraphics(g);
 
 		init();
@@ -47,7 +56,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 			Set<LOTRuntimeObject> os = runenv.getRunObjects();
 			drawObjects(tstack, os);
 
-			checkZoom();
+			checkZoom(dt);
 		}
 	}
 
@@ -99,7 +108,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 	}
 
 	private long getNewEventTime() {
-		return System.currentTimeMillis() - 3000;
+		return System.currentTimeMillis() - 1000;
 	}
 
 	private void drawEvent(LTransformationStack tstack, LOTRuntimeEvent e,
@@ -132,7 +141,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 		l.set(0, 0, 0);
 
 		getGraphics().setColor(Color.lightGray);
-		drawString(tstack, "" + runo.getName(), l);
+		// drawString(tstack, "" + runo.getName(), l);
 		//
 		List<LOTSubPart> subparts = part.getSubParts();
 		if (!subparts.isEmpty()) {

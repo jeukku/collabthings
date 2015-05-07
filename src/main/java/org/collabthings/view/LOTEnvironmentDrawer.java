@@ -60,15 +60,15 @@ public class LOTEnvironmentDrawer {
 		return "D[" + name + "][" + this.framecount + "]";
 	}
 
-	public void checkZoom() {
+	public void checkZoom(double dtime) {
 		if (somethingoutofscreen) {
-			zoomspeed *= 0.999;
+			zoomspeed *= (1 - dtime/10);
 		} else {
-			zoomspeed *= 1.1;
+			zoomspeed *= (1 + dtime);
 		}
 
-		if (zoomspeed < 0.9) {
-			zoomspeed = 0.9;
+		if (zoomspeed < 0.4) {
+			zoomspeed = 0.4;
 		} else if (zoomspeed > 1.0) {
 			zoomspeed = 1.0;
 		}
