@@ -1,5 +1,7 @@
 package org.collabthings.model;
 
+import waazdoh.common.MStringID;
+
 public interface LOTOpenSCAD extends LOTObject {
 
 	String getError();
@@ -10,4 +12,11 @@ public interface LOTOpenSCAD extends LOTObject {
 
 	String getName();
 
+	LOT3DModel getModel();
+
+	void setName(String string);
+
+	String getScript();
+
+	boolean load(MStringID id);
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
+import org.collabthings.model.LOT3DModel;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTSubPart;
@@ -87,7 +88,8 @@ public final class TestPart extends LOTTestCase {
 		p.setBoundingBox(av, bv);
 		p.publish();
 		//
-		LOTPart pb = getNewClient().getObjectFactory().getPart(p.getID().getStringID());
+		LOTPart pb = getNewClient().getObjectFactory().getPart(
+				p.getID().getStringID());
 		LOTBoundingBox bounding = pb.getBoundingBox();
 		assertEquals(bounding.getA(), av);
 		assertEquals(bounding.getB(), bv);
@@ -96,7 +98,8 @@ public final class TestPart extends LOTTestCase {
 	public void testImportModel() throws IOException, SAXException {
 		LOTClient e = getNewClient();
 		LOTPart p = e.getObjectFactory().getPart();
-		p.importModel(getClass().getResourceAsStream(cubemodelpath));
+		p.getModel().importModel(LOT3DModel.TYPE_X3D,
+				getClass().getResourceAsStream(cubemodelpath));
 		assertNotNull(p.getModel());
 		assertTrue(p.getModel().getBinary().length() > 0);
 	}

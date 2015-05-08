@@ -76,13 +76,14 @@ public final class Test3DModel extends LOTTestCase {
 
 		LOTClient env = getNewClient();
 		LOT3DModelImpl m = new LOT3DModelImpl(env);
-		assertTrue(m.importModel(getClass().getResourceAsStream(cubemodelpath)));
+		assertTrue(m.importModel("x3d",
+				getClass().getResourceAsStream(cubemodelpath)));
 		new ConditionWaiter(() -> m.isReady(), 5000);
 		//
 		assertTrue(m.isReady());
 		assertTrue(!m.getChildBinaries().isEmpty());
 		//
-		InputStream is = m.getModelStream();
+		InputStream is = m.getX3DStream();
 		WData b = new WData(new XML(new InputStreamReader(is)));
 		WData imgtxt = b.find("ImageTexture");
 		String nurl = imgtxt.getAttribute("url");

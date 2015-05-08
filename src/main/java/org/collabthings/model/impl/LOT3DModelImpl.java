@@ -166,10 +166,10 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	}
 
 	@Override
-	public boolean importModel(InputStream is) {
+	public boolean importModel(String type, InputStream is) {
 		Reader r = new InputStreamReader(is);
 		try {
-			return importModel(r);
+			return importX3D(r);
 		} catch (IOException | SAXException e) {
 			log.error(this, "importModel InputStream", e);
 			return false;
@@ -181,14 +181,55 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		try {
 			Reader fr;
 			fr = new FileReader(file);
-			return importModel(fr);
+			String extension = file.getName().substring(
+					file.getName().lastIndexOf('.') + 1);
+			log.info("Import model extension " + extension);
+			if (LOT3DModel.TYPE_STL.equals(extension)) {
+				return importSTL(fr);
+			} else if (LOT3DModel.TYPE_X3D.equals(extension)) {
+				return importX3D(fr);
+			} else {
+				log.info("Unknown extension " + extension);
+				return false;
+			}
 		} catch (IOException | SAXException e) {
 			log.error(this, "import model", e);
 			return false;
 		}
 	}
 
-	private boolean importModel(Reader fr) throws IOException, SAXException {
+	private boolean importSTL(Reader fr) throws IOException, SAXException {
+		StringBuilder sb = readFile(fr);
+		newBinary();
+		getBinary().load(new ByteArrayInputStream(sb.toString().getBytes()));
+		getBinary().setReady();
+		return true;
+	}
+
+	private boolean importX3D(Reader fr) throws IOException, SAXException {
+		StringBuilder sb = readFile(fr);
+
+		String s = sb.toString();
+		log.fine("importing string " + s);
+		//
+		s = s.replace("http://www.web3d.org", findSpecificationsResources());
+		log.fine("importing converted string " + s);
+		//
+		XML xml = new XML(s);
+		WData b = new WData(xml);
+		log.fine("importing " + b.toText());
+		if (importX3D(b)) {
+			newBinary();
+			getBinary().load(
+					new ByteArrayInputStream(b.toXML().toString().getBytes()));
+			getBinary().setReady();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private StringBuilder readFile(Reader fr) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		char[] chb = new char[1000];
 		while (true) {
@@ -202,25 +243,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		}
 
 		fr.close();
-
-		String s = sb.toString();
-		log.fine("importing string " + s);
-		//
-		s = s.replace("http://www.web3d.org", findSpecificationsResources());
-		log.fine("importing converted string " + s);
-		//
-		XML xml = new XML(s);
-		WData b = new WData(xml);
-		log.fine("importing " + b.toText());
-		if (importModel(b)) {
-			newBinary();
-			getBinary().load(
-					new ByteArrayInputStream(b.toXML().toString().getBytes()));
-			getBinary().setReady();
-			return true;
-		} else {
-			return false;
-		}
+		return sb;
 	}
 
 	private String findSpecificationsResources() throws IOException {
@@ -241,7 +264,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		return null;
 	}
 
-	private boolean importModel(WData b) throws IOException {
+	private boolean importX3D(WData b) throws IOException {
 		String urlattribute = b.getAttribute("url");
 		if (urlattribute != null) {
 			importReplaceURLAttribute(b, urlattribute);
@@ -249,7 +272,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		//
 		List<WData> cs = b.getChildren();
 		for (WData cb : cs) {
-			if (!importModel(cb)) {
+			if (!importX3D(cb)) {
 				return false;
 			}
 		}
@@ -291,7 +314,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	}
 
 	public File getModelFile() throws SAXException, IOException {
-		InputStream is = getModelStream();
+		InputStream is = getX3DStream();
 		File f = File.createTempFile("" + System.currentTimeMillis() + "_"
 				+ getBinary().getID().toString(), "."
 				+ getBinary().getExtension());
@@ -300,7 +323,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		return f;
 	}
 
-	public InputStream getModelStream() throws SAXException {
+	public InputStream getX3DStream() throws SAXException {
 		if (isReady()) {
 			XML xml;
 			try {
@@ -312,7 +335,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 				b.find("X3D").setAttribute("xmlns:xsd",
 						"http://www.w3.org/2001/XMLSchema-instance");
 
-				convertURLs(b);
+				convertX3DURLs(b);
 				log.info("getModelStream returning " + b.toXML().toString());
 				return new BufferedInputStream(new ByteArrayInputStream(b
 						.toXML().toString().getBytes()));
@@ -325,7 +348,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		}
 	}
 
-	private void convertURLs(WData b) {
+	private void convertX3DURLs(WData b) {
 		String surl = b.getAttribute("url");
 		if (surl != null) {
 			Binary cbin = env.getBinarySource().getOrDownload(
@@ -338,7 +361,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		//
 		List<WData> cbs = b.getChildren();
 		for (WData cb : cbs) {
-			convertURLs(cb);
+			convertX3DURLs(cb);
 		}
 	}
 

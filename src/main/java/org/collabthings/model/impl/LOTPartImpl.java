@@ -1,14 +1,15 @@
 package org.collabthings.model.impl;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
+import org.collabthings.model.LOT3DModel;
 import org.collabthings.model.LOTBoundingBox;
+import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTSubPart;
 
@@ -22,10 +23,13 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	private static final String BEANNAME = "part";
 	private static final String VALUENAME_NAME = "name";
 	private static final String VALUENAME_MODELID = "model3did";
+	private static final String VALUENAME_SCADID = "scadid";
 	//
 	private ServiceObject o;
 	private String name = "part";
 	private LOT3DModelImpl model;
+	private LOTOpenSCAD scad;
+
 	LOTClient env;
 
 	private List<LOTSubPart> subparts = new LinkedList<>();
@@ -50,7 +54,15 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	public WData getBean() {
 		WData b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
-		b.addValue(VALUENAME_MODELID, getModel().getID());
+		if (scad != null) {
+			b.addValue(VALUENAME_SCADID, scad.getID());
+		}
+
+		LOT3DModel currentmodel = getModel();
+		if (currentmodel != null) {
+			b.addValue(VALUENAME_MODELID, currentmodel.getID());
+		}
+
 		if (getBoundingBox() != null) {
 			b.add(getBoundingBox().getBean());
 		}
@@ -78,6 +90,13 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
 		model = new LOT3DModelImpl(env);
 		model.load(modelid);
+
+		MStringID scadid = bean.getIDValue(VALUENAME_SCADID);
+		if (scadid != null) {
+			LOTOpenSCADImpl nscad = new LOTOpenSCADImpl(this.env);
+			nscad.load(scadid);
+			scad = nscad;
+		}
 		//
 		WData beanboundingbox = bean.get(LOTBoundingBox.BEAN_NAME);
 		if (beanboundingbox != null) {
@@ -129,7 +148,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	@Override
 	public boolean isReady() {
-		if (!getModel().isReady()) {
+		if (getModel() != null && !getModel().isReady()) {
 			return false;
 		}
 
@@ -139,6 +158,10 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	public void save() {
 		getModel().save();
 
+		if (scad != null) {
+			scad.save();
+		}
+
 		for (LOTSubPart subpart : this.subparts) {
 			subpart.getPart().save();
 		}
@@ -147,8 +170,14 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	}
 
 	public void publish() {
+		save();
+		
 		getModel().publish();
-		//
+
+		if (scad != null) {
+			scad.publish();
+		}
+
 		for (LOTSubPart subpart : this.subparts) {
 			subpart.getPart().publish();
 		}
@@ -156,11 +185,15 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		getServiceObject().publish();
 	}
 
-	public LOT3DModelImpl getModel() {
-		if (model == null) {
-			newModel();
+	public LOT3DModel getModel() {
+		if (scad != null) {
+			return scad.getModel();
+		} else {
+			if (model == null) {
+				newModel();
+			}
+			return model;
 		}
-		return model;
 	}
 
 	public void newModel() {
@@ -181,11 +214,6 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	public boolean importModel(File file) {
 		return getModel().importModel(file);
-	}
-
-	@Override
-	public boolean importModel(InputStream is) {
-		return getModel().importModel(is);
 	}
 
 	@Override
@@ -213,5 +241,16 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		this.boundingbox = null;
 		this.subparts.clear();
 		this.o = null;
+	}
+
+	@Override
+	public LOTOpenSCAD getSCAD() {
+		return scad;
+	}
+
+	@Override
+	public LOTOpenSCAD newSCAD() {
+		scad = new LOTOpenSCADImpl(env);
+		return scad;
 	}
 }

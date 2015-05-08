@@ -1,7 +1,6 @@
 package org.collabthings.model;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.List;
 
 import org.collabthings.math.LVector;
@@ -24,10 +23,12 @@ public interface LOTPart extends LOTObject {
 
 	boolean importModel(File file);
 
-	boolean importModel(InputStream resourceAsStream);
-
 	void setBoundingBox(LVector a, LVector b);
 
 	LOTBoundingBox getBoundingBox();
+
+	LOTOpenSCAD newSCAD();
+
+	LOTOpenSCAD getSCAD();
 
 }
