@@ -57,6 +57,11 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		newBinary();
 	}
 
+	@Override
+	public String toString() {
+		return "Model[" + getName() + "]";
+	}
+
 	public boolean load(MStringID id) {
 		return o.load(id);
 	}
@@ -315,12 +320,16 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 
 	public File getModelFile() throws SAXException, IOException {
 		InputStream is = getX3DStream();
-		File f = File.createTempFile("" + System.currentTimeMillis() + "_"
-				+ getBinary().getID().toString(), "."
-				+ getBinary().getExtension());
-		f.delete();
-		Files.copy(is, f.toPath());
-		return f;
+		if (is != null) {
+			File f = File.createTempFile("" + System.currentTimeMillis() + "_"
+					+ getBinary().getID().toString(), "."
+					+ getBinary().getExtension());
+			f.delete();
+			Files.copy(is, f.toPath());
+			return f;
+		} else {
+			return null;
+		}
 	}
 
 	public InputStream getX3DStream() throws SAXException {

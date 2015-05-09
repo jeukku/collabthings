@@ -43,7 +43,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	@Override
 	public String toString() {
-		return "P[" + name + "][sub:" + subparts.size() + "][" + getID() + "]";
+		return "P[" + name + "][sub:" + subparts.size() + "]";
 	}
 
 	public boolean load(MStringID id) {
@@ -171,7 +171,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	public void publish() {
 		save();
-		
+
 		getModel().publish();
 
 		if (scad != null) {
