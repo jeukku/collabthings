@@ -36,4 +36,6 @@ public interface LOT3DModel extends LOTObject {
 
 	boolean importModel(File stl);
 
+	String getType();
+
 }

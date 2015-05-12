@@ -48,6 +48,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	private final List<Binary> childbinaries = new LinkedList<Binary>();
 	private double scale = 1.0;
 	private LVector translation = new LVector();
+	private String type;
 
 	public LOT3DModelImpl(final LOTClient nenv) {
 		this.env = nenv;
@@ -144,7 +145,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 
 	public Binary newBinary() {
 		String comment = "LOT3DModel";
-		String extension = "x3d";
+		String extension = getType();
 		binaryid = env.getBinarySource().newBinary(comment, extension).getID();
 		return getBinary();
 	}
@@ -174,7 +175,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	public boolean importModel(String type, InputStream is) {
 		Reader r = new InputStreamReader(is);
 		try {
-			return importX3D(r);
+			return importModel(r, type);
 		} catch (IOException | SAXException e) {
 			log.error(this, "importModel InputStream", e);
 			return false;
@@ -189,18 +190,34 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 			String extension = file.getName().substring(
 					file.getName().lastIndexOf('.') + 1);
 			log.info("Import model extension " + extension);
-			if (LOT3DModel.TYPE_STL.equals(extension)) {
-				return importSTL(fr);
-			} else if (LOT3DModel.TYPE_X3D.equals(extension)) {
-				return importX3D(fr);
-			} else {
-				log.info("Unknown extension " + extension);
-				return false;
-			}
+			return importModel(fr, extension);
 		} catch (IOException | SAXException e) {
 			log.error(this, "import model", e);
 			return false;
 		}
+	}
+
+	private boolean importModel(Reader fr, String extension)
+			throws IOException, SAXException {
+		setType(extension);
+
+		if (LOT3DModel.TYPE_STL.equals(extension)) {
+			return importSTL(fr);
+		} else if (LOT3DModel.TYPE_X3D.equals(extension)) {
+			return importX3D(fr);
+		} else {
+			log.info("Unknown extension " + extension);
+			return false;
+		}
+	}
+
+	private void setType(String ntype) {
+		this.type = ntype;
+		newBinary();
+	}
+
+	public String getType() {
+		return type;
 	}
 
 	private boolean importSTL(Reader fr) throws IOException, SAXException {
@@ -319,20 +336,30 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	}
 
 	public File getModelFile() throws SAXException, IOException {
-		InputStream is = getX3DStream();
-		if (is != null) {
-			File f = File.createTempFile("" + System.currentTimeMillis() + "_"
-					+ getBinary().getID().toString(), "."
-					+ getBinary().getExtension());
-			f.delete();
-			Files.copy(is, f.toPath());
-			return f;
-		} else {
+		if (getType() == null) {
 			return null;
+		}
+
+		File f = File.createTempFile("" + System.currentTimeMillis() + "_"
+				+ getBinary().getID().toString(), "."
+				+ getBinary().getExtension());
+		f.delete();
+
+		if (getType().equals(LOT3DModel.TYPE_X3D)) {
+			InputStream is = getX3DStream();
+			if (is != null) {
+				Files.copy(is, f.toPath());
+				return f;
+			} else {
+				return null;
+			}
+		} else {
+			Files.copy(getBinary().getInputStream(), f.toPath());
+			return f;
 		}
 	}
 
-	public InputStream getX3DStream() throws SAXException {
+	private InputStream getX3DStream() throws SAXException {
 		if (isReady()) {
 			XML xml;
 			try {

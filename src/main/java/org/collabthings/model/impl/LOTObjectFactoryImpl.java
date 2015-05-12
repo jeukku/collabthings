@@ -10,6 +10,7 @@ import org.collabthings.LOTClient;
 import org.collabthings.model.LOT3DModel;
 import org.collabthings.model.LOTInfo;
 import org.collabthings.model.LOTObjectFactory;
+import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTRunEnvironmentBuilder;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
@@ -37,6 +38,11 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	@Override
 	public void addInfoListener(LOTInfo info) {
 		infolisteners.add(info);
+	}
+
+	@Override
+	public LOTOpenSCAD getSCAD() {
+		return new LOTOpenSCADImpl(client);
 	}
 
 	@Override

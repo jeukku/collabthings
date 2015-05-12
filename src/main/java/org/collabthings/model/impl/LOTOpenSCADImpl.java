@@ -41,8 +41,10 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 	private String name;
 	private String info;
 
-	private String error;
-	private LOT3DModel model;
+	private StringBuffer error;
+	private final LOT3DModel model;
+
+	private int loadedscadhash = 0;
 
 	/**
 	 * Creates a new script with random ID.
@@ -54,23 +56,36 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 		o = new ServiceObject(BEANNAME, env.getClient(), this,
 				env.getVersion(), env.getPrefix());
 		setName("OpenSCAD" + (LOTOpenSCADImpl.namecounter++));
-		setScript("// created " + new Date() + " by "
-				+ env.getService().getUser().getUsername() + "\n"
-				+ "// Version " + env.getVersion());
+		StringBuffer b = new StringBuffer();
+		b.append("// created " + new Date() + " by "
+				+ env.getService().getUser().getUsername() + "\n");
+		b.append("// Version " + env.getVersion() + "\n");
+		b.append("color(\"red\")\n");
+		b.append("  rotate_extrude()\n");
+		b.append("    translate([1, 0])\n");
+		b.append("      square(1);\n");
+		setScript(b.toString());
+
+		model = new LOT3DModelImpl(client);
 	}
 
 	@Override
 	public LOT3DModel getModel() {
-		if (model == null) {
+		if (loadedscadhash != getScript().hashCode()) {
 			loadModel();
+			loadedscadhash = getScript().hashCode();
 		}
 		return model;
+	}
+
+	@Override
+	public int hashCode() {
+		return getBean().toText().hashCode();
 	}
 
 	private void loadModel() {
 		try {
 			File stl = createSTL();
-			model = new LOT3DModelImpl(client);
 			model.importModel(stl);
 		} catch (IOException e) {
 			log.error(this, "loadModel", e);
@@ -94,8 +109,9 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 		log.info("OpenSCAD " + path);
 
 		File stlfile = File.createTempFile(getID().toString(), ".stl");
-		String command = path + " -o " + stlfile + " "
-				+ tempfile.getAbsolutePath();
+		String command = path + " -o " + stlfile;
+		// command += " -D 'quality=\"production\"' ";
+		command += " " + tempfile.getAbsolutePath();
 		log.info("Running " + command);
 		Process e = Runtime.getRuntime().exec(command);
 
@@ -122,11 +138,19 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 					}
 
 					log.info("line :" + line);
+					appendError(line + "\n");
 				}
 			} catch (Exception e1) {
 				log.error(es, "loadModel", e1);
 			}
 		}).start();
+	}
+
+	private void appendError(String line) {
+		if (error == null) {
+			error = new StringBuffer();
+		}
+		error.append(line);
 	}
 
 	@Override
@@ -140,7 +164,6 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 	@Override
 	public boolean parseBean(final WData bean) {
 		script = bean.getBase64Value(SCRIPT);
-		model = null;
 		this.name = bean.getValue(VARIABLE_NAME);
 		return name != null && script != null;
 	}
@@ -152,12 +175,16 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 	@Override
 	public void setScript(final String nscript) {
 		this.script = nscript;
-		model = null;
+		error = null;
 	}
 
 	@Override
 	public String getError() {
-		return error;
+		if (error == null) {
+			return null;
+		} else {
+			return error.toString();
+		}
 	}
 
 	private ServiceObject getServiceObject() {
@@ -189,7 +216,7 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 
 	@Override
 	public boolean isOK() {
-		return true;
+		return error == null;
 	}
 
 	@Override
@@ -199,7 +226,7 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 
 	@Override
 	public String toString() {
-		return "LOTScript[" + this.name + "][" + info + "]";
+		return "SCAD[" + this.name + "][" + info + "]";
 	}
 
 	public void setName(String name) {

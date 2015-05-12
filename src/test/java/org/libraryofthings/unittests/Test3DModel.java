@@ -1,6 +1,7 @@
 package org.libraryofthings.unittests;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -83,7 +84,7 @@ public final class Test3DModel extends LOTTestCase {
 		assertTrue(m.isReady());
 		assertTrue(!m.getChildBinaries().isEmpty());
 		//
-		InputStream is = m.getX3DStream();
+		InputStream is = new FileInputStream(m.getModelFile());
 		WData b = new WData(new XML(new InputStreamReader(is)));
 		WData imgtxt = b.find("ImageTexture");
 		String nurl = imgtxt.getAttribute("url");
