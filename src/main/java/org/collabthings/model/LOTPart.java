@@ -31,4 +31,6 @@ public interface LOTPart extends LOTObject {
 
 	LOTOpenSCAD getSCAD();
 
+	LOTMaterial getMaterial();
+
 }

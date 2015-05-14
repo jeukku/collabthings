@@ -50,8 +50,9 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 	 * Creates a new script with random ID.
 	 * 
 	 * @param env
+	 * @param nmodel 
 	 */
-	public LOTOpenSCADImpl(final LOTClient env) {
+	public LOTOpenSCADImpl(final LOTClient env, LOT3DModel nmodel) {
 		this.client = env;
 		o = new ServiceObject(BEANNAME, env.getClient(), this,
 				env.getVersion(), env.getPrefix());
@@ -66,7 +67,7 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 		b.append("      square(1);\n");
 		setScript(b.toString());
 
-		model = new LOT3DModelImpl(client);
+		model = nmodel;
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOT3DModel;
 import org.collabthings.model.LOTBoundingBox;
+import org.collabthings.model.LOTMaterial;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTSubPart;
@@ -34,6 +35,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	private List<LOTSubPart> subparts = new LinkedList<>();
 	private LOTBoundingBox boundingbox;
+	private LOTMaterial material = new LOTMaterialImpl();
 
 	public LOTPartImpl(final LOTClient nenv) {
 		this.env = nenv;
@@ -93,7 +95,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 		MStringID scadid = bean.getIDValue(VALUENAME_SCADID);
 		if (scadid != null) {
-			LOTOpenSCADImpl nscad = new LOTOpenSCADImpl(this.env);
+			LOTOpenSCADImpl nscad = new LOTOpenSCADImpl(this.env, model);
 			nscad.load(scadid);
 			scad = nscad;
 		}
@@ -134,6 +136,11 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	public void setName(final String nname) {
 		this.name = nname;
+	}
+
+	@Override
+	public LOTMaterial getMaterial() {
+		return material;
 	}
 
 	@Override
@@ -186,14 +193,10 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	}
 
 	public LOT3DModel getModel() {
-		if (scad != null) {
-			return scad.getModel();
-		} else {
-			if (model == null) {
-				newModel();
-			}
-			return model;
+		if (model == null) {
+			newModel();
 		}
+		return model;
 	}
 
 	public void newModel() {
@@ -250,7 +253,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	@Override
 	public LOTOpenSCAD newSCAD() {
-		scad = new LOTOpenSCADImpl(env);
+		scad = new LOTOpenSCADImpl(env, getModel());
 		return scad;
 	}
 }

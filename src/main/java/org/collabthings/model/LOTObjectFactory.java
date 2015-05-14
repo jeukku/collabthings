@@ -28,6 +28,4 @@ public interface LOTObjectFactory {
 
 	LOTRunEnvironmentBuilder getRuntimeBuilder(MStringID id);
 
-	LOTOpenSCAD getSCAD();
-
 }
