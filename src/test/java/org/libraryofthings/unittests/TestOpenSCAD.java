@@ -23,10 +23,11 @@ public final class TestOpenSCAD extends LOTTestCase {
 		scad.setName("testing changing name");
 
 		scad.setScript(loadATestFile("scad/test.scad"));
-		part.publish();
 
 		LOT3DModel m = scad.getModel();
 		assertNotNull(m);
+
+		part.publish();
 
 		LOTClient benv = getNewClient(true);
 		assertNotNull(benv);
