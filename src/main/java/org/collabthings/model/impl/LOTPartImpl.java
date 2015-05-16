@@ -60,6 +60,8 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 			b.addValue(VALUENAME_SCADID, scad.getID());
 		}
 
+		b.add(material.getBean());
+
 		LOT3DModel currentmodel = getModel();
 		if (currentmodel != null) {
 			b.addValue(VALUENAME_MODELID, currentmodel.getID());
@@ -99,7 +101,9 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 			nscad.load(scadid);
 			scad = nscad;
 		}
-		//
+
+		material = new LOTMaterialImpl(bean.get("material"));
+
 		WData beanboundingbox = bean.get(LOTBoundingBox.BEAN_NAME);
 		if (beanboundingbox != null) {
 			boundingbox = new LOTBoundingBox(beanboundingbox);
