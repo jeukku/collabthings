@@ -50,6 +50,12 @@ public class SwingRunEnvironmentView extends JPanel implements LOTGraphics {
 	}
 
 	@Override
+	public void drawLine(double x, double y, double z, double bx, double by,
+			double bz) {
+		g2.drawLine((int) x, (int) y, (int) bx, (int) by);
+	}
+
+	@Override
 	public void drawOval(int x, int y, int w, int h) {
 		g2.drawOval(x, y, w, h);
 	}

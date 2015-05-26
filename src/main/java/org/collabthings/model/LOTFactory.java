@@ -45,7 +45,7 @@ public interface LOTFactory extends LOTObject {
 
 	void setBoundingBox(LOTBoundingBox lotBoundingBox);
 
-	void setModel(LOT3DModel model);
+	void setModel(LOTBinaryModel model);
 
 	void setToolUserSpawnLocation(LVector spawnlocation);
 

@@ -3,7 +3,7 @@ package org.libraryofthings.unittests;
 import java.io.IOException;
 
 import org.collabthings.LOTClient;
-import org.collabthings.model.LOT3DModel;
+import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.impl.LOTPartImpl;
@@ -24,7 +24,7 @@ public final class TestOpenSCAD extends LOTTestCase {
 
 		scad.setScript(loadATestFile("scad/test.scad"));
 
-		LOT3DModel m = scad.getModel();
+		LOTBinaryModel m = scad.getModel();
 		assertNotNull(m);
 
 		part.publish();
@@ -38,7 +38,7 @@ public final class TestOpenSCAD extends LOTTestCase {
 		assertEquals(part.getName(), bpart.getName());
 		waitObject(bpart);
 
-		LOTOpenSCAD bscad = bpart.getSCAD();
+		LOTOpenSCAD bscad = (LOTOpenSCAD) bpart.getModel();
 		assertNotNull(bscad);
 		assertEquals(scad.getScript(), bscad.getScript());
 	}

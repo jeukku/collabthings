@@ -11,8 +11,10 @@ import java.util.Date;
 
 import org.collabthings.LLog;
 import org.collabthings.LOTClient;
-import org.collabthings.model.LOT3DModel;
+import org.collabthings.model.LOTBinaryModel;
+import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTOpenSCAD;
+import org.collabthings.model.LOTTriangleMesh;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -25,10 +27,10 @@ import waazdoh.common.WData;
  * @author Juuso Vilmunen
  * 
  */
-public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
+public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
+		LOTModel {
 	private static final String VARIABLE_NAME = "name";
 	private static final String SCRIPT = "value";
-	private static final String BEANNAME = "openscad";
 	//
 	private ServiceObject o;
 	private String script;
@@ -42,7 +44,7 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 	private String info;
 
 	private StringBuffer error;
-	private final LOT3DModel model;
+	private final LOTBinaryModel model;
 
 	private int loadedscadhash = 0;
 
@@ -50,11 +52,11 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 	 * Creates a new script with random ID.
 	 * 
 	 * @param env
-	 * @param nmodel 
+	 * @param nmodel
 	 */
-	public LOTOpenSCADImpl(final LOTClient env, LOT3DModel nmodel) {
+	public LOTOpenSCADImpl(final LOTClient env) {
 		this.client = env;
-		o = new ServiceObject(BEANNAME, env.getClient(), this,
+		o = new ServiceObject(LOTOpenSCAD.TYPE, env.getClient(), this,
 				env.getVersion(), env.getPrefix());
 		setName("OpenSCAD" + (LOTOpenSCADImpl.namecounter++));
 		StringBuffer b = new StringBuffer();
@@ -67,11 +69,11 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 		b.append("      square(1);\n");
 		setScript(b.toString());
 
-		model = nmodel;
+		model = new LOT3DModelImpl(env);
 	}
 
 	@Override
-	public LOT3DModel getModel() {
+	public LOTBinaryModel getModel() {
 		if (loadedscadhash != getScript().hashCode()) {
 			loadModel();
 			loadedscadhash = getScript().hashCode();
@@ -82,6 +84,16 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 	@Override
 	public int hashCode() {
 		return getBean().toText().hashCode();
+	}
+
+	@Override
+	public boolean importModel(File file) {
+		throw new RuntimeException("not supported");
+	}
+
+	@Override
+	public String getModelType() {
+		return LOTOpenSCAD.TYPE;
 	}
 
 	private void loadModel() {
@@ -157,9 +169,13 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 	@Override
 	public WData getBean() {
 		WData b = o.getBean();
+		getBean(b);
+		return b;
+	}
+
+	public void getBean(WData b) {
 		b.setBase64Value(SCRIPT, script);
 		b.addValue(VARIABLE_NAME, name);
-		return b;
 	}
 
 	@Override
@@ -232,5 +248,10 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public LOTTriangleMesh getTriangleMesh() {
+		return getModel().getTriangleMesh();
 	}
 }

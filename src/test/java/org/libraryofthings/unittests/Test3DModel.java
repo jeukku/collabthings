@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOT3DModel;
+import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.impl.LOT3DModelImpl;
 import org.libraryofthings.LOTTestCase;
 import org.xml.sax.SAXException;
@@ -24,7 +24,7 @@ public final class Test3DModel extends LOTTestCase {
 		LOTClient env = getNewClient();
 		assertNotNull(env);
 		//
-		LOT3DModel am = new LOT3DModelImpl(env);
+		LOTBinaryModel am = new LOT3DModelImpl(env);
 		am.setName("TEST");
 		am.setTranslation(new LVector(1, 0, 1));
 		am.setScale(10);
@@ -53,7 +53,7 @@ public final class Test3DModel extends LOTTestCase {
 		s.getBinary().setReady();
 		s.publish();
 		//
-		LOT3DModel bs = new LOT3DModelImpl(benv);
+		LOTBinaryModel bs = new LOT3DModelImpl(benv);
 		bs.load(s.getID().getStringID());
 		assertEquals(s.getName(), bs.getName());
 		//

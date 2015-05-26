@@ -1,6 +1,7 @@
 package org.collabthings.model.impl;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +20,9 @@ import java.util.StringTokenizer;
 import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOT3DModel;
+import org.collabthings.model.LOTBinaryModel;
+import org.collabthings.model.LOTModel;
+import org.collabthings.model.LOTTriangleMesh;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.ServiceObject;
@@ -31,7 +34,8 @@ import waazdoh.common.ObjectID;
 import waazdoh.common.WData;
 import waazdoh.common.XML;
 
-public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
+public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
+		LOTModel {
 	private static final String BEANNAME = "model3d";
 	private static final String SCALE = "scale";
 	private static final String TRANSLATION = "translation";
@@ -49,6 +53,8 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	private double scale = 1.0;
 	private LVector translation = new LVector();
 	private String type;
+
+	private LOTTriangleMesh mesh;
 
 	public LOT3DModelImpl(final LOTClient nenv) {
 		this.env = nenv;
@@ -70,6 +76,11 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 	@Override
 	public WData getBean() {
 		WData b = o.getBean();
+		getBean(b);
+		return b;
+	}
+
+	public void getBean(WData b) {
 		b.addValue(NAME, name);
 		b.addValue(BINARYID, "" + getBinaryID());
 		b.addValue(SCALE, scale);
@@ -79,7 +90,6 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 		for (Binary binary : childbinaries) {
 			bb.add("binary").setValue(binary.getID().toString());
 		}
-		return b;
 	}
 
 	private BinaryID getBinaryID() {
@@ -201,14 +211,19 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 			throws IOException, SAXException {
 		setType(extension);
 
-		if (LOT3DModel.TYPE_STL.equals(extension)) {
+		if (LOTBinaryModel.TYPE_STL.equals(extension)) {
 			return importSTL(fr);
-		} else if (LOT3DModel.TYPE_X3D.equals(extension)) {
+		} else if (LOTBinaryModel.TYPE_X3D.equals(extension)) {
 			return importX3D(fr);
 		} else {
 			log.info("Unknown extension " + extension);
 			return false;
 		}
+	}
+
+	@Override
+	public String getModelType() {
+		return LOT3DModelImpl.TYPE;
 	}
 
 	private void setType(String ntype) {
@@ -345,7 +360,7 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 				+ getBinary().getExtension());
 		f.delete();
 
-		if (getType().equals(LOT3DModel.TYPE_X3D)) {
+		if (getType().equals(LOTBinaryModel.TYPE_X3D)) {
 			InputStream is = getX3DStream();
 			if (is != null) {
 				Files.copy(is, f.toPath());
@@ -429,6 +444,42 @@ public class LOT3DModelImpl implements LOT3DModel, ServiceObjectData {
 			return getBean().toXML().equals(bmodel.getBean().toXML());
 		} else {
 			return false;
+		}
+	}
+
+	@Override
+	public LOTTriangleMesh getTriangleMesh() {
+		if (mesh == null) {
+			createTriangleMesh();
+		}
+
+		return mesh;
+	}
+
+	private void createTriangleMesh() {
+		if (LOTBinaryModel.TYPE_STL.equals(getType())) {
+			String c = getModelFileContent();
+
+		} else {
+			mesh = new LOTTriangleMeshImpl();
+		}
+	}
+
+	private String getModelFileContent() {
+		try {
+			File f = getModelFile();
+			BufferedReader r = new BufferedReader(new FileReader(f));
+			StringBuilder b = new StringBuilder();
+			String line;
+			while ((line = r.readLine()) != null) {
+				b.append(line);
+				b.append("\n");
+			}
+			r.close();
+			return b.toString();
+		} catch (SAXException | IOException e) {
+			log.error(this, "getModelFileContent", e);
+			return null;
 		}
 	}
 }

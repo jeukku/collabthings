@@ -7,9 +7,9 @@ import java.util.List;
 import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOT3DModel;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTMaterial;
+import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTSubPart;
@@ -23,19 +23,18 @@ import waazdoh.common.WData;
 public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	private static final String BEANNAME = "part";
 	private static final String VALUENAME_NAME = "name";
-	private static final String VALUENAME_MODELID = "model3did";
-	private static final String VALUENAME_SCADID = "scadid";
+	private static final String VALUENAME_MODELID = "id";
 	//
 	private ServiceObject o;
 	private String name = "part";
-	private LOT3DModelImpl model;
-	private LOTOpenSCAD scad;
 
 	LOTClient env;
 
 	private List<LOTSubPart> subparts = new LinkedList<>();
 	private LOTBoundingBox boundingbox;
 	private LOTMaterial material = new LOTMaterialImpl();
+
+	private LOTModel model;
 
 	public LOTPartImpl(final LOTClient nenv) {
 		this.env = nenv;
@@ -56,16 +55,14 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	public WData getBean() {
 		WData b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
-		if (scad != null) {
-			b.addValue(VALUENAME_SCADID, scad.getID());
+
+		if (model != null) {
+			WData md = b.add("model");
+			md.addValue("id", model.getID());
+			md.addValue("type", model.getModelType());
 		}
 
 		b.add(material.getBean());
-
-		LOT3DModel currentmodel = getModel();
-		if (currentmodel != null) {
-			b.addValue(VALUENAME_MODELID, currentmodel.getID());
-		}
 
 		if (getBoundingBox() != null) {
 			b.add(getBoundingBox().getBean());
@@ -91,16 +88,8 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	@Override
 	public boolean parseBean(WData bean) {
 		setName(bean.getValue(VALUENAME_NAME));
-		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
-		model = new LOT3DModelImpl(env);
-		model.load(modelid);
 
-		MStringID scadid = bean.getIDValue(VALUENAME_SCADID);
-		if (scadid != null) {
-			LOTOpenSCADImpl nscad = new LOTOpenSCADImpl(this.env, model);
-			nscad.load(scadid);
-			scad = nscad;
-		}
+		parseModel(bean.get("model"));
 
 		material = new LOTMaterialImpl(bean.get("material"));
 
@@ -119,6 +108,23 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		}
 		//
 		return getName() != null;
+	}
+
+	private void parseModel(WData data) {
+		if (data != null) {
+			String type = data.getValue("type");
+			if (LOTOpenSCAD.TYPE.equals(type)) {
+				MStringID scadid = data.getIDValue(VALUENAME_MODELID);
+				LOTOpenSCADImpl nscad = new LOTOpenSCADImpl(this.env);
+				nscad.load(scadid);
+				model = nscad;
+			} else {
+				MStringID modelid = data.getIDValue(VALUENAME_MODELID);
+				LOT3DModelImpl m = new LOT3DModelImpl(env);
+				m.load(modelid);
+				model = m;
+			}
+		}
 	}
 
 	private synchronized void addPart(LOTSubPartImpl subpart) {
@@ -167,10 +173,8 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	}
 
 	public void save() {
-		getModel().save();
-
-		if (scad != null) {
-			scad.save();
+		if (model != null) {
+			model.save();
 		}
 
 		for (LOTSubPart subpart : this.subparts) {
@@ -183,10 +187,8 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	public void publish() {
 		save();
 
-		getModel().publish();
-
-		if (scad != null) {
-			scad.publish();
+		if (model != null) {
+			model.publish();
 		}
 
 		for (LOTSubPart subpart : this.subparts) {
@@ -196,15 +198,15 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		getServiceObject().publish();
 	}
 
-	public LOT3DModel getModel() {
-		if (model == null) {
-			newModel();
-		}
+	@Override
+	public LOTModel getModel() {
 		return model;
 	}
 
-	public void newModel() {
-		model = new LOT3DModelImpl(env);
+	public LOT3DModelImpl newBinaryModel() {
+		LOT3DModelImpl m = new LOT3DModelImpl(env);
+		model = m;
+		return m;
 	}
 
 	public synchronized LOTSubPart newSubPart() {
@@ -251,13 +253,9 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	}
 
 	@Override
-	public LOTOpenSCAD getSCAD() {
-		return scad;
-	}
-
-	@Override
 	public LOTOpenSCAD newSCAD() {
-		scad = new LOTOpenSCADImpl(env, getModel());
+		LOTOpenSCADImpl scad = new LOTOpenSCADImpl(env);
+		model = scad;
 		return scad;
 	}
 }

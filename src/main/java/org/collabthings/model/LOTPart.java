@@ -13,11 +13,9 @@ public interface LOTPart extends LOTObject {
 
 	void setName(String string);
 
-	LOT3DModel getModel();
+	LOTModel getModel();
 
 	boolean isAnEqualPart(LOTPart b);
-
-	void newModel();
 
 	String getName();
 
@@ -29,7 +27,7 @@ public interface LOTPart extends LOTObject {
 
 	LOTOpenSCAD newSCAD();
 
-	LOTOpenSCAD getSCAD();
+	LOTBinaryModel newBinaryModel();
 
 	LOTMaterial getMaterial();
 

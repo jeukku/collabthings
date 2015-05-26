@@ -9,11 +9,11 @@ import java.util.Set;
 import org.collabthings.LOTClient;
 import org.collabthings.PrintOut;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOT3DModel;
+import org.collabthings.model.LOTBinaryModel;
+import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
 
@@ -42,7 +42,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	private Map<String, LOTAttachedFactory> factories;
 	private final LOTBoundingBox bbox = new LOTBoundingBox(new LVector(),
 			new LVector());
-	private LOT3DModel model;
+	private LOTBinaryModel model;
 	private LVector tooluserspawnlocation;
 
 	// used as a proxy
@@ -214,7 +214,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		}
 	}
 
-	public LOT3DModel getModel() {
+	public LOTBinaryModel getModel() {
 		if (model == null && bean != null) {
 			MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
 			if (modelid != null) {
@@ -335,7 +335,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return env;
 	}
 
-	public void setModel(LOT3DModel model) {
+	public void setModel(LOTBinaryModel model) {
 		this.model = model;
 	}
 
