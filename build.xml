@@ -1,7 +1,7 @@
 <project>
 	<import file="ant.xml" />
 
-	<property name="projectname" value="libraryofthings.client" />
+	<property name="projectname" value="collabthings.client" />
 
 	<target name="client.check.uptodate">
 		<uptodate property="client.notrequired" targetfile="target/build.trig">
@@ -11,7 +11,7 @@
 		</uptodate>
 	</target>
 
-	<target name="libraryofthingsclient_dobuild" unless="client.notrequired">
+	<target name="collabthingsclient_dobuild" unless="client.notrequired">
 		<echo file="target/build.trig">Done</echo>
 
 		<ant target="runmvn">
@@ -19,7 +19,7 @@
 		</ant>
 	</target>
 
-	<target name="build" depends="client.check.uptodate, libraryofthingsclient_dobuild">
+	<target name="build" depends="client.check.uptodate, collabthingsclient_dobuild">
 		<echo>Done</echo>
 	</target>
 </project>
