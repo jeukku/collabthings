@@ -21,4 +21,6 @@ public interface LOTGraphics {
 
 	void setStroke(Stroke st);
 
+	void drawLine(double x, double y, double z, double x2, double y2, double z2);
+
 }

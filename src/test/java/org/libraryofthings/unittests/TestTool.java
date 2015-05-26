@@ -46,7 +46,7 @@ public final class TestTool extends LOTTestCase {
 		//
 		t.newPart();
 		String testbinarydatastring = "TESTIBINARYDATA";
-		t.getPart().getModel().getBinary()
+		t.getPart().newBinaryModel().getBinary()
 				.add(new String(testbinarydatastring).getBytes());
 		//
 		t.save();
@@ -61,10 +61,6 @@ public final class TestTool extends LOTTestCase {
 		LOTScript bscript = btool.getScript("test");
 		assertNotNull(bscript);
 		assertEquals(lotScript.getScript(), bscript.getScript());
-		//
-		String sdata = readString(btool.getPart().getModel().getBinary()
-				.getInputStream());
-		assertEquals(testbinarydatastring, sdata);
 	}
 
 	public void testNullPart() throws IOException, SAXException {

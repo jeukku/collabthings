@@ -14,15 +14,14 @@ import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTTask;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
+import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
 import org.collabthings.model.LOTValues;
-import org.collabthings.model.impl.LOTFactoryImpl;
 
 import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MStringID;

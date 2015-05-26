@@ -1,6 +1,7 @@
 package org.collabthings.view;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -17,10 +18,14 @@ import org.collabthings.environment.impl.LOTToolState;
 import org.collabthings.environment.impl.LOTToolUser;
 import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
+import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTBoundingBox;
+import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTSubPart;
+import org.collabthings.model.LOTTriangle;
+import org.collabthings.model.LOTTriangleMesh;
 
 public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 		SimulationView {
@@ -46,7 +51,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 		}
 		double dt = (currentTimeMillis - lasttime) / 1000.0;
 		lasttime = currentTimeMillis;
-		
+
 		setGraphics(g);
 
 		init();
@@ -140,30 +145,59 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 
 		l.set(0, 0, 0);
 
-		getGraphics().setColor(Color.lightGray);
-		// drawString(tstack, "" + runo.getName(), l);
-		//
-		List<LOTSubPart> subparts = part.getSubParts();
-		if (!subparts.isEmpty()) {
-			for (LOTSubPart lotSubPart : subparts) {
-				tstack.push(lotSubPart.getTransformation());
+		if (part.getModel() != null) {
+			LOTModel m = part.getModel();
+			drawModel(tstack, m);
+		} else {
+			getGraphics().setColor(Color.lightGray);
+			// drawString(tstack, "" + runo.getName(), l);
+			//
+			List<LOTSubPart> subparts = part.getSubParts();
+			if (!subparts.isEmpty()) {
+				for (LOTSubPart lotSubPart : subparts) {
+					tstack.push(lotSubPart.getTransformation());
 
-				LOTPart subpartpart = lotSubPart.getPart();
-				LOTBoundingBox subpartbbox = subpartpart.getBoundingBox();
-				if (subpartbbox != null) {
-					drawBoundingBox(tstack, subpartbbox);
+					LOTPart subpartpart = lotSubPart.getPart();
+					drawPart(tstack, null, subpartpart);
+
+					tstack.pull();
 				}
-
-				getGraphics().setColor(Color.red);
+			} else {
+				getGraphics().setColor(Color.green);
 				l.set(0, 0, 0);
 				drawCenterSquare(tstack, l);
-
-				tstack.pull();
 			}
-		} else {
-			getGraphics().setColor(Color.green);
-			l.set(0, 0, 0);
-			drawCenterSquare(tstack, l);
+		}
+	}
+
+	private void drawModel(LTransformationStack tstack, LOTModel m) {
+		LOTTriangleMesh mesh = m.getTriangleMesh();
+		if (mesh != null) {
+			List<LOTTriangle> ts = mesh.getTriangles();
+			List<LVector> orgvs = mesh.getVectors();
+			List<LVector> vs = new ArrayList<LVector>();
+			orgvs.forEach(v -> {
+				// TODO should we reuse objects? In previous Java versions
+				// object
+				// creation was pretty slow
+				vs.add(new LVector(v));
+			});
+
+			vs.parallelStream().forEach(v -> {
+				tstack.current().transform(v);
+				v.x = getSX(v.x);
+				v.y = getSX(v.y);
+			});
+
+			ts.parallelStream().forEach(t -> {
+				LVector ta = vs.get(t.a);
+				LVector tb = vs.get(t.b);
+				LVector tc = vs.get(t.c);
+
+				getGraphics().drawLine(ta.x, ta.y, ta.z, tb.x, tb.y, tb.z);
+				getGraphics().drawLine(ta.x, ta.y, ta.z, tc.x, tc.y, tc.z);
+				getGraphics().drawLine(tb.x, tb.y, tb.z, tc.x, tc.y, tc.z);
+			});
 		}
 	}
 

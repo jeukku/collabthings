@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.collabthings.LLog;
 import org.collabthings.LOTClient;
-import org.collabthings.model.LOT3DModel;
+import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTInfo;
 import org.collabthings.model.LOTObjectFactory;
 import org.collabthings.model.LOTRunEnvironmentBuilder;
@@ -152,7 +152,7 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	}
 
 	@Override
-	public LOT3DModel getModel() {
+	public LOTBinaryModel getModel() {
 		LOT3DModelImpl model = new LOT3DModelImpl(this.client);
 		synchronized (models) {
 			models.add(model);
@@ -161,7 +161,7 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	}
 
 	@Override
-	public LOT3DModel getModel(MStringID modelid) {
+	public LOTBinaryModel getModel(MStringID modelid) {
 		synchronized (models) {
 			for (LOT3DModelImpl model : models) {
 				if (model.getID().getStringID().equals(modelid)) {

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
+import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTSubPart;
@@ -24,10 +25,9 @@ public final class TestPart extends LOTTestCase {
 		part.setName("testing changing name");
 		part.save();
 		//
-		part.newModel();
+		LOTBinaryModel m = part.newBinaryModel();
 		String testbinarydatastring = "TESTIBINARYPARTDATA";
-		part.getModel().getBinary()
-				.add(new String(testbinarydatastring).getBytes());
+		m.getBinary().add(new String(testbinarydatastring).getBytes());
 		//
 		LOTSubPart subpart = part.newSubPart();
 
@@ -42,8 +42,7 @@ public final class TestPart extends LOTTestCase {
 		assertEquals(part.getName(), bpart.getName());
 		waitObject(bpart);
 		//
-		String sdata = readString(bpart.getModel().getBinary().getInputStream());
-		assertEquals(testbinarydatastring, sdata);
+		assertEquals(m, bpart.getModel());
 		//
 		LOTSubPart bsubpart = part.getSubParts().get(0);
 		assertEquals(bsubpart.getPart().getID(), subpart.getPart().getID());
@@ -87,7 +86,8 @@ public final class TestPart extends LOTTestCase {
 		p.setBoundingBox(av, bv);
 		p.publish();
 		//
-		LOTPart pb = getNewClient().getObjectFactory().getPart(p.getID().getStringID());
+		LOTPart pb = getNewClient().getObjectFactory().getPart(
+				p.getID().getStringID());
 		LOTBoundingBox bounding = pb.getBoundingBox();
 		assertEquals(bounding.getA(), av);
 		assertEquals(bounding.getB(), bv);
@@ -96,9 +96,11 @@ public final class TestPart extends LOTTestCase {
 	public void testImportModel() throws IOException, SAXException {
 		LOTClient e = getNewClient();
 		LOTPart p = e.getObjectFactory().getPart();
-		p.importModel(getClass().getResourceAsStream(cubemodelpath));
+		LOTBinaryModel bm = p.newBinaryModel();
+		bm.importModel(LOTBinaryModel.TYPE_X3D,
+				getClass().getResourceAsStream(cubemodelpath));
 		assertNotNull(p.getModel());
-		assertTrue(p.getModel().getBinary().length() > 0);
+		assertTrue(bm.getBinary().length() > 0);
 	}
 
 	public void testEqualPart() {

@@ -62,7 +62,7 @@ public class LOTEnvironmentDrawer {
 
 	public void checkZoom(double dtime) {
 		if (somethingoutofscreen) {
-			zoomspeed *= (1 - dtime/10);
+			zoomspeed *= (1 - dtime / 10);
 		} else {
 			zoomspeed *= (1 + dtime);
 		}
@@ -121,13 +121,23 @@ public class LOTEnvironmentDrawer {
 		}
 	}
 
-	private int getSY(LVector l) {
-		return (int) ((-zoom * l.y * getGraphics().getHeight() / 1000.0) + getGraphics()
+	public int getSY(LVector l) {
+		double y = l.y;
+		return getSY(y);
+	}
+
+	public int getSY(double y) {
+		return (int) ((-zoom * y * getGraphics().getHeight() / 1000.0) + getGraphics()
 				.getHeight() / 2);
 	}
 
-	private int getSX(LVector l) {
-		return (int) ((zoom * l.x * getGraphics().getHeight() / 1000.0) + getGraphics()
+	public int getSX(LVector l) {
+		double x = l.x;
+		return getSX(x);
+	}
+
+	public int getSX(double x) {
+		return (int) ((zoom * x * getGraphics().getHeight() / 1000.0) + getGraphics()
 				.getWidth() / 2);
 	}
 

@@ -10,7 +10,10 @@ import org.xml.sax.SAXException;
 import waazdoh.client.model.objects.Binary;
 import waazdoh.common.MStringID;
 
-public interface LOT3DModel extends LOTObject {
+public interface LOTBinaryModel extends LOTObject {
+	public static final String TYPE_X3D = "x3d";
+	public static final String TYPE_STL = "stl";
+	public static final String TYPE = "binary";
 
 	Binary getBinary();
 
@@ -30,6 +33,12 @@ public interface LOT3DModel extends LOTObject {
 
 	void setScale(double i);
 
-	boolean importModel(InputStream is);
+	boolean importModel(String type, InputStream is);
+
+	boolean importModel(File stl);
+
+	String getType();
+
+	LOTTriangleMesh getTriangleMesh();
 
 }

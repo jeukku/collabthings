@@ -1,6 +1,7 @@
 package org.libraryofthings;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -204,8 +205,17 @@ public class LOTTestCase extends TestCase {
 	}
 
 	protected String loadATestScript(String string) throws IOException {
-		StringBuilder sb = new StringBuilder();
 		String path = "src/test/js/" + string;
+		return loadTextFile(path);
+	}
+
+	protected String loadATestFile(String s) throws FileNotFoundException, IOException {
+		String path = "src/test/resources/" + s;
+		return loadTextFile(path);
+	}
+
+	private String loadTextFile(String path) throws FileNotFoundException,
+			IOException {
 		BufferedReader br = new BufferedReader(new FileReader(path));
 		StringWriter sw = new StringWriter();
 		//

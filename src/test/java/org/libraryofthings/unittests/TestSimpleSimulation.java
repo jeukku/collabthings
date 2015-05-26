@@ -59,6 +59,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTFactoryState f2s = f1s.getFactory("f2");
 		LOTFactoryState f21s = f2s.getFactory("f21");
 		LOTPartState p = f21s.newPart();
+		p.getPart().newSCAD();
+
 		// to zoom out the view
 		p.setLocation(new LVector(20, 0, 0));
 
