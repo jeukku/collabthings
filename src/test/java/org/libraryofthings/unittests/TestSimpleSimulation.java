@@ -1,5 +1,6 @@
 package org.libraryofthings.unittests;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.collabthings.math.LVector;
 import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTValues;
 import org.collabthings.model.impl.LOTEnvironmentImpl;
 import org.collabthings.model.impl.LOTFactoryImpl;
@@ -31,7 +33,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 	private static final int MAX_SIMUALTION_RUNTIME = 2000000;
 
-	public void testSimpleTransformation() {
+	public void testSimpleTransformation() throws FileNotFoundException, IOException {
 		LOTClient client = getNewClient();
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 
@@ -59,7 +61,10 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTFactoryState f2s = f1s.getFactory("f2");
 		LOTFactoryState f21s = f2s.getFactory("f21");
 		LOTPartState p = f21s.newPart();
-		p.getPart().newSCAD();
+
+		LOTOpenSCAD scad = p.getPart().newSCAD();
+		scad.setScript(loadATestFile("scad/test.scad"));
+		scad.setScale(0.4);
 
 		// to zoom out the view
 		p.setLocation(new LVector(20, 0, 0));

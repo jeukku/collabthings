@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 import org.collabthings.LLog;
@@ -22,6 +23,7 @@ import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTModel;
+import org.collabthings.model.LOTTriangle;
 import org.collabthings.model.LOTTriangleMesh;
 import org.xml.sax.SAXException;
 
@@ -459,7 +461,28 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 	private void createTriangleMesh() {
 		if (LOTBinaryModel.TYPE_STL.equals(getType())) {
 			String c = getModelFileContent();
-
+			if (c != null) {
+				log.info("STL " + c);
+				mesh = new LOTTriangleMeshImpl();
+				StringTokenizer st = new StringTokenizer(c);
+				Stack<LVector> s = new Stack<LVector>();
+				while (st.hasMoreTokens()) {
+					String t = st.nextToken();
+					if ("vertex".equals(t)) {
+						double sx = Double.parseDouble(st.nextToken());
+						double sy = Double.parseDouble(st.nextToken());
+						double sz = Double.parseDouble(st.nextToken());
+						s.push(new LVector(sx, sy, sz));
+					} else if ("endfacet".equals(t)) {
+						int index = mesh.getVectors().size();
+						mesh.getVectors().add(s.pop());
+						mesh.getVectors().add(s.pop());
+						mesh.getVectors().add(s.pop());
+						mesh.getTriangles().add(
+								new LOTTriangle(index, index + 1, index + 2));
+					}
+				}
+			}
 		} else {
 			mesh = new LOTTriangleMeshImpl();
 		}

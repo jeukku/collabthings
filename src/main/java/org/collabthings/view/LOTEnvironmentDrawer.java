@@ -26,7 +26,7 @@ public class LOTEnvironmentDrawer {
 	private LVector a = new LVector();
 	private LVector b = new LVector();
 
-	private EnvironmentDrawerTransform t;
+	protected EnvironmentDrawerTransform t;
 	private double zoom = DEFAULT_ZOOM;
 	private int framecount;
 	private String name;
@@ -89,7 +89,7 @@ public class LOTEnvironmentDrawer {
 		return g;
 	}
 
-	private void drawLine(LTransformationStack tstack, LVector a, LVector b) {
+	protected void drawLine(LTransformationStack tstack, LVector a, LVector b) {
 		tstack.current().transform(a);
 		tstack.current().transform(b);
 

@@ -11,6 +11,7 @@ import java.util.Date;
 
 import org.collabthings.LLog;
 import org.collabthings.LOTClient;
+import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTOpenSCAD;
@@ -47,6 +48,8 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 	private final LOTBinaryModel model;
 
 	private int loadedscadhash = 0;
+	private LVector translation = new LVector();
+	private double scale = 1;
 
 	/**
 	 * Creates a new script with random ID.
@@ -100,6 +103,8 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 		try {
 			File stl = createSTL();
 			model.importModel(stl);
+			model.setTranslation(getTranslation());
+			model.setScale(getScale());
 		} catch (IOException e) {
 			log.error(this, "loadModel", e);
 		} catch (InterruptedException e) {
@@ -253,5 +258,25 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 	@Override
 	public LOTTriangleMesh getTriangleMesh() {
 		return getModel().getTriangleMesh();
+	}
+
+	@Override
+	public double getScale() {
+		return scale;
+	}
+
+	@Override
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
+
+	@Override
+	public LVector getTranslation() {
+		return translation;
+	}
+
+	@Override
+	public void setTranslation(LVector translation) {
+		this.translation = translation;
 	}
 }
