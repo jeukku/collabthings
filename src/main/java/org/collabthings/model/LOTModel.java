@@ -2,6 +2,8 @@ package org.collabthings.model;
 
 import java.io.File;
 
+import org.collabthings.math.LVector;
+
 import waazdoh.common.ObjectID;
 
 public interface LOTModel {
@@ -19,4 +21,12 @@ public interface LOTModel {
 	boolean importModel(File file);
 
 	String getModelType();
+
+	double getScale();
+
+	void setScale(double scale);
+
+	LVector getTranslation();
+
+	void setTranslation(LVector translation);
 }

@@ -173,6 +173,9 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 	private void drawModel(LTransformationStack tstack, LOTModel m) {
 		LOTTriangleMesh mesh = m.getTriangleMesh();
 		if (mesh != null) {
+			final LVector mtrans = m.getTranslation();
+			final double scale = m.getScale();
+
 			List<LOTTriangle> ts = mesh.getTriangles();
 			List<LVector> orgvs = mesh.getVectors();
 			List<LVector> vs = new ArrayList<LVector>();
@@ -184,9 +187,16 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 			});
 
 			vs.parallelStream().forEach(v -> {
+				if (mtrans != null) {
+					v.add(mtrans);
+				}
+				v.scale(scale);
+
 				tstack.current().transform(v);
+				t.transform(v);
+				
 				v.x = getSX(v.x);
-				v.y = getSX(v.y);
+				v.y = getSY(v.y);
 			});
 
 			ts.parallelStream().forEach(t -> {

@@ -91,7 +91,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 		for (int i = 0; i < 3; i++) {
 			LOTSubPart sb = line.newSubPart();
 			sb.setPart(box);
-			sb.setOrientation(new LVector(i * 2, 0, 0), new LVector(0, 1, 0));
+			sb.setOrientation(new LVector(i * 2, 0, 0), new LVector(0, 1, 0),
+					Math.PI / 2);
 		}
 
 		line.publish();
@@ -274,7 +275,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		return tool;
 	}
 
-	private LOTPart createBox(LOTClient env, LOTPart square) {
+	private LOTPart createBox(LOTClient env, LOTPart square) throws IOException {
 		box = env.getObjectFactory().getPart();
 		box.setName("BOX");
 		for (int i = 0; i < PARTS_IN_A_BOX; i++) {
