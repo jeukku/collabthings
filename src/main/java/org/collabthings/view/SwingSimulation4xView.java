@@ -36,7 +36,14 @@ public class SwingSimulation4xView extends JPanel {
 		RunEnviromentDrawer zcanvas = new RunEnviromentDrawer(runenv,
 				(v) -> v.z = 0, "Z");
 		RunEnviromentDrawer freecanvas = new RunEnviromentDrawer(runenv,
-				(v) -> freetransform.transform(v), "Z");
+				(v) -> {
+					freetransform.transform(v);
+					v.z += 30;
+					v.z /= 10;
+					v.x /= v.z;
+					v.y /= v.z;
+
+				}, "Z");
 
 		setLayout(new GridLayout(2, 2));
 
@@ -68,9 +75,10 @@ public class SwingSimulation4xView extends JPanel {
 	private void setupFreeTransform() {
 		LTransformation nfreetransform = new LTransformation();
 		nfreetransform.mult(LTransformation.getRotate(new Vector3d(1, 0, 0),
-				0.4));
+				-0.4));
 		nfreetransform.mult(LTransformation.getRotate(new Vector3d(0, 1, 0),
 				freeangle));
+
 		freetransform = nfreetransform;
 	}
 }

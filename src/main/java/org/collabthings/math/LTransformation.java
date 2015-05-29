@@ -95,6 +95,18 @@ public class LTransformation {
 		return v;
 	}
 
+	public LVector transformw0(LVector v) {
+		double nx = v.x * m.m00 + v.y * m.m01 + v.z * m.m02;
+		double ny = v.x * m.m10 + v.y * m.m11 + v.z * m.m12;
+		double nz = v.x * m.m20 + v.y * m.m21 + v.z * m.m22;
+
+		v.x = nx;
+		v.y = ny;
+		v.z = nz;
+
+		return v;
+	}
+
 	public void mult(LTransformation t1) {
 		m.mul(t1.m);
 	}

@@ -463,6 +463,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 			String c = getModelFileContent();
 			if (c != null) {
 				log.info("STL " + c);
+				LVector n = new LVector(0, 1, 0);
 				mesh = new LOTTriangleMeshImpl();
 				StringTokenizer st = new StringTokenizer(c);
 				Stack<LVector> s = new Stack<LVector>();
@@ -473,13 +474,19 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 						double sy = Double.parseDouble(st.nextToken());
 						double sz = Double.parseDouble(st.nextToken());
 						s.push(new LVector(sx, sy, sz));
+					} else if ("normal".equals(t)) {
+						double sx = Double.parseDouble(st.nextToken());
+						double sy = Double.parseDouble(st.nextToken());
+						double sz = Double.parseDouble(st.nextToken());
+						n = new LVector(sx, sy, sz);
 					} else if ("endfacet".equals(t)) {
 						int index = mesh.getVectors().size();
 						mesh.getVectors().add(s.pop());
 						mesh.getVectors().add(s.pop());
 						mesh.getVectors().add(s.pop());
-						mesh.getTriangles().add(
-								new LOTTriangle(index, index + 1, index + 2));
+						mesh.getTriangles()
+								.add(new LOTTriangle(index, index + 1,
+										index + 2, n));
 					}
 				}
 			}

@@ -7,6 +7,8 @@ import java.awt.Stroke;
 
 import javax.swing.JPanel;
 
+import org.collabthings.math.LVector;
+
 public class SwingRunEnvironmentView extends JPanel implements LOTGraphics {
 	private static final long serialVersionUID = -6174408330205773946L;
 
@@ -53,6 +55,33 @@ public class SwingRunEnvironmentView extends JPanel implements LOTGraphics {
 	public void drawLine(double x, double y, double z, double bx, double by,
 			double bz) {
 		g2.drawLine((int) x, (int) y, (int) bx, (int) by);
+	}
+
+	@Override
+	public void drawTriangle(LVector ta, LVector tb, LVector tc, int color) {
+		setColor(color);
+
+		int[] ys = new int[3];
+		int[] xs = new int[3];
+		xs[0] = (int) ta.x;
+		ys[0] = (int) ta.y;
+		xs[1] = (int) tb.x;
+		ys[1] = (int) tb.y;
+		xs[2] = (int) tc.x;
+		ys[2] = (int) tc.y;
+
+		synchronized (g2) {
+			g2.fillPolygon(xs, ys, 3);
+		}
+	}
+
+	private void setColor(int color) {
+		Color c = getColor(color);
+		g2.setColor(c);
+	}
+
+	private Color getColor(int color) {
+		return new Color(color);
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package org.collabthings.view;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -16,9 +18,9 @@ import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTPartState;
 import org.collabthings.environment.impl.LOTToolState;
 import org.collabthings.environment.impl.LOTToolUser;
+import org.collabthings.math.LTransformation;
 import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTPart;
@@ -36,6 +38,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 	private final LVector l = new LVector();
 
 	private long lasttime;
+	private HashMap<LOTModel, Integer> modelcolors;
 
 	public RunEnviromentDrawer(final LOTRunEnvironment nrunenv,
 			EnvironmentDrawerTransform transform, String name) {
@@ -57,6 +60,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 		init();
 
 		LTransformationStack tstack = new LTransformationStack();
+
 		if (runenv != null) {
 			Set<LOTRuntimeObject> os = runenv.getRunObjects();
 			drawObjects(tstack, os);
@@ -175,6 +179,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 		if (mesh != null) {
 			final LVector mtrans = m.getTranslation();
 			final double scale = m.getScale();
+			final int color = getColor(m);
 
 			List<LOTTriangle> ts = mesh.getTriangles();
 			List<LVector> orgvs = mesh.getVectors();
@@ -193,22 +198,70 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 				v.scale(scale);
 
 				tstack.current().transform(v);
-				t.transform(v);
-				
+				drawert.transform(v);
+
 				v.x = getSX(v.x);
 				v.y = getSY(v.y);
 			});
 
-			ts.parallelStream().forEach(t -> {
-				LVector ta = vs.get(t.a);
-				LVector tb = vs.get(t.b);
-				LVector tc = vs.get(t.c);
+			ts.sort(new Comparator<LOTTriangle>() {
+				@Override
+				public int compare(LOTTriangle o1, LOTTriangle o2) {
+					LVector ta = vs.get(o1.a);
+					LVector tb = vs.get(o2.a);
+					if (ta.z < tb.z) {
+						return -1;
+					} else {
+						return 1;
+					}
+				}
+			});
 
-				getGraphics().drawLine(ta.x, ta.y, ta.z, tb.x, tb.y, tb.z);
-				getGraphics().drawLine(ta.x, ta.y, ta.z, tc.x, tc.y, tc.z);
-				getGraphics().drawLine(tb.x, tb.y, tb.z, tc.x, tc.y, tc.z);
+			ts.forEach(t -> {
+				LVector nn = t.n.copy();
+				tstack.current().transformw0(nn);
+				drawert.transform(nn);
+
+				if (nn.z > 0) {
+					LVector ta = vs.get(t.a);
+					LVector tb = vs.get(t.b);
+					LVector tc = vs.get(t.c);
+
+					if (ta.z > 0 && tb.z > 0 && tc.z > 0) {
+						if (nn.z > 1) {
+							nn.z = 1;
+						}
+
+						int r = ((int) (((color & 0xff0000) >> 16) * nn.z) & 0xff) << 16;
+						int g = ((int) (((color & 0xff00) >> 8) * nn.z) & 0xff) << 8;
+						int b = (int) ((color & 0xff) * nn.z) & 0xff;
+						int c = r << 16 | g << 8 | b;
+
+						getGraphics().drawTriangle(ta, tb, tc, c);
+
+						getGraphics().drawLine(ta.x, ta.y, ta.z, tb.x, tb.y,
+								tb.z);
+						getGraphics().drawLine(ta.x, ta.y, ta.z, tc.x, tc.y,
+								tc.z);
+						getGraphics().drawLine(tb.x, tb.y, tb.z, tc.x, tc.y,
+								tc.z);
+					}
+				}
 			});
 		}
+	}
+
+	private int getColor(LOTModel m) {
+		if (modelcolors == null) {
+			modelcolors = new HashMap<LOTModel, Integer>();
+		}
+
+		Integer c = modelcolors.get(m);
+		if (c == null) {
+			c = (int) (Math.random() * 0xffffff);
+			modelcolors.put(m, c);
+		}
+		return c;
 	}
 
 	private void drawToolUser(LTransformationStack tstack, LOTToolUser tooluser) {

@@ -3,6 +3,8 @@ package org.collabthings.view;
 import java.awt.Color;
 import java.awt.Stroke;
 
+import org.collabthings.math.LVector;
+
 public interface LOTGraphics {
 
 	void setColor(Color black);
@@ -22,5 +24,7 @@ public interface LOTGraphics {
 	void setStroke(Stroke st);
 
 	void drawLine(double x, double y, double z, double x2, double y2, double z2);
+
+	void drawTriangle(LVector ta, LVector tb, LVector tc, int color);
 
 }

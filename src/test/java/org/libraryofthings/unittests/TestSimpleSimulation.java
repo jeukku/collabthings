@@ -33,7 +33,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 	private static final int MAX_SIMUALTION_RUNTIME = 2000000;
 
-	public void testSimpleTransformation() throws FileNotFoundException, IOException {
+	public void testSimpleTransformation() throws FileNotFoundException,
+			IOException {
 		LOTClient client = getNewClient();
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 
@@ -56,18 +57,24 @@ public class TestSimpleSimulation extends LOTTestCase {
 				new LVector(2, 1.5, 2));
 		f3.setLocation(new LVector(-3, 2, -3));
 
+		LOTAttachedFactory f4 = f1.addFactory();
+		f4.getFactory().setBoundingBox(new LVector(-1, 0, -1),
+				new LVector(1, 1, 1));
+		f4.setLocation(new LVector(20, 0, 0));
+
 		LOTFactoryState f1s = new LOTFactoryState(client, env, "f1s", f1);
 
 		LOTFactoryState f2s = f1s.getFactory("f2");
+		LOTOpenSCAD scad2 = f2s.newPart().getPart().newSCAD();
+		scad2.setScript(loadATestFile("scad/test.scad"));
+		scad2.setScale(0.3);
+
 		LOTFactoryState f21s = f2s.getFactory("f21");
-		LOTPartState p = f21s.newPart();
+		LOTPartState p21s = f21s.newPart();
 
-		LOTOpenSCAD scad = p.getPart().newSCAD();
-		scad.setScript(loadATestFile("scad/test.scad"));
-		scad.setScale(0.4);
-
-		// to zoom out the view
-		p.setLocation(new LVector(20, 0, 0));
+		LOTOpenSCAD scad21 = p21s.getPart().newSCAD();
+		scad21.setScript(loadATestFile("scad/test.scad"));
+		scad21.setScale(0.4);
 
 		LOTRunEnvironment runenv = f1s.getRunEnvironment();
 
@@ -83,9 +90,14 @@ public class TestSimpleSimulation extends LOTTestCase {
 				valuesmap.put(name, values.get(name));
 
 				long st = System.currentTimeMillis();
-				while ((System.currentTimeMillis() - st) < 10000) {
+				while ((System.currentTimeMillis() - st) < 30000) {
+					f21s.getTransformation().rotateY(
+							System.currentTimeMillis() / 200.0);
+					p21s.getTransformation().rotateY(
+							System.currentTimeMillis() / 400.0);
+
 					try {
-						wait(200);
+						wait(20);
 					} catch (Exception e) {
 					}
 				}
