@@ -90,11 +90,11 @@ public class TestSimpleSimulation extends LOTTestCase {
 				valuesmap.put(name, values.get(name));
 
 				long st = System.currentTimeMillis();
-				while ((System.currentTimeMillis() - st) < 30000) {
+				while ((System.currentTimeMillis() - st) < 10000) {
 					f21s.getTransformation().rotateY(
-							System.currentTimeMillis() / 200.0);
+							System.currentTimeMillis() / 500.0);
 					p21s.getTransformation().rotateY(
-							System.currentTimeMillis() / 400.0);
+							System.currentTimeMillis() / 800.0);
 
 					try {
 						wait(20);

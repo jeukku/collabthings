@@ -28,12 +28,13 @@ public class LTransformation {
 		mult(LTransformation.getTranslate(location.x, location.y, location.z));
 
 		Vector3d cross = new Vector3d();
-		cross.cross(UP, orientationnormal);
+		Vector3d on = orientationnormal;
+		cross.cross(UP, on);
 		if (cross.length() > 0) {
 			cross.normalize();
 			Vector3d dot = new Vector3d(UP);
-			double angle = Math.acos(dot.dot(orientationnormal));
-			mult(LTransformation.getRotate(orientationnormal, orientationangle));
+			double angle = Math.acos(dot.dot(on));
+			mult(LTransformation.getRotate(on, orientationangle));
 			mult(LTransformation.getRotate(cross, angle));
 		} else {
 			mult(LTransformation.getRotate(UP, orientationangle));

@@ -18,7 +18,6 @@ import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTPartState;
 import org.collabthings.environment.impl.LOTToolState;
 import org.collabthings.environment.impl.LOTToolUser;
-import org.collabthings.math.LTransformation;
 import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBoundingBox;
@@ -198,7 +197,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 				v.scale(scale);
 
 				tstack.current().transform(v);
-				drawert.transform(v);
+				drawert.transform(v, true);
 
 				v.x = getSX(v.x);
 				v.y = getSY(v.y);
@@ -209,7 +208,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 				public int compare(LOTTriangle o1, LOTTriangle o2) {
 					LVector ta = vs.get(o1.a);
 					LVector tb = vs.get(o2.a);
-					if (ta.z < tb.z) {
+					if (ta.z >= tb.z) {
 						return -1;
 					} else {
 						return 1;
@@ -220,7 +219,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 			ts.forEach(t -> {
 				LVector nn = t.n.copy();
 				tstack.current().transformw0(nn);
-				drawert.transform(nn);
+				drawert.transform(nn, false);
 
 				if (nn.z > 0) {
 					LVector ta = vs.get(t.a);
@@ -239,12 +238,9 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 
 						getGraphics().drawTriangle(ta, tb, tc, c);
 
+						
 						getGraphics().drawLine(ta.x, ta.y, ta.z, tb.x, tb.y,
 								tb.z);
-						getGraphics().drawLine(ta.x, ta.y, ta.z, tc.x, tc.y,
-								tc.z);
-						getGraphics().drawLine(tb.x, tb.y, tb.z, tc.x, tc.y,
-								tc.z);
 					}
 				}
 			});

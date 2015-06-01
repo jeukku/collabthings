@@ -93,8 +93,8 @@ public class LOTEnvironmentDrawer {
 		tstack.current().transform(a);
 		tstack.current().transform(b);
 
-		drawert.transform(a);
-		drawert.transform(b);
+		drawert.transform(a, true);
+		drawert.transform(b, true);
 		int asx = getSX(a);
 		int asy = getSY(a);
 		int bsx = getSX(b);
@@ -106,7 +106,7 @@ public class LOTEnvironmentDrawer {
 	public void drawCenterCircle(LTransformationStack tstack, LVector l) {
 		a.set(l);
 		tstack.current().transform(a);
-		drawert.transform(a);
+		drawert.transform(a, true);
 		int sx = getSX(a);
 		int sy = getSY(a);
 		checkOutOfScreen(sx, sy);
@@ -144,7 +144,7 @@ public class LOTEnvironmentDrawer {
 	public void drawString(LTransformationStack tstack, String string, LVector l) {
 		a.set(l);
 		tstack.current().transform(a);
-		drawert.transform(a);
+		drawert.transform(a, true);
 		getGraphics().drawString(string, getSX(a), getSY(a));
 	}
 
@@ -154,7 +154,7 @@ public class LOTEnvironmentDrawer {
 
 		a.set(l);
 		tstack.current().transform(a);
-		drawert.transform(a);
+		drawert.transform(a, true);
 		int sx = getSX(a);
 		int sy = getSY(a);
 		checkOutOfScreen(sx, sy);
@@ -172,7 +172,7 @@ public class LOTEnvironmentDrawer {
 
 		a.set(l);
 		tstack.current().transform(a);
-		drawert.transform(a);
+		drawert.transform(a, true);
 		int sx = getSX(a);
 		int sy = getSY(a);
 		checkOutOfScreen(sx, sy);

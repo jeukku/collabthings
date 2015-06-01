@@ -25,24 +25,29 @@ public class SwingSimulation4xView extends JPanel {
 		freeanglespeed = runenv.getClient().getPreferences()
 				.getDouble("simulation.view.freeangle.speed", 0.2);
 
-		RunEnviromentDrawer ycanvas = new RunEnviromentDrawer(runenv, (v) -> {
-			v.y = v.z;
-			v.z = 0;
-		}, "Y");
-		RunEnviromentDrawer xcanvas = new RunEnviromentDrawer(runenv, (v) -> {
-			v.x = v.z;
-			v.z = 0;
-		}, "X");
+		RunEnviromentDrawer ycanvas = new RunEnviromentDrawer(runenv,
+				(v, b) -> {
+					v.y = v.z;
+					v.z = 0;
+				}, "Y");
+		RunEnviromentDrawer xcanvas = new RunEnviromentDrawer(runenv,
+				(v, b) -> {
+					v.x = v.z;
+					v.z = 0;
+				}, "X");
 		RunEnviromentDrawer zcanvas = new RunEnviromentDrawer(runenv,
-				(v) -> v.z = 0, "Z");
+				(v, b) -> v.z = 0, "Z");
 		RunEnviromentDrawer freecanvas = new RunEnviromentDrawer(runenv,
-				(v) -> {
-					freetransform.transform(v);
-					v.z += 30;
-					v.z /= 10;
-					v.x /= v.z;
-					v.y /= v.z;
-
+				(v, b) -> {
+					if (b) {
+						freetransform.transform(v);
+						v.z += 30;
+						v.z /= 10;
+						v.x /= v.z;
+						v.y /= v.z;
+					} else {
+						freetransform.transformw0(v);
+					}
 				}, "Z");
 
 		setLayout(new GridLayout(2, 2));
