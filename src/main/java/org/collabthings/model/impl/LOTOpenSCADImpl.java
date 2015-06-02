@@ -90,6 +90,16 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof LOTOpenSCADImpl) {
+			LOTOpenSCADImpl o = (LOTOpenSCADImpl) obj;
+			return o.getBean().toText().equals(getBean().toText());
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	public boolean importModel(File file) {
 		throw new RuntimeException("not supported");
 	}
