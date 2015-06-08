@@ -93,7 +93,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 				valuesmap.put(name, values.get(name));
 
 				long st = System.currentTimeMillis();
-				while ((System.currentTimeMillis() - st) < 1000000) {
+				while ((System.currentTimeMillis() - st) < 10000) {
 
 					f2s.getOrientation().set(new LVector(1, 1, 0),
 							System.currentTimeMillis() / 700.0);
