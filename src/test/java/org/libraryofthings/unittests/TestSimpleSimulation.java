@@ -69,7 +69,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 		f2part.getPart().setName("p2");
 		LOTOpenSCAD scad2 = f2part.getPart().newSCAD();
 		scad2.setScript(loadATestFile("scad/test.scad"));
-		scad2.setScale(0.3);
+		scad2.setScale(0.03);
 
 		LOTFactoryState f21s = f2s.getFactory("f21");
 		LOTPartState p21s = f21s.newPart();
@@ -77,7 +77,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 		LOTOpenSCAD scad21 = p21s.getPart().newSCAD();
 		scad21.setScript(loadATestFile("scad/test.scad"));
-		scad21.setScale(0.4);
+		scad21.setScale(0.04);
 
 		LOTRunEnvironment runenv = f1s.getRunEnvironment();
 
@@ -95,6 +95,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 				long st = System.currentTimeMillis();
 				while ((System.currentTimeMillis() - st) < 1000000) {
 
+					f2s.getOrientation().set(new LVector(1, 1, 0),
+							System.currentTimeMillis() / 700.0);
 					f21s.getOrientation().set(new LVector(0, 1, 0),
 							System.currentTimeMillis() / 500.0);
 					p21s.getOrientation().set(new LVector(0, 1, 0),
