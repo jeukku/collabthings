@@ -102,6 +102,10 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 			TriangleMesh mesh = i.getImport();
 			MeshView meshview = new MeshView(mesh);
 
+			meshview.setScaleX(scale);
+			meshview.setScaleY(scale);
+			meshview.setScaleZ(scale);
+
 			Color c = Color.RED;
 
 			Material m = new PhongMaterial(c);
