@@ -1,4 +1,4 @@
-library-of-things
+CollabThings
 =================
 
 Platform to store, share in a designs of machines and constructions, scripts and instructions 

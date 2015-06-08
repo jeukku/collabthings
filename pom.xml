@@ -4,6 +4,7 @@
 	<artifactId>collabthings.client</artifactId>
 	<packaging>jar</packaging>
 	<version>0.2.3-SNAPSHOT</version>
+
 	<name>collabthings.client</name>
 	<url>http://maven.apache.org</url>
 	<groupId>org.collabthings</groupId>
