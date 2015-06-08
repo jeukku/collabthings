@@ -256,6 +256,9 @@ public class ViewSimulation implements RunEnvironmentListener {
 			sp.setMaterial(getRandomMaterial());
 			g.getChildren().add(sp);
 
+			LOTModel model = partstate.getPart().getModel();
+			model.addTo(g);
+
 			objectgroup.getChildren().add(g);
 
 			n = new NodeInfo();

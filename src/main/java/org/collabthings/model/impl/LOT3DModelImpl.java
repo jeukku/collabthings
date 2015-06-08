@@ -18,6 +18,14 @@ import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.TriangleMesh;
+
 import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
@@ -35,6 +43,9 @@ import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
 import waazdoh.common.WData;
 import waazdoh.common.XML;
+
+import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
+import com.interactivemesh.jfx.importer.x3d.X3dModelImporter;
 
 public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		LOTModel {
@@ -220,6 +231,37 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		} else {
 			log.info("Unknown extension " + extension);
 			return false;
+		}
+	}
+
+	@Override
+	public void addTo(Group g) {
+		try {
+			if (LOTBinaryModel.TYPE_X3D.equals(getType())) {
+				X3dModelImporter x3dImporter = new X3dModelImporter();
+				x3dImporter.read(getModelFile());
+
+				Node[] rootNodes = x3dImporter.getImport();
+				log.info("imported nodes " + rootNodes);
+				for (Node node : rootNodes) {
+					g.getChildren().add(node);
+				}
+
+			} else if (LOTBinaryModel.TYPE_STL.equals(getType())) {
+				StlMeshImporter i = new StlMeshImporter();
+				i.read(getModelFile());
+				TriangleMesh mesh = i.getImport();
+				MeshView meshview = new MeshView(mesh);
+
+				Color c = Color.RED;
+
+				Material m = new PhongMaterial(c);
+				meshview.setMaterial(m);
+
+				g.getChildren().add(meshview);
+			}
+		} catch (SAXException | IOException e) {
+			log.error(this, "addTo", e);
 		}
 	}
 

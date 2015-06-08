@@ -9,6 +9,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
 
+import javafx.scene.Group;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.TriangleMesh;
+
 import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
@@ -16,12 +23,15 @@ import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTTriangleMesh;
+import org.xml.sax.SAXException;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
 import waazdoh.common.WData;
+
+import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
 
 /**
  * 
@@ -82,6 +92,26 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 			loadedscadhash = getScript().hashCode();
 		}
 		return model;
+	}
+
+	@Override
+	public void addTo(Group g) {
+		try {
+			StlMeshImporter i = new StlMeshImporter();
+			i.read(getModel().getModelFile());
+			TriangleMesh mesh = i.getImport();
+			MeshView meshview = new MeshView(mesh);
+
+			Color c = Color.RED;
+
+			Material m = new PhongMaterial(c);
+			meshview.setMaterial(m);
+
+			g.getChildren().add(meshview);
+
+		} catch (SAXException | IOException e) {
+			log.error(this, "addTo", e);
+		}
 	}
 
 	@Override
