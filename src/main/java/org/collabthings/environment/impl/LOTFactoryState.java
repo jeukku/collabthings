@@ -9,9 +9,11 @@ import java.util.Set;
 
 import org.collabthings.LLog;
 import org.collabthings.LOTClient;
+import org.collabthings.PrintOut;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTTask;
+import org.collabthings.math.LOrientation;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTAttachedFactory;
@@ -41,8 +43,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 	private final LOTPool pool;
 	private LOTRuntimeObject parent;
-	private LTransformation transformation;
 	private LOTEvents events = new LOTEvents();
+	private LOrientation orientation;
 
 	public LOTFactoryState(final LOTClient client, LOTEnvironment env,
 			final String name, final LOTAttachedFactory factory) {
@@ -61,7 +63,6 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		this.runenv = runenv;
 		this.parent = factorystate;
 		this.name = name;
-
 		pool = new LOTPool(this.runenv, this);
 		init();
 	}
@@ -71,8 +72,33 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		this(client, env, name2, new LOTAttachedFactory(factory));
 	}
 
+	@Override
+	public PrintOut printOut() {
+		PrintOut p = new PrintOut();
+		p.append("factorystate");
+		p.append(1, "factory " + factory);
+		p.append(1, "transformation " + getTransformation());
+
+		p.append(1, "factories");
+		for (LOTFactoryState fs : factories) {
+			p.append(2, fs.printOut());
+		}
+
+		p.append(1, "parts");
+		for (LOTPartState ps : parts) {
+			p.append(2, ps.printOut());
+		}
+
+		p.append(1, "toolusers");
+		for (LOTToolUser tu : toolusers) {
+			p.append(2, tu.printOut());
+		}
+
+		return p;
+	}
+
 	private void init() {
-		transformation = factory.getTransformation();
+		orientation = factory.getOrientation();
 
 		for (String fname : getFactory().getFactories()) {
 			LOTAttachedFactory f = getFactory().getFactory(fname);
@@ -87,14 +113,18 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return true;
 	}
 
-	public LTransformation getTransformation() {
-		return transformation;
+	public LOrientation getOrientation() {
+		return orientation;
 	}
 
 	public LVector getTransformedVector(LVector l) {
 		l = l.copy();
 		getTransformation().transform(l);
 		return l;
+	}
+
+	public LTransformation getTransformation() {
+		return new LTransformation(orientation);
 	}
 
 	public LOTPool getPool() {

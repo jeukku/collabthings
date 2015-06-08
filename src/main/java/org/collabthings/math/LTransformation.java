@@ -42,6 +42,10 @@ public class LTransformation {
 
 	}
 
+	public Matrix4d getMatrix() {
+		return m;	
+	}
+	
 	@Override
 	public String toString() {
 		return "LT:" + m;

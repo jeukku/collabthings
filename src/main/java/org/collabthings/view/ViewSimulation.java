@@ -12,18 +12,24 @@ import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
+import javafx.scene.DepthTest;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Rotate;
+import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Translate;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.vecmath.Matrix4d;
 
 import org.collabthings.LLog;
 import org.collabthings.environment.LOTRunEnvironment;
@@ -35,12 +41,17 @@ import org.collabthings.environment.impl.LOTPartState;
 import org.collabthings.environment.impl.LOTToolState;
 import org.collabthings.environment.impl.LOTToolUser;
 import org.collabthings.math.LTransformation;
+import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
+import org.collabthings.model.LOTBinaryModel;
+import org.collabthings.model.LOTBoundingBox;
+import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTRuntimeObject;
 
 public class ViewSimulation implements RunEnvironmentListener {
 
-	private static final double ZOOMSPEED_MINIMUM = 0.8;
+	private static final double ZOOMSPEED_MINIMUM = 0.1;
+	private static final double ZOOMSPEED_MAXIMUM = 4;
 	private static final int ZOOM_MAXIMUM = 1000;
 	private static final double ZOOM_MINIMUM = 0.000001;
 	private LOTRunEnvironment env;
@@ -53,14 +64,11 @@ public class ViewSimulation implements RunEnvironmentListener {
 	private Map<LOTRuntimeObject, NodeInfo> nodes = new HashMap<LOTRuntimeObject, NodeInfo>();
 	private double rotatex = 0;
 	private double zoom = 10;
-	private double zoomspeed = 1;
+	private double zoomspeed = 2;
 	private Timeline timeline;
 	private double time;
 	private AnimationTimer timer;
 
-	private double cameradistance = 170;
-	private Rotate camerarx = new Rotate(Math.PI / 4, Rotate.X_AXIS);
-	private Translate cameratr = new Translate(0, cameradistance, -cameradistance);
 	private LLog log = LLog.getLogger(this);
 	private Scene scene;
 	private double camerarotate;
@@ -80,7 +88,7 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 	private synchronized void createFrame() {
 		f = new JFrame();
-		f.setSize(800, 800);
+		f.setSize(1200, 800);
 		f.getContentPane().setLayout(new BorderLayout());
 
 		canvas = new JFXPanel();
@@ -89,7 +97,8 @@ public class ViewSimulation implements RunEnvironmentListener {
 		Platform.runLater(() -> {
 			scene = createScene();
 			canvas.setScene(scene);
-			addRuntimeObjects(env);
+
+			updateRuntimeObjects(env);
 
 			timeline = new Timeline();
 			timeline.setCycleCount(Timeline.INDEFINITE);
@@ -112,37 +121,125 @@ public class ViewSimulation implements RunEnvironmentListener {
 		//
 	}
 
-	private void addRuntimeObjects(LOTRunEnvironment env) {
+	private void updateRuntimeObjects(LOTRunEnvironment env) {
+		LTransformationStack stack = new LTransformationStack();
 		Set<LOTRuntimeObject> runos = env.getRunObjects();
 		for (LOTRuntimeObject runo : runos) {
-			addRuntimeObject(runo);
+			updateRuntimeObject(stack, runo);
 		}
-
 	}
 
-	private void addRuntimeObject(LOTRuntimeObject runo) {
+	private void updateRuntimeObject(LTransformationStack stack,
+			LOTRuntimeObject runo) {
 		if (runo instanceof LOTFactoryState) {
 			LOTFactoryState fs = (LOTFactoryState) runo;
-			addFactoryState(fs);
+			updateFactoryState(stack, fs);
 		} else if (runo instanceof LOTToolState) {
 			LOTToolState ts = (LOTToolState) runo;
-			addToolState(ts);
+			updateToolState(stack, ts);
 		} else if (runo instanceof LOTToolUser) {
-			addToolUser((LOTToolUser) runo);
+			updateToolUser(stack, (LOTToolUser) runo);
 		} else if (runo instanceof LOTPartState) {
-			addPartState((LOTPartState) runo);
+			updatePartState(stack, (LOTPartState) runo);
 		}
 	}
 
-	private void addFactoryState(LOTFactoryState fs) {
+	private void updateToolState(LTransformationStack stack, LOTToolState ts) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void updatePartState(LTransformationStack stack, LOTPartState ps) {
+		NodeInfo n = nodes.get(ps);
+		if (n == null) {
+			n = addPartState(ps);
+		}
+
+		Group g = n.group;
+
+		stack.push(ps.getTransformation());
+
+		// log.info("current ps " + ps);
+		// log.info("current g " + g);
+		// log.info("current tr " + stack.current());
+
+		setTransformation(stack, g);
+		stack.pull();
+	}
+
+	private void setTransformation(LTransformationStack stack, Group g) {
+		LTransformation t = stack.current();
+		LVector l = new LVector();
+		t.transform(l);
+
+		g.setTranslateX(l.x);
+		g.setTranslateY(l.y);
+		g.setTranslateZ(l.z);
+
+		Matrix4d m = t.getMatrix();
+
+		double d = Math.acos((m.m00 + m.m11 + m.m22 - 1d) / 2d);
+		if (d != 0d) {
+			double den = 2d * Math.sin(d);
+			Point3D p = new Point3D((m.m21 - m.m12) / den, (m.m02 - m.m20)
+					/ den, (m.m10 - m.m01) / den);
+			g.setRotationAxis(p);
+			g.setRotate(Math.toDegrees(d));
+		}
+	}
+
+	private void updateFactoryState(LTransformationStack stack,
+			LOTFactoryState fs) {
+		stack.push(fs.getTransformation());
+
+		// log.info("current tr " + fs + " " + stack.current());
+
+		NodeInfo n = this.nodes.get(fs);
+		if (n == null) {
+			Group g = newGroup();
+			LOTBoundingBox bb = fs.getFactory().getBoundingBox();
+			LVector bba = bb.getA();
+			LVector bbb = bb.getB();
+			Box sp = new Box(bbb.x - bba.x, bbb.y - bba.y, bbb.z - bba.z);
+			sp.setMaterial(getRandomMaterial());
+			sp.setDrawMode(DrawMode.LINE);
+
+			g.getChildren().add(sp);
+
+			objectgroup.getChildren().add(g);
+
+			n = new NodeInfo();
+			n.group = g;
+
+			nodes.put(fs, n);
+		}
+
+		if (n != null) {
+			setTransformation(stack, n.group);
+		}
+
 		List<LOTToolUser> ftus = fs.getToolUsers();
 		for (LOTToolUser lotToolUser : ftus) {
-			addToolUser(lotToolUser);
+			updateToolUser(stack, lotToolUser);
 		}
 
 		List<LOTFactoryState> fss = fs.getFactories();
 		for (LOTFactoryState lotFactoryState : fss) {
-			addFactoryState(lotFactoryState);
+			updateFactoryState(stack, lotFactoryState);
+		}
+
+		Set<LOTPartState> ps = fs.getParts();
+		for (LOTPartState p : ps) {
+			updatePartState(stack, p);
+		}
+
+		stack.pull();
+	}
+
+	private void updateToolUser(LTransformationStack stack,
+			LOTToolUser lotToolUser) {
+		if (nodes.get(lotToolUser) == null) {
+			addToolUser(lotToolUser);
 		}
 	}
 
@@ -150,8 +247,10 @@ public class ViewSimulation implements RunEnvironmentListener {
 		// TODO Auto-generated method stub
 	}
 
-	private void addPartState(LOTPartState partstate) {
-		if (nodes.get(partstate) == null) {
+	private NodeInfo addPartState(LOTPartState partstate) {
+
+		NodeInfo n = nodes.get(partstate);
+		if (n == null) {
 			Group g = newGroup();
 			Box sp = new Box(1, 1, 1);
 			sp.setMaterial(getRandomMaterial());
@@ -159,11 +258,12 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 			objectgroup.getChildren().add(g);
 
-			NodeInfo i = new NodeInfo();
-			i.group = g;
+			n = new NodeInfo();
+			n.group = g;
 
-			nodes.put(partstate, i);
+			nodes.put(partstate, n);
 		}
+		return n;
 	}
 
 	private void addToolUser(LOTToolUser lotToolUser) {
@@ -201,14 +301,20 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 		/* Create the Scene instance and set the group node as root */
 
-		Scene scene = new Scene(scenegroup, Color.DARKGRAY);
+		Scene scene = new Scene(scenegroup, 2000, 800, Color.DARKGRAY);
+
 		scenegroup.setAutoSizeChildren(false);
+		scenegroup.setDepthTest(DepthTest.ENABLE);
+
+		double cameradistance = 1000;
+		// Rotate camerarx = new Rotate(0, Rotate.X_AXIS);
+		Translate cameratr = new Translate(0, 0, -cameradistance);
 
 		this.camera = new PerspectiveCamera(true);
-		camera.setFarClip(1000000);
+		camera.setFarClip(100000);
 		camera.setNearClip(0.1);
 
-		camera.getTransforms().addAll(camerarx, cameratr);
+		camera.getTransforms().addAll(cameratr);
 
 		scene.setCamera(camera);
 		//
@@ -219,11 +325,12 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 		this.objectgroup = newGroup();
 
-		Box b = new Box(100, 1, 100);
-		b.setTranslateY(-2);
+		Box b = new Box(10, 0.1, 10);
+		b.setTranslateY(4);
 		b.setMaterial(getRandomMaterial());
+		b.setDrawMode(DrawMode.LINE);
 		objectgroup.getChildren().add(b);
-		//
+
 		scenegroup.getChildren().add(objectgroup);
 
 		return scene;
@@ -240,10 +347,8 @@ public class ViewSimulation implements RunEnvironmentListener {
 	}
 
 	private void updateRotation() {
-		camerarx.setAngle(camerarotate);
-
 		objectgroup.setRotate(rotatex);
-		objectgroup.setRotationAxis(new Point3D(0, 1, 0));
+		objectgroup.setRotationAxis(new Point3D(1, 1, 0));
 	}
 
 	private void updateZoom() {
@@ -253,10 +358,10 @@ public class ViewSimulation implements RunEnvironmentListener {
 	}
 
 	public synchronized void step(double dtime) {
-		camerarotate += dtime * 0.1;
+		rotatex += dtime * 10;
 
 		time += dtime;
-		zoom += (zoomspeed - 1) * dtime / 1000;
+		zoom += (zoomspeed - 1) * dtime;
 		if (zoom > ZOOM_MAXIMUM) {
 			zoom = ZOOM_MAXIMUM;
 		} else if (zoom < ZOOM_MINIMUM) {
@@ -266,45 +371,46 @@ public class ViewSimulation implements RunEnvironmentListener {
 
 	private void updateScene() {
 		if (scenegroup != null) {
-			addRuntimeObjects(env);
+			updateRuntimeObjects(env);
 
 			updateRotation();
 			updateZoom();
 
 			double w = canvas.getWidth() * 0.9;
-			double h = canvas.getWidth() * 0.9;
+			double h = canvas.getHeight() * 0.9;
 
 			boolean somethingoutofscreen = false;
 
 			for (LOTRuntimeObject tu : nodes.keySet()) {
 				NodeInfo nodei = nodes.get(tu);
 				Group node = nodei.group;
-				LTransformation t = tu.getTransformation();
-				LVector l = new LVector();
-				t.transform(l);
-				LVector location = l;
-				node.setTranslateX(location.x);
-				node.setTranslateY(location.y);
-				node.setTranslateZ(location.z);
 
 				Point2D screen = node.localToScreen(0, 0, 0);
 
-				if (screen.getX() < -w || screen.getX() > w || screen.getY() < -h
-						|| screen.getY() > h) {
+				if (screen.getX() < -w || screen.getX() > w
+						|| screen.getY() < -h || screen.getY() > h) {
 					somethingoutofscreen = true;
-					log.info("Out of screen " + screen + " w:" + w + " h:" + h + " object:" + tu);
+					log.info("Out of screen " + screen + " w:" + w + " h:" + h
+							+ " object:" + tu);
 				}
-
 			}
+
 			if (somethingoutofscreen) {
-				zoomspeed *= 0.95;
+				zoomspeed *= 0.90;
 				if (zoomspeed < ZOOMSPEED_MINIMUM) {
 					zoomspeed = ZOOMSPEED_MINIMUM;
 				}
+
+				log.info("zoomspeed " + zoomspeed);
 			} else {
-				zoomspeed *= 1.01;
+				zoomspeed *= 1.03;
+				if (zoomspeed > ZOOMSPEED_MAXIMUM) {
+					zoomspeed = ZOOMSPEED_MAXIMUM;
+				}
 			}
 		}
+
+		// log.info("objectgroup tr " + objectgroup.getTransforms());
 	}
 
 	private String getShortString(double value) {

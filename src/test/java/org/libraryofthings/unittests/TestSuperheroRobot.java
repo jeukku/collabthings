@@ -51,9 +51,10 @@ public final class TestSuperheroRobot extends LOTTestCase {
 		LVector targetlocation = new LVector(10, 0, 0);
 		robot.move(targetlocation, new LVector(0, 1, 0), Math.PI / 2);
 
-		assertTrue(
-				"" + targetlocation + " " + robot.getLocation(),
-				targetlocation.getSub(robot.getLocation()).length() < MAX_DISTANCE);
+		assertTrue("" + targetlocation + " "
+				+ robot.getOrientation().getLocation(),
+				targetlocation.getSub(robot.getOrientation().getLocation())
+						.length() < MAX_DISTANCE);
 
 		rune.stop();
 	}
@@ -74,7 +75,7 @@ public final class TestSuperheroRobot extends LOTTestCase {
 		assertFalse(state.getToolUsers().isEmpty());
 		LOTToolUser user = state.getToolUsers().get(0);
 		assertNotNull(user);
-		LVector l = user.getLocation();
+		LVector l = user.getOrientation().getLocation();
 		assertReallyClose(spawnlocation, l);
 	}
 }

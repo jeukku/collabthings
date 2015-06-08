@@ -18,6 +18,7 @@ import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTPartState;
 import org.collabthings.environment.impl.LOTToolState;
 import org.collabthings.environment.impl.LOTToolUser;
+import org.collabthings.math.LTransformation;
 import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBoundingBox;
@@ -84,7 +85,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 	}
 
 	private void drawFactoryState(LTransformationStack tstack, LOTFactoryState o) {
-		tstack.push(o.getTransformation());
+		tstack.push(new LTransformation(o.getOrientation()));
 
 		LOTBoundingBox bbox = o.getFactory().getBoundingBox();
 		if (bbox != null) {
@@ -238,7 +239,6 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 
 						getGraphics().drawTriangle(ta, tb, tc, c);
 
-						
 						getGraphics().drawLine(ta.x, ta.y, ta.z, tb.x, tb.y,
 								tb.z);
 					}
@@ -261,7 +261,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 	}
 
 	private void drawToolUser(LTransformationStack tstack, LOTToolUser tooluser) {
-		tstack.push(tooluser.getTransformation());
+		tstack.push(new LTransformation(tooluser.getOrientation()));
 
 		l.set(0, 0, 0);
 		drawCenterCircle(tstack, l);
@@ -273,7 +273,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
 		}
 
 		tstack.pull();
-		tstack.push(tooluser.getLocationTransformation());
+		tstack.push(tooluser.getTransformation());
 
 		LinkedList<LOTRuntimeEvent> eventlist = new LinkedList<LOTRuntimeEvent>();
 		eventlist.addAll(tooluser.getEvents().getNewEvents(getNewEventTime()));

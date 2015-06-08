@@ -49,11 +49,13 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 	}
 
 	@Override
-	public void recordEvent(LOTRuntimeObject runo, String string, LOTValues callvalues) {
+	public void recordEvent(LOTRuntimeObject runo, String string,
+			LOTValues callvalues) {
 		fireEvent(runo, string, callvalues);
 	}
-	
-	private void fireEvent(LOTRuntimeObject runo, String string, LOTValues callvalues) {
+
+	private void fireEvent(LOTRuntimeObject runo, String string,
+			LOTValues callvalues) {
 		for (RunEnvironmentListener listener : listeners) {
 			LOTRuntimeEvent e = new LOTRuntimeEvent(runo, string, callvalues);
 			listener.event(e);
@@ -83,7 +85,8 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 
 		po.append("objects:");
 		for (String p : objects.keySet()) {
-			po.append(1, p + " -> " + objects.get(p) + ";");
+			LOTRuntimeObject o = objects.get(p);
+			po.append(1, o.printOut());
 		}
 
 		return po;
@@ -188,7 +191,8 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 		if (values != null) {
 			sb.append("\tparameters: ");
 			for (String valuename : values.keys()) {
-				sb.append("\t\t" + valuename + " -> " + values.get(valuename) + "\n");
+				sb.append("\t\t" + valuename + " -> " + values.get(valuename)
+						+ "\n");
 			}
 		} else {
 			sb.append("Parameters null\n");

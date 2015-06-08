@@ -8,7 +8,7 @@ import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTTask;
 import org.collabthings.environment.RunEnvironmentListener;
-import org.collabthings.view.SwingSimulationFrame;
+import org.collabthings.view.ViewSimulation;
 
 import waazdoh.client.utils.ConditionWaiter;
 
@@ -23,7 +23,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	private boolean allsuccess = true;
 	private LOTStepRunner runner;
 	//
-	private SwingSimulationFrame view;
+	private ViewSimulation view;
 	private List<LOTRuntimeEvent> events = new LinkedList<LOTRuntimeEvent>();
 	private boolean done;
 
@@ -35,7 +35,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	public LOTSimpleSimulation(LOTRunEnvironment runenv, boolean b) {
 		this(runenv);
 		if (b) {
-			view = new SwingSimulationFrame(runenv);
+			view = new ViewSimulation(runenv);
 		}
 	}
 

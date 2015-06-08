@@ -2,9 +2,11 @@ package org.collabthings.environment.impl;
 
 import org.collabthings.LLog;
 import org.collabthings.LOTToolException;
+import org.collabthings.PrintOut;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.SimulationView;
+import org.collabthings.math.LOrientation;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
@@ -13,32 +15,30 @@ import org.collabthings.model.LOTValues;
 public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 	private static final long WAIT_A_BIT = 20;
-	private static final float MOVING_LOCATION_LENGTH_TRIGGER = 0.000000001f;
-	private static final double LOCATION_PRINTOUT = 20000;
+	private static final float MOVING_orientation_LENGTH_TRIGGER = 0.000000001f;
+	private static final double orientation_PRINTOUT = 20000;
 	//
 	final private LOTRunEnvironment simenv;
 	private LOTToolState tool;
-	private LVector targetorientationnormal;
-	private double targetorientationangle;
-	private LVector targetlocation;
-	private LVector location = new LVector();
-	private LVector orientationnormal = new LVector(1, 0, 0);
-	private double orientationangle;
+
+	private LOrientation orientation = new LOrientation();
+	private LOrientation targetorientation = new LOrientation();
+
 	//
 	private LLog log = LLog.getLogger(this);
 	//
-	private double locationprintouttimer = 0;
+	private double orientationprintouttimer = 0;
 	private double speed = 10;
 	final private LOTFactoryState factory;
 	private LOTEvents events = new LOTEvents();
 	private long movestarttime;
 
 	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
-			LOTFactoryState factory, LVector nlocation) {
+			LOTFactoryState factory, LVector norientation) {
 		this.simenv = simenv;
 		this.factory = factory;
-		if (nlocation != null) {
-			this.location = nlocation.copy();
+		if (norientation != null) {
+			this.orientation.getLocation().set(norientation.copy());
 		}
 	}
 
@@ -58,9 +58,16 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	}
 
 	@Override
+	public PrintOut printOut() {
+		PrintOut p = new PrintOut();
+		p.append("superherorobot at " + orientation);
+		return p;
+	}
+
+	@Override
 	public String toString() {
 		return "SuperHeroRobot[" + super.hashCode() + "][" + tool + "]["
-				+ location + "]";
+				+ orientation + "]";
 	}
 
 	@Override
@@ -70,32 +77,33 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 	@Override
 	public synchronized void move(LVector l, LVector n, double angle) {
-		targetlocation = l.copy();
-		events.add(new LOTRuntimeEvent(this, "Moving to " + targetlocation,
+		targetorientation.getLocation().set(l);
+		events.add(new LOTRuntimeEvent(this, "Moving to " + targetorientation,
 				null));
 
 		movestarttime = System.currentTimeMillis();
 
-		targetorientationnormal = n.copy();
-		targetorientationangle = angle;
-		log("Target location " + targetlocation);
+		targetorientation.getNormal().set(n);
+		targetorientation.setAngle(angle);
+		log("Target orientation " + targetorientation);
 		log("factory " + this.factory);
 		//
 		while (simenv.isRunning()
-				&& targetlocation != null
-				&& targetlocation.getSub(location).length() > MOVING_LOCATION_LENGTH_TRIGGER) {
+				&& targetorientation != null
+				&& targetorientation.getLocation()
+						.getSub(orientation.getLocation()).length() > MOVING_orientation_LENGTH_TRIGGER) {
 			waitAWhile();
 		}
 
-		if (targetlocation != null) {
-			tool.setOrientation(targetlocation, targetorientationnormal,
-					targetorientationangle);
+		if (targetorientation != null) {
+			tool.setOrientation(targetorientation.getLocation(),
+					targetorientation.getNormal(), targetorientation.getAngle());
 
-			log("Moved to " + targetlocation + " " + location + " in "
+			log("Moved to " + targetorientation + " " + orientation + " in "
 					+ (System.currentTimeMillis() - movestarttime) + "ms");
-			targetlocation = null;
+			targetorientation = null;
 		} else {
-			log("No target location. Propably stopped.");
+			log("No target orientation. Propably stopped.");
 		}
 	}
 
@@ -124,50 +132,46 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	}
 
 	@Override
-	public LVector getLocation() {
-		return location.copy();
+	public LOrientation getOrientation() {
+		return orientation;
 	}
 
 	@Override
 	public LTransformation getTransformation() {
-		return new LTransformation(location, orientationnormal,
-				this.orientationangle);
-	}
-
-	@Override
-	public LTransformation getLocationTransformation() {
-		return LTransformation.getTranslate(location);
+		return new LTransformation(orientation);
 	}
 
 	@Override
 	public synchronized void stop() {
-		targetlocation = null;
+		targetorientation = null;
 	}
 
 	@Override
 	public synchronized void step(double dtime) {
-		locationprintouttimer += dtime;
+		orientationprintouttimer += dtime;
 
-		if (targetlocation != null) {
-			LVector vdistance = targetlocation.getSub(location);
+		if (targetorientation != null) {
+			LVector vdistance = targetorientation.getLocation().getSub(
+					orientation.getLocation());
 			double distance = vdistance.length();
-			// log("step " + dtime + " l:" + location + " distance:" +
+			// log("step " + dtime + " l:" + orientation + " distance:" +
 			// distance);
 
-			double dangle = targetorientationangle - orientationangle;
+			double dangle = targetorientation.getAngle()
+					- orientation.getAngle();
 			dangle *= dtime * speed;
-			orientationangle += dangle;
+			orientation.setAngle(orientation.getAngle() + dangle);
 
-			LVector nnormal = targetorientationnormal.getNormalized();
+			LVector nnormal = targetorientation.getNormal().getNormalized();
 
 			// slow moving if orientation is not right
-			double normaldot = nnormal.dot(orientationnormal);
+			double normaldot = nnormal.dot(orientation.getNormal());
 			if (normaldot < -0.9) {
 				nnormal.x += nnormal.y;
 				nnormal.y += nnormal.z;
 				nnormal.z += nnormal.x;
 				nnormal.normalize();
-				normaldot = nnormal.dot(orientationnormal);
+				normaldot = nnormal.dot(orientation.getNormal());
 			}
 
 			if (normaldot < 0.1) {
@@ -176,8 +180,8 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 			nnormal.scale(dtime * speed);
 
-			orientationnormal.add(nnormal);
-			orientationnormal.normalize();
+			orientation.getNormal().add(nnormal);
+			orientation.getNormal().normalize();
 
 			double maxdistance = dtime * speed;
 			if (vdistance.length() < maxdistance) {
@@ -188,28 +192,28 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 					scale = 1;
 				}
 				LVector scaled = vdistance.getScaled(scale);
-				location.add(scaled);
-			} else if (distance > MOVING_LOCATION_LENGTH_TRIGGER) {
+				orientation.getLocation().add(scaled);
+			} else if (distance > MOVING_orientation_LENGTH_TRIGGER) {
 				distance = maxdistance;
 
 				// this is a bit random, but not going straight from a to b.
 				LVector direction = vdistance.getNormalized();
-				double ddot = direction.dot(targetorientationnormal);
+				double ddot = direction.dot(targetorientation.getNormal());
 				if (ddot > 0) {
 					direction.add(new LVector(direction.y, direction.z,
 							direction.x));
 				} else if (ddot > -0.99) {
 					LVector cross = new LVector();
-					cross.cross(direction, targetorientationnormal);
+					cross.cross(direction, targetorientation.getNormal());
 					direction.add(cross);
 				}
 
 				direction.normalize();
 				direction.scale(distance);
 
-				location.add(direction);
-				tool.setOrientation(location, orientationnormal,
-						orientationangle);
+				orientation.getLocation().add(direction);
+				tool.setOrientation(orientation.getLocation(),
+						orientation.getNormal(), orientation.getAngle());
 			} else {
 				log("Distance less than trigger length");
 				this.notifyAll();
@@ -217,9 +221,9 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 		}
 
-		if (locationprintouttimer > LOCATION_PRINTOUT) {
+		if (orientationprintouttimer > orientation_PRINTOUT) {
 			debugInfo(dtime);
-			locationprintouttimer = 0;
+			orientationprintouttimer = 0;
 		}
 	}
 
@@ -229,9 +233,8 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	}
 
 	private void debugInfo(double dtime) {
-		log("tool:" + tool + " location " + location + " normal "
-				+ orientationnormal + " step:" + dtime + " targetlocation:"
-				+ targetlocation);
+		log("tool:" + tool + " orientation " + orientation + " step:" + dtime
+				+ " targetorientation:" + targetorientation);
 	}
 
 	private synchronized void waitAWhile() {

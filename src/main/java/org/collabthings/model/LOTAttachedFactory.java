@@ -15,6 +15,11 @@ public class LOTAttachedFactory {
 		this.factory = f;
 	}
 
+	@Override
+	public String toString() {
+		return "Factory " + factory + " at " + orientation;
+	}
+
 	public LOTFactory getFactory() {
 		return factory;
 	}

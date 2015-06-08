@@ -50,7 +50,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTAttachedFactory f21 = f2.getFactory().addFactory("f21");
 		f21.getFactory().setBoundingBox(new LVector(-1, 0, -1),
 				new LVector(1, 1, 1));
-		f21.setLocation(new LVector(2, 0, 0));
+		f21.setLocation(new LVector(2, 1, 0));
 
 		LOTAttachedFactory f3 = f1.addFactory("f3");
 		f3.getFactory().setBoundingBox(new LVector(-2, 0, -2),
@@ -65,12 +65,15 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTFactoryState f1s = new LOTFactoryState(client, env, "f1s", f1);
 
 		LOTFactoryState f2s = f1s.getFactory("f2");
-		LOTOpenSCAD scad2 = f2s.newPart().getPart().newSCAD();
+		LOTPartState f2part = f2s.newPart();
+		f2part.getPart().setName("p2");
+		LOTOpenSCAD scad2 = f2part.getPart().newSCAD();
 		scad2.setScript(loadATestFile("scad/test.scad"));
 		scad2.setScale(0.3);
 
 		LOTFactoryState f21s = f2s.getFactory("f21");
 		LOTPartState p21s = f21s.newPart();
+		p21s.getPart().setName("p21");
 
 		LOTOpenSCAD scad21 = p21s.getPart().newSCAD();
 		scad21.setScript(loadATestFile("scad/test.scad"));
@@ -90,10 +93,11 @@ public class TestSimpleSimulation extends LOTTestCase {
 				valuesmap.put(name, values.get(name));
 
 				long st = System.currentTimeMillis();
-				while ((System.currentTimeMillis() - st) < 10000) {
-					f21s.getTransformation().rotateY(
+				while ((System.currentTimeMillis() - st) < 1000000) {
+
+					f21s.getOrientation().set(new LVector(0, 1, 0),
 							System.currentTimeMillis() / 500.0);
-					p21s.getTransformation().rotateY(
+					p21s.getOrientation().set(new LVector(0, 1, 0),
 							System.currentTimeMillis() / 800.0);
 
 					try {

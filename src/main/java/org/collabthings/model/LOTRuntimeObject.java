@@ -1,10 +1,11 @@
 package org.collabthings.model;
 
-import org.collabthings.math.LTransformation;
+import org.collabthings.PrintOut;
+import org.collabthings.math.LOrientation;
 
 public interface LOTRuntimeObject {
 
-	LTransformation getTransformation();
+	LOrientation getOrientation();
 
 	void step(double dtime);
 
@@ -13,5 +14,7 @@ public interface LOTRuntimeObject {
 	String getParameter(String name);
 
 	String getName();
+
+	PrintOut printOut();
 
 }

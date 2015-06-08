@@ -8,6 +8,8 @@ import waazdoh.common.ObjectID;
 
 public interface LOTModel {
 
+	String SCAD = "openscad";
+
 	ObjectID getID();
 
 	void publish();

@@ -113,7 +113,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	private void parseModel(WData data) {
 		if (data != null) {
 			String type = data.getValue("type");
-			if (LOTOpenSCAD.TYPE.equals(type)) {
+			if (LOTModel.SCAD.equals(type)) {
 				MStringID scadid = data.getIDValue(VALUENAME_MODELID);
 				LOTOpenSCADImpl nscad = new LOTOpenSCADImpl(this.env);
 				nscad.load(scadid);

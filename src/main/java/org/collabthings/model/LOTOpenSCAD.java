@@ -4,8 +4,6 @@ import waazdoh.common.MStringID;
 
 public interface LOTOpenSCAD extends LOTObject, LOTModel {
 
-	String TYPE = "openscad";
-
 	String getError();
 
 	void setScript(String nscript);

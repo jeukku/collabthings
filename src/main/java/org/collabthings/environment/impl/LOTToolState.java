@@ -2,10 +2,10 @@ package org.collabthings.environment.impl;
 
 import org.collabthings.LLog;
 import org.collabthings.LOTToolException;
+import org.collabthings.PrintOut;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.math.LOrientation;
-import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTTool;
@@ -37,6 +37,15 @@ public class LOTToolState implements LOTRuntimeObject {
 		pool = new LOTPool(runenv, this);
 	}
 
+	@Override
+	public PrintOut printOut() {
+		PrintOut o = new PrintOut();
+
+		o.append("toolstate");
+		o.append(1, "" + o);
+		return o;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -64,13 +73,13 @@ public class LOTToolState implements LOTRuntimeObject {
 		callvalues.put("tool", this);
 
 		LOTScriptRunnerImpl script = pool.getScript(tool.getScript(scriptname));
-		//TODO shouldn't be hard coded like this
+		// TODO shouldn't be hard coded like this
 		if (!"draw".equals(scriptname)) {
 			this.env.recordEvent(this, "calling " + scriptname + " " + script,
 					callvalues);
 			events.add(new LOTRuntimeEvent(this, "" + scriptname, callvalues));
 		}
-		
+
 		if (script != null) {
 			script.run(callvalues);
 		} else {
@@ -89,8 +98,8 @@ public class LOTToolState implements LOTRuntimeObject {
 	}
 
 	@Override
-	public LTransformation getTransformation() {
-		return new LTransformation(o);
+	public LOrientation getOrientation() {
+		return o;
 	}
 
 	public LVector getLocation() {

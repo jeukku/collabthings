@@ -59,7 +59,7 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 	 */
 	public LOTOpenSCADImpl(final LOTClient env) {
 		this.client = env;
-		o = new ServiceObject(LOTOpenSCAD.TYPE, env.getClient(), this,
+		o = new ServiceObject(LOTModel.SCAD, env.getClient(), this,
 				env.getVersion(), env.getPrefix());
 		setName("OpenSCAD" + (LOTOpenSCADImpl.namecounter++));
 		StringBuffer b = new StringBuffer();
@@ -106,7 +106,7 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 
 	@Override
 	public String getModelType() {
-		return LOTOpenSCAD.TYPE;
+		return LOTModel.SCAD;
 	}
 
 	private void loadModel() {
