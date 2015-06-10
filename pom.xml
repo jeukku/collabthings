@@ -217,6 +217,24 @@
 			<scope>system</scope>
 			<systemPath>${env.JAVA_HOME}/jre/lib/jfxswt.jar</systemPath>
 		</dependency>
+
+		<dependency>
+			<groupId>com.interactivemesh</groupId>
+			<artifactId>jfx</artifactId>
+			<version>2.2.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/lib/jimX3dModelImporterJFX.jar
+			</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>com.interactivemesh</groupId>
+			<artifactId>jfx</artifactId>
+			<version>2.2.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/lib/jimStlMeshImporterJFX.jar
+			</systemPath>
+		</dependency>
 	</dependencies>
 
 	<repositories>
