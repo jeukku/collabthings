@@ -26,13 +26,13 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTTriangle;
 import org.collabthings.model.LOTTriangleMesh;
+import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.ServiceObject;

@@ -1,8 +1,6 @@
 package org.collabthings.environment.impl;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTToolException;
-import org.collabthings.PrintOut;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.SimulationView;
@@ -11,6 +9,8 @@ import org.collabthings.math.LTransformation;
 import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTValues;
+import org.collabthings.util.LLog;
+import org.collabthings.util.PrintOut;
 
 public class ReallySimpleSuperheroRobot implements LOTToolUser {
 

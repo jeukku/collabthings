@@ -3,11 +3,11 @@ package org.collabthings.simulation;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.collabthings.LLog;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTTask;
 import org.collabthings.environment.RunEnvironmentListener;
+import org.collabthings.util.LLog;
 import org.collabthings.view.ViewSimulation;
 
 import waazdoh.client.utils.ConditionWaiter;

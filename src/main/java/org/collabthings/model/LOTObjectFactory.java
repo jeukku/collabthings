@@ -1,5 +1,7 @@
 package org.collabthings.model;
 
+import org.collabthings.environment.LOTRunEnvironmentBuilder;
+
 import waazdoh.common.MStringID;
 
 public interface LOTObjectFactory {

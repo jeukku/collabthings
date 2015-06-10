@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import javax.script.ScriptException;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
+import org.collabthings.util.LLog;
 import org.libraryofthings.LOTTestCase;
 import org.xml.sax.SAXException;
 

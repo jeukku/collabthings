@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTClient;
-import org.collabthings.PrintOut;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTTask;
@@ -24,6 +22,8 @@ import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
 import org.collabthings.model.LOTValues;
+import org.collabthings.util.LLog;
+import org.collabthings.util.PrintOut;
 
 import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MStringID;

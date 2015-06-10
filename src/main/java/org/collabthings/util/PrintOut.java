@@ -1,4 +1,4 @@
-package org.collabthings;
+package org.collabthings.util;
 
 import java.util.LinkedList;
 import java.util.List;

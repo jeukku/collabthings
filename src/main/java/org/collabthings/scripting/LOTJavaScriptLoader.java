@@ -13,8 +13,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTClient;
+import org.collabthings.util.LLog;
 
 public class LOTJavaScriptLoader implements ScriptLoader {
 	private static LOTJavaScriptLoader loader;

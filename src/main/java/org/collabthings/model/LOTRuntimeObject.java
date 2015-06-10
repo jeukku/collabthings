@@ -1,7 +1,7 @@
 package org.collabthings.model;
 
-import org.collabthings.PrintOut;
 import org.collabthings.math.LOrientation;
+import org.collabthings.util.PrintOut;
 
 public interface LOTRuntimeObject {
 

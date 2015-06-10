@@ -1,7 +1,8 @@
-package org.collabthings.model;
+package org.collabthings.environment;
 
-import org.collabthings.PrintOut;
-import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.model.LOTEnvironment;
+import org.collabthings.model.LOTObject;
+import org.collabthings.util.PrintOut;
 
 public interface LOTRunEnvironmentBuilder extends LOTObject {
 

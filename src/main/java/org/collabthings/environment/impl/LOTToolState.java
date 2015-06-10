@@ -1,8 +1,6 @@
 package org.collabthings.environment.impl;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTToolException;
-import org.collabthings.PrintOut;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.math.LOrientation;
@@ -10,6 +8,8 @@ import org.collabthings.math.LVector;
 import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTTool;
 import org.collabthings.model.LOTValues;
+import org.collabthings.util.LLog;
+import org.collabthings.util.PrintOut;
 
 public class LOTToolState implements LOTRuntimeObject {
 

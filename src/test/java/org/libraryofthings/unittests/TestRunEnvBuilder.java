@@ -2,9 +2,9 @@ package org.libraryofthings.unittests;
 
 import org.collabthings.LOTClient;
 import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.environment.LOTRunEnvironmentBuilder;
+import org.collabthings.environment.impl.LOTRunEnvironmentBuilderImpl;
 import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTRunEnvironmentBuilder;
-import org.collabthings.model.impl.LOTRunEnvironmentBuilderImpl;
 import org.collabthings.model.impl.LOTScriptImpl;
 import org.libraryofthings.LOTTestCase;
 

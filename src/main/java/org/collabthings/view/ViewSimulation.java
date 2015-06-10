@@ -27,7 +27,6 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.vecmath.Matrix4d;
 
-import org.collabthings.LLog;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTTask;
@@ -43,6 +42,7 @@ import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.simulation.LOTViewSimulation;
+import org.collabthings.util.LLog;
 
 public class ViewSimulation implements RunEnvironmentListener, LOTViewSimulation {
 

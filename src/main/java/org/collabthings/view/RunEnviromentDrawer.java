@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTToolException;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
@@ -28,6 +27,7 @@ import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTSubPart;
 import org.collabthings.model.LOTTriangle;
 import org.collabthings.model.LOTTriangleMesh;
+import org.collabthings.util.LLog;
 
 public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements SimulationView {
 

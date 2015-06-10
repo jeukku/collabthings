@@ -1,7 +1,5 @@
 package org.collabthings.environment.impl;
 
-import org.collabthings.LLog;
-import org.collabthings.PrintOut;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.math.LOrientation;
 import org.collabthings.math.LTransformation;
@@ -9,6 +7,8 @@ import org.collabthings.math.LVector;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTSubPart;
+import org.collabthings.util.LLog;
+import org.collabthings.util.PrintOut;
 
 public class LOTPartState implements LOTRuntimeObject {
 	private LOTPart part;

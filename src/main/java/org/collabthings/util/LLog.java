@@ -1,4 +1,4 @@
-package org.collabthings;
+package org.collabthings.util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
