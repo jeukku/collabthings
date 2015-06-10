@@ -44,7 +44,8 @@ import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.simulation.LOTViewSimulation;
 import org.collabthings.util.LLog;
 
-public class ViewSimulation implements RunEnvironmentListener, LOTViewSimulation {
+public class ViewSimulation implements RunEnvironmentListener,
+		LOTViewSimulation {
 
 	private static final double ZOOMSPEED_MINIMUM = 0.1;
 	private static final double ZOOMSPEED_MAXIMUM = 4;
@@ -249,10 +250,10 @@ public class ViewSimulation implements RunEnvironmentListener, LOTViewSimulation
 		addToolState(ts);
 
 		stack.push(new LTransformation(ts.getOrientation()));
-		
+
 		NodeInfo n = nodes.get(ts);
 		setTransformation(stack, n.group);
-		
+
 		stack.pull();
 	}
 
@@ -462,7 +463,9 @@ public class ViewSimulation implements RunEnvironmentListener, LOTViewSimulation
 	}
 
 	public void close() {
-		f.dispose();
+		if (f != null) {
+			f.dispose();
+		}
 	}
 
 	@Override
