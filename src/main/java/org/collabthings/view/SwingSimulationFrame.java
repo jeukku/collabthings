@@ -7,8 +7,9 @@ import javax.swing.SwingUtilities;
 
 import org.collabthings.LLog;
 import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.simulation.LOTViewSimulation;
 
-public class SwingSimulationFrame {
+public class SwingSimulationFrame implements LOTViewSimulation {
 	LOTRunEnvironment runenv;
 
 	LLog log = LLog.getLogger(this);

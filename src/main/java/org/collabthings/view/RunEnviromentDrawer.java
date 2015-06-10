@@ -29,8 +29,7 @@ import org.collabthings.model.LOTSubPart;
 import org.collabthings.model.LOTTriangle;
 import org.collabthings.model.LOTTriangleMesh;
 
-public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements
-		SimulationView {
+public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements SimulationView {
 
 	private LOTRunEnvironment runenv;
 	private LLog log = LLog.getLogger(this);

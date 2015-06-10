@@ -15,7 +15,7 @@ public interface LOTToolUser extends LOTRuntimeObject {
 
 	void step(double dtime);
 
-//	LVector getLocation();
+	// LVector getLocation();
 
 	boolean isAvailable(LOTToolState toolstate);
 

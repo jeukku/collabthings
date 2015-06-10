@@ -14,17 +14,13 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
-import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Translate;
 
 import javax.swing.JFrame;
@@ -43,12 +39,12 @@ import org.collabthings.environment.impl.LOTToolUser;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTRuntimeObject;
+import org.collabthings.simulation.LOTViewSimulation;
 
-public class ViewSimulation implements RunEnvironmentListener {
+public class ViewSimulation implements RunEnvironmentListener, LOTViewSimulation {
 
 	private static final double ZOOMSPEED_MINIMUM = 0.1;
 	private static final double ZOOMSPEED_MAXIMUM = 4;
@@ -144,11 +140,6 @@ public class ViewSimulation implements RunEnvironmentListener {
 		}
 	}
 
-	private void updateToolState(LTransformationStack stack, LOTToolState ts) {
-		// TODO Auto-generated method stub
-
-	}
-
 	private void updatePartState(LTransformationStack stack, LOTPartState ps) {
 		NodeInfo n = nodes.get(ps);
 		if (n == null) {
@@ -241,10 +232,44 @@ public class ViewSimulation implements RunEnvironmentListener {
 		if (nodes.get(lotToolUser) == null) {
 			addToolUser(lotToolUser);
 		}
+
+		stack.push(lotToolUser.getTransformation());
+
+		NodeInfo n = nodes.get(lotToolUser);
+		setTransformation(stack, n.group);
+
+		if (lotToolUser.getTool() != null) {
+			updateToolState(stack, lotToolUser.getTool());
+		}
+
+		stack.pull();
+	}
+
+	private void updateToolState(LTransformationStack stack, LOTToolState ts) {
+		addToolState(ts);
+
+		stack.push(new LTransformation(ts.getOrientation()));
+		
+		NodeInfo n = nodes.get(ts);
+		setTransformation(stack, n.group);
+		
+		stack.pull();
 	}
 
 	private void addToolState(LOTToolState ts) {
-		// TODO Auto-generated method stub
+		if (nodes.get(ts) == null) {
+			Group g = newGroup();
+			Box sp = new Box(1, 1, 1);
+			sp.setMaterial(getRandomMaterial());
+			g.getChildren().add(sp);
+
+			objectgroup.getChildren().add(g);
+
+			NodeInfo n = new NodeInfo();
+			n.group = g;
+
+			nodes.put(ts, n);
+		}
 	}
 
 	private NodeInfo addPartState(LOTPartState partstate) {
@@ -257,7 +282,14 @@ public class ViewSimulation implements RunEnvironmentListener {
 			g.getChildren().add(sp);
 
 			LOTModel model = partstate.getPart().getModel();
-			model.addTo(g);
+			if (model != null) {
+				model.addTo(g);
+			} else {
+				Box b = new Box(10, 0.1, 10);
+				b.setMaterial(getRandomMaterial());
+				b.setDrawMode(DrawMode.LINE);
+				g.getChildren().add(b);
+			}
 
 			objectgroup.getChildren().add(g);
 

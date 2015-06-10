@@ -14,8 +14,8 @@ import waazdoh.client.utils.ConditionWaiter;
 
 public class LOTSimpleSimulation implements LOTSimulation,
 		RunEnvironmentListener {
-	private static final double MAX_STEP = 0.02;
-	private static final double MIN_STEP = 0.01;
+	private static final double MAX_STEP = 0.002;
+	private static final double MIN_STEP = 0.001;
 	//
 
 	private LOTRunEnvironment env;
@@ -23,7 +23,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	private boolean allsuccess = true;
 	private LOTStepRunner runner;
 	//
-	private ViewSimulation view;
+	private LOTViewSimulation view;
 	private List<LOTRuntimeEvent> events = new LinkedList<LOTRuntimeEvent>();
 	private boolean done;
 
@@ -36,6 +36,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 		this(runenv);
 		if (b) {
 			view = new ViewSimulation(runenv);
+			// view = new SwingSimulationFrame(runenv);
 		}
 	}
 
