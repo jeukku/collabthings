@@ -1,10 +1,10 @@
-package org.libraryofthings.unittests;
+package org.collabthings.unittests;
 
 import java.io.IOException;
 
 import org.collabthings.LOTClient;
+import org.collabthings.LOTTestCase;
 import org.collabthings.environment.impl.LOTPool;
-import org.libraryofthings.LOTTestCase;
 import org.xml.sax.SAXException;
 
 public final class TestPool extends LOTTestCase {

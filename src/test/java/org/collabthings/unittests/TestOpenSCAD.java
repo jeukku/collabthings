@@ -1,13 +1,13 @@
-package org.libraryofthings.unittests;
+package org.collabthings.unittests;
 
 import java.io.IOException;
 
 import org.collabthings.LOTClient;
+import org.collabthings.LOTTestCase;
 import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.impl.LOTPartImpl;
-import org.libraryofthings.LOTTestCase;
 import org.xml.sax.SAXException;
 
 import waazdoh.common.MStringID;

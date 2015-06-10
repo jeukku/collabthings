@@ -1,4 +1,4 @@
-package org.libraryofthings.unittests;
+package org.collabthings.unittests;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,10 +7,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.collabthings.LOTClient;
+import org.collabthings.LOTTestCase;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.impl.LOT3DModelImpl;
-import org.libraryofthings.LOTTestCase;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.utils.ConditionWaiter;

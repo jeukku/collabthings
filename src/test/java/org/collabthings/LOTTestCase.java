@@ -1,4 +1,4 @@
-package org.libraryofthings;
+package org.collabthings;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

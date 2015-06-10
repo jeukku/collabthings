@@ -1,4 +1,4 @@
-package org.libraryofthings.integrationtests;
+package org.collabthings.integrationtests;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import javax.script.ScriptException;
 
 import org.collabthings.LOTClient;
+import org.collabthings.LOTTestCase;
 import org.collabthings.LOTToolException;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRunEnvironmentBuilder;
@@ -24,7 +25,6 @@ import org.collabthings.model.impl.LOTScriptImpl;
 import org.collabthings.simulation.LOTSimpleSimulation;
 import org.collabthings.simulation.LOTSimulation;
 import org.collabthings.util.LLog;
-import org.libraryofthings.LOTTestCase;
 import org.xml.sax.SAXException;
 
 import waazdoh.common.MStringID;

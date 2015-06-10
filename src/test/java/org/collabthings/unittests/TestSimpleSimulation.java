@@ -1,4 +1,4 @@
-package org.libraryofthings.unittests;
+package org.collabthings.unittests;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.collabthings.LOTClient;
+import org.collabthings.LOTTestCase;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTScriptRunner;
 import org.collabthings.environment.impl.LOTFactoryState;
@@ -26,7 +27,6 @@ import org.collabthings.model.impl.LOTScriptImpl;
 import org.collabthings.model.impl.LOTToolImpl;
 import org.collabthings.simulation.LOTSimpleSimulation;
 import org.collabthings.simulation.LOTSimulation;
-import org.libraryofthings.LOTTestCase;
 import org.xml.sax.SAXException;
 
 public class TestSimpleSimulation extends LOTTestCase {

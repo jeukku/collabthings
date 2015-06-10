@@ -1,13 +1,13 @@
-package org.libraryofthings.unittests;
+package org.collabthings.unittests;
 
 import org.collabthings.LOTClient;
+import org.collabthings.LOTTestCase;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
 import org.collabthings.environment.impl.LOTScriptRunnerImpl;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.impl.LOTEnvironmentImpl;
 import org.collabthings.model.impl.LOTScriptImpl;
-import org.libraryofthings.LOTTestCase;
 
 public final class TestScript extends LOTTestCase {
 

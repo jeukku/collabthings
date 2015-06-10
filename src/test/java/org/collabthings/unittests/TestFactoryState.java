@@ -1,13 +1,13 @@
-package org.libraryofthings.unittests;
+package org.collabthings.unittests;
 
 import org.collabthings.LOTClient;
+import org.collabthings.LOTTestCase;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTPartState;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.impl.LOTEnvironmentImpl;
 import org.collabthings.simulation.LOTStepRunner;
-import org.libraryofthings.LOTTestCase;
 
 import waazdoh.common.MTimedFlag;
 

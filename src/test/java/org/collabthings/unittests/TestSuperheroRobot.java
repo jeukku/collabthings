@@ -1,8 +1,9 @@
-package org.libraryofthings.unittests;
+package org.collabthings.unittests;
 
 import java.io.IOException;
 
 import org.collabthings.LOTClient;
+import org.collabthings.LOTTestCase;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
@@ -14,7 +15,6 @@ import org.collabthings.model.LOTFactory;
 import org.collabthings.model.impl.LOTEnvironmentImpl;
 import org.collabthings.model.impl.LOTFactoryImpl;
 import org.collabthings.model.impl.LOTToolImpl;
-import org.libraryofthings.LOTTestCase;
 import org.xml.sax.SAXException;
 
 import waazdoh.common.MTimedFlag;

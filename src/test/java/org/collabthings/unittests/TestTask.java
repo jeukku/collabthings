@@ -1,14 +1,14 @@
-package org.libraryofthings.unittests;
+package org.collabthings.unittests;
 
 import java.io.IOException;
 
 import org.collabthings.LOTClient;
+import org.collabthings.LOTTestCase;
 import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
 import org.collabthings.environment.impl.LOTScriptRunnerImpl;
 import org.collabthings.environment.impl.LOTTaskImpl;
 import org.collabthings.model.impl.LOTEnvironmentImpl;
 import org.collabthings.model.impl.LOTScriptImpl;
-import org.libraryofthings.LOTTestCase;
 import org.xml.sax.SAXException;
 
 public final class TestTask extends LOTTestCase {

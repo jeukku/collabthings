@@ -1,8 +1,8 @@
-package org.libraryofthings.unittests;
+package org.collabthings.unittests;
 
+import org.collabthings.LOTTestCase;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
-import org.libraryofthings.LOTTestCase;
 
 public final class TestTransformation extends LOTTestCase {
 

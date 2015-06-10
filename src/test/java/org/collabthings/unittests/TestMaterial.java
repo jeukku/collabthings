@@ -1,4 +1,4 @@
-package org.libraryofthings.unittests;
+package org.collabthings.unittests;
 
 import junit.framework.TestCase;
 

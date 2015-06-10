@@ -1,9 +1,9 @@
-package org.libraryofthings.unittests;
+package org.collabthings.unittests;
 
 import java.io.IOException;
 
 import org.collabthings.LOTClient;
-import org.libraryofthings.LOTTestCase;
+import org.collabthings.LOTTestCase;
 import org.xml.sax.SAXException;
 
 import waazdoh.common.vo.AppLoginVO;
