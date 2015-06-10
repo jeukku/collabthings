@@ -12,10 +12,10 @@ import org.collabthings.math.LVector;
 public class SwingRunEnvironmentView extends JPanel implements LOTGraphics {
 	private static final long serialVersionUID = -6174408330205773946L;
 
-	private RunEnviromentDrawer drawer;
+	private RunEnvironmentDrawerImpl drawer;
 	private Graphics2D g2;
 
-	public SwingRunEnvironmentView(RunEnviromentDrawer ndrawer) {
+	public SwingRunEnvironmentView(RunEnvironmentDrawerImpl ndrawer) {
 		this.drawer = ndrawer;
 	}
 

@@ -1,5 +1,7 @@
 package org.collabthings.unittests;
 
+import java.awt.Color;
+import java.awt.Stroke;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import org.collabthings.LOTClient;
 import org.collabthings.LOTTestCase;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTScriptRunner;
+import org.collabthings.environment.RunEnvironmentDrawer;
 import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTPartState;
 import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
@@ -27,6 +30,8 @@ import org.collabthings.model.impl.LOTScriptImpl;
 import org.collabthings.model.impl.LOTToolImpl;
 import org.collabthings.simulation.LOTSimpleSimulation;
 import org.collabthings.simulation.LOTSimulation;
+import org.collabthings.view.LOTGraphics;
+import org.collabthings.view.RunEnvironmentDrawerImpl;
 import org.xml.sax.SAXException;
 
 public class TestSimpleSimulation extends LOTTestCase {
@@ -86,6 +91,13 @@ public class TestSimpleSimulation extends LOTTestCase {
 		String name = "testvaluename";
 		String value = "testvalue";
 
+		RunEnvironmentDrawer d = new RunEnvironmentDrawerImpl(runenv,
+				(e, b) -> {
+
+				}, "test");
+
+		LOTGraphicsTest g = new LOTGraphicsTest();
+
 		runenv.addTask(new LOTScriptRunner() {
 
 			@Override
@@ -101,6 +113,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 							System.currentTimeMillis() / 500.0);
 					p21s.getOrientation().set(new LVector(0, 1, 0),
 							System.currentTimeMillis() / 800.0);
+
+					d.draw(g);
 
 					try {
 						wait(20);
@@ -120,6 +134,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv, true);
 		assertTrue(simulation.run(MAX_SIMUALTION_RUNTIME));
+
+		assertTrue(g.setcolorcount > 0);
 
 		assertEquals(value, valuesmap.get("testvaluename"));
 	}

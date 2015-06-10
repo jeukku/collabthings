@@ -3,7 +3,7 @@ package org.collabthings.environment.impl;
 import org.collabthings.LOTToolException;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.SimulationView;
+import org.collabthings.environment.RunEnvironmentDrawer;
 import org.collabthings.math.LOrientation;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LTransformationStack;
@@ -251,7 +251,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	}
 
 	@Override
-	public void callDraw(SimulationView view, LTransformationStack tstack)
+	public void callDraw(RunEnvironmentDrawer view, LTransformationStack tstack)
 			throws LOTToolException {
 		if (tool != null) {
 			LOTValues values = new LOTValues("view", view, "tstack", tstack);

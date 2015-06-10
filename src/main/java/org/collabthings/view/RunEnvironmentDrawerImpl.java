@@ -11,7 +11,7 @@ import java.util.Set;
 import org.collabthings.LOTToolException;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.SimulationView;
+import org.collabthings.environment.RunEnvironmentDrawer;
 import org.collabthings.environment.impl.LOTEvents;
 import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTPartState;
@@ -29,7 +29,8 @@ import org.collabthings.model.LOTTriangle;
 import org.collabthings.model.LOTTriangleMesh;
 import org.collabthings.util.LLog;
 
-public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements SimulationView {
+public class RunEnvironmentDrawerImpl extends LOTEnvironmentDrawer implements
+		RunEnvironmentDrawer {
 
 	private LOTRunEnvironment runenv;
 	private LLog log = LLog.getLogger(this);
@@ -39,7 +40,7 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements Simulat
 	private long lasttime;
 	private HashMap<LOTModel, Integer> modelcolors;
 
-	public RunEnviromentDrawer(final LOTRunEnvironment nrunenv,
+	public RunEnvironmentDrawerImpl(final LOTRunEnvironment nrunenv,
 			EnvironmentDrawerTransform transform, String name) {
 		super(name, transform);
 
@@ -208,10 +209,12 @@ public class RunEnviromentDrawer extends LOTEnvironmentDrawer implements Simulat
 				public int compare(LOTTriangle o1, LOTTriangle o2) {
 					LVector ta = vs.get(o1.a);
 					LVector tb = vs.get(o2.a);
-					if (ta.z >= tb.z) {
+					if (ta.z > tb.z) {
 						return -1;
-					} else {
+					} else if (ta.z < tb.z) {
 						return 1;
+					} else {
+						return 0;
 					}
 				}
 			});

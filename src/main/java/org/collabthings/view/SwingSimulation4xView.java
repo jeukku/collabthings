@@ -25,19 +25,19 @@ public class SwingSimulation4xView extends JPanel {
 		freeanglespeed = runenv.getClient().getPreferences()
 				.getDouble("simulation.view.freeangle.speed", 0.2);
 
-		RunEnviromentDrawer ycanvas = new RunEnviromentDrawer(runenv,
+		RunEnvironmentDrawerImpl ycanvas = new RunEnvironmentDrawerImpl(runenv,
 				(v, b) -> {
 					v.y = v.z;
 					v.z = 0;
 				}, "Y");
-		RunEnviromentDrawer xcanvas = new RunEnviromentDrawer(runenv,
+		RunEnvironmentDrawerImpl xcanvas = new RunEnvironmentDrawerImpl(runenv,
 				(v, b) -> {
 					v.x = v.z;
 					v.z = 0;
 				}, "X");
-		RunEnviromentDrawer zcanvas = new RunEnviromentDrawer(runenv,
+		RunEnvironmentDrawerImpl zcanvas = new RunEnvironmentDrawerImpl(runenv,
 				(v, b) -> v.z = 0, "Z");
-		RunEnviromentDrawer freecanvas = new RunEnviromentDrawer(runenv,
+		RunEnvironmentDrawerImpl freecanvas = new RunEnvironmentDrawerImpl(runenv,
 				(v, b) -> {
 					if (b) {
 						freetransform.transform(v);

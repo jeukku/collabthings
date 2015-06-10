@@ -44,7 +44,7 @@ import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.simulation.LOTViewSimulation;
 import org.collabthings.util.LLog;
 
-public class ViewSimulation implements RunEnvironmentListener,
+public class JFXSimulationView implements RunEnvironmentListener,
 		LOTViewSimulation {
 
 	private static final double ZOOMSPEED_MINIMUM = 0.1;
@@ -71,7 +71,7 @@ public class ViewSimulation implements RunEnvironmentListener,
 	private double camerarotate;
 	private JFrame f;
 
-	public ViewSimulation(LOTRunEnvironment env) {
+	public JFXSimulationView(LOTRunEnvironment env) {
 		this.env = env;
 		env.addListener(this);
 		//

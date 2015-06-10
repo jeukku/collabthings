@@ -1,7 +1,7 @@
 package org.collabthings.environment.impl;
 
 import org.collabthings.LOTToolException;
-import org.collabthings.environment.SimulationView;
+import org.collabthings.environment.RunEnvironmentDrawer;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
@@ -19,7 +19,7 @@ public interface LOTToolUser extends LOTRuntimeObject {
 
 	boolean isAvailable(LOTToolState toolstate);
 
-	void callDraw(SimulationView view, LTransformationStack tstack)
+	void callDraw(RunEnvironmentDrawer view, LTransformationStack tstack)
 			throws LOTToolException;
 
 	LOTEvents getEvents();
