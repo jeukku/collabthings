@@ -21,8 +21,8 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	final private LOTRunEnvironment simenv;
 	private LOTToolState tool;
 
-	private LOrientation orientation = new LOrientation();
-	private LOrientation targetorientation = new LOrientation();
+	private final LOrientation orientation = new LOrientation();
+	private final LOrientation targetorientation = new LOrientation();
 
 	//
 	private LLog log = LLog.getLogger(this);
@@ -32,6 +32,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	final private LOTFactoryState factory;
 	private LOTEvents events = new LOTEvents();
 	private long movestarttime;
+	private boolean stopped;
 
 	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
 			LOTFactoryState factory, LVector norientation) {
@@ -89,21 +90,18 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		log("factory " + this.factory);
 		//
 		while (simenv.isRunning()
-				&& targetorientation != null
+				&& !stopped
 				&& targetorientation.getLocation()
 						.getSub(orientation.getLocation()).length() > MOVING_orientation_LENGTH_TRIGGER) {
 			waitAWhile();
 		}
 
-		if (targetorientation != null) {
+		if (!stopped) {
 			tool.setOrientation(targetorientation.getLocation(),
 					targetorientation.getNormal(), targetorientation.getAngle());
 
 			log("Moved to " + targetorientation + " " + orientation + " in "
 					+ (System.currentTimeMillis() - movestarttime) + "ms");
-			targetorientation = null;
-		} else {
-			log("No target orientation. Propably stopped.");
 		}
 	}
 
@@ -143,7 +141,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 	@Override
 	public synchronized void stop() {
-		targetorientation = null;
+		stopped = true;
 	}
 
 	@Override
@@ -212,8 +210,10 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 				direction.scale(distance);
 
 				orientation.getLocation().add(direction);
-				tool.setOrientation(orientation.getLocation(),
-						orientation.getNormal(), orientation.getAngle());
+				if (tool != null) {
+					tool.setOrientation(orientation.getLocation(),
+							orientation.getNormal(), orientation.getAngle());
+				}
 			} else {
 				log("Distance less than trigger length");
 				this.notifyAll();
