@@ -220,7 +220,7 @@
 
 		<dependency>
 			<groupId>com.interactivemesh</groupId>
-			<artifactId>jfx</artifactId>
+			<artifactId>x3d</artifactId>
 			<version>2.2.3</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/lib/jimX3dModelImporterJFX.jar
@@ -229,7 +229,7 @@
 
 		<dependency>
 			<groupId>com.interactivemesh</groupId>
-			<artifactId>jfx</artifactId>
+			<artifactId>stl</artifactId>
 			<version>2.2.3</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/lib/jimStlMeshImporterJFX.jar
