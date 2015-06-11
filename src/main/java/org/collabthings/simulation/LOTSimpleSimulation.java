@@ -9,6 +9,7 @@ import org.collabthings.environment.LOTTask;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.util.LLog;
 import org.collabthings.view.JFXSimulationView;
+import org.collabthings.view.LOTViewSimulation;
 
 import waazdoh.client.utils.ConditionWaiter;
 

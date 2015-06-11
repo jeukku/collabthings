@@ -7,6 +7,7 @@ import java.awt.Stroke;
 import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBoundingBox;
+import org.collabthings.util.LOTGraphics;
 
 public class LOTEnvironmentDrawer {
 	private static final int INFOTEXT_Y = 20;

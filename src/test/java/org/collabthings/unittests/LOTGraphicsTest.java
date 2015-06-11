@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Stroke;
 
 import org.collabthings.math.LVector;
-import org.collabthings.view.LOTGraphics;
+import org.collabthings.util.LOTGraphics;
 
 public class LOTGraphicsTest implements LOTGraphics {
 	public int setcolorcount = 0;

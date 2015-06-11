@@ -28,6 +28,7 @@ import org.collabthings.model.LOTSubPart;
 import org.collabthings.model.LOTTriangle;
 import org.collabthings.model.LOTTriangleMesh;
 import org.collabthings.util.LLog;
+import org.collabthings.util.LOTGraphics;
 
 public class RunEnvironmentDrawerImpl extends LOTEnvironmentDrawer implements
 		RunEnvironmentDrawer {

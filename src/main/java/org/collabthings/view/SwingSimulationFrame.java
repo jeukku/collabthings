@@ -6,7 +6,6 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.simulation.LOTViewSimulation;
 import org.collabthings.util.LLog;
 
 public class SwingSimulationFrame implements LOTViewSimulation {

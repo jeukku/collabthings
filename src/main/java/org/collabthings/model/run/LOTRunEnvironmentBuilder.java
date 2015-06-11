@@ -1,5 +1,6 @@
-package org.collabthings.environment;
+package org.collabthings.model.run;
 
+import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTObject;
 import org.collabthings.util.PrintOut;

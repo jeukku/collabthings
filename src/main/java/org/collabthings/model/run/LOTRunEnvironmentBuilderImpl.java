@@ -1,4 +1,4 @@
-package org.collabthings.environment.impl;
+package org.collabthings.model.run;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,7 @@ import javax.script.ScriptException;
 
 import org.collabthings.LOTClient;
 import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.LOTRunEnvironmentBuilder;
+import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTScript;

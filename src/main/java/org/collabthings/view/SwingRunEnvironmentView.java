@@ -8,6 +8,7 @@ import java.awt.Stroke;
 import javax.swing.JPanel;
 
 import org.collabthings.math.LVector;
+import org.collabthings.util.LOTGraphics;
 
 public class SwingRunEnvironmentView extends JPanel implements LOTGraphics {
 	private static final long serialVersionUID = -6174408330205773946L;

@@ -1,4 +1,4 @@
-package org.collabthings.simulation;
+package org.collabthings.view;
 
 public interface LOTViewSimulation {
 

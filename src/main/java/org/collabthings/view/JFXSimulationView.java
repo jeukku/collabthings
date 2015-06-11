@@ -41,7 +41,6 @@ import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTRuntimeObject;
-import org.collabthings.simulation.LOTViewSimulation;
 import org.collabthings.util.LLog;
 
 public class JFXSimulationView implements RunEnvironmentListener,

@@ -30,7 +30,7 @@ import org.collabthings.model.impl.LOTScriptImpl;
 import org.collabthings.model.impl.LOTToolImpl;
 import org.collabthings.simulation.LOTSimpleSimulation;
 import org.collabthings.simulation.LOTSimulation;
-import org.collabthings.view.LOTGraphics;
+import org.collabthings.util.LOTGraphics;
 import org.collabthings.view.RunEnvironmentDrawerImpl;
 import org.xml.sax.SAXException;
 

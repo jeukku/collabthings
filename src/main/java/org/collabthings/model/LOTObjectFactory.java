@@ -1,6 +1,6 @@
 package org.collabthings.model;
 
-import org.collabthings.environment.LOTRunEnvironmentBuilder;
+import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 
 import waazdoh.common.MStringID;
 

@@ -1,4 +1,4 @@
-package org.collabthings.view;
+package org.collabthings.util;
 
 import java.awt.Color;
 import java.awt.Stroke;

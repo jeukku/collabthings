@@ -1,6 +1,6 @@
 package org.collabthings.environment;
 
-import org.collabthings.view.LOTGraphics;
+import org.collabthings.util.LOTGraphics;
 
 public interface RunEnvironmentDrawer {
 
