@@ -2,9 +2,9 @@ package org.collabthings.impl;
 
 import org.collabthings.LOTClient;
 import org.collabthings.LOTStorage;
+import org.collabthings.factory.LOTObjectFactory;
+import org.collabthings.factory.impl.LOTObjectFactoryImpl;
 import org.collabthings.model.LOTObject;
-import org.collabthings.model.LOTObjectFactory;
-import org.collabthings.model.impl.LOTObjectFactoryImpl;
 import org.collabthings.util.LLog;
 
 import waazdoh.client.BinarySource;

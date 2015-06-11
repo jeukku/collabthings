@@ -4,8 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.collabthings.factory.LOTObjectFactory;
 import org.collabthings.model.LOTObject;
-import org.collabthings.model.LOTObjectFactory;
 
 import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;

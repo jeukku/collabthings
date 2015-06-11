@@ -1,5 +1,11 @@
-package org.collabthings.model;
+package org.collabthings.factory;
 
+import org.collabthings.model.LOTBinaryModel;
+import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTInfo;
+import org.collabthings.model.LOTPart;
+import org.collabthings.model.LOTScript;
+import org.collabthings.model.LOTTool;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 
 import waazdoh.common.MStringID;

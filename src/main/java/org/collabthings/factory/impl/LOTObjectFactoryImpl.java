@@ -1,4 +1,4 @@
-package org.collabthings.model.impl;
+package org.collabthings.factory.impl;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -6,11 +6,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.collabthings.LOTClient;
+import org.collabthings.factory.LOTObjectFactory;
 import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTInfo;
-import org.collabthings.model.LOTObjectFactory;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
+import org.collabthings.model.impl.LOT3DModelImpl;
+import org.collabthings.model.impl.LOTFactoryImpl;
+import org.collabthings.model.impl.LOTPartImpl;
+import org.collabthings.model.impl.LOTScriptImpl;
+import org.collabthings.model.impl.LOTToolImpl;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.model.run.LOTRunEnvironmentBuilderImpl;
 import org.collabthings.util.LLog;
