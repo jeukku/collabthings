@@ -1,5 +1,6 @@
 package org.collabthings.environment.impl;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -249,8 +250,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		for (LOTToolUser tooluser : toolusers) {
 			tooluser.stop();
 		}
-		for (LOTFactoryState factory : factories) {
-			factory.stop();
+		for (LOTFactoryState cfactory : factories) {
+			cfactory.stop();
 		}
 	}
 
@@ -266,11 +267,38 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	public LOTToolUser getToolUser(final LOTToolState lotToolState, LVector l) {
 		new ConditionWaiter(() -> !isRunning()
 				|| getAvailableToolUser(lotToolState) != null, 0);
-		return getAvailableToolUser(lotToolState);
+		return getAvailableToolUser(lotToolState, l);
 	}
 
 	private LOTToolUser getAvailableToolUser(LOTToolState toolstate) {
 		for (LOTToolUser tooluser : toolusers) {
+			if (tooluser.isAvailable(toolstate)) {
+				return tooluser;
+			}
+		}
+		return null;
+	}
+
+	private LOTToolUser getAvailableToolUser(LOTToolState toolstate, LVector l) {
+		LinkedList<LOTToolUser> ts = new LinkedList<LOTToolUser>(toolusers);
+		ts.sort(new Comparator<LOTToolUser>() {
+			@Override
+			public int compare(LOTToolUser a, LOTToolUser b) {
+				double adistance = a.getOrientation().getLocation().getSub(l)
+						.length();
+				double bdistance = b.getOrientation().getLocation().getSub(l)
+						.length();
+				if (adistance < bdistance) {
+					return -1;
+				} else if (adistance > bdistance) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		});
+
+		for (LOTToolUser tooluser : ts) {
 			if (tooluser.isAvailable(toolstate)) {
 				return tooluser;
 			}

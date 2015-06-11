@@ -186,6 +186,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(rune,
 				factorystate);
 		factorystate.addToolUser(robot);
+		factorystate.addToolUser(new ReallySimpleSuperheroRobot(rune, factorystate));
+		
 		LOTPartState p = factorystate.newPart();
 		p.getPart().newSubPart();
 
