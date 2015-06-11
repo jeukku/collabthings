@@ -68,6 +68,9 @@ public class TestSimpleSimulation extends LOTTestCase {
 		f4.setLocation(new LVector(20, 0, 0));
 
 		LOTFactoryState f1s = new LOTFactoryState(client, env, "f1s", f1);
+		f1s.newPart().getPart().newSubPart();
+		f1s.newPart().getPart()
+				.setBoundingBox(new LVector(), new LVector(1, 1, 1));
 
 		LOTFactoryState f2s = f1s.getFactory("f2");
 		LOTPartState f2part = f2s.newPart();
@@ -186,8 +189,9 @@ public class TestSimpleSimulation extends LOTTestCase {
 		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(rune,
 				factorystate);
 		factorystate.addToolUser(robot);
-		factorystate.addToolUser(new ReallySimpleSuperheroRobot(rune, factorystate));
-		
+		factorystate.addToolUser(new ReallySimpleSuperheroRobot(rune,
+				factorystate));
+
 		LOTPartState p = factorystate.newPart();
 		p.getPart().newSubPart();
 
