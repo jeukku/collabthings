@@ -6,28 +6,32 @@ import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
 import org.collabthings.environment.impl.LOTScriptRunnerImpl;
 import org.collabthings.model.LOTEnvironment;
+import org.collabthings.model.LOTScript;
 import org.collabthings.model.impl.LOTEnvironmentImpl;
-import org.collabthings.model.impl.LOTScriptImpl;
 
 public final class TestScript extends LOTTestCase {
 
 	private static final String THIS_SHOULD_WORK = "this should work.";
-	private static final String SCRIPT_TEMPLATE = "function info() { return \"" + THIS_SHOULD_WORK
-			+ "\"; } \n";
-	private static final String SCRIPT_ENV_TEST_VALUE = "testvalue " + Math.random();
+	private static final String SCRIPT_TEMPLATE = "function info() { return \""
+			+ THIS_SHOULD_WORK + "\"; } \n";
+	private static final String SCRIPT_ENV_TEST_VALUE = "testvalue "
+			+ Math.random();
 	private static final String FAILING_SCRIPT = "FAIL";
 
 	public void testSaveAndLoad() {
 		LOTClient client = getNewClient();
 		assertNotNull(client);
 		//
-		LOTScriptImpl s = getAndTestWorkingScriptExample(client);
+		LOTScript s = getAndTestWorkingScriptExample(client);
 		s.publish();
 		//
 		LOTClient benv = getNewClient();
 		assertNotNull(benv);
-		LOTScriptImpl bs = new LOTScriptImpl(benv);
-		assertTrue(bs.load(s.getID().getStringID()));
+		LOTScript bs = benv.getObjectFactory().getScript(
+				s.getID().getStringID());
+		assertNotNull(bs);
+		bs = benv.getObjectFactory().getScript(s.getID().getStringID());
+		assertNotNull(bs);
 
 		assertEquals(s.getScript(), bs.getScript());
 		assertTrue(s.isOK());
@@ -42,21 +46,21 @@ public final class TestScript extends LOTTestCase {
 		assertEquals(THIS_SHOULD_WORK, bs.getInfo());
 	}
 
-	private LOTScriptImpl getAndTestWorkingScriptExample(LOTClient env) {
-		LOTScriptImpl s = getWorkingScriptExample(env);
+	private LOTScript getAndTestWorkingScriptExample(LOTClient env) {
+		LOTScript s = getWorkingScriptExample(env);
 		assertNotNull(s);
 		s.save();
 		return s;
 	}
 
-	private LOTScriptImpl getWorkingScriptExample(LOTClient env) {
+	private LOTScript getWorkingScriptExample(LOTClient env) {
 		return getScript(env, SCRIPT_TEMPLATE
-				+ "function run(env) { env.setParameter(\"testvalue\", \"" + SCRIPT_ENV_TEST_VALUE
-				+ "\" ); } ");
+				+ "function run(env) { env.setParameter(\"testvalue\", \""
+				+ SCRIPT_ENV_TEST_VALUE + "\" ); } ");
 	}
 
-	private LOTScriptImpl getScript(LOTClient env, String script) {
-		LOTScriptImpl s = new LOTScriptImpl(env);
+	private LOTScript getScript(LOTClient env, String script) {
+		LOTScript s = env.getObjectFactory().getScript();
 		s.setScript(script);
 		if (s.isOK()) {
 			return s;
@@ -67,7 +71,7 @@ public final class TestScript extends LOTTestCase {
 
 	public void testRuntimeEnvironmentParameters() {
 		LOTClient client = getNewClient();
-		LOTScriptImpl s = getScript(client, SCRIPT_TEMPLATE
+		LOTScript s = getScript(client, SCRIPT_TEMPLATE
 				+ "function run(e) { e.setParameter('test', 'testvalue'); }");
 		assertNotNull(s);
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
@@ -81,8 +85,10 @@ public final class TestScript extends LOTTestCase {
 		LOTClient c = getNewClient();
 
 		try {
-			LOTScriptImpl s = getScript(c, SCRIPT_TEMPLATE
-					+ "function run(e) { r = new java.io.FileWriter('/jstest.txt'); r.flush(); }");
+			LOTScript s = getScript(
+					c,
+					SCRIPT_TEMPLATE
+							+ "function run(e) { r = new java.io.FileWriter('/jstest.txt'); r.flush(); }");
 			assertNull(s);
 		} catch (SecurityException ex) {
 			assertNotNull(ex);
@@ -91,21 +97,21 @@ public final class TestScript extends LOTTestCase {
 
 	public void testFailLoad() {
 		LOTClient env = getNewClient();
-		LOTScriptImpl s = getScript(env, FAILING_SCRIPT);
+		LOTScript s = getScript(env, FAILING_SCRIPT);
 		assertNull(s);
 	}
 
 	public void testMissingMethod() {
 		LOTClient env = getNewClient();
-		LOTScriptImpl s = getScript(env, "function fail() {}");
+		LOTScript s = getScript(env, "function fail() {}");
 		assertNull(s);
 	}
 
 	public void testMissingRunMethod() {
 		LOTClient client = getNewClient();
-		LOTScriptImpl s = getScript(client, "function info() {}");
-		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client, new LOTEnvironmentImpl(
-				client));
+		LOTScript s = getScript(client, "function info() {}");
+		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client,
+				new LOTEnvironmentImpl(client));
 		LOTScriptRunnerImpl runner = new LOTScriptRunnerImpl(s, runenv, null);
 		runner.run();
 

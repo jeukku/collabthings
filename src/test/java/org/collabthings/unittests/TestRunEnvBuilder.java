@@ -48,6 +48,9 @@ public final class TestRunEnvBuilder extends LOTTestCase {
 		LOTClient c2 = getNewClient();
 		LOTRunEnvironmentBuilder b2 = c2.getObjectFactory().getRuntimeBuilder(
 				b.getID().getStringID());
+		assertNotNull(b2);
+		b2 = c2.getObjectFactory().getRuntimeBuilder(b.getID().getStringID());
+		assertNotNull(b2);
 
 		LOTRunEnvironment runEnvironment = b2.getRunEnvironment();
 		assertNotNull(runEnvironment);

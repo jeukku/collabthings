@@ -28,7 +28,7 @@ public interface LOTObjectFactory {
 
 	LOTBinaryModel getModel();
 
-	LOTScript getScript(String id);
+	LOTScript getScript(MStringID id);
 
 	LOTScript getScript();
 

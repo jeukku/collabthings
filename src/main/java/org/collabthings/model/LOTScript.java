@@ -18,4 +18,6 @@ public interface LOTScript extends LOTObject {
 
 	String getName();
 
+	String getInfo();
+
 }

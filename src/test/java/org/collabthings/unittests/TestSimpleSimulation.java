@@ -1,7 +1,5 @@
 package org.collabthings.unittests;
 
-import java.awt.Color;
-import java.awt.Stroke;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,8 +8,11 @@ import java.util.Map;
 import org.collabthings.LOTClient;
 import org.collabthings.LOTTestCase;
 import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTScriptRunner;
+import org.collabthings.environment.LOTTask;
 import org.collabthings.environment.RunEnvironmentDrawer;
+import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTPartState;
 import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
@@ -30,7 +31,6 @@ import org.collabthings.model.impl.LOTScriptImpl;
 import org.collabthings.model.impl.LOTToolImpl;
 import org.collabthings.simulation.LOTSimpleSimulation;
 import org.collabthings.simulation.LOTSimulation;
-import org.collabthings.util.LOTGraphics;
 import org.collabthings.view.RunEnvironmentDrawerImpl;
 import org.xml.sax.SAXException;
 
@@ -100,6 +100,21 @@ public class TestSimpleSimulation extends LOTTestCase {
 				}, "test");
 
 		LOTGraphicsTest g = new LOTGraphicsTest();
+
+		runenv.addListener(new RunEnvironmentListener() {
+
+			@Override
+			public void taskFailed(LOTRunEnvironment runenv, LOTTask task) {
+			}
+
+			@Override
+			public void event(LOTRuntimeEvent e) {
+				assertNotNull(e);
+				assertNotNull(e.getName());
+				assertNotNull(e.getValues());
+				assertNotNull(e.getObject());
+			}
+		});
 
 		runenv.addTask(new LOTScriptRunner() {
 

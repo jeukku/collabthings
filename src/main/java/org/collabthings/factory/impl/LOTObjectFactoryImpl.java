@@ -51,9 +51,8 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	}
 
 	@Override
-	public LOTScript getScript(String sid) {
+	public LOTScript getScript(MStringID id) {
 		synchronized (scripts) {
-			MStringID id = new MStringID(sid);
 			for (LOTScriptImpl s : scripts) {
 				if (s.getID().getStringID().equals(id)) {
 					return s;
