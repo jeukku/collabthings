@@ -17,7 +17,7 @@ import org.collabthings.model.impl.LOTPartImpl;
 import org.collabthings.model.impl.LOTScriptImpl;
 import org.collabthings.model.impl.LOTToolImpl;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
-import org.collabthings.model.run.LOTRunEnvironmentBuilderImpl;
+import org.collabthings.model.run.impl.LOTRunEnvironmentBuilderImpl;
 import org.collabthings.util.LLog;
 
 import waazdoh.common.MStringID;

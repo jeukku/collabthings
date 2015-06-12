@@ -1,4 +1,4 @@
-package org.collabthings.model.run;
+package org.collabthings.model.run.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +12,7 @@ import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.impl.LOTEnvironmentImpl;
+import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 

@@ -6,7 +6,7 @@ import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.impl.LOTScriptImpl;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
-import org.collabthings.model.run.LOTRunEnvironmentBuilderImpl;
+import org.collabthings.model.run.impl.LOTRunEnvironmentBuilderImpl;
 
 public final class TestRunEnvBuilder extends LOTTestCase {
 

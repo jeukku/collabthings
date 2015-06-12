@@ -21,7 +21,7 @@ import org.collabthings.model.LOTTool;
 import org.collabthings.model.impl.LOTEnvironmentImpl;
 import org.collabthings.model.impl.LOTScriptImpl;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
-import org.collabthings.model.run.LOTRunEnvironmentBuilderImpl;
+import org.collabthings.model.run.impl.LOTRunEnvironmentBuilderImpl;
 import org.collabthings.simulation.LOTSimpleSimulation;
 import org.collabthings.simulation.LOTSimulation;
 import org.collabthings.util.LLog;
