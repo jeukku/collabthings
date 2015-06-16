@@ -8,8 +8,8 @@ import java.util.Set;
 
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTAttachedFactory;
+import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTFactory;

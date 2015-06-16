@@ -13,7 +13,6 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.collabthings.LOTClient;
 import org.collabthings.impl.LOTClientImpl;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTObject;
