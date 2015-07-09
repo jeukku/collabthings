@@ -1,9 +1,9 @@
 package org.collabthings.environment.impl;
 
-import org.collabthings.LLog;
 import org.collabthings.environment.LOTScriptRunner;
 import org.collabthings.environment.LOTTask;
 import org.collabthings.model.LOTValues;
+import org.collabthings.util.LLog;
 
 import waazdoh.client.utils.ConditionWaiter;
 

@@ -3,19 +3,20 @@ package org.collabthings.simulation;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.collabthings.LLog;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTTask;
 import org.collabthings.environment.RunEnvironmentListener;
-import org.collabthings.view.SwingSimulationFrame;
+import org.collabthings.util.LLog;
+import org.collabthings.view.JFXSimulationView;
+import org.collabthings.view.LOTViewSimulation;
 
 import waazdoh.client.utils.ConditionWaiter;
 
 public class LOTSimpleSimulation implements LOTSimulation,
 		RunEnvironmentListener {
-	private static final double MAX_STEP = 0.02;
-	private static final double MIN_STEP = 0.01;
+	private static final double MAX_STEP = 0.002;
+	private static final double MIN_STEP = 0.001;
 	//
 
 	private LOTRunEnvironment env;
@@ -23,7 +24,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	private boolean allsuccess = true;
 	private LOTStepRunner runner;
 	//
-	private SwingSimulationFrame view;
+	private LOTViewSimulation view;
 	private List<LOTRuntimeEvent> events = new LinkedList<LOTRuntimeEvent>();
 	private boolean done;
 
@@ -35,7 +36,8 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	public LOTSimpleSimulation(LOTRunEnvironment runenv, boolean b) {
 		this(runenv);
 		if (b) {
-			view = new SwingSimulationFrame(runenv);
+			view = new JFXSimulationView(runenv);
+			// view = new SwingSimulationFrame(runenv);
 		}
 	}
 

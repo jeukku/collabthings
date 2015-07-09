@@ -5,10 +5,10 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import org.collabthings.LLog;
 import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.util.LLog;
 
-public class SwingSimulationFrame {
+public class SwingSimulationFrame implements LOTViewSimulation {
 	LOTRunEnvironment runenv;
 
 	LLog log = LLog.getLogger(this);

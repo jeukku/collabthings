@@ -1,5 +1,6 @@
 package org.collabthings.environment.impl;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -7,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTTask;
+import org.collabthings.math.LOrientation;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTAttachedFactory;
@@ -22,6 +23,8 @@ import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
 import org.collabthings.model.LOTValues;
+import org.collabthings.util.LLog;
+import org.collabthings.util.PrintOut;
 
 import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MStringID;
@@ -41,8 +44,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 	private final LOTPool pool;
 	private LOTRuntimeObject parent;
-	private LTransformation transformation;
 	private LOTEvents events = new LOTEvents();
+	private LOrientation orientation;
 
 	public LOTFactoryState(final LOTClient client, LOTEnvironment env,
 			final String name, final LOTAttachedFactory factory) {
@@ -61,7 +64,6 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		this.runenv = runenv;
 		this.parent = factorystate;
 		this.name = name;
-
 		pool = new LOTPool(this.runenv, this);
 		init();
 	}
@@ -71,8 +73,33 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		this(client, env, name2, new LOTAttachedFactory(factory));
 	}
 
+	@Override
+	public PrintOut printOut() {
+		PrintOut p = new PrintOut();
+		p.append("factorystate");
+		p.append(1, "factory " + factory);
+		p.append(1, "transformation " + getTransformation());
+
+		p.append(1, "factories");
+		for (LOTFactoryState fs : factories) {
+			p.append(2, fs.printOut());
+		}
+
+		p.append(1, "parts");
+		for (LOTPartState ps : parts) {
+			p.append(2, ps.printOut());
+		}
+
+		p.append(1, "toolusers");
+		for (LOTToolUser tu : toolusers) {
+			p.append(2, tu.printOut());
+		}
+
+		return p;
+	}
+
 	private void init() {
-		transformation = factory.getTransformation();
+		orientation = factory.getOrientation();
 
 		for (String fname : getFactory().getFactories()) {
 			LOTAttachedFactory f = getFactory().getFactory(fname);
@@ -87,14 +114,18 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return true;
 	}
 
-	public LTransformation getTransformation() {
-		return transformation;
+	public LOrientation getOrientation() {
+		return orientation;
 	}
 
 	public LVector getTransformedVector(LVector l) {
 		l = l.copy();
 		getTransformation().transform(l);
 		return l;
+	}
+
+	public LTransformation getTransformation() {
+		return new LTransformation(orientation);
 	}
 
 	public LOTPool getPool() {
@@ -219,8 +250,8 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		for (LOTToolUser tooluser : toolusers) {
 			tooluser.stop();
 		}
-		for (LOTFactoryState factory : factories) {
-			factory.stop();
+		for (LOTFactoryState cfactory : factories) {
+			cfactory.stop();
 		}
 	}
 
@@ -236,11 +267,38 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	public LOTToolUser getToolUser(final LOTToolState lotToolState, LVector l) {
 		new ConditionWaiter(() -> !isRunning()
 				|| getAvailableToolUser(lotToolState) != null, 0);
-		return getAvailableToolUser(lotToolState);
+		return getAvailableToolUser(lotToolState, l);
 	}
 
 	private LOTToolUser getAvailableToolUser(LOTToolState toolstate) {
 		for (LOTToolUser tooluser : toolusers) {
+			if (tooluser.isAvailable(toolstate)) {
+				return tooluser;
+			}
+		}
+		return null;
+	}
+
+	private LOTToolUser getAvailableToolUser(LOTToolState toolstate, LVector l) {
+		LinkedList<LOTToolUser> ts = new LinkedList<LOTToolUser>(toolusers);
+		ts.sort(new Comparator<LOTToolUser>() {
+			@Override
+			public int compare(LOTToolUser a, LOTToolUser b) {
+				double adistance = a.getOrientation().getLocation().getSub(l)
+						.length();
+				double bdistance = b.getOrientation().getLocation().getSub(l)
+						.length();
+				if (adistance < bdistance) {
+					return -1;
+				} else if (adistance > bdistance) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		});
+
+		for (LOTToolUser tooluser : ts) {
 			if (tooluser.isAvailable(toolstate)) {
 				return tooluser;
 			}

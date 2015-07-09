@@ -1,34 +1,42 @@
 package org.collabthings.environment.impl;
 
-import org.collabthings.LLog;
 import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.math.LOrientation;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTSubPart;
+import org.collabthings.util.LLog;
+import org.collabthings.util.PrintOut;
 
 public class LOTPartState implements LOTRuntimeObject {
 	private LOTPart part;
-	private final LVector location = new LVector();
 	//
 	private LLog log = LLog.getLogger(this);
 	private LOTRunEnvironment runenv;
 	//
 	private LOTFactoryState factory;
+	private LOrientation orientation = new LOrientation();
 
-	public LOTPartState(final LOTRunEnvironment runenv, final LOTFactoryState factory,
-			final LOTPart part) {
+	public LOTPartState(final LOTRunEnvironment runenv,
+			final LOTFactoryState factory, final LOTPart part) {
 		this.part = part;
 		this.runenv = runenv;
 		this.factory = factory;
 	}
 
 	@Override
-	public LTransformation getTransformation() {
-		LTransformation t = new LTransformation();
-		t.mult(LTransformation.getTranslate(location));
-		return t;
+	public LOrientation getOrientation() {
+		return orientation;
+	}
+
+	@Override
+	public PrintOut printOut() {
+		PrintOut o = new PrintOut();
+		o.append("partstate");
+		o.append(1, "" + part);
+		return o;
 	}
 
 	@Override
@@ -43,11 +51,11 @@ public class LOTPartState implements LOTRuntimeObject {
 	}
 
 	public LVector getLocation() {
-		return location.copy();
+		return orientation.getLocation().copy();
 	}
 
 	public void setLocation(LVector v) {
-		location.set(v);
+		orientation.getLocation().set(v);
 	}
 
 	@Override
@@ -81,6 +89,10 @@ public class LOTPartState implements LOTRuntimeObject {
 
 	@Override
 	public String toString() {
-		return "PartState[" + part + "][" + location + "]";
+		return "PartState[" + part + "][" + orientation + "]";
+	}
+
+	public LTransformation getTransformation() {
+		return new LTransformation(orientation);
 	}
 }

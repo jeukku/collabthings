@@ -1,6 +1,6 @@
 package org.collabthings.simulation;
 
-import org.collabthings.LLog;
+import org.collabthings.util.LLog;
 
 public class LOTStepRunner {
 

@@ -7,6 +7,7 @@ import java.awt.Stroke;
 import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBoundingBox;
+import org.collabthings.util.LOTGraphics;
 
 public class LOTEnvironmentDrawer {
 	private static final int INFOTEXT_Y = 20;
@@ -26,7 +27,7 @@ public class LOTEnvironmentDrawer {
 	private LVector a = new LVector();
 	private LVector b = new LVector();
 
-	protected EnvironmentDrawerTransform t;
+	protected EnvironmentDrawerTransform drawert;
 	private double zoom = DEFAULT_ZOOM;
 	private int framecount;
 	private String name;
@@ -36,7 +37,7 @@ public class LOTEnvironmentDrawer {
 	public LOTEnvironmentDrawer(String nname,
 			EnvironmentDrawerTransform transform) {
 		this.name = nname;
-		this.t = transform;
+		this.drawert = transform;
 	}
 
 	public void init() {
@@ -46,8 +47,8 @@ public class LOTEnvironmentDrawer {
 						+ " zspeed:" + zoomspeed, INFOTEXT_X, INFOTEXT_Y);
 
 		somethingoutofscreen = false;
-		int widthmargin = getGraphics().getWidth() / 10;
-		int heightmargin = getGraphics().getHeight() / 10;
+		int widthmargin = getGraphics().getWidth() / 5;
+		int heightmargin = getGraphics().getHeight() / 5;
 
 		screenleft = widthmargin;
 		screentop = heightmargin;
@@ -93,8 +94,8 @@ public class LOTEnvironmentDrawer {
 		tstack.current().transform(a);
 		tstack.current().transform(b);
 
-		t.transform(a);
-		t.transform(b);
+		drawert.transform(a, true);
+		drawert.transform(b, true);
 		int asx = getSX(a);
 		int asy = getSY(a);
 		int bsx = getSX(b);
@@ -106,7 +107,7 @@ public class LOTEnvironmentDrawer {
 	public void drawCenterCircle(LTransformationStack tstack, LVector l) {
 		a.set(l);
 		tstack.current().transform(a);
-		t.transform(a);
+		drawert.transform(a, true);
 		int sx = getSX(a);
 		int sy = getSY(a);
 		checkOutOfScreen(sx, sy);
@@ -144,7 +145,7 @@ public class LOTEnvironmentDrawer {
 	public void drawString(LTransformationStack tstack, String string, LVector l) {
 		a.set(l);
 		tstack.current().transform(a);
-		t.transform(a);
+		drawert.transform(a, true);
 		getGraphics().drawString(string, getSX(a), getSY(a));
 	}
 
@@ -154,7 +155,7 @@ public class LOTEnvironmentDrawer {
 
 		a.set(l);
 		tstack.current().transform(a);
-		t.transform(a);
+		drawert.transform(a, true);
 		int sx = getSX(a);
 		int sy = getSY(a);
 		checkOutOfScreen(sx, sy);
@@ -172,7 +173,7 @@ public class LOTEnvironmentDrawer {
 
 		a.set(l);
 		tstack.current().transform(a);
-		t.transform(a);
+		drawert.transform(a, true);
 		int sx = getSX(a);
 		int sy = getSY(a);
 		checkOutOfScreen(sx, sy);

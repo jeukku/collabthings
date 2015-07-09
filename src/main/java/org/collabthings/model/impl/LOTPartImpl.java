@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBoundingBox;
@@ -13,6 +12,7 @@ import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTSubPart;
+import org.collabthings.util.LLog;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -113,7 +113,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	private void parseModel(WData data) {
 		if (data != null) {
 			String type = data.getValue("type");
-			if (LOTOpenSCAD.TYPE.equals(type)) {
+			if (LOTModel.SCAD.equals(type)) {
 				MStringID scadid = data.getIDValue(VALUENAME_MODELID);
 				LOTOpenSCADImpl nscad = new LOTOpenSCADImpl(this.env);
 				nscad.load(scadid);

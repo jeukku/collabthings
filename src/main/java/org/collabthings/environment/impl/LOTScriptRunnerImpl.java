@@ -6,12 +6,12 @@ import java.security.PrivilegedAction;
 import javax.script.Invocable;
 import javax.script.ScriptException;
 
-import org.collabthings.LLog;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTScriptRunner;
 import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTValues;
+import org.collabthings.util.LLog;
 
 public class LOTScriptRunnerImpl implements LOTScriptRunner {
 	final private LOTScript script;

@@ -3,11 +3,11 @@ package org.collabthings.model.impl;
 import javax.script.Invocable;
 import javax.script.ScriptException;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.model.LOTScript;
 import org.collabthings.scripting.LOTJavaScriptLoader;
 import org.collabthings.scripting.ScriptLoader;
+import org.collabthings.util.LLog;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;

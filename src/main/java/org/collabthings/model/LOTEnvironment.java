@@ -2,8 +2,8 @@ package org.collabthings.model;
 
 import java.util.Set;
 
-import org.collabthings.PrintOut;
 import org.collabthings.math.LVector;
+import org.collabthings.util.PrintOut;
 
 import waazdoh.common.ObjectID;
 
