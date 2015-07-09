@@ -1,6 +1,5 @@
 package org.collabthings.view;
 
-import java.awt.BorderLayout;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,6 @@ import java.util.Set;
 import javafx.animation.AnimationTimer;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.DepthTest;
@@ -23,8 +21,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.vecmath.Matrix4d;
 
 import org.collabthings.environment.LOTRunEnvironment;
@@ -54,11 +50,12 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private Group scenegroup;
 	private PerspectiveCamera camera;
 	private Group cameraGroup;
+
+	private Group rx, ry, rz;
 	private Group objectgroup;
-	private JFXPanel canvas;
 
 	private Map<LOTRuntimeObject, NodeInfo> nodes = new HashMap<LOTRuntimeObject, NodeInfo>();
-	private double rotatex = 0;
+	private double scenerotatex = 200;
 	private double zoom = 10;
 	private double zoomspeed = 2;
 	private Timeline timeline;
@@ -68,13 +65,22 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private LLog log = LLog.getLogger(this);
 	private Scene scene;
 	private double camerarotate;
-	private JFrame f;
 
-	public JFXSimulationView(LOTRunEnvironment env) {
+	private ViewCanvas canvas;
+	private boolean stopped;
+	private double rotatey = 0;
+	private double rotatez = 0;
+	private double rotatex = 0;
+
+	private boolean mousedown;
+	private int mousex;
+	private int mousey;
+
+	public JFXSimulationView(LOTRunEnvironment env, ViewCanvas ncanvas) {
 		this.env = env;
+		this.canvas = ncanvas;
 		env.addListener(this);
-		//
-		SwingUtilities.invokeLater(() -> createFrame());
+		createCanvas();
 	}
 
 	@Override
@@ -82,39 +88,41 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		return getClass().getTypeName();
 	}
 
-	private synchronized void createFrame() {
-		f = new JFrame();
-		f.setSize(1200, 800);
-		f.getContentPane().setLayout(new BorderLayout());
+	public void stop() {
+		stopped = true;
 
-		canvas = new JFXPanel();
+		if (timer != null) {
+			timer.stop();
+		}
 
-		f.getContentPane().add(canvas, BorderLayout.CENTER);
+		if (timeline != null) {
+			timeline.stop();
+		}
+	}
+
+	private void createCanvas() {
 		Platform.runLater(() -> {
 			scene = createScene();
 			canvas.setScene(scene);
 
-			updateRuntimeObjects(env);
+			updateScene();
 
-			timeline = new Timeline();
-			timeline.setCycleCount(Timeline.INDEFINITE);
-			timeline.setAutoReverse(true);
-			timer = new AnimationTimer() {
+			if (!stopped) {
+				timeline = new Timeline();
+				timeline.setCycleCount(Timeline.INDEFINITE);
+				timeline.setAutoReverse(true);
+				timer = new AnimationTimer() {
 
-				@Override
-				public void handle(long arg0) {
-					updateScene();
-				}
-			};
+					@Override
+					public void handle(long arg0) {
+						updateScene();
+					}
+				};
 
-			timeline.play();
-			timer.start();
+				timeline.play();
+				timer.start();
+			}
 		});
-
-		f.setVisible(true);
-
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//
 	}
 
 	private void updateRuntimeObjects(LOTRunEnvironment env) {
@@ -358,6 +366,12 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		scenegroup.getChildren().add(cameraGroup);
 		//
 
+		this.rx = newGroup();
+		this.ry = newGroup();
+		rx.getChildren().add(ry);
+		this.rz = newGroup();
+		ry.getChildren().add(rz);
+
 		this.objectgroup = newGroup();
 
 		Box b = new Box(10, 0.1, 10);
@@ -366,7 +380,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		b.setDrawMode(DrawMode.LINE);
 		objectgroup.getChildren().add(b);
 
-		scenegroup.getChildren().add(objectgroup);
+		rz.getChildren().add(objectgroup);
+		scenegroup.getChildren().add(rz);
 
 		return scene;
 	}
@@ -382,8 +397,17 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	}
 
 	private void updateRotation() {
-		objectgroup.setRotate(rotatex);
+		objectgroup.setRotate(scenerotatex);
 		objectgroup.setRotationAxis(new Point3D(1, 1, 0));
+
+		this.rx.setRotationAxis(new Point3D(1, 0, 0));
+		this.rx.setRotate(rotatex);
+		this.ry.setRotationAxis(new Point3D(0, 1, 0));
+		this.ry.setRotate(rotatey);
+		this.rz.setRotationAxis(new Point3D(0, 0, 1));
+		this.rz.setRotate(rotatez);
+
+		log.info("rotation " + rotatex + ", " + rotatey + ", " + rotatez);
 	}
 
 	private void updateZoom() {
@@ -393,7 +417,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	}
 
 	public synchronized void step(double dtime) {
-		rotatex += dtime * 10;
+		scenerotatex += dtime * 10;
 
 		time += dtime;
 		zoom += (zoomspeed - 1) * dtime;
@@ -421,12 +445,13 @@ public class JFXSimulationView implements RunEnvironmentListener,
 				Group node = nodei.group;
 
 				Point2D screen = node.localToScreen(0, 0, 0);
-
-				if (screen.getX() < -w || screen.getX() > w
-						|| screen.getY() < -h || screen.getY() > h) {
-					somethingoutofscreen = true;
-					log.info("Out of screen " + screen + " w:" + w + " h:" + h
-							+ " object:" + tu);
+				if (screen != null) {
+					if (screen.getX() < -w || screen.getX() > w
+							|| screen.getY() < -h || screen.getY() > h) {
+						somethingoutofscreen = true;
+						log.info("Out of screen " + screen + " w:" + w + " h:"
+								+ h + " object:" + tu);
+					}
 				}
 			}
 
@@ -457,17 +482,61 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		}
 	}
 
+	@Override
+	public void event(LOTRuntimeEvent e) {
+	}
+
+	@Override
+	public void close() {
+		timeline.stop();
+	}
+
 	private class NodeInfo {
 		Group group;
 	}
 
-	public void close() {
-		if (f != null) {
-			f.dispose();
-		}
+	public interface ViewCanvas {
+
+		double getWidth();
+
+		void setScene(Scene scene);
+
+		double getHeight();
+
+		void refresh();
+
 	}
 
-	@Override
-	public void event(LOTRuntimeEvent e) {
+	public void setSceneOrientation(double rx, double ry, double rz) {
+		this.rotatex = rx;
+		this.rotatey = ry;
+		this.rotatez = rz;
+	}
+
+	public void mouseUp(int x, int y, int button) {
+		this.mousedown = false;
+	}
+
+	public void mouseDown(int x, int y, int button) {
+		this.mousedown = true;
+	}
+
+	public void mouseMove(int x, int y, int button) {
+		if (mousedown) {
+			int dx = mousex - x;
+			int dy = mousey - y;
+			rotatey += dx;
+			rotatex += dy;
+			rotatez += dx + dy;
+
+			log.info("mouse moved " + dx + ", " + dy);
+
+			updateRotation();
+		}
+
+		mousex = x;
+		mousey = y;
+
+		canvas.refresh();
 	}
 }
