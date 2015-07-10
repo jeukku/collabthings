@@ -55,7 +55,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private Group objectgroup;
 
 	private Map<LOTRuntimeObject, NodeInfo> nodes = new HashMap<LOTRuntimeObject, NodeInfo>();
-	private double scenerotatex = 200;
+	private double scenerotatex = 0;
 	private double zoom = 10;
 	private double zoomspeed = 2;
 	private Timeline timeline;
@@ -381,7 +381,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		objectgroup.getChildren().add(b);
 
 		rz.getChildren().add(objectgroup);
-		scenegroup.getChildren().add(rz);
+		scenegroup.getChildren().add(rx);
 
 		return scene;
 	}
@@ -525,9 +525,9 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		if (mousedown) {
 			int dx = mousex - x;
 			int dy = mousey - y;
-			rotatey += dx;
+			rotatez += dx;
 			rotatex += dy;
-			rotatez += dx + dy;
+			// rotatez += dx + dy;
 
 			log.info("mouse moved " + dx + ", " + dy);
 
