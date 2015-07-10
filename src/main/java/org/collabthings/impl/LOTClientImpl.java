@@ -9,7 +9,7 @@ import org.collabthings.util.LLog;
 
 import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
-import waazdoh.client.storage.BeanStorage;
+import waazdoh.common.BeanStorage;
 import waazdoh.common.WPreferences;
 import waazdoh.common.client.ServiceClient;
 

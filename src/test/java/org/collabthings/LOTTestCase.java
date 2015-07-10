@@ -168,7 +168,7 @@ public class LOTTestCase extends TestCase {
 			BinarySource source) throws SAXException {
 		if (p.getBoolean(LOTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
 			RestServiceClient client = new RestServiceClient(p.get(
-					WPreferences.SERVICE_URL, "unknown_service"));
+					WPreferences.SERVICE_URL, "unknown_service"), beanstorage);
 			if (client.getUsers().requestAppLogin() != null) {
 				return client;
 			}
@@ -208,7 +208,8 @@ public class LOTTestCase extends TestCase {
 		return loadTextFile(path);
 	}
 
-	protected String loadATestFile(String s) throws FileNotFoundException, IOException {
+	protected String loadATestFile(String s) throws FileNotFoundException,
+			IOException {
 		String path = "src/test/resources/" + s;
 		return loadTextFile(path);
 	}
