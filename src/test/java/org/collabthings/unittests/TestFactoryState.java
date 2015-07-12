@@ -5,6 +5,8 @@ import org.collabthings.LOTTestCase;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTPartState;
+import org.collabthings.environment.impl.LOTToolState;
+import org.collabthings.math.LVector;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.impl.LOTEnvironmentImpl;
 import org.collabthings.simulation.LOTStepRunner;
@@ -12,6 +14,8 @@ import org.collabthings.simulation.LOTStepRunner;
 import waazdoh.common.MTimedFlag;
 
 public final class TestFactoryState extends LOTTestCase {
+
+	private LOTClient c;
 
 	public void testDestroyPart() {
 		LOTFactoryState state = getFactoryState();
@@ -47,12 +51,30 @@ public final class TestFactoryState extends LOTTestCase {
 	}
 
 	private LOTFactoryState getFactoryState() {
-		LOTClient c = getNewClient();
+		c = getNewClient();
 		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
 		LOTFactory f = c.getObjectFactory().getFactory();
 
 		LOTFactoryState state = new LOTFactoryState(c, e, "state", f);
 		return state;
+	}
+
+	public void testTools() {
+		LOTFactoryState s = getFactoryState();
+		LOTToolState tool1 = s.addTool("tool", c.getObjectFactory().getTool());
+		LOTToolState tool2 = s.addTool("tool", c.getObjectFactory().getTool());
+
+		tool1.setInUse();
+		tool1.setOrientation(new LVector(1000, 0, 0), new LVector(0, 1, 0), 0);
+		tool2.setOrientation(new LVector(), new LVector(0, 1, 0), 0);
+
+		assertEquals(tool2, s.getTool("tool"));
+		tool1.setAvailable();
+		tool2.setInUse();
+
+		assertEquals(tool1, s.getTool("tool"));
+
+		assertNull(s.getTool("tool_UNKNOWN"));
 	}
 
 	public void testRuntime() {
