@@ -10,7 +10,6 @@ import waazdoh.common.MStringID;
 import waazdoh.common.WData;
 
 public final class LOTSubPartImpl implements LOTSubPart {
-	private final LOTPart parent;
 	private LOTPart part;
 	private final LVector p = new LVector();
 	private final LVector n = new LVector();
@@ -23,7 +22,6 @@ public final class LOTSubPartImpl implements LOTSubPart {
 	 * @param env
 	 */
 	public LOTSubPartImpl(final LOTPartImpl nparent, final LOTClient env) {
-		this.parent = nparent;
 		this.client = env;
 		part = new LOTPartImpl(env);
 	}

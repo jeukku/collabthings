@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class PrintOut {
+	public static final int INDENT = 1;
+	public static final int INDENT2 = 2;
+
 	private List<Line> lines = new LinkedList<Line>();
 
 	public void append(String string) {

@@ -30,6 +30,8 @@ import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MStringID;
 
 public class LOTFactoryState implements LOTRuntimeObject {
+	private static final long DEFAULT_WAIT = 100;
+
 	private final LOTAttachedFactory factory;
 	private final LOTRunEnvironment runenv;
 	private LLog log;
@@ -77,22 +79,22 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	public PrintOut printOut() {
 		PrintOut p = new PrintOut();
 		p.append("factorystate");
-		p.append(1, "factory " + factory);
-		p.append(1, "transformation " + getTransformation());
+		p.append(PrintOut.INDENT, "factory " + factory);
+		p.append(PrintOut.INDENT, "transformation " + getTransformation());
 
-		p.append(1, "factories");
+		p.append(PrintOut.INDENT, "factories");
 		for (LOTFactoryState fs : factories) {
-			p.append(2, fs.printOut());
+			p.append(PrintOut.INDENT2, fs.printOut());
 		}
 
-		p.append(1, "parts");
+		p.append(PrintOut.INDENT, "parts");
 		for (LOTPartState ps : parts) {
-			p.append(2, ps.printOut());
+			p.append(PrintOut.INDENT2, ps.printOut());
 		}
 
-		p.append(1, "toolusers");
+		p.append(PrintOut.INDENT, "toolusers");
 		for (LOTToolUser tu : toolusers) {
-			p.append(2, tu.printOut());
+			p.append(PrintOut.INDENT2, tu.printOut());
 		}
 
 		return p;
@@ -118,10 +120,10 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return orientation;
 	}
 
-	public LVector getTransformedVector(LVector l) {
-		l = l.copy();
-		getTransformation().transform(l);
-		return l;
+	public LVector getTransformedVector(final LVector l) {
+		LVector c = l.copy();
+		getTransformation().transform(c);
+		return c;
 	}
 
 	public LTransformation getTransformation() {
@@ -180,11 +182,6 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	private LOTToolState findTool(String id) {
 		for (LOTToolState tool : tools) {
 			if (tool.getName().equals(id) && !tool.isInUse()) {
-				return tool;
-			}
-		}
-		for (LOTToolState tool : tools) {
-			if (tool.getName().equals(id)) {
 				return tool;
 			}
 		}
@@ -425,7 +422,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		try {
 			while (!isStepperDone(r)) {
 				synchronized (steppers) {
-					steppers.wait(100);
+					steppers.wait(DEFAULT_WAIT);
 				}
 			}
 		} catch (InterruptedException e) {

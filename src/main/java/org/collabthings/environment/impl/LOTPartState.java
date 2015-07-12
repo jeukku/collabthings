@@ -7,22 +7,17 @@ import org.collabthings.math.LVector;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTSubPart;
-import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 
 public class LOTPartState implements LOTRuntimeObject {
 	private LOTPart part;
-	//
-	private LLog log = LLog.getLogger(this);
-	private LOTRunEnvironment runenv;
-	//
+
 	private LOTFactoryState factory;
 	private LOrientation orientation = new LOrientation();
 
 	public LOTPartState(final LOTRunEnvironment runenv,
 			final LOTFactoryState factory, final LOTPart part) {
 		this.part = part;
-		this.runenv = runenv;
 		this.factory = factory;
 	}
 
