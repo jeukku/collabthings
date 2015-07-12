@@ -15,8 +15,8 @@ import org.collabthings.util.PrintOut;
 public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 	private static final long WAIT_A_BIT = 20;
-	private static final float MOVING_orientation_LENGTH_TRIGGER = 0.000000001f;
-	private static final double orientation_PRINTOUT = 20000;
+	private static final float MOVING_ORIENTATION_LENGTH_TRIGGER = 0.000000001f;
+	private static final double ORIENTATION_PRINTOUT = 20000;
 	//
 	final private LOTRunEnvironment simenv;
 	private LOTToolState tool;
@@ -92,7 +92,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		while (simenv.isRunning()
 				&& !stopped
 				&& targetorientation.getLocation()
-						.getSub(orientation.getLocation()).length() > MOVING_orientation_LENGTH_TRIGGER) {
+						.getSub(orientation.getLocation()).length() > MOVING_ORIENTATION_LENGTH_TRIGGER) {
 			waitAWhile();
 		}
 
@@ -149,79 +149,94 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		orientationprintouttimer += dtime;
 
 		if (targetorientation != null) {
-			LVector vdistance = targetorientation.getLocation().getSub(
-					orientation.getLocation());
-			double distance = vdistance.length();
-			// log("step " + dtime + " l:" + orientation + " distance:" +
-			// distance);
-
-			double dangle = targetorientation.getAngle()
-					- orientation.getAngle();
-			dangle *= dtime * speed;
-			orientation.setAngle(orientation.getAngle() + dangle);
-
-			LVector nnormal = targetorientation.getNormal().getNormalized();
-
-			// slow moving if orientation is not right
-			double normaldot = nnormal.dot(orientation.getNormal());
-			if (normaldot < -0.9) {
-				nnormal.x += nnormal.y;
-				nnormal.y += nnormal.z;
-				nnormal.z += nnormal.x;
-				nnormal.normalize();
-				normaldot = nnormal.dot(orientation.getNormal());
-			}
-
-			if (normaldot < 0.1) {
-				distance *= normaldot;
-			}
-
-			nnormal.scale(dtime * speed);
-
-			orientation.getNormal().add(nnormal);
-			orientation.getNormal().normalize();
-
-			double maxdistance = dtime * speed;
-			if (vdistance.length() < maxdistance) {
-				// just move to right direction
-				double scale = 0.8;
-				if (distance < maxdistance / 10) {
-					// close enough, just go there.
-					scale = 1;
-				}
-				LVector scaled = vdistance.getScaled(scale);
-				orientation.getLocation().add(scaled);
-			} else if (distance > MOVING_orientation_LENGTH_TRIGGER) {
-				distance = maxdistance;
-
-				// this is a bit random, but not going straight from a to b.
-				LVector direction = vdistance.getNormalized();
-				double ddot = direction.dot(targetorientation.getNormal());
-				if (ddot > 0) {
-					direction.add(new LVector(direction.y, direction.z,
-							direction.x));
-				} else if (ddot > -0.99) {
-					LVector cross = new LVector();
-					cross.cross(direction, targetorientation.getNormal());
-					direction.add(cross);
-				}
-
-				direction.normalize();
-				direction.scale(distance);
-
-				orientation.getLocation().add(direction);
-				if (tool != null) {
-					tool.setOrientation(orientation.getLocation(),
-							orientation.getNormal(), orientation.getAngle());
-				}
-			} else {
-				log("Distance less than trigger length");
-				this.notifyAll();
-			}
-
+			move(dtime);
 		}
 
-		if (orientationprintouttimer > orientation_PRINTOUT) {
+		printOut(dtime);
+	}
+
+	private void move(double dtime) {
+		LVector vdistance = targetorientation.getLocation().getSub(
+				orientation.getLocation());
+		double distance = vdistance.length();
+
+		double dangle = targetorientation.getAngle()
+				- orientation.getAngle();
+		dangle *= dtime * speed;
+		orientation.setAngle(orientation.getAngle() + dangle);
+
+		LVector nnormal = targetorientation.getNormal().getNormalized();
+
+		// slow moving if orientation is not right
+		double normaldot = nnormal.dot(orientation.getNormal());
+		if (normaldot < -0.9) {
+			nnormal.x += nnormal.y;
+			nnormal.y += nnormal.z;
+			nnormal.z += nnormal.x;
+			nnormal.normalize();
+			normaldot = nnormal.dot(orientation.getNormal());
+		}
+
+		if (normaldot < 0.1) {
+			distance *= normaldot;
+		}
+
+		nnormal.scale(dtime * speed);
+
+		orientation.getNormal().add(nnormal);
+		orientation.getNormal().normalize();
+
+		double maxdistance = dtime * speed;
+		if (vdistance.length() < maxdistance) {
+			moveToTarget(vdistance, distance, maxdistance);
+		} else if (distance > MOVING_ORIENTATION_LENGTH_TRIGGER) {
+			move(vdistance, maxdistance);
+		} else {
+			log("Distance less than trigger length");
+			this.notifyAll();
+		}
+	}
+
+	private void move(LVector vdistance, double maxdistance) {
+		double distance;
+		distance = maxdistance;
+
+		// this is a bit random, but not going straight from a to b.
+		LVector direction = vdistance.getNormalized();
+		double ddot = direction.dot(targetorientation.getNormal());
+		if (ddot > 0) {
+			direction.add(new LVector(direction.y, direction.z,
+					direction.x));
+		} else if (ddot > -0.99) {
+			LVector cross = new LVector();
+			cross.cross(direction, targetorientation.getNormal());
+			direction.add(cross);
+		}
+
+		direction.normalize();
+		direction.scale(distance);
+
+		orientation.getLocation().add(direction);
+		if (tool != null) {
+			tool.setOrientation(orientation.getLocation(),
+					orientation.getNormal(), orientation.getAngle());
+		}
+	}
+
+	private void moveToTarget(LVector vdistance, double distance,
+			double maxdistance) {
+		// just move to right direction
+		double scale = 0.8;
+		if (distance < maxdistance / 10) {
+			// close enough, just go there.
+			scale = 1;
+		}
+		LVector scaled = vdistance.getScaled(scale);
+		orientation.getLocation().add(scaled);
+	}
+
+	private void printOut(double dtime) {
+		if (orientationprintouttimer > ORIENTATION_PRINTOUT) {
 			debugInfo(dtime);
 			orientationprintouttimer = 0;
 		}
