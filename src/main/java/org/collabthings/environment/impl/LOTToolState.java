@@ -39,11 +39,11 @@ public class LOTToolState implements LOTRuntimeObject {
 
 	@Override
 	public PrintOut printOut() {
-		PrintOut o = new PrintOut();
+		PrintOut out = new PrintOut();
 
-		o.append("toolstate");
-		o.append(1, "" + o);
-		return o;
+		out.append("toolstate");
+		out.append(1, "" + out);
+		return out;
 	}
 
 	public String getName() {

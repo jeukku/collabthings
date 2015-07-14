@@ -79,8 +79,8 @@ public class LTransformation {
 	}
 
 	public void rotateY(double d) {
-		AxisAngle4d a = new AxisAngle4d(new Vector3d(0, 1, 0), d);
-		m.set(a);
+		AxisAngle4d tmp = new AxisAngle4d(new Vector3d(0, 1, 0), d);
+		m.set(tmp);
 	}
 
 	public void rotate(Vector3d v, double d) {
