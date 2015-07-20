@@ -32,6 +32,7 @@ import org.collabthings.model.impl.LOTToolImpl;
 import org.collabthings.simulation.LOTSimpleSimulation;
 import org.collabthings.simulation.LOTSimulation;
 import org.collabthings.view.RunEnvironmentDrawerImpl;
+import org.collabthings.view.SwingSimulationFrame;
 import org.xml.sax.SAXException;
 
 public class TestSimpleSimulation extends LOTTestCase {
@@ -220,7 +221,9 @@ public class TestSimpleSimulation extends LOTTestCase {
 		LOTScriptRunner runner = new LOTScriptRunnerImpl(script, rune,
 				factorystate);
 		rune.addTask(runner);
-		LOTSimulation s = new LOTSimpleSimulation(rune, true);
+		LOTSimulation s = new LOTSimpleSimulation(rune);
+		SwingSimulationFrame frame = new SwingSimulationFrame(rune);
+		frame.step(0);
 
 		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
 
@@ -228,6 +231,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 		//
 		LVector l = toolstate.getLocation();
 		assertReallyClose(new LVector(10, 0, 0), l);
+
+		frame.close();
 	}
 
 	public void testCallTool() {

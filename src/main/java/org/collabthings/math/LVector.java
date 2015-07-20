@@ -5,6 +5,8 @@ import javax.vecmath.Vector3d;
 import waazdoh.common.WData;
 
 public class LVector extends Vector3d {
+	private static final long serialVersionUID = 1L;
+
 	public LVector(LVector v) {
 		super(v);
 	}

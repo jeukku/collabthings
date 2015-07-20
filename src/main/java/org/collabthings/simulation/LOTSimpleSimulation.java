@@ -36,7 +36,6 @@ public class LOTSimpleSimulation implements LOTSimulation,
 		this(runenv);
 		if (b) {
 			view = new JFXRunEnvironmentFrame(runenv);
-			// view = new SwingSimulationFrame(runenv);
 		}
 	}
 

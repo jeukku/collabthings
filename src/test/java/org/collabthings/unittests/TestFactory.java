@@ -148,6 +148,7 @@ public final class TestFactory extends LOTTestCase {
 		LOTClient c = getNewClient();
 		LOTTool tool = c.getObjectFactory().getTool();
 		LOTScript s = tool.addScript("testscript");
+		assertNotNull(s);
 		assertNotNull(tool.getScript("testscript"));
 	}
 }

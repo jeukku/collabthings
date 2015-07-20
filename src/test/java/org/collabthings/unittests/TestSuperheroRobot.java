@@ -69,7 +69,6 @@ public final class TestSuperheroRobot extends LOTTestCase {
 		f.setToolUserSpawnLocation(spawnlocation);
 
 		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
-		LOTRunEnvironment rune = new LOTRunEnvironmentImpl(c, e);
 		LOTFactoryState state = new LOTFactoryState(c, e, "test", f);
 		state.addSuperheroRobot();
 		assertFalse(state.getToolUsers().isEmpty());
