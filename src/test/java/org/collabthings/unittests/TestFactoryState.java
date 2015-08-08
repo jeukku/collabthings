@@ -84,7 +84,7 @@ public final class TestFactoryState extends LOTTestCase {
 		MTimedFlag flag = new MTimedFlag(10000);
 		MTimedFlag delay = new MTimedFlag(400);
 
-		LOTStepRunner runner = new LOTStepRunner(0.1, 0.01, (dtime) -> {
+		new LOTStepRunner(0.1, 0.01, (dtime) -> {
 			rune.step(dtime);
 			return !flag.isTriggered();
 		});

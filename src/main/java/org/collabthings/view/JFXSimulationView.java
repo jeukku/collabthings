@@ -59,12 +59,10 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private double zoom = 10;
 	private double zoomspeed = 2;
 	private Timeline timeline;
-	private double time;
 	private AnimationTimer timer;
 
 	private LLog log = LLog.getLogger(this);
 	private Scene scene;
-	private double camerarotate;
 
 	private ViewCanvas canvas;
 	private boolean stopped;
@@ -419,7 +417,6 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	public synchronized void step(double dtime) {
 		scenerotatex += dtime * 10;
 
-		time += dtime;
 		zoom += (zoomspeed - 1) * dtime;
 		if (zoom > ZOOM_MAXIMUM) {
 			zoom = ZOOM_MAXIMUM;
@@ -471,15 +468,6 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		}
 
 		// log.info("objectgroup tr " + objectgroup.getTransforms());
-	}
-
-	private String getShortString(double value) {
-		String string = "" + value;
-		if (string.length() > 4) {
-			return string.substring(0, 4);
-		} else {
-			return string;
-		}
 	}
 
 	@Override

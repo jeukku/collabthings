@@ -12,13 +12,11 @@ import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTAttachedFactory;
-import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTSubPart;
 import org.collabthings.model.LOTTool;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
 import org.collabthings.model.impl.LOTScriptImpl;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.LOTRunEnvironmentBuilderImpl;
@@ -42,7 +40,6 @@ public final class ITTestBuildABox extends LOTTestCase {
 			InterruptedException {
 		LOTClient client = getNewClient();
 
-		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		LOTFactory factory = client.getObjectFactory().getFactory();
 		setupFactoryThatUsesBoxes(factory, client);
 
