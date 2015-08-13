@@ -7,12 +7,15 @@ import javax.script.ScriptException;
 import org.collabthings.LOTClient;
 import org.collabthings.LOTTestCase;
 import org.collabthings.math.LVector;
+import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
 import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
+
+import waazdoh.common.MStringID;
 
 public final class TestFactory extends LOTTestCase {
 
@@ -94,6 +97,50 @@ public final class TestFactory extends LOTTestCase {
 		bf.setName("test");
 		assertEquals(af, bf);
 		assertTrue(af.getBean().equals(bf.getBean()));
+	}
+
+	public void testBookmarkChildFactory() {
+		LOTClient c = getNewClient();
+		LOTFactory f = c.getObjectFactory().getFactory();
+		String childfactoryid = "testchildfactory";
+		LOTAttachedFactory addFactory = f.addFactory(childfactoryid);
+
+		String childfactoryname = "some child factory";
+		String bookmark = c.getService().getUser().getUsername() + "/factory/"
+				+ childfactoryname + "/latest";
+
+		addFactory.setBookmark(bookmark);
+
+		LOTFactory childf = addFactory.getFactory();
+		childf.setName(childfactoryid);
+
+		childf.setName(childfactoryname);
+		childf.addScript("testscript");
+		LLog.getLogger(this).info("publishing first " + f.getBean().toText());
+
+		f.publish();
+
+		childf.setToolUserSpawnLocation(new LVector(1, 1, 1));
+		childf.publish();
+
+		LOTClient bc = getNewClient();
+		String clientausername = c.getService().getUser().getUsername();
+		assertNotNull(clientausername);
+
+		String publishedchildfactory = bc.getPublished(bookmark);
+		assertNotNull(publishedchildfactory);
+
+		MStringID factoryid = f.getID().getStringID();
+		LOTFactory bf = bc.getObjectFactory().getFactory(factoryid);
+
+		LLog.getLogger(this).info("first " + f.getBean().toText());
+		LLog.getLogger(this).info("second " + bf.getBean().toText());
+
+		assertEquals(f.getBean().toText(), bf.getBean().toText());
+		LOTFactory bchildf = bf.getFactory(childfactoryid).getFactory();
+		assertNotNull(bchildf);
+		assertEquals(childfactoryname, bchildf.getName());
+		assertEquals(childf.getBean().toText(), bchildf.getBean().toText());
 	}
 
 	public void testChildFactory() {

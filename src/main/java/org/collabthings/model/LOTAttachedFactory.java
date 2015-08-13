@@ -11,8 +11,15 @@ public class LOTAttachedFactory {
 
 	private LOrientation orientation = new LOrientation();
 
+	private String bookmark;
+
 	public LOTAttachedFactory(LOTFactory f) {
 		this.factory = f;
+	}
+
+	public LOTAttachedFactory(String nbookmark, LOTFactory f) {
+		this.factory = f;
+		this.bookmark = nbookmark;
 	}
 
 	@Override
@@ -43,5 +50,13 @@ public class LOTAttachedFactory {
 
 	public void set(WData wData) {
 		orientation = new LOrientation(wData);
+	}
+
+	public String getBookmark() {
+		return bookmark;
+	}
+
+	public void setBookmark(String nbookmark) {
+		this.bookmark = nbookmark;
 	}
 }

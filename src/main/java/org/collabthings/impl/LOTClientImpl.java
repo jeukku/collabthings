@@ -21,8 +21,8 @@ public final class LOTClientImpl implements LOTClient {
 	private final LOTObjectFactory factory;
 	private LLog log = LLog.getLogger(this);
 
-	public LOTClientImpl(WPreferences p, BinarySource binarysource, BeanStorage beanstorage,
-			ServiceClient service) {
+	public LOTClientImpl(WPreferences p, BinarySource binarysource,
+			BeanStorage beanstorage, ServiceClient service) {
 		client = new WClient(p, binarysource, beanstorage, service);
 		this.factory = new LOTObjectFactoryImpl(this);
 		this.storage = new LOTStorageImpl(service);
@@ -63,7 +63,8 @@ public final class LOTClientImpl implements LOTClient {
 
 	@Override
 	public String getGlobalSetting(String name) {
-		return client.readStorageArea("/public/" + PREFIX + "/settings/" + name);
+		return client
+				.readStorageArea("/public/" + PREFIX + "/settings/" + name);
 	}
 
 	@Override
@@ -94,5 +95,30 @@ public final class LOTClientImpl implements LOTClient {
 		log.info("writing " + path + " value:" + id);
 
 		client.getService().getStorageArea().write(path, id);
+	}
+
+	@Override
+	public String getPublished(String username, String string) {
+		String path = "" + string;
+		if (path.indexOf("published/") < 0) {
+			path = "published/" + string;
+		}
+
+		path = path.replace("//", "/");
+		log.info("reading " + username + " path:" + path);
+		return client.getService().getStorageArea().read(username, path);
+	}
+
+	@Override
+	public String getPublished(String value) {
+		String path = "" + value;
+		if (path.indexOf('/') == 0) {
+			path = path.substring(1);
+		}
+
+		String username = path.substring(0, path.indexOf('/'));
+		path = path.substring(path.indexOf('/'));
+
+		return getPublished(username, path);
 	}
 }

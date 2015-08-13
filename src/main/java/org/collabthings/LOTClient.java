@@ -40,6 +40,10 @@ public interface LOTClient {
 
 	void publish(String string, LOTObject o);
 
+	String getPublished(String username, String string);
+
+	String getPublished(String value);
+
 	public static String getDateTime() {
 		Date date = Calendar.getInstance().getTime();
 		SimpleDateFormat d = new SimpleDateFormat("yyyyMMdd");

@@ -103,12 +103,18 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		if (getModel() != null) {
 			b.addValue(VALUENAME_MODELID, model.getID());
 		}
+
 		WData bchildfactories = b.add("factories");
 		for (String cname : getFactoryMap().keySet()) {
 			LOTAttachedFactory cf = getFactory(cname);
 			WData bchildfactory = bchildfactories.add("item");
 			bchildfactory.addValue("name", cname);
-			bchildfactory.addValue("id", cf.getFactory().getID().toString());
+			if (cf.getBookmark() != null) {
+				bchildfactory.addValue("bookmark", cf.getBookmark());
+			} else {
+				bchildfactory
+						.addValue("id", cf.getFactory().getID().toString());
+			}
 			bchildfactory.add(cf.getOrientation().getBean("orientation"));
 		}
 		//
@@ -305,12 +311,19 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 			WData bchildfactories = bean.get("factories");
 			List<WData> bcfs = bchildfactories.getChildren();
 			for (WData bchildfactory : bcfs) {
+				LOTFactoryImpl f = new LOTFactoryImpl(this.client);
+
 				String cfname = bchildfactory.getValue("name");
 				String cfid = bchildfactory.getValue("id");
+				String bookmark = bchildfactory.getValue("bookmark");
 
-				LOTFactoryImpl f = new LOTFactoryImpl(this.client);
+				if (cfid == null) {
+					cfid = client.getPublished(bookmark);
+				}
+
 				if (f.load(new MStringID(cfid))) {
 					LOTAttachedFactory cf = addFactory(cfname, f);
+					cf.setBookmark(bookmark);
 					cf.set(bchildfactory.get("orientation"));
 				} else {
 					WLogger.getLogger(this).error(
