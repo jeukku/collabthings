@@ -132,7 +132,10 @@ public class LOTTestCase extends TestCase {
 		} else {
 			AppLoginVO applogin = c.getClient().requestAppLogin();
 			String apploginid = applogin.getId();
-			log.info("applogin url " + applogin.getUrl() + "/" + apploginid);
+			String url = applogin.getUrl();
+			log.info("applogin url " + url
+					+ (url.charAt(url.length() - 1) == '/' ? "" : "/")
+					+ apploginid);
 
 			new ConditionWaiter(() -> {
 				AppLoginVO al = c.getClient().checkAppLogin(apploginid);
