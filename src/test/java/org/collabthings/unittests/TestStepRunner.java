@@ -17,7 +17,7 @@ public final class TestStepRunner extends LOTTestCase {
 		Values v = new Values();
 
 		MTimedFlag f = new MTimedFlag(20000);
-		LOTStepRunner runner = new LOTStepRunner(0.02, 0.001, (double step) -> {
+		LOTStepRunner runner = new LOTStepRunner(0.00002, 0.00001, (double step) -> {
 			v.count++;
 			v.totaltime += step;
 
