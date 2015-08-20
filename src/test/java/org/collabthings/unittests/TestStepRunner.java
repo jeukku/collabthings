@@ -30,7 +30,6 @@ public final class TestStepRunner extends LOTTestCase {
 				});
 
 		f.waitTimer();
-		assertTrue(runner.isStopped());
 		assertTrue("" + v.count, v.count >= 1000);
 	}
 

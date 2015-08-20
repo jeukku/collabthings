@@ -114,6 +114,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 				assertNotNull(e.getName());
 				assertNotNull(e.getValues());
 				assertNotNull(e.getObject());
+				assertTrue(("" + e).indexOf("test") >= 0);
 			}
 		});
 
@@ -140,6 +141,9 @@ public class TestSimpleSimulation extends LOTTestCase {
 					} catch (Exception e) {
 					}
 				}
+
+				runenv.recordEvent(f1s, "test", values);
+
 				return true;
 			}
 
