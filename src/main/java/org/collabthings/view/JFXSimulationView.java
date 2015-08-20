@@ -100,27 +100,31 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 	private void createCanvas() {
 		Platform.runLater(() -> {
-			scene = createScene();
-			canvas.setScene(scene);
-
-			updateScene();
-
-			if (!stopped) {
-				timeline = new Timeline();
-				timeline.setCycleCount(Timeline.INDEFINITE);
-				timeline.setAutoReverse(true);
-				timer = new AnimationTimer() {
-
-					@Override
-					public void handle(long arg0) {
-						updateScene();
-					}
-				};
-
-				timeline.play();
-				timer.start();
-			}
+			doCreateCanvas();
 		});
+	}
+
+	private void doCreateCanvas() {
+		scene = createScene();
+		canvas.setScene(scene);
+
+		updateScene();
+
+		if (!stopped) {
+			timeline = new Timeline();
+			timeline.setCycleCount(Timeline.INDEFINITE);
+			timeline.setAutoReverse(true);
+			timer = new AnimationTimer() {
+
+				@Override
+				public void handle(long arg0) {
+					updateScene();
+				}
+			};
+
+			timeline.play();
+			timer.start();
+		}
 	}
 
 	private void updateRuntimeObjects(LOTRunEnvironment env) {

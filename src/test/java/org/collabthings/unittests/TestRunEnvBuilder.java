@@ -23,7 +23,6 @@ public final class TestRunEnvBuilder extends LOTTestCase {
 		LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(c);
 		b.getEnvironment().setParameter("factoryid", f.getID());
 		LOTScriptImpl taskscript = new LOTScriptImpl(c);
-		StringBuilder tasksb = new StringBuilder();
 		// TODO create a task
 
 		b.getEnvironment().addScript("taskscript", taskscript);

@@ -263,6 +263,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 						+ testscriptvalue + "'); }");
 		//
 		LOTToolState toolstate = factorystate.addTool("tool", tool);
+		assertNotNull(toolstate);
 		//
 
 		factorystate.addTask("factorytest", null);

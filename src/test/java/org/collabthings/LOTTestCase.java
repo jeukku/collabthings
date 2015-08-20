@@ -106,7 +106,6 @@ public class LOTTestCase extends TestCase {
 		boolean bind = usercounter > 0 || forcebind ? true : false;
 
 		String username = "test_username_" + (usercounter) + "@localhost";
-		WPreferences p = new StaticTestPreferences("lottests", username);
 		usercounter++;
 		try {
 			return getNewEnv(username, bind);

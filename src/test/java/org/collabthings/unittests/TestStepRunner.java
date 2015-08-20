@@ -17,19 +17,20 @@ public final class TestStepRunner extends LOTTestCase {
 		Values v = new Values();
 
 		MTimedFlag f = new MTimedFlag(20000);
-		LOTStepRunner runner = new LOTStepRunner(0.00002, 0.00001, (double step) -> {
-			v.count++;
-			v.totaltime += step;
+		LOTStepRunner runner = new LOTStepRunner(0.00002, 0.00001,
+				(double step) -> {
+					v.count++;
+					v.totaltime += step;
 
-			if (v.count > 1000) {
-				f.trigger();
-			}
+					if (v.count > 1000) {
+						f.trigger();
+					}
 
-			return !f.isTriggered();
-		});
+					return !f.isTriggered();
+				});
 
 		f.waitTimer();
-
+		assertTrue(runner.isStopped());
 		assertTrue("" + v.count, v.count >= 1000);
 	}
 
