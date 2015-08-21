@@ -21,9 +21,10 @@ public final class TestRunEnvBuilder extends LOTTestCase {
 		f.publish();
 
 		LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(c);
+		b.setName("testnameeb");
+
 		b.getEnvironment().setParameter("factoryid", f.getID());
 		LOTScriptImpl taskscript = new LOTScriptImpl(c);
-		StringBuilder tasksb = new StringBuilder();
 		// TODO create a task
 
 		b.getEnvironment().addScript("taskscript", taskscript);
@@ -52,6 +53,7 @@ public final class TestRunEnvBuilder extends LOTTestCase {
 		b2 = c2.getObjectFactory().getRuntimeBuilder(b.getID().getStringID());
 		assertNotNull(b2);
 
+		assertEquals(b.getName(), b2.getName());
 		LOTRunEnvironment runEnvironment = b2.getRunEnvironment();
 		assertNotNull(runEnvironment);
 

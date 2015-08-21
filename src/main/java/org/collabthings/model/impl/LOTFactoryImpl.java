@@ -30,7 +30,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	private static final String VALUENAME_MODELID = "model3did";
 	private static final String VALUENAME_ENVIRONMENTID = "environmentid";
 	private static final String VALUENAME_SPAWNLOCATION = "toolspawn";
-	private static final String BEANNAME_ORIENTATION = "orientation";
 	//
 	private static int counter = 0;
 	//
@@ -137,8 +136,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		if (beansl != null) {
 			tooluserspawnlocation = new LVector(beansl);
 		}
-
-		WData ob = bean.get(BEANNAME_ORIENTATION);
 
 		WData bbbox = bean.get(LOTBoundingBox.BEAN_NAME);
 		if (bbbox != null) {

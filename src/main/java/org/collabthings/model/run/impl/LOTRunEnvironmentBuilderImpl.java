@@ -22,7 +22,8 @@ import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
 import waazdoh.common.WData;
 
-public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, ServiceObjectData {
+public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder,
+		ServiceObjectData {
 	private static final String BEANNAME = "runenvbuilder";
 	//
 	private LOTClient client;
@@ -34,18 +35,18 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 	private String name = "envbuilder";
 
 	private Map<String, String> storageread = new HashMap<>();
-	
+
 	public LOTRunEnvironmentBuilderImpl(LOTClient nclient) {
 		this.client = nclient;
 		env = new LOTEnvironmentImpl(nclient);
-		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(),
-				nclient.getPrefix());
+		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
+				nclient.getVersion(), nclient.getPrefix());
 	}
 
 	public LOTRunEnvironmentBuilderImpl(LOTClient nclient, MStringID idValue) {
 		this.client = nclient;
-		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(),
-				nclient.getPrefix());
+		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
+				nclient.getVersion(), nclient.getPrefix());
 		o.load(idValue);
 	}
 
@@ -59,7 +60,8 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 	public LOTRunEnvironment getRunEnvironment() {
 		LOTScript s = getEnvironment().getScript("init");
 		try {
-			return (LOTRunEnvironment) s.getInvocable().invokeFunction("run", this);
+			return (LOTRunEnvironment) s.getInvocable().invokeFunction("run",
+					this);
 		} catch (NoSuchMethodException | ScriptException e) {
 			getLogger().error(this, "getRunEnvironment", e);
 			return null;
@@ -81,10 +83,12 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 		return "RunEnvironmentBuilder";
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -120,12 +124,13 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 	@Override
 	public void publish() {
 		save();
-		
+
 		env.publish();
 		o.publish();
 
 		client.publish("/builder/latest", this);
-		client.publish("/builder/" + getName() + "/" + LOTClient.getDateTime(), this);
+		client.publish("/builder/" + getName() + "/" + LOTClient.getDateTime(),
+				this);
 		client.publish("/builder/" + getName() + "/latest", this);
 	}
 
@@ -156,17 +161,18 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder, S
 		return po;
 	}
 
-	public String readStorage(String path) {		
+	public String readStorage(String path) {
 		String username = path.substring(0, path.indexOf('/'));
 		if ("self".equals(username)) {
 			username = client.getService().getUser().getUsername();
 		}
 
 		String npath = path.substring(path.indexOf('/') + 1);
-		String value = client.getStorage().readStorage(this.client.getService().getUser(username), npath);
-		
+		String value = client.getStorage().readStorage(
+				this.client.getService().getUser(username), npath);
+
 		addStorageRead(path, value);
-		
+
 		return value;
 	}
 

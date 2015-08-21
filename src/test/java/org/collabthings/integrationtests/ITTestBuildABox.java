@@ -65,7 +65,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		builder.publish();
 
 		LOTRunEnvironment runenv = builder.getRunEnvironment();
-
+		assertNotNull(runenv);
 		//
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv, true);
 

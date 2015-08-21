@@ -3,6 +3,7 @@ package org.collabthings.impl;
 import java.util.List;
 
 import org.collabthings.LOTStorage;
+import org.collabthings.util.LLog;
 
 import waazdoh.common.client.ServiceClient;
 import waazdoh.common.vo.UserVO;
@@ -32,6 +33,11 @@ public class LOTStorageImpl implements LOTStorage {
 
 	@Override
 	public String readStorage(UserVO u, String item) {
-		return service.getStorageArea().read(u.getUsername(), item);
+		if (u != null) {
+			return service.getStorageArea().read(u.getUsername(), item);
+		} else {
+			LLog.getLogger(this).info("User null -> returning null");
+			return null;
+		}
 	}
 }

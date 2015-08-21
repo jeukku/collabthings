@@ -106,7 +106,6 @@ public class LOTTestCase extends TestCase {
 		boolean bind = usercounter > 0 || forcebind ? true : false;
 
 		String username = "test_username_" + (usercounter) + "@localhost";
-		WPreferences p = new StaticTestPreferences("lottests", username);
 		usercounter++;
 		try {
 			return getNewEnv(username, bind);
@@ -132,7 +131,10 @@ public class LOTTestCase extends TestCase {
 		} else {
 			AppLoginVO applogin = c.getClient().requestAppLogin();
 			String apploginid = applogin.getId();
-			log.info("applogin url " + applogin.getUrl() + "/" + apploginid);
+			String url = applogin.getUrl();
+			log.info("applogin url " + url
+					+ (url.charAt(url.length() - 1) == '/' ? "" : "/")
+					+ apploginid);
 
 			new ConditionWaiter(() -> {
 				AppLoginVO al = c.getClient().checkAppLogin(apploginid);
