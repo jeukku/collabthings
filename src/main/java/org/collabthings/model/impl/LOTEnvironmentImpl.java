@@ -109,22 +109,22 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	}
 
 	private void getVectorParametersBean(WData b) {
-		WData bean = b.add(VALUENAME_VPARAMS);
+		WData bvectorparams = b.add(VALUENAME_VPARAMS);
 		Set<String> names = vparameters.keySet();
 		for (String string : names) {
 			LVector v = getVectorParameter(string);
-			WData sbean = bean.add(VALUENAME_MAPITEM);
+			WData sbean = bvectorparams.add(VALUENAME_MAPITEM);
 			sbean.addValue("name", string);
 			sbean.add(v.getBean("value"));
 		}
 	}
 
 	private void getParametersBean(WData b) {
-		WData bean = b.add(VALUENAME_PARAMS);
+		WData bparams = b.add(VALUENAME_PARAMS);
 		Set<String> names = parameters.keySet();
 		for (String string : names) {
 			String s = getParameter(string);
-			WData sbean = bean.add(VALUENAME_MAPITEM);
+			WData sbean = bparams.add(VALUENAME_MAPITEM);
 			sbean.addValue("name", string);
 			sbean.addValue("value", s);
 		}
@@ -168,10 +168,10 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		WData tbean = bean.get(VALUENAME_TOOLS);
 		List<WData> tbeans = tbean.getChildren();
 		for (WData b : tbeans) {
-			String name = b.getValue("name");
+			String toolname = b.getValue("name");
 			MStringID id = b.getIDValue("id");
 			LOTToolImpl tool = new LOTToolImpl(client, id);
-			tools.put(name, tool);
+			tools.put(toolname, tool);
 		}
 	}
 
@@ -179,9 +179,9 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		WData pbean = bean.get(VALUENAME_PARAMS);
 		List<WData> pbeans = pbean.getChildren();
 		for (WData b : pbeans) {
-			String name = b.getValue("name");
+			String param = b.getValue("name");
 			String value = b.getValue("value");
-			parameters.put(name, value);
+			parameters.put(param, value);
 		}
 	}
 
