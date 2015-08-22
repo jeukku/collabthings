@@ -97,6 +97,9 @@ public class LOTFactoryState implements LOTRuntimeObject {
 			p.append(PrintOut.INDENT2, tu.printOut());
 		}
 
+		p.append(PrintOut.INDENT, "pool");
+		p.append(PrintOut.INDENT2, pool.printOut());
+		
 		return p;
 	}
 
