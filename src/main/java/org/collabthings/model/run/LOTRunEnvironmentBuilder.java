@@ -21,4 +21,6 @@ public interface LOTRunEnvironmentBuilder extends LOTObject {
 
 	void setName(String name);
 
+	String readStorage(String path);
+
 }

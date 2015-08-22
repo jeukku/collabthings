@@ -10,8 +10,25 @@ import org.collabthings.model.run.impl.LOTRunEnvironmentBuilderImpl;
 
 public final class TestRunEnvBuilder extends LOTTestCase {
 
+	public void testStorage() {
+		LOTClient c = getNewClient();
+		LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(c);
+		b.setName("testnameeb");
+
+		String value = "" + Math.random();
+		c.getStorage().writeToStorage("/test", "test", value);
+		assertEquals(value, b.readStorage("self/test/test"));
+		assertEquals(
+				value,
+				b.readStorage(c.getClient().getService().getUser()
+						.getUsername()
+						+ "/test/test"));
+	}
+
 	public void testGetFactory() {
 		LOTClient c = getNewClient();
+		LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(c);
+		b.setName("testnameeb");
 
 		LOTFactory f = c.getObjectFactory().getFactory();
 
@@ -19,9 +36,6 @@ public final class TestRunEnvBuilder extends LOTTestCase {
 		f.addFactory();
 		f.addFactory("testname");
 		f.publish();
-
-		LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(c);
-		b.setName("testnameeb");
 
 		b.getEnvironment().setParameter("factoryid", f.getID());
 		LOTScriptImpl taskscript = new LOTScriptImpl(c);
