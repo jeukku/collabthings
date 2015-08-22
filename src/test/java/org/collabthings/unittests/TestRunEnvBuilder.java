@@ -16,7 +16,7 @@ public final class TestRunEnvBuilder extends LOTTestCase {
 		b.setName("testnameeb");
 
 		String value = "" + Math.random();
-		c.getStorage().writeToStorage("/test", "test", value);
+		c.getStorage().writeToStorage("test", "test", value);
 		assertEquals(value, b.readStorage("self/test/test"));
 		assertEquals(
 				value,
