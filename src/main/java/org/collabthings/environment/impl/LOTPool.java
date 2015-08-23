@@ -14,10 +14,10 @@ import org.collabthings.util.PrintOut;
 
 public class LOTPool {
 	private static final int MAX_WAIT_TIME = 100000;
-	final private Map<String, List<LOTPart>> parts = new HashMap<>();
-	final private Map<LOTScript, LOTScriptRunnerImpl> scriptrunners = new HashMap<>();
-	final private LOTRuntimeObject runtimeobject;
-	final private LOTRunEnvironment runenv;
+	private final Map<String, List<LOTPart>> parts = new HashMap<>();
+	private final Map<LOTScript, LOTScriptRunnerImpl> scriptrunners = new HashMap<>();
+	private final LOTRuntimeObject runtimeobject;
+	private final LOTRunEnvironment runenv;
 
 	private LLog log;
 
@@ -101,9 +101,9 @@ public class LOTPool {
 	public PrintOut printOut() {
 		PrintOut p = new PrintOut();
 		p.append("" + this);
-		p.append(1, "parts");
+		p.append(PrintOut.INDENT, "parts");
 		for (String pname : parts.keySet()) {
-			p.append(2, "count:" + countParts(pname));
+			p.append(PrintOut.INDENT2, "count:" + countParts(pname));
 		}
 
 		return p;
