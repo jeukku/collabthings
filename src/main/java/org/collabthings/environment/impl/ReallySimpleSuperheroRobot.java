@@ -18,7 +18,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private static final float MOVING_ORIENTATION_LENGTH_TRIGGER = 0.000000001f;
 	private static final double ORIENTATION_PRINTOUT = 20000;
 	//
-	final private LOTRunEnvironment simenv;
+	private final LOTRunEnvironment simenv;
 	private LOTToolState tool;
 
 	private final LOrientation orientation = new LOrientation();
@@ -29,7 +29,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	//
 	private double orientationprintouttimer = 0;
 	private double speed = 10;
-	final private LOTFactoryState factory;
+	private final LOTFactoryState factory;
 	private LOTEvents events = new LOTEvents();
 	private long movestarttime;
 	private boolean stopped;

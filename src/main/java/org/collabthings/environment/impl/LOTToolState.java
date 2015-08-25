@@ -22,7 +22,7 @@ public class LOTToolState implements LOTRuntimeObject {
 	private LLog log = LLog.getLogger(this);
 	private boolean inuse;
 	private String name;
-	final private LOTPool pool;
+	private final LOTPool pool;
 	private LOTEvents events = new LOTEvents();
 
 	public LOTToolState(final String name, final LOTRunEnvironment runenv,

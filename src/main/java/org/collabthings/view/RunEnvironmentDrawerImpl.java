@@ -208,8 +208,8 @@ public class RunEnvironmentDrawerImpl extends LOTEnvironmentDrawer implements
 			ts.sort(new Comparator<LOTTriangle>() {
 				@Override
 				public int compare(LOTTriangle o1, LOTTriangle o2) {
-					LVector ta = vs.get(o1.a);
-					LVector tb = vs.get(o2.a);
+					LVector ta = vs.get(o1.getA());
+					LVector tb = vs.get(o2.getA());
 					if (ta.z > tb.z) {
 						return -1;
 					} else if (ta.z < tb.z) {
@@ -221,14 +221,14 @@ public class RunEnvironmentDrawerImpl extends LOTEnvironmentDrawer implements
 			});
 
 			ts.forEach(t -> {
-				LVector nn = t.n.copy();
+				LVector nn = t.getN().copy();
 				tstack.current().transformw0(nn);
 				drawert.transform(nn, false);
 
 				if (nn.z > 0) {
-					LVector ta = vs.get(t.a);
-					LVector tb = vs.get(t.b);
-					LVector tc = vs.get(t.c);
+					LVector ta = vs.get(t.getA());
+					LVector tb = vs.get(t.getB());
+					LVector tc = vs.get(t.getC());
 
 					if (ta.z > 0 && tb.z > 0 && tc.z > 0) {
 						if (nn.z > 1) {

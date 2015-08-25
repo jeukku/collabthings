@@ -14,9 +14,9 @@ import org.collabthings.model.LOTValues;
 import org.collabthings.util.LLog;
 
 public class LOTScriptRunnerImpl implements LOTScriptRunner {
-	final private LOTScript script;
-	final private LOTRunEnvironment runenv;
-	final private LOTRuntimeObject runo;
+	private final LOTScript script;
+	private final LOTRunEnvironment runenv;
+	private final LOTRuntimeObject runo;
 
 	private LLog log = LLog.getLogger(this);
 	private String error;

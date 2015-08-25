@@ -446,13 +446,11 @@ public class JFXSimulationView implements RunEnvironmentListener,
 				Group node = nodei.group;
 
 				Point2D screen = node.localToScreen(0, 0, 0);
-				if (screen != null) {
-					if (screen.getX() < -w || screen.getX() > w
-							|| screen.getY() < -h || screen.getY() > h) {
-						somethingoutofscreen = true;
-						log.info("Out of screen " + screen + " w:" + w + " h:"
-								+ h + " object:" + tu);
-					}
+				if (screen != null
+						&& pointOutOfScreen(w, h, screen)) {
+					somethingoutofscreen = true;
+					log.info("Out of screen " + screen + " w:" + w + " h:" + h
+							+ " object:" + tu);
 				}
 			}
 
@@ -472,6 +470,11 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		}
 
 		// log.info("objectgroup tr " + objectgroup.getTransforms());
+	}
+
+	private boolean pointOutOfScreen(double w, double h, Point2D screen) {
+		return screen.getX() < -w || screen.getX() > w
+				|| screen.getY() < -h || screen.getY() > h;
 	}
 
 	@Override

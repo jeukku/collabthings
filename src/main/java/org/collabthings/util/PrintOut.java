@@ -20,7 +20,7 @@ public class PrintOut {
 			String t = st.nextToken();
 			Line l = new Line();
 			l.indent = i;
-			l.line = t;
+			l.text = t;
 			lines.add(l);
 		}
 	}
@@ -31,7 +31,7 @@ public class PrintOut {
 			for (int i = 0; i < l.indent; i++) {
 				sb.append("  ");
 			}
-			sb.append(l.line);
+			sb.append(l.text);
 			sb.append("\n");
 		}
 
@@ -42,13 +42,13 @@ public class PrintOut {
 		List<Line> olines = printOut.lines;
 		for (Line line : olines) {
 			int iline = line.indent + i;
-			append(iline, line.line);
+			append(iline, line.text);
 		}
 	}
 
 	private class Line {
 		int indent;
-		String line;
+		String text;
 	}
 
 }

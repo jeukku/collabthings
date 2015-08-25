@@ -8,7 +8,7 @@ public class LTransformation {
 	private Matrix4d m = new Matrix4d();
 	public static final Vector3d UP = new Vector3d(0, 1, 0);
 
-	final private AxisAngle4d a = new AxisAngle4d();
+	private final AxisAngle4d a = new AxisAngle4d();
 
 	public LTransformation() {
 		m.setIdentity();

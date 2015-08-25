@@ -1,11 +1,25 @@
 package org.collabthings.unittests;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.collabthings.LOTClient;
 import org.collabthings.LOTTestCase;
 import org.collabthings.environment.impl.LOTPool;
+import org.collabthings.math.LVector;
+import org.collabthings.model.LOTBinaryModel;
+import org.collabthings.model.LOTBoundingBox;
+import org.collabthings.model.LOTMaterial;
+import org.collabthings.model.LOTModel;
+import org.collabthings.model.LOTOpenSCAD;
+import org.collabthings.model.LOTPart;
+import org.collabthings.model.LOTSubPart;
+import org.collabthings.model.impl.LOTPartImpl;
 import org.xml.sax.SAXException;
+
+import waazdoh.common.ObjectID;
+import waazdoh.common.WData;
 
 public final class TestPool extends LOTTestCase {
 
@@ -17,14 +31,29 @@ public final class TestPool extends LOTTestCase {
 		assertNull(p.getPart("null"));
 	}
 
+	public void testCount() {
+		LOTPool p = new LOTPool(null, null);
+		assertEquals(0, p.countParts("test"));
+	}
+
 	public void testAddPartGetPart() throws IOException, SAXException {
 		LOTClient e = getNewClient();
 		assertNotNull(e);
 
 		LOTPool pool = new LOTPool(null, null);
 		pool.addPart("test", e.getObjectFactory().getPart());
+		
+		assertEquals(1, pool.countParts("test"));
 		//
-		assertNotNull(pool.getPart("test"));
+		LOTPart peekPart = pool.peekPart("test");
+		assertNotNull(peekPart);
+		LOTPart part = pool.getPart("test");
+		assertNotNull(part);
+		assertSame(peekPart, part);
+
+		assertNull(pool.peekPart("test"));
+		assertNull(pool.getPart("test"));
+
 		assertNull(pool.getPart("test_null"));
 	}
 
