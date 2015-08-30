@@ -175,7 +175,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	public LOTToolState getTool(String id) {
 		LOTToolState tool = findTool(id);
 		if (tool != null) {
-			new ConditionWaiter(() -> !tool.isInUse() || !isRunning(), 0);
+			ConditionWaiter.wait(() -> !tool.isInUse() || !isRunning(), 0);
 			return tool;
 		} else {
 			return null;
@@ -265,7 +265,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 	}
 
 	public LOTToolUser getToolUser(final LOTToolState lotToolState, LVector l) {
-		new ConditionWaiter(() -> !isRunning()
+		ConditionWaiter.wait(() -> !isRunning()
 				|| getAvailableToolUser(lotToolState) != null, 0);
 		return getAvailableToolUser(lotToolState, l);
 	}

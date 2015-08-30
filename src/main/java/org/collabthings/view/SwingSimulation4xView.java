@@ -11,7 +11,7 @@ import org.collabthings.math.LTransformation;
 public class SwingSimulation4xView extends JPanel {
 	private static final long serialVersionUID = -6344995091052142118L;
 
-	private LTransformation freetransform;
+	private transient LTransformation freetransform;
 	private double freeangle;
 	private SwingRunEnvironmentView yview;
 	private SwingRunEnvironmentView zview;
@@ -37,8 +37,8 @@ public class SwingSimulation4xView extends JPanel {
 				}, "X");
 		RunEnvironmentDrawerImpl zcanvas = new RunEnvironmentDrawerImpl(runenv,
 				(v, b) -> v.z = 0, "Z");
-		RunEnvironmentDrawerImpl freecanvas = new RunEnvironmentDrawerImpl(runenv,
-				(v, b) -> {
+		RunEnvironmentDrawerImpl freecanvas = new RunEnvironmentDrawerImpl(
+				runenv, (v, b) -> {
 					if (b) {
 						freetransform.transform(v);
 						v.z += 30;

@@ -77,9 +77,13 @@ public class LOTPool {
 			log.info("waiting for part " + pool);
 		}
 
-		while (isPartPoolEmpty(pool)
-				&& (System.currentTimeMillis() - st) < maxtime) {
-			waitABit();
+		try {
+			while (isPartPoolEmpty(pool)
+					&& (System.currentTimeMillis() - st) < maxtime) {
+				this.wait();
+			}
+		} catch (InterruptedException e) {
+			log.error(this, "waitForPart", e);
 		}
 
 		log.info("Waiting for pool " + pool + " done");
@@ -107,14 +111,6 @@ public class LOTPool {
 		}
 
 		return p;
-	}
-
-	private synchronized void waitABit() {
-		try {
-			this.wait();
-		} catch (InterruptedException e) {
-			LLog.getLogger(this).error(this, "wait", e);
-		}
 	}
 
 	public LOTScriptRunnerImpl getScript(LOTScript script) {

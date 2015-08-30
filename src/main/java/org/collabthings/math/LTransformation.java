@@ -1,10 +1,13 @@
 package org.collabthings.math;
 
+import java.io.Serializable;
+
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 
-public class LTransformation {
+public class LTransformation implements Serializable {
+	
 	private Matrix4d m = new Matrix4d();
 	public static final Vector3d UP = new Vector3d(0, 1, 0);
 

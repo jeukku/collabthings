@@ -47,7 +47,7 @@ public final class TestStepRunner extends LOTTestCase {
 		assertFalse(runner.isStopped());
 		assertFalse(f.isTriggered());
 		runner.stop();
-		new ConditionWaiter(() -> runner.isStopped(), 20000);
+		ConditionWaiter.wait(() -> runner.isStopped(), 20000);
 		assertTrue(runner.isStopped());
 		assertFalse(f.isTriggered());
 	}
@@ -62,7 +62,7 @@ public final class TestStepRunner extends LOTTestCase {
 		synchronized (runner) {
 			runner.wait(2000);
 		}
-		new ConditionWaiter(() -> runner.isStopped(), 1000);
+		ConditionWaiter.wait(() -> runner.isStopped(), 1000);
 		//
 		assertTrue(runner.isStopped());
 	}

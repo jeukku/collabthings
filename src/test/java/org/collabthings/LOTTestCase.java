@@ -90,7 +90,7 @@ public class LOTTestCase extends TestCase {
 		assertNotNull(clienta);
 		assertNotNull(clientb);
 
-		new ConditionWaiter(() -> {
+		ConditionWaiter.wait(() -> {
 			return clientb.isRunning() && clienta.isRunning()
 					&& clienta.getBinarySource().isRunning()
 					&& clientb.isRunning();
@@ -136,7 +136,7 @@ public class LOTTestCase extends TestCase {
 					+ (url.charAt(url.length() - 1) == '/' ? "" : "/")
 					+ apploginid);
 
-			new ConditionWaiter(() -> {
+			ConditionWaiter.wait(() -> {
 				AppLoginVO al = c.getClient().checkAppLogin(apploginid);
 				return al.getSessionid() != null;
 			}, 100000);

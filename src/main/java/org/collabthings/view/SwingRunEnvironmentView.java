@@ -13,8 +13,8 @@ import org.collabthings.util.LOTGraphics;
 public class SwingRunEnvironmentView extends JPanel implements LOTGraphics {
 	private static final long serialVersionUID = -6174408330205773946L;
 
-	private RunEnvironmentDrawerImpl drawer;
-	private Graphics2D g2;
+	private transient RunEnvironmentDrawerImpl drawer;
+	private transient Graphics2D g2;
 
 	public SwingRunEnvironmentView(RunEnvironmentDrawerImpl ndrawer) {
 		this.drawer = ndrawer;
