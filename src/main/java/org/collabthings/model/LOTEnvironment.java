@@ -21,7 +21,11 @@ public interface LOTEnvironment extends LOTObject {
 
 	LOTTool getTool(String string);
 
+	void renameTool(String string, String text);
+
 	Set<String> getTools();
+
+	void deleteTool(String string);
 
 	Set<String> getParameters();
 

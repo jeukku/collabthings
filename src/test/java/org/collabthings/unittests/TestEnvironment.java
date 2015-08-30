@@ -71,6 +71,13 @@ public final class TestEnvironment extends LOTTestCase {
 		String scriptname = "testscript";
 		env.addScript(scriptname, new LOTScriptImpl(c));
 		assertNotNull(env.getScript(scriptname));
+		
+		env.renameScript("testscript", "testscript2");
+		assertNull(env.getScript("testscript"));
+		assertNotNull(env.getScript("testscript2"));
+		
+		env.deleteScript("testscript2");
+		assertNull(env.getScript("testscript2"));
 	}
 
 	public void testAddGetParameter() {
@@ -92,6 +99,13 @@ public final class TestEnvironment extends LOTTestCase {
 				.getStringID());
 		assertNotNull(benv.getTool(testtool));
 		assertEquals(e.getTool(testtool), benv.getTool(testtool));
+
+		benv.renameTool("testtool", "testtool2");
+		assertNull(benv.getTool("testtool"));
+		assertNotNull(benv.getTool("testtool2"));
+		
+		benv.deleteTool("testtool2");
+		assertNull(benv.getTool("testtool2"));
 	}
 
 	public void testVectorParameters() {
