@@ -74,10 +74,13 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private int mousex;
 	private int mousey;
 
-	public JFXSimulationView(LOTRunEnvironment env, ViewCanvas ncanvas) {
+	public JFXSimulationView(LOTRunEnvironment env) {
 		this.env = env;
-		this.canvas = ncanvas;
 		env.addListener(this);
+	}
+
+	public void setCanvas(ViewCanvas ncanvas) {
+		this.canvas = ncanvas;
 		createCanvas();
 	}
 
