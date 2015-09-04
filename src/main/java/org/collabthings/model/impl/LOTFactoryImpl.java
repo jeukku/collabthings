@@ -155,7 +155,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return getEnv().getScripts();
 	}
 
-	@Override
 	public LOTScript getScript(String string) {
 		return getEnv().getScript(string.toLowerCase());
 	}
@@ -169,12 +168,10 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return getServiceObject().getID();
 	}
 
-	@Override
 	public String getName() {
 		return name;
 	}
 
-	@Override
 	public void setName(final String nname) {
 		this.name = nname;
 	}
@@ -184,7 +181,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return bbox;
 	}
 
-	@Override
 	public void setBoundingBox(LOTBoundingBox box) {
 		this.bbox.set(box.getA(), box.getB());
 	}
@@ -203,13 +199,11 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return true;
 	}
 
-	@Override
 	public LOTScript addScript(String scriptname, LOTScript lotScript) {
 		getEnv().addScript(scriptname.toLowerCase(), lotScript);
 		return lotScript;
 	}
 
-	@Override
 	public void save() {
 		if (getModel() != null) {
 			model.save();
@@ -233,7 +227,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return model;
 	}
 
-	@Override
 	public void publish() {
 		save();
 
@@ -259,7 +252,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return "F[" + name + "]";
 	}
 
-	@Override
 	public LOTEnvironment getEnvironment() {
 		return this.env;
 	}
@@ -300,7 +292,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return cfactory;
 	}
 
-	@Override
 	public LOTAttachedFactory getFactory(final String name) {
 		return getFactoryMap().get(name);
 	}
@@ -354,7 +345,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		return env;
 	}
 
-	@Override
 	public void setModel(LOTBinaryModel model) {
 		this.model = model;
 	}

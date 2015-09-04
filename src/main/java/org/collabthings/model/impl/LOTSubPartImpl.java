@@ -26,7 +26,6 @@ public final class LOTSubPartImpl implements LOTSubPart {
 		part = new LOTPartImpl(env);
 	}
 
-	@Override
 	public LOTPart getPart() {
 		return part;
 	}
@@ -60,7 +59,6 @@ public final class LOTSubPartImpl implements LOTSubPart {
 		return transformation;
 	}
 
-	@Override
 	public void setOrientation(LVector location, LVector normal, double angle) {
 		setOrientation(location, normal);
 		this.angle = angle;
@@ -73,17 +71,14 @@ public final class LOTSubPartImpl implements LOTSubPart {
 		transformation = null;
 	}
 
-	@Override
 	public LVector getNormal() {
 		return n;
 	}
 
-	@Override
 	public LVector getLocation() {
 		return p;
 	}
 
-	@Override
 	public double getAngle() {
 		return angle;
 	}

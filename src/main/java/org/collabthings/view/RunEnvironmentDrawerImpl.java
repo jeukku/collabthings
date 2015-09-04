@@ -40,7 +40,6 @@ public class RunEnvironmentDrawerImpl extends LOTEnvironmentDrawer implements
 
 	private long lasttime;
 	private HashMap<LOTModel, Integer> modelcolors;
-	private boolean drawevents;
 
 	public RunEnvironmentDrawerImpl(final LOTRunEnvironment nrunenv,
 			EnvironmentDrawerTransform transform, String name) {
@@ -156,6 +155,7 @@ public class RunEnvironmentDrawerImpl extends LOTEnvironmentDrawer implements
 			drawModel(tstack, m);
 		} else {
 			getGraphics().setColor(Color.lightGray);
+			// drawString(tstack, "" + runo.getName(), l);
 			//
 			List<LOTSubPart> subparts = part.getSubParts();
 			if (!subparts.isEmpty()) {
@@ -286,10 +286,8 @@ public class RunEnvironmentDrawerImpl extends LOTEnvironmentDrawer implements
 			eventlist.addAll(tool.getEvents().getNewEvents(getNewEventTime()));
 		}
 
-		if (this.drawevents) {
-			drawEvents(tstack, eventlist, new LVector(0, 0.6, 0));
-		}
-		
+		// drawEvents(tstack, eventlist, new LVector(0, 0.6, 0));
+
 		tstack.pull();
 	}
 

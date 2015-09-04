@@ -102,7 +102,9 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	}
 
 	private void createCanvas() {
-		Platform.runLater(() -> doCreateCanvas());
+		Platform.runLater(() -> {
+			doCreateCanvas();
+		});
 	}
 
 	private void doCreateCanvas() {
@@ -161,6 +163,10 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 		stack.push(ps.getTransformation());
 
+		// log.info("current ps " + ps);
+		// log.info("current g " + g);
+		// log.info("current tr " + stack.current());
+
 		setTransformation(stack, g);
 		stack.pull();
 	}
@@ -189,6 +195,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private void updateFactoryState(LTransformationStack stack,
 			LOTFactoryState fs) {
 		stack.push(fs.getTransformation());
+
+		// log.info("current tr " + fs + " " + stack.current());
 
 		NodeInfo n = this.nodes.get(fs);
 		if (n == null) {
@@ -341,12 +349,13 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 		/* Create the Scene instance and set the group node as root */
 
-		Scene nscene = new Scene(scenegroup, 2000, 800, Color.DARKGRAY);
+		Scene scene = new Scene(scenegroup, 2000, 800, Color.DARKGRAY);
 
 		scenegroup.setAutoSizeChildren(false);
 		scenegroup.setDepthTest(DepthTest.ENABLE);
 
 		double cameradistance = 1000;
+		// Rotate camerarx = new Rotate(0, Rotate.X_AXIS);
 		Translate cameratr = new Translate(0, 0, -cameradistance);
 
 		this.camera = new PerspectiveCamera(true);
@@ -355,7 +364,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 		camera.getTransforms().addAll(cameratr);
 
-		nscene.setCamera(camera);
+		scene.setCamera(camera);
 		//
 		this.cameraGroup = newGroup();
 		cameraGroup.getChildren().add(camera);
@@ -379,7 +388,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		rz.getChildren().add(objectgroup);
 		scenegroup.getChildren().add(rx);
 
-		return nscene;
+		return scene;
 	}
 
 	private Group newGroup() {
@@ -412,7 +421,6 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		this.objectgroup.setScaleZ(zoom);
 	}
 
-	@Override
 	public synchronized void step(double dtime) {
 		scenerotatex += dtime * 10;
 
@@ -462,6 +470,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 				}
 			}
 		}
+
+		// log.info("objectgroup tr " + objectgroup.getTransforms());
 	}
 
 	private boolean pointOutOfScreen(double w, double h, Point2D screen) {
@@ -500,12 +510,21 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		this.rotatez = rz;
 	}
 
-	private void mouseMove(int x, int y, int button) {
+	public void mouseUp(int x, int y, int button) {
+		this.mousedown = false;
+	}
+
+	public void mouseDown(int x, int y, int button) {
+		this.mousedown = true;
+	}
+
+	public void mouseMove(int x, int y, int button) {
 		if (mousedown) {
 			int dx = mousex - x;
 			int dy = mousey - y;
 			rotatez += dx;
 			rotatex += dy;
+			// rotatez += dx + dy;
 
 			log.info("mouse moved " + dx + ", " + dy);
 
