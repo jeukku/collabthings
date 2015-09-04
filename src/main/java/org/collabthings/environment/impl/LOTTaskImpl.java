@@ -30,7 +30,7 @@ public final class LOTTaskImpl implements LOTTask {
 	}
 
 	public void waitUntilFinished() {
-		new ConditionWaiter(() -> this.isrun, 0);
+		ConditionWaiter.wait(() -> this.isrun, 0);
 	}
 
 	public String toString() {

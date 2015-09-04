@@ -74,10 +74,13 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private int mousex;
 	private int mousey;
 
-	public JFXSimulationView(LOTRunEnvironment env, ViewCanvas ncanvas) {
+	public JFXSimulationView(LOTRunEnvironment env) {
 		this.env = env;
-		this.canvas = ncanvas;
 		env.addListener(this);
+	}
+
+	public void setCanvas(ViewCanvas ncanvas) {
+		this.canvas = ncanvas;
 		createCanvas();
 	}
 
@@ -180,7 +183,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		Matrix4d m = t.getMatrix();
 
 		double d = Math.acos((m.m00 + m.m11 + m.m22 - 1d) / 2d);
-		if (d != 0d) {
+		if (Math.abs(d) > 0.00001) {
 			double den = 2d * Math.sin(d);
 			Point3D p = new Point3D((m.m21 - m.m12) / den, (m.m02 - m.m20)
 					/ den, (m.m10 - m.m01) / den);
@@ -446,8 +449,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 				Group node = nodei.group;
 
 				Point2D screen = node.localToScreen(0, 0, 0);
-				if (screen != null
-						&& pointOutOfScreen(w, h, screen)) {
+				if (screen != null && pointOutOfScreen(w, h, screen)) {
 					somethingoutofscreen = true;
 					log.info("Out of screen " + screen + " w:" + w + " h:" + h
 							+ " object:" + tu);
@@ -473,8 +475,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	}
 
 	private boolean pointOutOfScreen(double w, double h, Point2D screen) {
-		return screen.getX() < -w || screen.getX() > w
-				|| screen.getY() < -h || screen.getY() > h;
+		return screen.getX() < -w || screen.getX() > w || screen.getY() < -h
+				|| screen.getY() > h;
 	}
 
 	@Override

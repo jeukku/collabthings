@@ -93,7 +93,11 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 				&& !stopped
 				&& targetorientation.getLocation()
 						.getSub(orientation.getLocation()).length() > MOVING_ORIENTATION_LENGTH_TRIGGER) {
-			waitAWhile();
+			try {
+				this.wait(WAIT_A_BIT);
+			} catch (InterruptedException e) {
+				log.error(this, "waitAWhile", e);
+			}
 		}
 
 		if (!stopped) {
@@ -155,13 +159,12 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		printOut(dtime);
 	}
 
-	private void move(double dtime) {
+	private synchronized void move(double dtime) {
 		LVector vdistance = targetorientation.getLocation().getSub(
 				orientation.getLocation());
 		double distance = vdistance.length();
 
-		double dangle = targetorientation.getAngle()
-				- orientation.getAngle();
+		double dangle = targetorientation.getAngle() - orientation.getAngle();
 		dangle *= dtime * speed;
 		orientation.setAngle(orientation.getAngle() + dangle);
 
@@ -205,8 +208,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		LVector direction = vdistance.getNormalized();
 		double ddot = direction.dot(targetorientation.getNormal());
 		if (ddot > 0) {
-			direction.add(new LVector(direction.y, direction.z,
-					direction.x));
+			direction.add(new LVector(direction.y, direction.z, direction.x));
 		} else if (ddot > -0.99) {
 			LVector cross = new LVector();
 			cross.cross(direction, targetorientation.getNormal());
@@ -250,14 +252,6 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	private void debugInfo(double dtime) {
 		log("tool:" + tool + " orientation " + orientation + " step:" + dtime
 				+ " targetorientation:" + targetorientation);
-	}
-
-	private synchronized void waitAWhile() {
-		try {
-			this.wait(WAIT_A_BIT);
-		} catch (InterruptedException e) {
-			log.error(this, "waitAWhile", e);
-		}
 	}
 
 	@Override

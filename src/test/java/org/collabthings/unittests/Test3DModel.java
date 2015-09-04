@@ -79,7 +79,7 @@ public final class Test3DModel extends LOTTestCase {
 		LOT3DModelImpl m = new LOT3DModelImpl(env);
 		assertTrue(m.importModel("x3d",
 				getClass().getResourceAsStream(cubemodelpath)));
-		new ConditionWaiter(() -> m.isReady(), 5000);
+		ConditionWaiter.wait(() -> m.isReady(), 5000);
 		//
 		assertTrue(m.isReady());
 		assertTrue(!m.getChildBinaries().isEmpty());

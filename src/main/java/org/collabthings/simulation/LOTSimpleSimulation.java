@@ -48,7 +48,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	public boolean run(int maxruntime) {
 		start();
 
-		new ConditionWaiter(() -> check(), maxruntime);
+		ConditionWaiter.wait(() -> check(), maxruntime);
 		stop();
 
 		done = true;

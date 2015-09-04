@@ -253,6 +253,21 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	}
 
 	@Override
+	public void renameTool(String oldname, String newname) {
+		synchronized (tools) {
+			LOTTool t = tools.remove(oldname);
+			tools.put(newname, t);
+		}
+	}
+	
+	@Override
+	public void deleteTool(String string) {
+		synchronized (tools) {
+			tools.remove(string);
+		}
+	}
+
+	@Override
 	public void setParameter(String string, ObjectID id) {
 		setParameter(string, id.toString());
 	}
