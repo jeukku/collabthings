@@ -5,19 +5,11 @@ import java.util.Set;
 import org.collabthings.math.LVector;
 import org.collabthings.util.PrintOut;
 
-import waazdoh.common.ObjectID;
-
 public interface LOTFactory extends LOTObject {
 
 	LOTScript getScript(String string);
 
 	LOTEnvironment getEnvironment();
-
-	void save();
-
-	void publish();
-
-	ObjectID getID();
 
 	String getName();
 
@@ -52,6 +44,5 @@ public interface LOTFactory extends LOTObject {
 	LVector getToolUserSpawnLocation();
 
 	PrintOut printOut();
-
 
 }

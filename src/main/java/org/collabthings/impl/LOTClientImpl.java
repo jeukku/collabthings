@@ -28,14 +28,17 @@ public final class LOTClientImpl implements LOTClient {
 		this.storage = new LOTStorageImpl(service);
 	}
 
+	@Override
 	public WClient getClient() {
 		return client;
 	}
 
+	@Override
 	public BinarySource getBinarySource() {
 		return client.getBinarySource();
 	}
 
+	@Override
 	public LOTObjectFactory getObjectFactory() {
 		return factory;
 	}
@@ -45,18 +48,22 @@ public final class LOTClientImpl implements LOTClient {
 		return storage;
 	}
 
+	@Override
 	public String getVersion() {
 		return LOTClientImpl.VERSION;
 	}
 
+	@Override
 	public String getPrefix() {
 		return PREFIX;
 	}
 
+	@Override
 	public WPreferences getPreferences() {
 		return client.getPreferences();
 	}
 
+	@Override
 	public void stop() {
 		getClient().stop();
 	}
@@ -77,6 +84,7 @@ public final class LOTClientImpl implements LOTClient {
 		return getClient().getService();
 	}
 
+	@Override
 	public boolean isRunning() {
 		if (getClient().isRunning()) {
 			return true;

@@ -19,12 +19,14 @@ public final class LOTTaskImpl implements LOTTask {
 		LLog.getLogger(this).info("LOTTask " + s);
 	}
 
+	@Override
 	public boolean run() {
 		boolean ret = s.run(values);
 		isrun = true;
 		return ret;
 	}
 
+	@Override
 	public String getError() {
 		return s.getError();
 	}
@@ -33,6 +35,7 @@ public final class LOTTaskImpl implements LOTTask {
 		ConditionWaiter.wait(() -> this.isrun, 0);
 	}
 
+	@Override
 	public String toString() {
 		return "LOTTask[" + this.s + "][" + values + "]";
 	}

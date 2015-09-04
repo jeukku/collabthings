@@ -54,6 +54,7 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 		return b;
 	}
 
+	@Override
 	public LOTScript getScript(String string) {
 		return env.getScript(string.toLowerCase());
 	}
@@ -83,10 +84,12 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 		return getServiceObject().getID();
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public void setName(final String nname) {
 		this.name = nname;
 	}
@@ -114,6 +117,7 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 		return lotScript;
 	}
 
+	@Override
 	public void save() {
 		if (part != null) {
 			part.save();
@@ -124,6 +128,7 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 		getServiceObject().save();
 	}
 
+	@Override
 	public void publish() {
 		if (part != null) {
 			part.publish();
@@ -134,10 +139,12 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 		getServiceObject().publish();
 	}
 
+	@Override
 	public LOTPart getPart() {
 		return part;
 	}
 
+	@Override
 	public LOTPart newPart() {
 		part = new LOTPartImpl(client);
 		return part;
