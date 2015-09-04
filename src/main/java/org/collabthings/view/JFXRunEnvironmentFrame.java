@@ -33,8 +33,7 @@ public class JFXRunEnvironmentFrame {
 		f.getContentPane().setLayout(new BorderLayout());
 
 		JFXPanel panel = new JFXPanel();
-		JFXSimulationView view = new JFXSimulationView(env);
-		view.setCanvas(new ViewCanvas() {
+		new JFXSimulationView(env, new ViewCanvas() {
 
 			@Override
 			public void setScene(Scene scene) {
