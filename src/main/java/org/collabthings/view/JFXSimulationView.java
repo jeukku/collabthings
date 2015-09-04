@@ -81,6 +81,15 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		createCanvas();
 	}
 
+	public JFXSimulationView(LOTRunEnvironment e) {
+		this.env = e;
+	}
+
+	public void setCanvas(ViewCanvas ncanvas) {
+		this.canvas = ncanvas;
+		createCanvas();
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getTypeName();
