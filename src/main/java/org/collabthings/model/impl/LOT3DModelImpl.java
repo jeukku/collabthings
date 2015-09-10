@@ -82,6 +82,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		return "Model[" + getName() + "]";
 	}
 
+	@Override
 	public boolean load(MStringID id) {
 		return o.load(id);
 	}
@@ -158,10 +159,12 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		return this.env.getBinarySource().getOrDownload(binaryid);
 	}
 
+	@Override
 	public void setName(String n) {
 		this.name = n;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -173,6 +176,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		return getBinary();
 	}
 
+	@Override
 	public void publish() {
 		save();
 		//
@@ -183,6 +187,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		}
 	}
 
+	@Override
 	public void save() {
 		if (binaryid != null) {
 			getBinary().setReady();
@@ -205,6 +210,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		}
 	}
 
+	@Override
 	public boolean importModel(File file) {
 		log.info("Importing " + file);
 		try {
@@ -275,6 +281,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		newBinary();
 	}
 
+	@Override
 	public String getType() {
 		return type;
 	}
@@ -394,6 +401,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		return childbinaries;
 	}
 
+	@Override
 	public File getModelFile() throws SAXException, IOException {
 		if (getType() == null) {
 			return null;
@@ -460,18 +468,22 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		}
 	}
 
+	@Override
 	public double getScale() {
 		return scale;
 	}
 
+	@Override
 	public void setScale(double scale) {
 		this.scale = scale;
 	}
 
+	@Override
 	public LVector getTranslation() {
 		return translation;
 	}
 
+	@Override
 	public void setTranslation(LVector t) {
 		translation.set(t);
 	}

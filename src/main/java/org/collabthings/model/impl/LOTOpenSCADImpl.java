@@ -257,6 +257,7 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 		return o;
 	}
 
+	@Override
 	public ObjectID getID() {
 		return getServiceObject().getID();
 	}
@@ -295,6 +296,7 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 		return "SCAD[" + this.name + "][" + info + "]";
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}

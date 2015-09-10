@@ -46,6 +46,7 @@ public class LOTToolState implements LOTRuntimeObject {
 		return out;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}

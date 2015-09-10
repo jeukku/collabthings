@@ -150,6 +150,7 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 		return true;
 	}
 
+	@Override
 	public boolean isRunning() {
 		return !stopped;
 	}
@@ -229,6 +230,7 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 		return client;
 	}
 
+	@Override
 	public void addRunObject(String string, LOTRuntimeObject runtimeo) {
 		this.objects.put(string, runtimeo);
 	}

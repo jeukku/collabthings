@@ -45,7 +45,8 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	 */
 	public LOTScriptImpl(final LOTClient env) {
 		this.client = env;
-		o = new ServiceObject(BEANNAME, env.getClient(), this, env.getVersion(), env.getPrefix());
+		o = new ServiceObject(BEANNAME, env.getClient(), this,
+				env.getVersion(), env.getPrefix());
 		setName("script" + (LOTScriptImpl.namecounter++));
 		setScript("function run(env, values) { env.log().info('Running ' + this); } function info() { return 'default script'; } ");
 	}
@@ -76,6 +77,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 		inv = null;
 	}
 
+	@Override
 	public Invocable getInvocable() {
 		if (inv == null) {
 			try {
@@ -107,6 +109,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 		return o;
 	}
 
+	@Override
 	public ObjectID getID() {
 		return getServiceObject().getID();
 	}
@@ -126,6 +129,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 		getServiceObject().save();
 	}
 
+	@Override
 	public String getScript() {
 		return script;
 	}
@@ -134,7 +138,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	 * 
 	 * @return true, if script is usable.
 	 */
-	
+
 	@Override
 	public boolean isOK() {
 		return getInvocable() != null;
@@ -151,6 +155,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	 * @throws NoSuchMethodException
 	 * @throws ScriptException
 	 */
+	@Override
 	public String getInfo() {
 		getInvocable();
 		return info;
@@ -161,6 +166,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 		return "LOTScript[" + this.name + "][" + info + "]";
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}

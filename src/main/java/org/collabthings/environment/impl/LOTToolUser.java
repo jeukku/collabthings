@@ -13,10 +13,6 @@ public interface LOTToolUser extends LOTRuntimeObject {
 
 	void setTool(LOTToolState lotToolState);
 
-	void step(double dtime);
-
-	// LVector getLocation();
-
 	boolean isAvailable(LOTToolState toolstate);
 
 	void callDraw(RunEnvironmentDrawer view, LTransformationStack tstack)
