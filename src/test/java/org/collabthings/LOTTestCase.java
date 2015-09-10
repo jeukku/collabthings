@@ -26,11 +26,11 @@ import waazdoh.client.utils.ThreadChecker;
 import waazdoh.common.WPreferences;
 import waazdoh.common.client.RestServiceClient;
 import waazdoh.common.client.ServiceClient;
+import waazdoh.common.testing.StaticService;
+import waazdoh.common.testing.StaticTestPreferences;
 import waazdoh.common.vo.AppLoginVO;
 import waazdoh.cp2p.P2PBinarySource;
 import waazdoh.cp2p.P2PServer;
-import waazdoh.testing.StaticService;
-import waazdoh.testing.StaticTestPreferences;
 
 public class LOTTestCase extends TestCase {
 	private static final int DEFAULT_WAITTIME = 100;
