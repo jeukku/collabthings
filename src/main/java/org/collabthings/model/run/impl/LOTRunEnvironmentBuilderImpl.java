@@ -39,6 +39,10 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder,
 	public LOTRunEnvironmentBuilderImpl(LOTClient nclient) {
 		this.client = nclient;
 		env = new LOTEnvironmentImpl(nclient);
+		LOTScript initscript = nclient.getObjectFactory().getScript();
+		initscript.setScript("function run() {}\nfunction info() {}\n");
+		env.addScript("init", initscript);
+
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
 				nclient.getVersion(), nclient.getPrefix());
 	}
