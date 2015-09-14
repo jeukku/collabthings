@@ -99,7 +99,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 		p.append(PrintOut.INDENT, "pool");
 		p.append(PrintOut.INDENT2, pool.printOut());
-		
+
 		return p;
 	}
 
@@ -167,9 +167,13 @@ public class LOTFactoryState implements LOTRuntimeObject {
 
 	public LOTToolState addTool(String id, LOTTool tool) {
 		getLog().info("addTool " + id + " tool:" + tool);
-		LOTToolState toolstate = new LOTToolState(id, runenv, tool, this);
-		tools.add(toolstate);
-		return toolstate;
+		if (tool != null) {
+			LOTToolState toolstate = new LOTToolState(id, runenv, tool, this);
+			tools.add(toolstate);
+			return toolstate;
+		} else {
+			return null;
+		}
 	}
 
 	public LOTToolState getTool(String id) {
