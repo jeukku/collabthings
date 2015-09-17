@@ -403,8 +403,6 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		this.ry.setRotate(rotatey);
 		this.rz.setRotationAxis(new Point3D(0, 0, 1));
 		this.rz.setRotate(rotatez);
-
-		log.info("rotation " + rotatex + ", " + rotatey + ", " + rotatez);
 	}
 
 	private void updateZoom() {
@@ -444,8 +442,6 @@ public class JFXSimulationView implements RunEnvironmentListener,
 				Point2D screen = node.localToScreen(0, 0, 0);
 				if (screen != null && pointOutOfScreen(w, h, screen)) {
 					somethingoutofscreen = true;
-					log.info("Out of screen " + screen + " w:" + w + " h:" + h
-							+ " object:" + tu);
 				}
 			}
 
@@ -454,8 +450,6 @@ public class JFXSimulationView implements RunEnvironmentListener,
 				if (zoomspeed < ZOOMSPEED_MINIMUM) {
 					zoomspeed = ZOOMSPEED_MINIMUM;
 				}
-
-				log.info("zoomspeed " + zoomspeed);
 			} else {
 				zoomspeed *= 1.03;
 				if (zoomspeed > ZOOMSPEED_MAXIMUM) {
