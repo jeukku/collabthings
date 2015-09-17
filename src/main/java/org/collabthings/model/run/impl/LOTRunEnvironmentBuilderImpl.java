@@ -13,6 +13,7 @@ import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.impl.LOTEnvironmentImpl;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
+import org.collabthings.util.CResourcesReader;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 
@@ -41,6 +42,12 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder,
 		env = new LOTEnvironmentImpl(nclient);
 		LOTScript initscript = nclient.getObjectFactory().getScript();
 		initscript.setScript("function run() {}\nfunction info() {}\n");
+
+		CResourcesReader r = new CResourcesReader("templates/runenvbuilder.js");
+		if (r.isSuccess()) {
+			initscript.setScript(r.getText());
+		}
+
 		env.addScript("init", initscript);
 
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this,
