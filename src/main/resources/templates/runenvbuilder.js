@@ -3,16 +3,19 @@ function run(envbuilder) {
 
 	var boxid = envbuilder
 			.readStorage("self/published/factory/boxfactory/latest");
-	var order = envbuilder.getEnvironment().getScript("addorder");
+	if (boxid != null) {
+		var order = envbuilder.getEnvironment().getScript("addorder");
 
-	var state = envbuilder.createFactoryState("boxfactory", boxid);
+		var state = envbuilder.createFactoryState("boxfactory", boxid);
 
-	envbuilder.printOut();
+		envbuilder.printOut();
 
-	state.getRunEnvironment().getEnvironment().addScript("ordertask", order);
-	state.addTask("ordertask", null);
+		state.addTask("addorder", null);
 
-	return state.getRunEnvironment();
+		return state.getRunEnvironment();
+	} else {
+		return null;
+	}
 }
 
 function info() {
