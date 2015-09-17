@@ -7,28 +7,38 @@ piece is automatically shared through waazdoh -network.
 
 
 Runenvironment builder
-==
-
-Test
-=
-
-Runenvironment
-==
-
-Factory
-==
+===
+Scripts and environment to build run environment.
 
 Script
-==
+===
+
+Tasks, builders and factories are largely defined with scripts. 
+
+Test
+====
+Testing syntax :P
+
+Factory
+===
+
+Pool
+===
+Holding parts.
 
 Part
-==
+===
 
 Tool
-==
+===
 
 Tooluser
-==
+===
 
 Model
-==
+===
+
+Runenvironment
+===
+
+Holding FactoryState, PartState, ToolState and such. Used when running simulation.
