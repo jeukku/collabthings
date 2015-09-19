@@ -16,6 +16,7 @@ import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.util.CResourcesReader;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
+import org.collabthings.util.ShortHashID;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -91,7 +92,7 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder,
 
 	@Override
 	public String toString() {
-		return "RunEnvironmentBuilder";
+		return "REB[" + new ShortHashID(getID().getStringID()) + "]";
 	}
 
 	@Override
