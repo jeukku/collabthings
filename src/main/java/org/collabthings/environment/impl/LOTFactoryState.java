@@ -318,8 +318,15 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return this.runenv;
 	}
 
-	public LOTTask addTask(String task, LOTValues values) {
-		return runenv.addTask(getScript(task), values);
+	public LOTTask addTask(String task, LOTValues values) throws CTRuntimeError {
+		LOTScriptRunnerImpl script = getScript(task);
+		if (script != null) {
+			return runenv.addTask(script, values);
+		} else {
+			String message = "addTaks failed. No script called " + task;
+			log.info(message);
+			throw new CTRuntimeError(message);
+		}
 	}
 
 	public boolean call(String string) {

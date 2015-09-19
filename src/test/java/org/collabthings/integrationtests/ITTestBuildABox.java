@@ -61,7 +61,9 @@ public final class ITTestBuildABox extends LOTTestCase {
 				loadScript(new LOTScriptImpl(client),
 						"linefactory_runenv_order.js"));
 		builder.getEnvironment().setParameter("partid", line.getID());
-
+		
+		builder.setName("boxsetfactorybuilder");
+		
 		builder.publish();
 
 		LOTRunEnvironment runenv = builder.getRunEnvironment();

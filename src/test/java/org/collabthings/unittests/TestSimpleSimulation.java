@@ -13,6 +13,7 @@ import org.collabthings.environment.LOTScriptRunner;
 import org.collabthings.environment.LOTTask;
 import org.collabthings.environment.RunEnvironmentDrawer;
 import org.collabthings.environment.RunEnvironmentListener;
+import org.collabthings.environment.impl.CTRuntimeError;
 import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTPartState;
 import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
@@ -239,7 +240,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 		frame.close();
 	}
 
-	public void testCallTool() {
+	public void testCallTool() throws CTRuntimeError {
 		LOTClient client = getNewClient();
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 

@@ -16,7 +16,7 @@ public final class LOTTaskImpl implements LOTTask {
 		this.s = s2;
 		this.values = values2;
 		//
-		LLog.getLogger(this).info("LOTTask " + s);
+		LLog.getLogger(this).info("LOTTask " + s.toString());
 	}
 
 	@Override
