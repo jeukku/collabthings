@@ -36,7 +36,9 @@ import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTModel;
+import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTRuntimeObject;
+import org.collabthings.model.LOTSubPart;
 import org.collabthings.util.LLog;
 
 public class JFXSimulationView implements RunEnvironmentListener,
@@ -167,6 +169,10 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 	private void setTransformation(LTransformationStack stack, Group g) {
 		LTransformation t = stack.current();
+		setTransformation(g, t);
+	}
+
+	private void setTransformation(Group g, LTransformation t) {
 		LVector l = new LVector();
 		t.transform(l);
 
@@ -196,7 +202,15 @@ public class JFXSimulationView implements RunEnvironmentListener,
 			LOTBoundingBox bb = fs.getFactory().getBoundingBox();
 			LVector bba = bb.getA();
 			LVector bbb = bb.getB();
-			Box sp = new Box(bbb.x - bba.x, bbb.y - bba.y, bbb.z - bba.z);
+			double width = bbb.x - bba.x;
+			double height = bbb.y - bba.y;
+			double depth = bbb.z - bba.z;
+
+			if (fs.getOrientation().getNormal().dot(new LVector(0, 1, 0)) > 0.99) {
+				// height /= 10;
+			}
+
+			Box sp = new Box(width, height, depth);
 			sp.setMaterial(getRandomMaterial());
 			sp.setDrawMode(DrawMode.LINE);
 
@@ -281,21 +295,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 		NodeInfo n = nodes.get(partstate);
 		if (n == null) {
-			Group g = newGroup();
-			Box sp = new Box(1, 1, 1);
-			sp.setMaterial(getRandomMaterial());
-			g.getChildren().add(sp);
-
-			LOTModel model = partstate.getPart().getModel();
-			if (model != null) {
-				model.addTo(g);
-			} else {
-				Box b = new Box(10, 0.1, 10);
-				b.setMaterial(getRandomMaterial());
-				b.setDrawMode(DrawMode.LINE);
-				g.getChildren().add(b);
-			}
-
+			Group g = createPartGroup(partstate);
 			objectgroup.getChildren().add(g);
 
 			n = new NodeInfo();
@@ -304,6 +304,46 @@ public class JFXSimulationView implements RunEnvironmentListener,
 			nodes.put(partstate, n);
 		}
 		return n;
+	}
+
+	private Group createPartGroup(LOTPartState partstate) {
+		Group g = newGroup();
+
+		addPartBoxes(g, partstate.getPart());
+
+		return g;
+	}
+
+	private void addPartBoxes(Group g, LOTPart part) {
+		LOTModel model = part.getModel();
+		if (model != null) {
+			model.addTo(g);
+		} else {
+			List<LOTSubPart> sb = part.getSubParts();
+			if (sb.isEmpty()) {
+				LOTBoundingBox bb = part.getBoundingBox();
+				if (bb != null) {
+					LVector bba = bb.getA();
+					LVector bbb = bb.getB();
+					double width = bbb.x - bba.x;
+					double height = bbb.y - bba.y;
+					double depth = bbb.z - bba.z;
+					Box b = new Box(width, height, depth);
+
+					b.setMaterial(getRandomMaterial());
+					b.setDrawMode(DrawMode.LINE);
+					g.getChildren().add(b);
+				} else {
+					log.info("Boundingbox null " + part);
+				}
+			} else {
+				for (LOTSubPart lotSubPart : sb) {
+					Group cg = newGroup();
+					setTransformation(cg, lotSubPart.getTransformation());
+					addPartBoxes(cg, lotSubPart.getPart());
+				}
+			}
+		}
 	}
 
 	private void addToolUser(LOTToolUser lotToolUser) {
@@ -370,12 +410,6 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		ry.getChildren().add(rz);
 
 		this.objectgroup = newGroup();
-
-		Box b = new Box(10, 0.1, 10);
-		b.setTranslateY(4);
-		b.setMaterial(getRandomMaterial());
-		b.setDrawMode(DrawMode.LINE);
-		objectgroup.getChildren().add(b);
 
 		rz.getChildren().add(objectgroup);
 		scenegroup.getChildren().add(rx);
