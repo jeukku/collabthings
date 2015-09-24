@@ -24,7 +24,7 @@ public class LOTAttachedFactory {
 
 	@Override
 	public String toString() {
-		return "Factory " + factory + " at " + orientation;
+		return "Child factory " + factory + " at " + orientation;
 	}
 
 	public LOTFactory getFactory() {
