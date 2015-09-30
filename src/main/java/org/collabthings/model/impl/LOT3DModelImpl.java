@@ -42,6 +42,7 @@ import waazdoh.client.model.objects.Binary;
 import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
 import waazdoh.common.WData;
+import waazdoh.common.WObject;
 import waazdoh.common.XML;
 
 import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
@@ -88,21 +89,20 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 	}
 
 	@Override
-	public WData getBean() {
-		WData b = o.getBean();
+	public WObject getObject() {
+		WObject b = o.getBean();
 		getBean(b);
 		return b;
 	}
 
-	public void getBean(WData b) {
+	public void getBean(WObject b) {
 		b.addValue(NAME, name);
 		b.addValue(BINARYID, "" + getBinaryID());
 		b.addValue(SCALE, scale);
-		b.add(translation.getBean(TRANSLATION));
+		b.add(TRANSLATION, translation.getBean());
 		//
-		WData bb = b.add("binaries");
 		for (Binary binary : childbinaries) {
-			bb.add("binary").setValue(binary.getID().toString());
+			b.addToList("binaries", binary.getID().toString());
 		}
 	}
 
@@ -111,16 +111,16 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 	}
 
 	@Override
-	public boolean parseBean(WData bean) {
+	public boolean parseBean(WObject bean) {
 		name = bean.getValue("name");
 		binaryid = new BinaryID(bean.getIDValue(BINARYID));
 		scale = bean.getDoubleValue(SCALE);
 		translation = new LVector(bean.get(TRANSLATION));
 		//
-		WData bs = bean.get("binaries");
-		List<WData> bchildbinaries = bs.getChildren();
-		for (WData bchildbinary : bchildbinaries) {
-			BinaryID childbinaryid = new BinaryID(bchildbinary.getText());
+
+		List<String> bchildbinaries = bean.getList("binaries");
+		for (String bchildbinary : bchildbinaries) {
+			BinaryID childbinaryid = new BinaryID(bchildbinary);
 			addChildBinary(env.getBinarySource().getOrDownload(childbinaryid));
 		}
 		//
@@ -490,14 +490,14 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 
 	@Override
 	public int hashCode() {
-		return getBean().toXML().hashCode();
+		return getObject().hashCode();
 	}
 
 	@Override
 	public boolean equals(Object b) {
 		if (b instanceof LOT3DModelImpl) {
 			LOT3DModelImpl bmodel = (LOT3DModelImpl) b;
-			return getBean().toXML().equals(bmodel.getBean().toXML());
+			return getObject().equals(bmodel.getObject());
 		} else {
 			return false;
 		}

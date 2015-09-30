@@ -1,9 +1,7 @@
 package org.collabthings.model;
 
 import waazdoh.common.ObjectID;
-import waazdoh.common.WData;
-
-
+import waazdoh.common.WObject;
 
 public interface LOTObject {
 
@@ -15,6 +13,6 @@ public interface LOTObject {
 
 	ObjectID getID();
 
-	WData getBean();
+	WObject getObject();
 
 }

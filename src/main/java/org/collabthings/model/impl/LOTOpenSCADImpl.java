@@ -29,7 +29,7 @@ import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
-import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
 
@@ -120,14 +120,14 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 
 	@Override
 	public int hashCode() {
-		return getBean().toText().hashCode();
+		return getObject().toText().hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof LOTOpenSCADImpl) {
 			LOTOpenSCADImpl o = (LOTOpenSCADImpl) obj;
-			return o.getBean().toText().equals(getBean().toText());
+			return o.getObject().toText().equals(getObject().toText());
 		} else {
 			return false;
 		}
@@ -216,19 +216,19 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 	}
 
 	@Override
-	public WData getBean() {
-		WData b = o.getBean();
+	public WObject getObject() {
+		WObject b = o.getBean();
 		getBean(b);
 		return b;
 	}
 
-	public void getBean(WData b) {
+	public void getBean(WObject b) {
 		b.setBase64Value(SCRIPT, script);
 		b.addValue(VARIABLE_NAME, name);
 	}
 
 	@Override
-	public boolean parseBean(final WData bean) {
+	public boolean parseBean(final WObject bean) {
 		script = bean.getBase64Value(SCRIPT);
 		this.name = bean.getValue(VARIABLE_NAME);
 		return name != null && script != null;

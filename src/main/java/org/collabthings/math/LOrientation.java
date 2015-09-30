@@ -1,8 +1,6 @@
 package org.collabthings.math;
 
-import waazdoh.common.WData;
-
-
+import waazdoh.common.WObject;
 
 public class LOrientation {
 	private static final String VALUENAME_ORIENTATION_LOCATION = "location";
@@ -13,10 +11,10 @@ public class LOrientation {
 	private final LVector normal = new LVector(0, 1, 0);
 	private double angle = 0.0;
 
-	public LOrientation(WData ob) {
-		getLocation().set(new LVector(ob.get(VALUENAME_ORIENTATION_LOCATION)));
-		getNormal().set(new LVector(ob.get(VALUENAME_ORIENTATION_NORMAL)));
-		setAngle(ob.getDoubleValue(VALUENAME_ORIENTATION_ANGLE));
+	public LOrientation(WObject o) {
+		getLocation().set(new LVector(o.get(VALUENAME_ORIENTATION_LOCATION)));
+		getNormal().set(new LVector(o.get(VALUENAME_ORIENTATION_NORMAL)));
+		setAngle(o.getDoubleValue(VALUENAME_ORIENTATION_ANGLE));
 	}
 
 	public LOrientation() {
@@ -29,10 +27,10 @@ public class LOrientation {
 				+ ")]";
 	}
 
-	public WData getBean(String beannameOrientation) {
-		WData ob = new WData(beannameOrientation);
-		ob.add(getLocation().getBean(VALUENAME_ORIENTATION_LOCATION));
-		ob.add(getNormal().getBean(VALUENAME_ORIENTATION_NORMAL));
+	public WObject getBean() {
+		WObject ob = new WObject();
+		ob.add(VALUENAME_ORIENTATION_LOCATION, getLocation().getBean());
+		ob.add(VALUENAME_ORIENTATION_NORMAL, getNormal().getBean());
 		ob.addValue(VALUENAME_ORIENTATION_ANGLE, getAngle());
 		return ob;
 	}

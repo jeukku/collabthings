@@ -72,7 +72,7 @@ public final class TestFactory extends LOTTestCase {
 		assertEquals(f.getToolUserSpawnLocation(),
 				bfact.getToolUserSpawnLocation());
 
-		assertEquals(f.getBean().toText(), bfact.getBean().toText());
+		assertEquals(f.getObject().toText(), bfact.getObject().toText());
 		assertEquals(f.hashCode(), bfact.hashCode());
 	}
 
@@ -84,19 +84,19 @@ public final class TestFactory extends LOTTestCase {
 		LOTFactory bf = bc.getObjectFactory().getFactory(
 				af.getID().getStringID());
 
-		LLog.getLogger(af).info(af.getBean().toText());
-		LLog.getLogger(bf).info(bf.getBean().toText());
+		LLog.getLogger(af).info(af.getObject().toText());
+		LLog.getLogger(bf).info(bf.getObject().toText());
 		LLog.getLogger(af).info(af.printOut().toText());
 		LLog.getLogger(bf).info(bf.printOut().toText());
 
-		assertEquals(af.getBean().toText(), bf.getBean().toText());
+		assertEquals(af.getObject().toText(), bf.getObject().toText());
 		assertNotSame(af, bf);
-		assertTrue(af.getBean().equals(bf.getBean()));
+		assertTrue(af.getObject().equals(bf.getObject()));
 		af.setName("test");
-		assertFalse(af.getBean().equals(bf.getBean()));
+		assertFalse(af.getObject().equals(bf.getObject()));
 		bf.setName("test");
 		assertEquals(af, bf);
-		assertTrue(af.getBean().equals(bf.getBean()));
+		assertTrue(af.getObject().equals(bf.getObject()));
 	}
 
 	public void testBookmarkChildFactory() {
@@ -116,7 +116,7 @@ public final class TestFactory extends LOTTestCase {
 
 		childf.setName(childfactoryname);
 		childf.addScript("testscript");
-		LLog.getLogger(this).info("publishing first " + f.getBean().toText());
+		LLog.getLogger(this).info("publishing first " + f.getObject().toText());
 
 		f.publish();
 
@@ -133,14 +133,14 @@ public final class TestFactory extends LOTTestCase {
 		MStringID factoryid = f.getID().getStringID();
 		LOTFactory bf = bc.getObjectFactory().getFactory(factoryid);
 
-		LLog.getLogger(this).info("first " + f.getBean().toText());
-		LLog.getLogger(this).info("second " + bf.getBean().toText());
+		LLog.getLogger(this).info("first " + f.getObject().toText());
+		LLog.getLogger(this).info("second " + bf.getObject().toText());
 
-		assertEquals(f.getBean().toText(), bf.getBean().toText());
+		assertEquals(f.getObject().toText(), bf.getObject().toText());
 		LOTFactory bchildf = bf.getFactory(childfactoryid).getFactory();
 		assertNotNull(bchildf);
 		assertEquals(childfactoryname, bchildf.getName());
-		assertEquals(childf.getBean().toText(), bchildf.getBean().toText());
+		assertEquals(childf.getObject().toText(), bchildf.getObject().toText());
 	}
 
 	public void testChildFactory() {
@@ -156,11 +156,11 @@ public final class TestFactory extends LOTTestCase {
 		LOTClient bc = getNewClient();
 		LOTFactory bf = bc.getObjectFactory().getFactory(
 				f.getID().getStringID());
-		assertEquals(f.getBean().toText(), bf.getBean().toText());
+		assertEquals(f.getObject().toText(), bf.getObject().toText());
 		LOTFactory bchildf = bf.getFactory(childfactoryid).getFactory();
 		assertNotNull(bchildf);
 		assertEquals(childfactoryname, bchildf.getName());
-		assertEquals(childf.getBean().toText(), bchildf.getBean().toText());
+		assertEquals(childf.getObject().toText(), bchildf.getObject().toText());
 	}
 
 	public void testBoundingBox() {

@@ -124,7 +124,7 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	@Override
 	public LOTPartImpl getPart() {
 		LOTPartImpl p = new LOTPartImpl(client);
-		log.info("new part " + p.getBean());
+		log.info("new part " + p.getObject());
 		synchronized (parts) {
 			parts.add(p);
 		}
@@ -149,7 +149,7 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 				log.info("Failed to load part " + partid);
 				log.info("Current parts " + parts);
 				for (LOTPartImpl p : parts) {
-					log.info("Part " + p.getBean());
+					log.info("Part " + p.getObject());
 				}
 				return null;
 			}

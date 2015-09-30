@@ -7,7 +7,7 @@ import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTSubPart;
 
 import waazdoh.common.MStringID;
-import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 public final class LOTSubPartImpl implements LOTSubPart {
 	private LOTPart part;
@@ -30,17 +30,17 @@ public final class LOTSubPartImpl implements LOTSubPart {
 		return part;
 	}
 
-	public void parse(WData bpart) {
+	public void parse(WObject bpart) {
 		MStringID partid = bpart.getIDValue("id");
 		part = this.client.getObjectFactory().getPart(partid);
 		p.set(bpart.get("p"));
 		n.set(bpart.get("n"));
 	}
 
-	public void getBean(WData bpart) {
-		bpart.addValue("id", part.getID());
-		bpart.add(p.getBean("p"));
-		bpart.add(n.getBean("n"));
+	public void getBean(WObject bpart) {
+		bpart.setAttribute("id", "" + part.getID());
+		bpart.add("p", p.getBean());
+		bpart.add("n", n.getBean());
 	}
 
 	@Override

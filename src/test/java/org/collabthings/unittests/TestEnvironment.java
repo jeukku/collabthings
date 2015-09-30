@@ -30,7 +30,7 @@ public final class TestEnvironment extends LOTTestCase {
 
 		LOTScript loadedscript = newe.getScript("test");
 		assertNotNull(loadedscript);
-		assertEquals(lotScript.getBean().toText(), loadedscript.getBean()
+		assertEquals(lotScript.getObject().toText(), loadedscript.getObject()
 				.toText());
 	}
 

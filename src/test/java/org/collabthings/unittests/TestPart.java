@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 
 import waazdoh.common.MStringID;
 import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 public final class TestPart extends LOTTestCase {
 
@@ -71,11 +72,16 @@ public final class TestPart extends LOTTestCase {
 	}
 
 	public void testParseFalseBean() throws IOException, SAXException {
-		LOTClient e = getNewClient();
-		LOTPartImpl p = (LOTPartImpl) e.getObjectFactory().getPart();
-		WData bean = new WData("part");
-		bean.add("parts");
-		p.parseBean(bean);
+		try {
+			LOTClient e = getNewClient();
+			LOTPartImpl p = (LOTPartImpl) e.getObjectFactory().getPart();
+			WObject bean = new WObject("part");
+			bean.addValue("parts", 0);
+			p.parseBean(bean);
+			assertFalse(true);
+		} catch (ClassCastException e) {
+			assertNotNull(e);
+		}
 	}
 
 	public void testBoundingBox() {
@@ -111,7 +117,7 @@ public final class TestPart extends LOTTestCase {
 
 		setupSubparts(a, c);
 		setupSubparts(b, c);
-		//
+		
 		assertFalse(a.isAnEqualPart(c));
 		assertFalse(b.isAnEqualPart(c));
 		assertTrue(a.isAnEqualPart(b));

@@ -11,7 +11,7 @@ import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
-import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool {
 	private static final String BEANNAME = "tool";
@@ -42,8 +42,8 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 	}
 
 	@Override
-	public WData getBean() {
-		WData b = o.getBean();
+	public WObject getObject() {
+		WObject b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
 		if (part != null) {
 			b.addValue(VALUENAME_MODELID, part.getID());
@@ -60,7 +60,7 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 	}
 
 	@Override
-	public boolean parseBean(WData bean) {
+	public boolean parseBean(WObject bean) {
 		setName(bean.getValue(VALUENAME_NAME));
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
 		if (modelid != null) {
@@ -164,14 +164,14 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 
 	@Override
 	public int hashCode() {
-		return getBean().toText().hashCode();
+		return getObject().toText().hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof LOTToolImpl) {
 			LOTToolImpl tool = (LOTToolImpl) obj;
-			return getBean().toText().equals(tool.getBean().toText());
+			return getObject().toText().equals(tool.getObject().toText());
 		} else {
 			return false;
 		}

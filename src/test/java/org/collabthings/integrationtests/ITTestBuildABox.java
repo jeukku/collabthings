@@ -214,7 +214,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		boxfactory.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 10,
 				10));
 		log.info("platesource " + squarefactory + " with square " + square);
-		log.info("square bean " + square.getBean());
+		log.info("square bean " + square.getObject());
 
 		boxfactory.publish();
 		return boxfactory;

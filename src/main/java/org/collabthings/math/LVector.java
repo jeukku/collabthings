@@ -2,7 +2,7 @@ package org.collabthings.math;
 
 import javax.vecmath.Vector3d;
 
-import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 public class LVector extends Vector3d {
 	private static final long serialVersionUID = 1L;
@@ -19,7 +19,7 @@ public class LVector extends Vector3d {
 		super(0, 0, 0);
 	}
 
-	public LVector(WData b) {
+	public LVector(WObject b) {
 		set(b);
 	}
 
@@ -45,15 +45,15 @@ public class LVector extends Vector3d {
 		return n;
 	}
 
-	public WData getBean(String name) {
-		WData b = new WData(name);
+	public WObject getBean() {
+		WObject b = new WObject();
 		b.addValue("x", x);
 		b.addValue("y", y);
 		b.addValue("z", z);
 		return b;
 	}
 
-	public void set(WData b) {
+	public void set(WObject b) {
 		x = b.getDoubleValue("x");
 		y = b.getDoubleValue("y");
 		z = b.getDoubleValue("z");

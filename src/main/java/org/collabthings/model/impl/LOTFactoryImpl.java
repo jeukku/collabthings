@@ -21,8 +21,8 @@ import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
-import waazdoh.common.WData;
 import waazdoh.common.WLogger;
+import waazdoh.common.WObject;
 
 public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	public static final String BEANNAME = "factory";
@@ -42,10 +42,10 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	private final LOTBoundingBox bbox = new LOTBoundingBox(new LVector(),
 			new LVector());
 	private LOTBinaryModel model;
-	private LVector tooluserspawnlocation;
+	private LVector tooluserspawnlocation = new LVector();
 
 	// used as a proxy
-	private WData bean;
+	private WObject bean;
 
 	public LOTFactoryImpl(final LOTClient nclient) {
 		this.client = nclient;
@@ -86,8 +86,8 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	@Override
-	public WData getBean() {
-		WData b = o.getBean();
+	public WObject getObject() {
+		WObject b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
 
 		if (getEnv() != null) {
@@ -97,16 +97,16 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		addVectorBean(b, VALUENAME_SPAWNLOCATION, tooluserspawnlocation);
 
 		if (bbox != null) {
-			b.add(bbox.getBean());
+			b.add(LOTBoundingBox.BEAN_NAME, bbox.getBean());
 		}
+
 		if (getModel() != null) {
 			b.addValue(VALUENAME_MODELID, model.getID());
 		}
 
-		WData bchildfactories = b.add("factories");
 		for (String cname : getFactoryMap().keySet()) {
 			LOTAttachedFactory cf = getFactory(cname);
-			WData bchildfactory = bchildfactories.add("item");
+			WObject bchildfactory = new WObject();
 			bchildfactory.addValue("name", cname);
 			if (cf.getBookmark() != null) {
 				bchildfactory.addValue("bookmark", cf.getBookmark());
@@ -114,30 +114,32 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 				bchildfactory
 						.addValue("id", cf.getFactory().getID().toString());
 			}
-			bchildfactory.add(cf.getOrientation().getBean("orientation"));
+			bchildfactory.add("orientation", cf.getOrientation().getBean());
+
+			b.addToList("factories", bchildfactory);
 		}
 		//
 		return b;
 	}
 
-	private void addVectorBean(WData b, String valuename, LVector v) {
+	private void addVectorBean(WObject b, String valuename, LVector v) {
 		if (v != null) {
-			WData vectorbean = v.getBean(valuename);
-			b.add(vectorbean);
+			WObject vectorbean = v.getBean();
+			b.add(valuename, vectorbean);
 		}
 	}
 
 	@Override
-	public boolean parseBean(WData bean) {
+	public boolean parseBean(WObject bean) {
 		this.bean = bean;
 		setName(bean.getValue(VALUENAME_NAME));
 
-		WData beansl = bean.get(VALUENAME_SPAWNLOCATION);
+		WObject beansl = bean.get(VALUENAME_SPAWNLOCATION);
 		if (beansl != null) {
 			tooluserspawnlocation = new LVector(beansl);
 		}
 
-		WData bbbox = bean.get(LOTBoundingBox.BEAN_NAME);
+		WObject bbbox = bean.get(LOTBoundingBox.BEAN_NAME);
 		if (bbbox != null) {
 			bbox.set(bbbox);
 		}
@@ -266,14 +268,14 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	@Override
 	public int hashCode() {
-		return getBean().toText().hashCode();
+		return getObject().toText().hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof LOTFactoryImpl) {
 			LOTFactoryImpl fact = (LOTFactoryImpl) obj;
-			return getBean().toText().equals(fact.getBean().toText());
+			return getObject().toText().equals(fact.getObject().toText());
 		} else {
 			return false;
 		}
@@ -314,9 +316,8 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		if (factories == null) {
 			factories = new HashMap<String, LOTAttachedFactory>();
 
-			WData bchildfactories = bean.get("factories");
-			List<WData> bcfs = bchildfactories.getChildren();
-			for (WData bchildfactory : bcfs) {
+			List<WObject> bcfs = bean.getObjectList("factories");
+			for (WObject bchildfactory : bcfs) {
 				LOTFactoryImpl f = new LOTFactoryImpl(this.client);
 
 				String cfname = bchildfactory.getValue("name");
@@ -334,7 +335,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 				} else {
 					WLogger.getLogger(this).error(
 							"failed to load childfactory "
-									+ bchildfactory.getText());
+									+ bchildfactory.toText());
 				}
 			}
 		}

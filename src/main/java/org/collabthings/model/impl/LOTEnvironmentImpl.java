@@ -17,7 +17,7 @@ import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
-import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	private static final String BEANNAME = "env";
@@ -37,7 +37,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	private LLog log;
 
 	private String name = "env";
-	private WData bean;
+	private WObject bean;
 
 	public LOTEnvironmentImpl(LOTClient nclient) {
 		this.client = nclient;
@@ -67,8 +67,8 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	}
 
 	@Override
-	public WData getBean() {
-		WData b = o.getBean();
+	public WObject getObject() {
+		WObject b = o.getBean();
 
 		b.addValue("name", getName());
 
@@ -80,27 +80,27 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		return b;
 	}
 
-	private void getToolsBean(WData b) {
-		WData toolbean = b.add(VALUENAME_TOOLS);
+	private void getToolsBean(WObject b) {
 		Set<String> toolnames = tools.keySet();
 		for (String string : toolnames) {
 			LOTTool s = getTool(string);
-			WData sbean = toolbean.add("tool");
-			sbean.addValue("name", string);
-			sbean.addValue("id", s.getID());
+			WObject o = new WObject();
+			o.addValue("name", string);
+			o.addValue("id", s.getID());
+			b.addToList(VALUENAME_TOOLS, o);
 		}
 	}
 
-	private void getScriptsBean(WData b) {
+	private void getScriptsBean(WObject b) {
 		synchronized (getScriptsSet()) {
-			WData scriptbean = b.add(VALUENAME_SCRIPTS);
 			Set<String> scriptnames = getScriptsSet().keySet();
 			for (String string : scriptnames) {
 				LOTScript s = getScript(string);
 				if (s != null) {
-					WData sbean = scriptbean.add("script");
-					sbean.addValue("name", string);
-					sbean.addValue("id", s.getID());
+					WObject so = new WObject();
+					so.addValue("name", string);
+					so.addValue("id", s.getID().toString());
+					b.addToList(VALUENAME_SCRIPTS, so);
 				} else {
 					getLogger().warning("script \"" + string + "\" null");
 				}
@@ -108,30 +108,30 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		}
 	}
 
-	private void getVectorParametersBean(WData b) {
-		WData bvectorparams = b.add(VALUENAME_VPARAMS);
+	private void getVectorParametersBean(WObject b) {
 		Set<String> names = vparameters.keySet();
 		for (String string : names) {
 			LVector v = getVectorParameter(string);
-			WData sbean = bvectorparams.add(VALUENAME_MAPITEM);
+			WObject sbean = new WObject();
 			sbean.addValue("name", string);
-			sbean.add(v.getBean("value"));
+			sbean.add("value", v.getBean());
+			b.addToList(VALUENAME_VPARAMS, sbean);
 		}
 	}
 
-	private void getParametersBean(WData b) {
-		WData bparams = b.add(VALUENAME_PARAMS);
+	private void getParametersBean(WObject b) {
 		Set<String> names = parameters.keySet();
 		for (String string : names) {
 			String s = getParameter(string);
-			WData sbean = bparams.add(VALUENAME_MAPITEM);
+			WObject sbean = new WObject();
 			sbean.addValue("name", string);
 			sbean.addValue("value", s);
+			b.addToList(VALUENAME_PARAMS, sbean);
 		}
 	}
 
 	@Override
-	public boolean parseBean(WData bean) {
+	public boolean parseBean(WObject bean) {
 		this.bean = bean;
 
 		parseTools(bean);
@@ -151,11 +151,10 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		return scripts;
 	}
 
-	private void parseScripts(WData bean) {
+	private void parseScripts(WObject bean) {
 		scripts = new HashMap<>();
-		WData ssbean = bean.get(VALUENAME_SCRIPTS);
-		List<WData> sbeans = ssbean.getChildren();
-		for (WData sbean : sbeans) {
+		List<WObject> sbeans = bean.getObjectList(VALUENAME_SCRIPTS);
+		for (WObject sbean : sbeans) {
 			String scriptname = sbean.getValue("name");
 			MStringID id = sbean.getIDValue("id");
 			LOTScriptImpl script = new LOTScriptImpl(client);
@@ -164,10 +163,9 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		}
 	}
 
-	private void parseTools(WData bean) {
-		WData tbean = bean.get(VALUENAME_TOOLS);
-		List<WData> tbeans = tbean.getChildren();
-		for (WData b : tbeans) {
+	private void parseTools(WObject bean) {
+		List<WObject> tbeans = bean.getObjectList(VALUENAME_TOOLS);
+		for (WObject b : tbeans) {
 			String toolname = b.getValue("name");
 			MStringID id = b.getIDValue("id");
 			LOTToolImpl tool = new LOTToolImpl(client, id);
@@ -175,22 +173,20 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		}
 	}
 
-	private void parseParameters(WData bean) {
-		WData pbean = bean.get(VALUENAME_PARAMS);
-		List<WData> pbeans = pbean.getChildren();
-		for (WData b : pbeans) {
+	private void parseParameters(WObject bean) {
+		List<WObject> pbeans = bean.getObjectList(VALUENAME_PARAMS);
+		for (WObject b : pbeans) {
 			String param = b.getValue("name");
 			String value = b.getValue("value");
 			parameters.put(param, value);
 		}
 	}
 
-	private void parseVParameters(WData bean) {
-		WData pbean = bean.get(VALUENAME_VPARAMS);
-		List<WData> pbeans = pbean.getChildren();
-		for (WData b : pbeans) {
+	private void parseVParameters(WObject bean) {
+		List<WObject> pbeans = bean.getObjectList(VALUENAME_VPARAMS);
+		for (WObject b : pbeans) {
 			String name = b.getValue("name");
-			WData value = b.get("value");
+			WObject value = b.get("value");
 			LVector v = new LVector(value);
 			vparameters.put(name, v);
 		}
@@ -259,7 +255,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 			tools.put(newname, t);
 		}
 	}
-	
+
 	@Override
 	public void deleteTool(String string) {
 		synchronized (tools) {
@@ -343,7 +339,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	public PrintOut printOut() {
 		PrintOut po = new PrintOut();
 
-		po.append(0, getBean().toText());
+		po.append(0, getObject().toText());
 
 		return po;
 	}

@@ -22,7 +22,7 @@ import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
-import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder,
 		ServiceObjectData {
@@ -106,8 +106,8 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder,
 	}
 
 	@Override
-	public WData getBean() {
-		WData b = o.getBean();
+	public WObject getObject() {
+		WObject b = o.getBean();
 
 		b.addValue("name", getName());
 		b.addValue("envid", env.getID());
@@ -116,7 +116,7 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder,
 	}
 
 	@Override
-	public boolean parseBean(WData bean) {
+	public boolean parseBean(WObject bean) {
 		name = bean.getValue("name");
 		env = new LOTEnvironmentImpl(client, bean.getIDValue("envid"));
 		return true;
@@ -161,7 +161,7 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder,
 		PrintOut po = new PrintOut();
 		po.append("RunEnvBuilder");
 		po.append("Bean");
-		po.append(1, getBean().toText());
+		po.append(1, getObject().toText());
 
 		po.append("Env");
 		po.append(1, env.printOut());

@@ -18,7 +18,7 @@ import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
-import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	private static final String BEANNAME = "part";
@@ -52,55 +52,53 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	}
 
 	@Override
-	public WData getBean() {
-		WData b = o.getBean();
+	public WObject getObject() {
+		WObject b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());
 
 		if (model != null) {
-			WData md = b.add("model");
+			WObject md = b.add("model");
 			md.addValue("id", model.getID());
 			md.addValue("type", model.getModelType());
 		}
 
-		b.add(material.getBean());
+		b.add("material", material.getBean());
 
 		if (getBoundingBox() != null) {
-			b.add(getBoundingBox().getBean());
+			b.add(LOTBoundingBox.BEAN_NAME, getBoundingBox().getBean());
 		}
 		//
-		WData bparts = getSubPartsBean();
-		//
-		b.add(bparts);
+		addSubParts(b);
 
 		//
 		return b;
 	}
 
-	private synchronized WData getSubPartsBean() {
-		WData bparts = new WData("parts");
+	private synchronized void addSubParts(WObject b) {
+		List<WObject> list = new LinkedList<>();
 		for (LOTSubPart part : getSubParts()) {
-			WData bpart = bparts.add("part");
+			WObject bpart = new WObject("part");
 			((LOTSubPartImpl) part).getBean(bpart);
+			b.addToList("parts", bpart);
 		}
-		return bparts;
 	}
 
 	@Override
-	public boolean parseBean(WData bean) {
+	public boolean parseBean(WObject bean) {
 		setName(bean.getValue(VALUENAME_NAME));
 
 		parseModel(bean.get("model"));
 
 		material = new LOTMaterialImpl(bean.get("material"));
 
-		WData beanboundingbox = bean.get(LOTBoundingBox.BEAN_NAME);
+		WObject beanboundingbox = bean.get(LOTBoundingBox.BEAN_NAME);
 		if (beanboundingbox != null) {
 			boundingbox = new LOTBoundingBox(beanboundingbox);
 		}
 		//
-		WData bparts = bean.get("parts");
-		if (bparts != null) {
-			for (WData bpart : bparts.getChildren()) {
+		List<WObject> parts = bean.getObjectList("parts");
+		if (parts != null) {
+			for (WObject bpart : parts) {
 				LOTSubPartImpl subpart = new LOTSubPartImpl(this, env);
 				subpart.parse(bpart);
 				addPart(subpart);
@@ -110,7 +108,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		return getName() != null;
 	}
 
-	private void parseModel(WData data) {
+	private void parseModel(WObject data) {
 		if (data != null) {
 			String type = data.getValue("type");
 			if (LOTModel.SCAD.equals(type)) {
@@ -228,10 +226,20 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	@Override
 	public synchronized boolean isAnEqualPart(LOTPart p) {
 		if (p instanceof LOTPartImpl) {
-			LOTPartImpl impl = (LOTPartImpl) p;
-			WData thisb = this.getSubPartsBean();
-			WData thatb = impl.getSubPartsBean();
-			return thisb.equals(thatb);
+			LOTPartImpl that = (LOTPartImpl) p;
+			WObject thisb = new WObject();
+			addSubParts(thisb);
+			WObject thatb = new WObject();
+			that.addSubParts(thatb);
+			thisb.addValue("modifytime", 0);
+			thatb.addValue("modifytime", 0);
+			if (!thisb.equals(thatb)) {
+				LLog.getLogger(this).info("this " + thisb.toText());
+				LLog.getLogger(this).info("is not equal to " + thatb.toText());
+				return false;
+			} else {
+				return true;
+			}
 		} else {
 			return false;
 		}

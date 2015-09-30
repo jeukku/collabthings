@@ -5,6 +5,7 @@ import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
 
 import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 public class LOTAttachedFactory {
 	private LOTFactory factory;
@@ -48,8 +49,8 @@ public class LOTAttachedFactory {
 		return new LTransformation(orientation);
 	}
 
-	public void set(WData wData) {
-		orientation = new LOrientation(wData);
+	public void set(WObject wObject) {
+		orientation = new LOrientation(wObject);
 	}
 
 	public String getBookmark() {

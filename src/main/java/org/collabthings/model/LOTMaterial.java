@@ -1,11 +1,11 @@
 package org.collabthings.model;
 
-import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 public interface LOTMaterial {
 
 	double[] getColor();
 
-	WData getBean();
+	WObject getBean();
 
 }

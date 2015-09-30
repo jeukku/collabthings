@@ -13,7 +13,7 @@ import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
-import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 /**
  * 
@@ -52,15 +52,15 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	}
 
 	@Override
-	public WData getBean() {
-		WData b = o.getBean();
+	public WObject getObject() {
+		WObject b = o.getBean();
 		b.setBase64Value(SCRIPT, script);
 		b.addValue("name", name);
 		return b;
 	}
 
 	@Override
-	public boolean parseBean(final WData bean) {
+	public boolean parseBean(final WObject bean) {
 		script = bean.getBase64Value(SCRIPT);
 		inv = null;
 		this.name = bean.getValue("name");

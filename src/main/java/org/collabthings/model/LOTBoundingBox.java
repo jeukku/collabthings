@@ -2,7 +2,7 @@ package org.collabthings.model;
 
 import org.collabthings.math.LVector;
 
-import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 public class LOTBoundingBox {
 	public static final String BEAN_NAME = "bbox";
@@ -14,7 +14,7 @@ public class LOTBoundingBox {
 		this.b = b;
 	}
 
-	public LOTBoundingBox(WData beanboundingbox) {
+	public LOTBoundingBox(WObject beanboundingbox) {
 		set(beanboundingbox);
 	}
 
@@ -26,19 +26,18 @@ public class LOTBoundingBox {
 		return b;
 	}
 
-	public WData getBean() {
-		WData bean = new WData(BEAN_NAME);
-		WData beana = a.getBean("a");
-		bean.add(beana);
-		WData beanb = b.getBean("b");
-		beanb.setName("b");
-		bean.add(beanb);
+	public WObject getBean() {
+		WObject bean = new WObject();
+		WObject beana = a.getBean();
+		bean.add("a", beana);
+		WObject beanb = b.getBean();
+		bean.add("b", beanb);
 		return bean;
 	}
 
-	public void set(WData bean) {
-		a = new LVector(bean.get("a"));
-		b = new LVector(bean.get("b"));
+	public void set(WObject bbbox) {
+		a = new LVector(bbbox.get("a"));
+		b = new LVector(bbbox.get("b"));
 	}
 
 	public void set(LVector a2, LVector b2) {
