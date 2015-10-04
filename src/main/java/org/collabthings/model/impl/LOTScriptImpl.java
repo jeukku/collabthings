@@ -60,7 +60,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 	}
 
 	@Override
-	public boolean parseBean(final WObject bean) {
+	public boolean parse(final WObject bean) {
 		script = bean.getBase64Value(SCRIPT);
 		inv = null;
 		this.name = bean.getValue("name");

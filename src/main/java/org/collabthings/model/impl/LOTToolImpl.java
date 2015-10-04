@@ -60,7 +60,7 @@ public final class LOTToolImpl implements ServiceObjectData, LOTObject, LOTTool 
 	}
 
 	@Override
-	public boolean parseBean(WObject bean) {
+	public boolean parse(WObject bean) {
 		setName(bean.getValue(VALUENAME_NAME));
 		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
 		if (modelid != null) {

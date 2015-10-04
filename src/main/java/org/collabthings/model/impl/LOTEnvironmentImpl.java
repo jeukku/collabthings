@@ -131,7 +131,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 	}
 
 	@Override
-	public boolean parseBean(WObject bean) {
+	public boolean parse(WObject bean) {
 		this.bean = bean;
 
 		parseTools(bean);

@@ -116,7 +116,7 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder,
 	}
 
 	@Override
-	public boolean parseBean(WObject bean) {
+	public boolean parse(WObject bean) {
 		name = bean.getValue("name");
 		env = new LOTEnvironmentImpl(client, bean.getIDValue("envid"));
 		return true;

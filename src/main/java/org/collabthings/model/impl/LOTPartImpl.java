@@ -84,7 +84,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	}
 
 	@Override
-	public boolean parseBean(WObject bean) {
+	public boolean parse(WObject bean) {
 		setName(bean.getValue(VALUENAME_NAME));
 
 		parseModel(bean.get("model"));

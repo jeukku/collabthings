@@ -130,7 +130,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	@Override
-	public boolean parseBean(WObject bean) {
+	public boolean parse(WObject bean) {
 		this.bean = bean;
 		setName(bean.getValue(VALUENAME_NAME));
 

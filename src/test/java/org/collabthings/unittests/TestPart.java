@@ -77,7 +77,7 @@ public final class TestPart extends LOTTestCase {
 			LOTPartImpl p = (LOTPartImpl) e.getObjectFactory().getPart();
 			WObject bean = new WObject("part");
 			bean.addValue("parts", 0);
-			p.parseBean(bean);
+			p.parse(bean);
 			assertFalse(true);
 		} catch (ClassCastException e) {
 			assertNotNull(e);

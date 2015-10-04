@@ -111,7 +111,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 	}
 
 	@Override
-	public boolean parseBean(WObject bean) {
+	public boolean parse(WObject bean) {
 		name = bean.getValue("name");
 		binaryid = new BinaryID(bean.getIDValue(BINARYID));
 		scale = bean.getDoubleValue(SCALE);

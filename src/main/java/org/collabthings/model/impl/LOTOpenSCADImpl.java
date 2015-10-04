@@ -228,7 +228,7 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 	}
 
 	@Override
-	public boolean parseBean(final WObject bean) {
+	public boolean parse(final WObject bean) {
 		script = bean.getBase64Value(SCRIPT);
 		this.name = bean.getValue(VARIABLE_NAME);
 		return name != null && script != null;

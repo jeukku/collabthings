@@ -15,4 +15,6 @@ public interface LOTObject {
 
 	WObject getObject();
 
+	boolean parse(WObject o);
+
 }
