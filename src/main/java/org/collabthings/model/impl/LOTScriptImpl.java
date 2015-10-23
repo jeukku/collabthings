@@ -73,8 +73,14 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 
 	@Override
 	public void setScript(final String nscript) {
-		this.script = nscript;
+		this.script = processScript(nscript);
 		inv = null;
+	}
+
+	private String processScript(final String nscript) {
+		String s = nscript;
+		s = s.replace("$SELF", this.client.getService().getUser().getUsername());
+		return s;
 	}
 
 	@Override
@@ -168,6 +174,6 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 
 	@Override
 	public void setName(String name) {
-		this.name = name;
+		this.name = processScript(name);
 	}
 }
