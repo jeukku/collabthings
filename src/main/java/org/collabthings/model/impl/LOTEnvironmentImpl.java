@@ -137,7 +137,8 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		parseTools(bean);
 		parseParameters(bean);
 		parseVParameters(bean);
-
+		parseScripts(bean);
+		
 		name = bean.getValue("name");
 
 		return true;
