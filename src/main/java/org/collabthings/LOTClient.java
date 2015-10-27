@@ -3,6 +3,7 @@ package org.collabthings;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 import org.collabthings.factory.LOTObjectFactory;
 import org.collabthings.model.LOTObject;
@@ -13,7 +14,9 @@ import waazdoh.common.WPreferences;
 import waazdoh.common.client.ServiceClient;
 
 public interface LOTClient {
-	public static final String VERSION = "0.0.1";
+	public static final String VERSION = "0.0.2";
+	public final String LOWEST_ACCEPTED_VERSION = "0.0.2";
+
 	public static final String JAVASCRIPT_FORBIDDENWORDS = "lot.javascript.forbiddenwords";
 
 	LOTObjectFactory getObjectFactory();
@@ -50,4 +53,18 @@ public interface LOTClient {
 		return d.format(date);
 	}
 
+	public static boolean checkVersion(String v) {
+		String a = getParsedVersionString(v);
+		String b = getParsedVersionString(LOWEST_ACCEPTED_VERSION);
+		return a.compareTo(b) >= 0;
+	}
+
+	public static String getParsedVersionString(String v) {
+		String s = "";
+		StringTokenizer vt = new StringTokenizer(v, ".");
+		while (vt.hasMoreTokens()) {
+			s += String.format("%03d", Integer.parseInt(vt.nextToken()));
+		}
+		return s;
+	}
 }
