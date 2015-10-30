@@ -205,7 +205,7 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 			} catch (Exception e1) {
 				log.error(es, "loadModel", e1);
 			}
-		}).start();
+		}, "OpenSCAD readStream").start();
 	}
 
 	private void appendError(String line) {

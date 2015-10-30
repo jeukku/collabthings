@@ -23,6 +23,7 @@ public final class LOTTaskImpl implements LOTTask {
 	public boolean run() {
 		boolean ret = s.run(values);
 		isrun = true;
+		LLog.getLogger(this).info("Task done " + ret);
 		return ret;
 	}
 

@@ -46,12 +46,17 @@ public class LOTSimpleSimulation implements LOTSimulation,
 
 	@Override
 	public boolean run(int maxruntime) {
+		log.info("Starting simulation maxruntime:" + maxruntime);
 		start();
 
 		ConditionWaiter.wait(() -> check(), maxruntime);
+		log.info("Simulation stopping. Every things ok:" + allsuccess);
 		stop();
 
 		done = true;
+
+		log.info("Simulation stopped. Every things ok:" + allsuccess);
+
 		return allsuccess;
 	}
 

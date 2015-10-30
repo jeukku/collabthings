@@ -112,7 +112,7 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 			removeTask(task);
 			runningtasks.add(task);
 			//
-			new Thread(() -> runTask(task)).start();
+			new Thread(() -> runTask(task), "RunEnv run task " + task).start();
 		}
 	}
 
@@ -121,9 +121,12 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 	}
 
 	private void runTask(LOTTask task) {
+		log.info("Running task " + task);
 		if (!task.run()) {
 			fireTaskFailed(task);
 		}
+
+		log.info("Task run " + task);
 
 		synchronized (this) {
 			runningtasks.remove(task);
@@ -131,6 +134,7 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 	}
 
 	private void fireTaskFailed(LOTTask task) {
+		log.info("Task FAILED! " + task);
 		for (RunEnvironmentListener listener : listeners) {
 			listener.taskFailed(this, task);
 		}

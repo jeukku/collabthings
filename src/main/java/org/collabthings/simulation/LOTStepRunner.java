@@ -17,7 +17,8 @@ public class LOTStepRunner {
 			final StepListener listener) {
 		this.maxstep = maxstep;
 		this.minstep = minstep;
-		this.thread = new Thread(() -> launchLoop(listener));
+		this.thread = new Thread(() -> launchLoop(listener),
+				"StepRunner launchLoop");
 		this.thread.start();
 	}
 
