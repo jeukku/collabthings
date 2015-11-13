@@ -250,10 +250,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		getEnvironment().publish();
 		getServiceObject().publish();
 
-		client.publish("/factory/latest", this);
-		client.publish("/factory/" + getName() + "/" + LOTClient.getDateTime(),
-				this);
-		client.publish("/factory/" + getName() + "/latest", this);
+		client.publish(getName(), this);
 	}
 
 	@Override

@@ -194,6 +194,8 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		}
 
 		getServiceObject().publish();
+
+		this.env.publish(getName(), this);
 	}
 
 	@Override
