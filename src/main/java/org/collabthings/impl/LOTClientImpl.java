@@ -98,7 +98,16 @@ public final class LOTClientImpl implements LOTClient {
 	}
 
 	@Override
-	public void publish(String string, LOTObject o) {
+	public void publish(String name, LOTObject o) {
+		createBookmark("/" + o.getObject().getType() + "/latest", o);
+		createBookmark("/" + o.getObject().getType() + "/" + name + "/"
+				+ LOTClient.getDateTime(), o);
+		createBookmark("/" + o.getObject().getType() + "/" + name + "/latest",
+				o);
+		createBookmark(name, o);
+	}
+
+	private void createBookmark(String string, LOTObject o) {
 		String path = "published/" + string;
 		path = path.replace("//", "/");
 
