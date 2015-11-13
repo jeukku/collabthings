@@ -32,6 +32,19 @@ public class LOTStorageImpl implements LOTStorage {
 	}
 
 	@Override
+	public String readStorage(final String fullpath) {
+		String username = fullpath.substring(0, fullpath.indexOf('/'));
+		int indexOf = fullpath.indexOf('/');
+		String path = fullpath.substring(indexOf + 1);
+		String value = service.getStorageArea().read(username, path);
+		LLog.getLogger(this).info(
+				"readStorage username:" + username + " path:" + path
+						+ " got value:\"" + value + "\"");
+
+		return value;
+	}
+
+	@Override
 	public String readStorage(UserVO u, String item) {
 		if (u != null) {
 			return service.getStorageArea().read(u.getUsername(), item);
