@@ -140,10 +140,7 @@ public class LOTRunEnvironmentBuilderImpl implements LOTRunEnvironmentBuilder,
 		env.publish();
 		o.publish();
 
-		client.publish("/builder/latest", this);
-		client.publish("/builder/" + getName() + "/" + LOTClient.getDateTime(),
-				this);
-		client.publish("/builder/" + getName() + "/latest", this);
+		client.publish(getName(), this);
 	}
 
 	public ServiceObject getServiceObject() {
