@@ -80,7 +80,8 @@ public class LOTPool {
 		try {
 			while (isPartPoolEmpty(pool)
 					&& (System.currentTimeMillis() - st) < maxtime) {
-				this.wait();
+				this.wait(maxtime / 4);
+				log.info("waiting for part " + pool + " content:" + this.parts);
 			}
 		} catch (InterruptedException e) {
 			log.error(this, "waitForPart", e);

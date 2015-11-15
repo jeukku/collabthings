@@ -46,12 +46,14 @@ function run(runenv, factory, values) {
 		destpartstate.setLocation(factory.getVector('buildingpartlocation'));
 
 		log.info("Running through all subparts. Destination part "
-				+ destpartstate);
+				+ destpartstate + " subparts:" + part.getSubParts());
 		_.each(part.getSubParts().toArray(), function(subpart) {
 			var callvalues = values.copy();
 			callvalues.put('subpart', subpart);
 			callvalues.put('destpart', destpartstate);
 			callvalues.put('partid', subpart.getPart().getID());
+			
+			log.info("Running through all subparts: calling order with " + callvalues);
 			factory.getFactory("source").call('order', callvalues);
 			
 			if (factory.getFactory("source2") != null) {

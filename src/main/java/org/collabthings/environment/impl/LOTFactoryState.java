@@ -389,6 +389,10 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return runenv.getClient().getObjectFactory().getPart(new MStringID(s));
 	}
 
+	public String readStorage(String path) {
+		return runenv.getClient().getStorage().readStorage(path);
+	}
+
 	public LOTPartState newPart() {
 		LOTPartState partstate = new LOTPartState(runenv, this, runenv
 				.getClient().getObjectFactory().getPart());

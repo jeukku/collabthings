@@ -190,12 +190,13 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		orientation.getNormal().normalize();
 
 		double maxdistance = dtime * speed;
-		if (vdistance.length() < maxdistance) {
-			moveToTarget(vdistance, distance, maxdistance);
-		} else if (distance > MOVING_ORIENTATION_LENGTH_TRIGGER) {
-			move(vdistance, maxdistance);
+		if (distance > MOVING_ORIENTATION_LENGTH_TRIGGER) {
+			if (vdistance.length() < maxdistance) {
+				moveToTarget(vdistance, distance, maxdistance);
+			} else {
+				move(vdistance, maxdistance);
+			}
 		} else {
-			log("Distance less than trigger length");
 			this.notifyAll();
 		}
 	}

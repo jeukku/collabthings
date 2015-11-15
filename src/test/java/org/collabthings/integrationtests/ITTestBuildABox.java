@@ -34,6 +34,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 	//
 	private LOTPart box;
 	private LLog log = LLog.getLogger(this);
+	private LOTPart square;
 
 	public synchronized void testBoxLine() throws NoSuchMethodException,
 			IOException, SAXException, ScriptException, LOTToolException,
@@ -61,9 +62,9 @@ public final class ITTestBuildABox extends LOTTestCase {
 				loadScript(new LOTScriptImpl(client),
 						"linefactory_runenv_order.js"));
 		builder.getEnvironment().setParameter("partid", line.getID());
-		
+
 		builder.setName("boxsetfactorybuilder");
-		
+
 		builder.publish();
 
 		LOTRunEnvironment runenv = builder.getRunEnvironment();
@@ -179,12 +180,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		log.info("Boxfactory " + boxfactory);
 
 		// TODO picking up plates, moving them and leaving them somewhere
-		// Create a plate object
-		LOTPart square = client.getObjectFactory().getPart();
-		square.setName("square");
-		square.setBoundingBox(new LVector(-1, 0, -1), new LVector(1, 0.1, 1));
-		log.info("Square " + square);
-		square.publish();
+		LOTPart square = getSquare(client);
 
 		// Create a box object
 		LOTPart box = createBox(client, square);
@@ -218,6 +214,19 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		boxfactory.publish();
 		return boxfactory;
+	}
+
+	private LOTPart getSquare(LOTClient client) {
+		// Create a plate object
+		if (this.square == null) {
+			this.square = client.getObjectFactory().getPart();
+			square.setName("square");
+			square.setBoundingBox(new LVector(-1, 0, -1),
+					new LVector(1, 0.1, 1));
+			log.info("Square " + square);
+			square.publish();
+		}
+		return square;
 	}
 
 	private LOTFactory createAssemblyFactory(LOTFactory factory,
@@ -258,7 +267,12 @@ public final class ITTestBuildABox extends LOTTestCase {
 			ScriptException, IOException {
 		platesource.setName("platesource");
 
-		platesource.getEnvironment().setParameter("plateid", square.getID());
+		square.publish();
+
+		List<String> searchValue = client.getService().getStorageArea()
+				.searchValue(square.getID().toString());
+		platesource.getEnvironment()
+				.setParameter("bmplate", searchValue.get(0));
 		loadScript(platesource.addScript("order"), "platesource_order.js");
 		loadScript(platesource.addScript("build"), "platesource_build.js");
 

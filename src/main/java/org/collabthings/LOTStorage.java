@@ -12,4 +12,6 @@ public interface LOTStorage {
 	List<String> getUserPublished(String userid, int start, int count);
 
 	String readStorage(UserVO u, String item);
+
+	String readStorage(String path);
 }
