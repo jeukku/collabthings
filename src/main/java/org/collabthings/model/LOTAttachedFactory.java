@@ -4,7 +4,6 @@ import org.collabthings.math.LOrientation;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
 
-import waazdoh.common.WData;
 import waazdoh.common.WObject;
 
 public class LOTAttachedFactory {

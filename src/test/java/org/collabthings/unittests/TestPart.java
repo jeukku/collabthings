@@ -13,7 +13,6 @@ import org.collabthings.model.impl.LOTPartImpl;
 import org.xml.sax.SAXException;
 
 import waazdoh.common.MStringID;
-import waazdoh.common.WData;
 import waazdoh.common.WObject;
 
 public final class TestPart extends LOTTestCase {

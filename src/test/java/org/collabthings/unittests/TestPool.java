@@ -1,25 +1,12 @@
 package org.collabthings.unittests;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.collabthings.LOTClient;
 import org.collabthings.LOTTestCase;
 import org.collabthings.environment.impl.LOTPool;
-import org.collabthings.math.LVector;
-import org.collabthings.model.LOTBinaryModel;
-import org.collabthings.model.LOTBoundingBox;
-import org.collabthings.model.LOTMaterial;
-import org.collabthings.model.LOTModel;
-import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
-import org.collabthings.model.LOTSubPart;
-import org.collabthings.model.impl.LOTPartImpl;
 import org.xml.sax.SAXException;
-
-import waazdoh.common.ObjectID;
-import waazdoh.common.WData;
 
 public final class TestPool extends LOTTestCase {
 
