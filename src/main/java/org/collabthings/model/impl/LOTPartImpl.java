@@ -53,7 +53,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	@Override
 	public WObject getObject() {
-		WObject b = o.getBean();
+		WObject b = o.getBean().add("content");
 		b.addValue(VALUENAME_NAME, getName());
 
 		if (model != null) {
@@ -85,6 +85,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	@Override
 	public boolean parse(WObject bean) {
+		bean = bean.get("content");
 		setName(bean.getValue(VALUENAME_NAME));
 
 		parseModel(bean.get("model"));
