@@ -53,7 +53,8 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	@Override
 	public WObject getObject() {
-		WObject b = o.getBean().add("content");
+		WObject org = o.getBean();
+		WObject b = org.add("content");
 		b.addValue(VALUENAME_NAME, getName());
 
 		if (model != null) {
@@ -71,7 +72,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 		addSubParts(b);
 
 		//
-		return b;
+		return org;
 	}
 
 	private synchronized void addSubParts(WObject b) {

@@ -71,16 +71,12 @@ public final class TestPart extends LOTTestCase {
 	}
 
 	public void testParseFalseBean() throws IOException, SAXException {
-		try {
-			LOTClient e = getNewClient();
-			LOTPartImpl p = (LOTPartImpl) e.getObjectFactory().getPart();
-			WObject bean = new WObject("part");
-			bean.addValue("parts", 0);
-			p.parse(bean);
-			assertFalse(true);
-		} catch (ClassCastException e) {
-			assertNotNull(e);
-		}
+		LOTClient e = getNewClient();
+		LOTPartImpl p = (LOTPartImpl) e.getObjectFactory().getPart();
+		WObject bean = new WObject("part");
+		bean.addValue("parts", 0);
+		boolean success = p.parse(bean);
+		assertFalse(success);
 	}
 
 	public void testBoundingBox() {
@@ -116,7 +112,7 @@ public final class TestPart extends LOTTestCase {
 
 		setupSubparts(a, c);
 		setupSubparts(b, c);
-		
+
 		assertFalse(a.isAnEqualPart(c));
 		assertFalse(b.isAnEqualPart(c));
 		assertTrue(a.isAnEqualPart(b));

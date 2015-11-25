@@ -54,9 +54,13 @@ public interface LOTClient {
 	}
 
 	public static boolean checkVersion(String v) {
-		String a = getParsedVersionString(v);
-		String b = getParsedVersionString(LOWEST_ACCEPTED_VERSION);
-		return a.compareTo(b) >= 0;
+		if (v != null) {
+			String a = getParsedVersionString(v);
+			String b = getParsedVersionString(LOWEST_ACCEPTED_VERSION);
+			return a.compareTo(b) >= 0;
+		} else {
+			return false;
+		}
 	}
 
 	public static String getParsedVersionString(String v) {
