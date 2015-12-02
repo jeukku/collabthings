@@ -45,7 +45,7 @@ public class LOTScriptRunnerImpl implements LOTScriptRunner {
 	 */
 	public boolean run(LOTValues values) {
 		if (script != null) {
-			return AccessController
+			Boolean ret = AccessController
 					.doPrivileged(new PrivilegedAction<Boolean>() {
 
 						public Boolean run() {
@@ -62,9 +62,13 @@ public class LOTScriptRunnerImpl implements LOTScriptRunner {
 							} catch (NoSuchMethodException | ScriptException e1) {
 								handleException(e1);
 								return false;
+							} catch (Exception e) {
+								handleException(e);
+								return false;
 							}
 						}
 					});
+			return ret;
 		} else {
 			return false;
 		}

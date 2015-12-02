@@ -271,6 +271,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		List<String> searchValue = client.getService().getStorageArea()
 				.searchValue(square.getID().toString());
+		log.info("createPlateSource square search result " + searchValue);
 		platesource.getEnvironment()
 				.setParameter("bmplate", searchValue.get(0));
 		loadScript(platesource.addScript("order"), "platesource_order.js");

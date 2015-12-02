@@ -11,6 +11,7 @@ import waazdoh.common.vo.UserVO;
 public class LOTStorageImpl implements LOTStorage {
 
 	private ServiceClient service;
+	private LLog log = LLog.getLogger(this);
 
 	public LOTStorageImpl(ServiceClient service) {
 		this.service = service;
@@ -33,15 +34,19 @@ public class LOTStorageImpl implements LOTStorage {
 
 	@Override
 	public String readStorage(final String fullpath) {
-		String username = fullpath.substring(0, fullpath.indexOf('/'));
 		int indexOf = fullpath.indexOf('/');
-		String path = fullpath.substring(indexOf + 1);
-		String value = service.getStorageArea().read(username, path);
-		LLog.getLogger(this).info(
-				"readStorage username:" + username + " path:" + path
-						+ " got value:\"" + value + "\"");
+		if (indexOf >= 0) {
+			String username = fullpath.substring(0, indexOf);
+			String path = fullpath.substring(indexOf + 1);
+			String value = service.getStorageArea().read(username, path);
+			log.info("readStorage username:" + username + " path:" + path
+					+ " got value:\"" + value + "\"");
 
-		return value;
+			return value;
+		} else {
+			log.info("readStorage called without a path \"" + fullpath + "\"");
+			return null;
+		}
 	}
 
 	@Override
