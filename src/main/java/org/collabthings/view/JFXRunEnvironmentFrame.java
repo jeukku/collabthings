@@ -14,6 +14,7 @@ import org.collabthings.view.JFXSimulationView.ViewCanvas;
 public class JFXRunEnvironmentFrame {
 	private LOTRunEnvironment env;
 	private JFrame f;
+	private JFXSimulationView view;
 
 	public JFXRunEnvironmentFrame(LOTRunEnvironment env) {
 		this.env = env;
@@ -33,7 +34,7 @@ public class JFXRunEnvironmentFrame {
 		f.getContentPane().setLayout(new BorderLayout());
 
 		JFXPanel panel = new JFXPanel();
-		JFXSimulationView view = new JFXSimulationView(env);
+		view = new JFXSimulationView(env);
 		view.setCanvas(new ViewCanvas() {
 
 			@Override
@@ -72,7 +73,9 @@ public class JFXRunEnvironmentFrame {
 	}
 
 	public void step(double dtime) {
-		env.step(dtime);
+		if (view != null) {
+			view.step(dtime);
+		}
 	}
 
 }
