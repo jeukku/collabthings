@@ -15,9 +15,12 @@ public final class TestLists extends LOTTestCase {
 		//
 
 		e.getStorage().writeToStorage("testpath", "testname", "testvalue");
-		List<String> list = e.getStorage().listStorage("testpath");
+		List<String> list = e.getStorage().listStorage(
+				e.getService().getUser().getUsername() + "/testpath");
 		assertEquals("testname", list.iterator().next());
-		assertEquals("testvalue",
-				e.getStorage().readStorage(e.getService().getUser(), "testpath/testname"));
+		assertEquals(
+				"testvalue",
+				e.getStorage().readStorage(e.getService().getUser(),
+						"testpath/testname"));
 	}
 }

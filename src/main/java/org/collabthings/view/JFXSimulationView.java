@@ -161,7 +161,9 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 		Group g = n.group;
 
-		stack.push(ps.getTransformation());
+		LTransformation transformation = ps.getTransformation();
+		log.info("part state " + transformation);
+		stack.push(transformation);
 
 		setTransformation(stack, g);
 		stack.pull();
@@ -331,7 +333,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 					Box b = new Box(width, height, depth);
 
 					b.setMaterial(getRandomMaterial());
-					b.setDrawMode(DrawMode.LINE);
+					b.setDrawMode(DrawMode.FILL);
 					g.getChildren().add(b);
 				} else {
 					log.info("Boundingbox null " + part);
