@@ -9,6 +9,7 @@ import org.collabthings.LOTClient;
 import org.collabthings.factory.LOTObjectFactory;
 import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTInfo;
+import org.collabthings.model.LOTPartBuilder;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
 import org.collabthings.model.impl.LOT3DModelImpl;
@@ -31,6 +32,7 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	private List<LOT3DModelImpl> models = new LinkedList<>();
 	private List<LOTScriptImpl> scripts = new LinkedList<>();
 	private List<LOTRunEnvironmentBuilder> runtimebuilders = new LinkedList<>();
+	private List<LOTPartBuilder> partbuilders = new LinkedList<>();
 
 	private LLog log = LLog.getLogger(this);
 
@@ -64,6 +66,15 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 			scripts.add(s);
 			return s;
 		}
+	}
+
+	@Override
+	public LOTPartBuilder getPartBuilder() {
+		LOTPartBuilder pb = new LOTPartBuilderImpl(client);
+		synchronized (partbuilders) {
+			partbuilders.add(pb);
+		}
+		return pb;
 	}
 
 	@Override

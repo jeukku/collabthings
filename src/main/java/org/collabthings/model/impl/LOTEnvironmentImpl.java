@@ -102,7 +102,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 					so.addValue("id", s.getID().toString());
 					b.addToList(VALUENAME_SCRIPTS, so);
 				} else {
-					getLogger().warning("script \"" + string + "\" null");
+					log().warning("script \"" + string + "\" null");
 				}
 			}
 		}
@@ -329,7 +329,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		return getServiceObject().getID();
 	}
 
-	private LLog getLogger() {
+	public LLog log() {
 		if (log == null) {
 			this.log = LLog.getLogger(this);
 		}

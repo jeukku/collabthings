@@ -1,11 +1,5 @@
 package org.collabthings.environment.impl;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-
-import javax.script.Invocable;
-import javax.script.ScriptException;
-
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTScriptRunner;
 import org.collabthings.model.LOTRuntimeObject;
@@ -45,41 +39,13 @@ public class LOTScriptRunnerImpl implements LOTScriptRunner {
 	 */
 	public boolean run(LOTValues values) {
 		if (script != null) {
-			Boolean ret = AccessController
-					.doPrivileged(new PrivilegedAction<Boolean>() {
-
-						public Boolean run() {
-							try {
-
-								Invocable i = script.getInvocable();
-								if (i != null) {
-									i.invokeFunction("run", runenv, runo,
-											values);
-									return true;
-								} else {
-									return false;
-								}
-							} catch (NoSuchMethodException | ScriptException e1) {
-								handleException(e1);
-								return false;
-							} catch (Exception e) {
-								handleException(e);
-								return false;
-							}
-						}
-					});
+			LOTScriptInvoker inv = new LOTScriptInvoker(script);
+			boolean ret = inv.run("run", runenv, runo, values);
+			error = inv.getError();
 			return ret;
 		} else {
 			return false;
 		}
-	}
-
-	private void handleException(Exception e1) {
-		this.error = "ERROR " + e1 + " in script " + script + " called in "
-				+ runenv + " in object " + runo;
-		log.info("Error in script " + script);
-		log.info("Error in script " + script + " exception " + e1);
-		log.error(this, "run", e1);
 	}
 
 	@Override
