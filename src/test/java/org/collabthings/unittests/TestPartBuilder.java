@@ -4,12 +4,9 @@ import java.io.IOException;
 
 import org.collabthings.LOTClient;
 import org.collabthings.LOTTestCase;
-import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
-import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTPartBuilder;
 import org.collabthings.model.LOTScript;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
 
 public final class TestPartBuilder extends LOTTestCase {
 
@@ -17,20 +14,27 @@ public final class TestPartBuilder extends LOTTestCase {
 		LOTClient client = getNewClient();
 		assertNotNull(client);
 		//
-		LOTPartBuilder pb = client.getObjectFactory().getPartBuilder();
-		assertNotNull(pb);
+		LOTPartBuilder pba = client.getObjectFactory().getPartBuilder();
+		assertNotNull(pba);
 
 		String stext = loadATestScript("partbuilder/test.js");
 		LOTScript s = client.getObjectFactory().getScript();
 		s.setScript(stext);
-		pb.setScript(s);
+		pba.setScript(s);
+		
+		pba.publish();
+		
 		//
-		LOTEnvironment env = new LOTEnvironmentImpl(client);
-		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client, env);
+		clientb = getNewClient();
 
-		LOTPart p = client.getObjectFactory().getPart();
-		assertTrue(pb.run(p));
+		LOTPartBuilder pbb = clientb.getObjectFactory().getPartBuilder(
+				pba.getID().getStringID());
 
+		LOTPart p = clientb.getObjectFactory().getPart();
+		assertTrue(pbb.run(p));
+		assertNull(pbb.getError());
+		
+		assertEquals(1, p.getSubParts().size());
 	}
 
 }

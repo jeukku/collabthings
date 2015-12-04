@@ -78,6 +78,27 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	}
 
 	@Override
+	public LOTPartBuilder getPartBuilder(MStringID builderid) {
+		synchronized (partbuilders) {
+
+			for (LOTPartBuilder builder : partbuilders) {
+				if (builder.getID().equals(builderid)) {
+					return builder;
+				}
+			}
+
+			LOTPartBuilderImpl builder = new LOTPartBuilderImpl(client);
+			if (builder.load(builderid)) {
+				partbuilders.add(builder);
+				return builder;
+			} else {
+				log.info("Failed to load factory " + builderid);
+				return null;
+			}
+		}
+	}
+
+	@Override
 	public LOTFactoryImpl getFactory() {
 		LOTFactoryImpl f = new LOTFactoryImpl(client);
 		synchronized (factories) {
