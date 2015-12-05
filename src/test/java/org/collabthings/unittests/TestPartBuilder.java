@@ -17,6 +17,9 @@ public final class TestPartBuilder extends LOTTestCase {
 		LOTPartBuilder pba = client.getObjectFactory().getPartBuilder();
 		assertNotNull(pba);
 
+		String name = "PartBuilderTest";
+		pba.setName(name);
+		
 		String stext = loadATestScript("partbuilder/test.js");
 		LOTScript s = client.getObjectFactory().getScript();
 		s.setScript(stext);
@@ -33,7 +36,7 @@ public final class TestPartBuilder extends LOTTestCase {
 		LOTPart p = clientb.getObjectFactory().getPart();
 		assertTrue(pbb.run(p));
 		assertNull(pbb.getError());
-		
+		assertEquals(name, pbb.getName());
 		assertEquals(1, p.getSubParts().size());
 	}
 

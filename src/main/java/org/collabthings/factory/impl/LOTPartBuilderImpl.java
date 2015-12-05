@@ -15,15 +15,18 @@ import waazdoh.common.ObjectID;
 import waazdoh.common.WObject;
 
 public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
+	public static final String BEANNAME = "partbuilder";
+	
 	private static final String VALUE_SCRIPT = "script";
-
-	public static final String BEANNAME = "factory";
+	private static final String VALUE_NAME = "name";
 
 	private LOTClient client;
 	private LOTScript script;
 	private String error;
 
 	private ServiceObject o;
+
+	private String name;
 
 	public LOTPartBuilderImpl(LOTClient client) {
 		this.client = client;
@@ -45,6 +48,16 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 	}
 
 	@Override
+	public void setName(String string) {
+		this.name = string;
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
 	public boolean isReady() {
 		return true;
 	}
@@ -58,6 +71,7 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 	public void publish() {
 		script.publish();
 		o.publish();
+		client.publish(getName(), this);
 	}
 
 	@Override
@@ -76,6 +90,8 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 		WObject content = o.getBean();
 
 		content.addValue(VALUE_SCRIPT, this.script.getID());
+		content.addValue(VALUE_NAME, getName());
+
 		return content;
 	}
 
@@ -83,6 +99,7 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 	public boolean parse(WObject o) {
 		String scriptid = o.getValue(VALUE_SCRIPT);
 		setScript(client.getObjectFactory().getScript(new MStringID(scriptid)));
+		setName(o.getValue(VALUE_NAME));
 		return true;
 	}
 

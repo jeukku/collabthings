@@ -8,4 +8,8 @@ public interface LOTPartBuilder extends LOTObject {
 
 	String getError();
 
+	String getName();
+
+	void setName(String string);
+
 }
