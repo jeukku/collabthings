@@ -104,6 +104,7 @@ public final class LOTClientImpl implements LOTClient {
 		createBookmark("/" + o.getObject().getType() + "/" + name + "/latest",
 				o);
 		createBookmark("/" + o.getObject().getType() + "/" + name, o);
+		createBookmark("/" + o.getObject().getType() + "/latest", o);
 	}
 
 	private void createBookmark(String string, LOTObject o) {
