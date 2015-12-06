@@ -31,7 +31,8 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	LOTClient env;
 
 	private List<LOTSubPart> subparts = new LinkedList<>();
-	private LOTBoundingBox boundingbox;
+	private LOTBoundingBox boundingbox = new LOTBoundingBox(new LVector(),
+			new LVector());
 	private LOTMaterial material = new LOTMaterialImpl();
 
 	private LOTModel model;

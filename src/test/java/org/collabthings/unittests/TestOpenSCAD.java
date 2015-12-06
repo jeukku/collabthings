@@ -35,7 +35,8 @@ public final class TestOpenSCAD extends LOTTestCase {
 		//
 		LOTPart part = new LOTPartImpl(env);
 		LOTOpenSCAD scad = part.newSCAD();
-		scad.setName("testing changing name");
+		scad.setName("scad");
+		part.setName("scad");
 
 		scad.setScript(loadATestFile("scad/test.scad"));
 

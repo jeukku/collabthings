@@ -16,7 +16,7 @@ import waazdoh.common.WObject;
 
 public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 	public static final String BEANNAME = "partbuilder";
-	
+
 	private static final String VALUE_SCRIPT = "script";
 	private static final String VALUE_NAME = "name";
 
@@ -55,6 +55,11 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 	@Override
 	public String getName() {
 		return this.name;
+	}
+
+	@Override
+	public LOTScript getScript() {
+		return this.script;
 	}
 
 	@Override

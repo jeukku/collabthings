@@ -12,4 +12,6 @@ public interface LOTPartBuilder extends LOTObject {
 
 	void setName(String string);
 
+	LOTScript getScript();
+
 }

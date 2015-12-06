@@ -94,7 +94,7 @@ public final class LOTScriptImpl implements ServiceObjectData, LOTScript {
 					log.info("load a script " + info);
 					error = null;
 				} else {
-					script = null;
+					script = "Invocable null";
 				}
 			} catch (ScriptException | NoSuchMethodException e) {
 				log.error(this, "getInvocable", e);
