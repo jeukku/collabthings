@@ -14,6 +14,7 @@ import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
 import org.collabthings.model.impl.LOT3DModelImpl;
 import org.collabthings.model.impl.LOTFactoryImpl;
+import org.collabthings.model.impl.LOTPartBuilderImpl;
 import org.collabthings.model.impl.LOTPartImpl;
 import org.collabthings.model.impl.LOTScriptImpl;
 import org.collabthings.model.impl.LOTToolImpl;

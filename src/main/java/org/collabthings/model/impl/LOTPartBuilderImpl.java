@@ -1,4 +1,4 @@
-package org.collabthings.factory.impl;
+package org.collabthings.model.impl;
 
 import org.collabthings.LOTClient;
 import org.collabthings.environment.impl.LOTScriptInvoker;
@@ -6,7 +6,6 @@ import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTPartBuilder;
 import org.collabthings.model.LOTScript;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
