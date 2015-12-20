@@ -19,23 +19,25 @@ public final class TestPartBuilder extends LOTTestCase {
 
 		String name = "PartBuilderTest";
 		pba.setName(name);
-		
+
 		String stext = loadATestScript("partbuilder/test.js");
 		LOTScript s = client.getObjectFactory().getScript();
 		s.setScript(stext);
 		pba.setScript(s);
-		
+
 		pba.publish();
-		
+
 		//
 		clientb = getNewClient();
 
 		LOTPartBuilder pbb = clientb.getObjectFactory().getPartBuilder(
 				pba.getID().getStringID());
+		assertEquals(pba.getObject().toText(), pbb.getObject().toText());
 
 		LOTPart p = clientb.getObjectFactory().getPart();
-		assertTrue(pbb.run(p));
+		boolean success = pbb.run(p);
 		assertNull(pbb.getError());
+		assertTrue(success);
 		assertEquals(name, pbb.getName());
 		assertEquals(1, p.getSubParts().size());
 	}

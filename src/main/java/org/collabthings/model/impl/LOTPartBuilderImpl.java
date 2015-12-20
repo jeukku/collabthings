@@ -18,6 +18,7 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 
 	private static final String VALUE_SCRIPT = "script";
 	private static final String VALUE_NAME = "name";
+	private static final String VALUE_ENV = "env";
 
 	private LOTClient client;
 	private LOTScript script;
@@ -27,17 +28,19 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 
 	private String name;
 
+	private LOTEnvironment e;
+
 	public LOTPartBuilderImpl(LOTClient client) {
 		this.client = client;
 		o = new ServiceObject(BEANNAME, client.getClient(), this,
 				client.getVersion(), client.getPrefix());
+		e = new LOTEnvironmentImpl(client);
 	}
 
 	@Override
 	public boolean run(LOTPart p) {
 		LOTScriptInvoker inv = new LOTScriptInvoker(script);
-		LOTEnvironment e = new LOTEnvironmentImpl(client);
-		boolean ret = inv.run("run", p, e);
+		boolean ret = inv.run("run", e, p);
 		error = inv.getError();
 		return ret;
 	}
@@ -74,6 +77,7 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 	@Override
 	public void publish() {
 		script.publish();
+		e.publish();
 		o.publish();
 		client.publish(getName(), this);
 	}
@@ -81,6 +85,7 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 	@Override
 	public void save() {
 		script.save();
+		e.save();
 		o.save();
 	}
 
@@ -95,15 +100,17 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 
 		content.addValue(VALUE_SCRIPT, this.script.getID());
 		content.addValue(VALUE_NAME, getName());
+		content.addValue(VALUE_ENV, e.getID().toString());
 
 		return content;
 	}
 
 	@Override
 	public boolean parse(WObject o) {
-		String scriptid = o.getValue(VALUE_SCRIPT);
-		setScript(client.getObjectFactory().getScript(new MStringID(scriptid)));
+		MStringID scriptid = new MStringID(o.getValue(VALUE_SCRIPT));
+		setScript(client.getObjectFactory().getScript(scriptid));
 		setName(o.getValue(VALUE_NAME));
+		e = new LOTEnvironmentImpl(client, new MStringID(o.getValue(VALUE_ENV)));
 		return true;
 	}
 

@@ -2,7 +2,7 @@ function info() {
 	return "Partbuilder";
 }
 
-function run(part, e) {
+function run(e, part) {
 	var log = e.log().instance("Partbuilder running " + part);
 	var log = e.log().instance("env : " + e);
 
