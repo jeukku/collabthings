@@ -1,5 +1,6 @@
 package org.collabthings.integrationtests;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTSubPart;
@@ -216,11 +218,15 @@ public final class ITTestBuildABox extends LOTTestCase {
 		return boxfactory;
 	}
 
-	private LOTPart getSquare(LOTClient client) {
+	private LOTPart getSquare(LOTClient client) throws FileNotFoundException,
+			IOException {
 		// Create a plate object
 		if (this.square == null) {
 			this.square = client.getObjectFactory().getPart();
 			square.setName("square");
+			LOTOpenSCAD scad = square.newSCAD();
+			scad.setScript(loadATestFile("scad/square.scad"));
+
 			square.setBoundingBox(new LVector(-1, 0, -1),
 					new LVector(1, 0.1, 1));
 			log.info("Square " + square);
@@ -291,6 +297,9 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 	private LOTPart createBox(LOTClient env, LOTPart square) throws IOException {
 		box = env.getObjectFactory().getPart();
+		LOTOpenSCAD scad = box.newSCAD();
+		scad.setScript(loadATestFile("scad/cube.scad"));
+
 		box.setName("BOX");
 		for (int i = 0; i < PARTS_IN_A_BOX; i++) {
 			LOTSubPart wall = box.newSubPart();
