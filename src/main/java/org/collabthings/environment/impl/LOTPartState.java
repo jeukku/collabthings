@@ -40,7 +40,10 @@ public class LOTPartState implements LOTRuntimeObject {
 	}
 
 	public void destroy() {
-		factory.remove(this);
+		if (factory != null) {
+			factory.remove(this);
+		}
+		
 		part = null;
 		factory = null;
 	}

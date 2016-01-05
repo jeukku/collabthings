@@ -1,8 +1,10 @@
 package org.collabthings.view;
 
 import java.awt.BorderLayout;
+import java.awt.Point;
 
 import javafx.embed.swing.JFXPanel;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 
 import javax.swing.JFrame;
@@ -40,6 +42,12 @@ public class JFXRunEnvironmentFrame {
 			@Override
 			public void setScene(Scene scene) {
 				panel.setScene(scene);
+			}
+
+			@Override
+			public Point2D getUpperLeft() {
+				Point d = panel.getLocationOnScreen();
+				return new Point2D(d.x, d.y);
 			}
 
 			@Override

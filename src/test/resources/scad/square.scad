@@ -1,1 +1,2 @@
-square(10);
+cube(size=[10,10,1], center=false);
+

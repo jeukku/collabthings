@@ -88,27 +88,31 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	@Override
 	public boolean parse(WObject bean) {
 		bean = bean.get("content");
-		setName(bean.getValue(VALUENAME_NAME));
+		if (bean != null) {
+			setName(bean.getValue(VALUENAME_NAME));
 
-		parseModel(bean.get("model"));
+			parseModel(bean.get("model"));
 
-		material = new LOTMaterialImpl(bean.get("material"));
+			material = new LOTMaterialImpl(bean.get("material"));
 
-		WObject beanboundingbox = bean.get(LOTBoundingBox.BEAN_NAME);
-		if (beanboundingbox != null) {
-			boundingbox = new LOTBoundingBox(beanboundingbox);
-		}
-		//
-		List<WObject> parts = bean.getObjectList("parts");
-		if (parts != null) {
-			for (WObject bpart : parts) {
-				LOTSubPartImpl subpart = new LOTSubPartImpl(this, env);
-				subpart.parse(bpart);
-				addPart(subpart);
+			WObject beanboundingbox = bean.get(LOTBoundingBox.BEAN_NAME);
+			if (beanboundingbox != null) {
+				boundingbox = new LOTBoundingBox(beanboundingbox);
 			}
+			//
+			List<WObject> parts = bean.getObjectList("parts");
+			if (parts != null) {
+				for (WObject bpart : parts) {
+					LOTSubPartImpl subpart = new LOTSubPartImpl(this, env);
+					subpart.parse(bpart);
+					addPart(subpart);
+				}
+			}
+			//
+			return getName() != null;
+		} else {
+			return false;
 		}
-		//
-		return getName() != null;
 	}
 
 	private void parseModel(WObject data) {
