@@ -76,8 +76,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private boolean mousedown;
 	private int mousex;
 	private int mousey;
-	private double lastw;
-	private double lasth;
+	private int lastw;
+	private int lasth;
 	private int framecount;
 
 	public JFXSimulationView(LOTRunEnvironment e) {
@@ -131,7 +131,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		}
 	}
 
-	private void setScene(double canvasw, double canvash) {
+	private void setScene(int canvasw, int canvash) {
 		Scene scene = createScene(canvasw, canvash);
 		canvas.setScene(scene);
 	}
@@ -421,23 +421,6 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		rz.getChildren().add(objectgroup);
 		scenegroup.getChildren().add(rx);
 
-		Box sp = new Box(2, 2, 2);
-		sp.setMaterial(getRandomMaterial());
-		sp.setDrawMode(DrawMode.LINE);
-
-		Group boxg = newGroup("box");
-		boxg.getChildren().add(sp);
-		objectgroup.getChildren().add(boxg);
-
-		sp = new Box(20, 20, 20);
-		sp.setMaterial(getRandomMaterial());
-		sp.setDrawMode(DrawMode.LINE);
-
-		boxg = newGroup("box");
-		boxg.setTranslateX(30);
-		boxg.getChildren().add(sp);
-		objectgroup.getChildren().add(boxg);
-
 		return scene;
 	}
 
@@ -479,8 +462,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		scenerotatex += dtime * 10;
 
 		zoom += (zoomspeed - 1) * dtime;
-		log.info("zoomspeed " + zoomspeed + " zoom " + zoom + " fs "
-				+ (1 / dtime));
+		// log.info("zoomspeed " + zoomspeed + " zoom " + zoom + " fs "+ (1 /
+		// dtime));
 		if (zoom > ZOOM_MAXIMUM) {
 			zoom = ZOOM_MAXIMUM;
 		} else if (zoom < ZOOM_MINIMUM) {
@@ -491,8 +474,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private synchronized void updateScene() {
 		waitForFramecount();
 
-		double canvasw = canvas.getWidth();
-		double canvash = canvas.getHeight();
+		int canvasw = (int) canvas.getWidth();
+		int canvash = (int) canvas.getHeight();
 		if (lastw != canvasw || lasth != canvash) {
 			setScene(canvasw, canvash);
 		}
@@ -519,20 +502,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 				Point2D upperleft = canvas.getUpperLeft();
 				screen = screen.subtract(upperleft);
 
-				Point3D toscene = node.localToScene(0, 0, 0);
-
 				if (screen != null && pointOutOfScreen(w, h, screen)) {
 					somethingoutofscreen = true;
-					log.info("something out of screen " + screen + " node:"
-							+ node.getTransforms() + " ogscale:"
-							+ objectgroup.getScaleX());
-					log.info("zoom " + zoom + " zoomspeed " + zoomspeed);
-					log.info("out of screen " + node);
-					log.info("out of screen scene " + toscene);
-					log.info("out of screen localtoscene "
-							+ node.getLocalToSceneTransform());
-
-					// print(scenegroup, 0);
 				}
 			}
 
@@ -654,13 +625,9 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 			log.info("mouse moved " + dx + ", " + dy + " rotate " + rotatez
 					+ " rotatex " + rotatex);
-
-			updateRotation();
 		}
 
 		mousex = x;
 		mousey = y;
-
-		canvas.refresh();
 	}
 }

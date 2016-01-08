@@ -2,6 +2,9 @@ package org.collabthings.view;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Point2D;
@@ -64,6 +67,33 @@ public class JFXRunEnvironmentFrame {
 			public void refresh() {
 				// TODO
 			}
+		});
+
+		panel.addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				view.mouseMove(e.getX(), e.getY(), e.getButton());
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				view.mouseMove(e.getX(), e.getY(), e.getButton());
+			}
+		});
+
+		panel.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				view.mouseUp(e.getX(), e.getY(), e.getButton());
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				view.mouseDown(e.getX(), e.getY(), e.getButton());
+			}
+
 		});
 
 		f.getContentPane().add(panel, BorderLayout.CENTER);
