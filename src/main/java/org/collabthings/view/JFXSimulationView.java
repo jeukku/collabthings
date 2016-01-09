@@ -521,7 +521,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		}
 	}
 
-	private void waitForFramecount() {
+	private synchronized void waitForFramecount() {
 		while (framecount < 1) {
 			try {
 				this.wait(10);
