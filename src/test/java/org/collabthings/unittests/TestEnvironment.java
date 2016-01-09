@@ -94,7 +94,7 @@ public final class TestEnvironment extends LOTTestCase {
 		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
 		String testtool = "testtool";
 		e.addTool(testtool, c.getObjectFactory().getTool());
-		e.save();
+		e.publish();
 		LOTEnvironmentImpl benv = new LOTEnvironmentImpl(c, e.getID()
 				.getStringID());
 		assertNotNull(benv.getTool(testtool));
