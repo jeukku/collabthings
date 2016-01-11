@@ -41,6 +41,10 @@ public class JFXRunEnvironmentFrame {
 		JFXPanel panel = new JFXPanel();
 		view = new JFXSimulationView(env);
 		view.setCanvas(new ViewCanvas() {
+			@Override
+			public boolean isVisible() {
+				return panel.isShowing();
+		}
 
 			@Override
 			public void setScene(Scene scene) {

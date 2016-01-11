@@ -1,5 +1,8 @@
 package org.collabthings.environment.impl;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.math.LOrientation;
 import org.collabthings.math.LTransformation;
@@ -14,6 +17,7 @@ public class LOTPartState implements LOTRuntimeObject {
 
 	private LOTFactoryState factory;
 	private LOrientation orientation = new LOrientation();
+	private List<LOTPartStateListener> listeners;
 
 	public LOTPartState(final LOTRunEnvironment runenv,
 			final LOTFactoryState factory, final LOTPart part) {
@@ -43,9 +47,22 @@ public class LOTPartState implements LOTRuntimeObject {
 		if (factory != null) {
 			factory.remove(this);
 		}
-		
+
 		part = null;
 		factory = null;
+
+		if (listeners != null) {
+			for (LOTPartStateListener l : listeners) {
+				l.destroyed();
+			}
+		}
+	}
+
+	public void addListener(LOTPartStateListener l) {
+		if (listeners == null) {
+			listeners = new LinkedList<LOTPartState.LOTPartStateListener>();
+		}
+		listeners.add(l);
 	}
 
 	public LVector getLocation() {
@@ -92,5 +109,11 @@ public class LOTPartState implements LOTRuntimeObject {
 
 	public LTransformation getTransformation() {
 		return new LTransformation(orientation);
+	}
+
+	public static interface LOTPartStateListener {
+
+		void destroyed();
+
 	}
 }

@@ -42,6 +42,7 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 		LOTModel {
 	private static final String VARIABLE_NAME = "name";
 	private static final String SCRIPT = "value";
+	private static final String VARIABLE_SCALE = "scale";
 	//
 	private ServiceObject o;
 	private String script;
@@ -225,12 +226,15 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 	public void getBean(WObject b) {
 		b.setBase64Value(SCRIPT, script);
 		b.addValue(VARIABLE_NAME, name);
+		b.addValue(VARIABLE_SCALE, scale);
 	}
 
 	@Override
 	public boolean parse(final WObject bean) {
 		script = bean.getBase64Value(SCRIPT);
 		this.name = bean.getValue(VARIABLE_NAME);
+		this.scale = bean.getDoubleValue(VARIABLE_SCALE);
+
 		return name != null && script != null;
 	}
 

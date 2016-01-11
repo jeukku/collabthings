@@ -1,6 +1,7 @@
 package org.collabthings.view;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +32,7 @@ import org.collabthings.environment.LOTTask;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTPartState;
+import org.collabthings.environment.impl.LOTPartState.LOTPartStateListener;
 import org.collabthings.environment.impl.LOTToolState;
 import org.collabthings.environment.impl.LOTToolUser;
 import org.collabthings.math.LTransformation;
@@ -59,6 +61,9 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private Group objectgroup;
 
 	private Map<LOTRuntimeObject, NodeInfo> nodes;
+	private Map<LOTSubPart, NodeInfo> subpartnodes;
+	private List<Runnable> tasks = new LinkedList<Runnable>();
+
 	private double scenerotatex = 0;
 	private double zoom = 10;
 	private double zoomspeed = 2;
@@ -160,10 +165,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	}
 
 	private void updatePartState(LTransformationStack stack, LOTPartState ps) {
-		NodeInfo n = nodes.get(ps);
-		if (n == null) {
-			n = addPartState(ps);
-		}
+		NodeInfo n = addPartState(ps);
 
 		Group g = n.group;
 
@@ -283,51 +285,61 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	}
 
 	private void addToolState(LOTToolState ts) {
-		if (nodes.get(ts) == null) {
+		NodeInfo n = nodes.get(ts);
+		if (n == null) {
 			Group g = newGroup("tool " + ts);
 			Box sp = new Box(1, 1, 1);
 			sp.setMaterial(getRandomMaterial());
 			g.getChildren().add(sp);
 
-			objectgroup.getChildren().add(g);
-
-			NodeInfo n = new NodeInfo();
-			n.group = g;
-
-			nodes.put(ts, n);
+			addNewGroup(ts, g);
 		}
 	}
 
-	private NodeInfo addPartState(LOTPartState partstate) {
+	private NodeInfo addNewGroup(LOTRuntimeObject o, Group g) {
+		NodeInfo n;
+		objectgroup.getChildren().add(g);
 
-		NodeInfo n = nodes.get(partstate);
-		if (n == null) {
-			Group g = createPartGroup(partstate);
-			objectgroup.getChildren().add(g);
+		n = new NodeInfo();
+		n.group = g;
 
-			n = new NodeInfo();
-			n.group = g;
-
-			nodes.put(partstate, n);
-		}
+		nodes.put(o, n);
 		return n;
 	}
 
-	private Group createPartGroup(LOTPartState partstate) {
-		Group g = newGroup("part " + partstate);
+	private NodeInfo addPartState(final LOTPartState partstate) {
+		NodeInfo n = nodes.get(partstate);
+		if (n == null) {
+			Group g = newGroup("part " + partstate);
+			n = addNewGroup(partstate, g);
+			partstate.addListener(new LOTPartStateListener() {
 
-		addPartBoxes(g, partstate.getPart());
+				@Override
+				public void destroyed() {
+					addTask(() -> {
+						NodeInfo dn = nodes.get(partstate);
+						objectgroup.getChildren().remove(dn.group);
+					});
+				}
+			});
 
-		return g;
+		}
+
+		LOTPart part = partstate.getPart();
+		addPart(n, part);
+
+		return n;
 	}
 
-	private void addPartBoxes(Group g, LOTPart part) {
+	private void addPart(NodeInfo n, LOTPart part) {
 		LOTModel model = part.getModel();
 		if (model != null) {
-			model.addTo(g);
+			if (n.group.getChildren().size() == 0) {
+				model.addTo(n.group);
+			}
 		} else {
-			List<LOTSubPart> sb = part.getSubParts();
-			if (sb.isEmpty()) {
+			List<LOTSubPart> subparts = part.getSubParts();
+			if (subparts.isEmpty() && n.group.getChildren().isEmpty()) {
 				LOTBoundingBox bb = part.getBoundingBox();
 				if (bb != null) {
 					LVector bba = bb.getA();
@@ -339,15 +351,21 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 					b.setMaterial(getRandomMaterial());
 					b.setDrawMode(DrawMode.FILL);
-					g.getChildren().add(b);
-				} else {
-					log.info("Boundingbox null " + part);
+					n.group.getChildren().add(b);
 				}
 			} else {
-				for (LOTSubPart lotSubPart : sb) {
-					Group cg = newGroup("subpart " + lotSubPart);
-					setTransformation(cg, lotSubPart.getTransformation());
-					addPartBoxes(cg, lotSubPart.getPart());
+				for (LOTSubPart sp : subparts) {
+					if (subpartnodes.get(sp) == null) {
+						Group subpartg = newGroup("" + sp);
+						setTransformation(subpartg, sp.getTransformation());
+						n.group.getChildren().add(subpartg);
+
+						NodeInfo subpartn = new NodeInfo();
+
+						subpartn.group = subpartg;
+						subpartnodes.put(sp, subpartn);
+						addPart(subpartn, sp.getPart());
+					}
 				}
 			}
 		}
@@ -369,6 +387,10 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		}
 	}
 
+	private synchronized void addTask(Runnable r) {
+		tasks.add(r);
+	}
+
 	private PhongMaterial getRandomMaterial() {
 		PhongMaterial m = new javafx.scene.paint.PhongMaterial(Color.WHITE);
 		m.setDiffuseColor(Color.hsb(Math.random() * 360, 1, 1));
@@ -383,6 +405,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 	private synchronized Scene createScene(double canvasw, double canvash) {
 		nodes = new HashMap<LOTRuntimeObject, JFXSimulationView.NodeInfo>();
+		subpartnodes = new HashMap<LOTSubPart, JFXSimulationView.NodeInfo>();
 
 		log.info("new scene " + canvasw + "," + canvash);
 
@@ -439,7 +462,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 	private void updateRotation() {
 		objectgroup.setRotate(scenerotatex);
-		objectgroup.setRotationAxis(new Point3D(1, 1, 0));
+		objectgroup.setRotationAxis(new Point3D(0, 1, 0));
 
 		this.rx.setRotationAxis(new Point3D(1, 0, 0));
 		this.rx.setRotate(rotatex);
@@ -472,33 +495,43 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	}
 
 	private synchronized void updateScene() {
-		waitForFramecount();
+		if (canvas.isVisible()) {
+			waitForFramecount();
 
-		int canvasw = (int) canvas.getWidth();
-		int canvash = (int) canvas.getHeight();
-		if (lastw != canvasw || lasth != canvash) {
-			setScene(canvasw, canvash);
+			int canvasw = (int) canvas.getWidth();
+			int canvash = (int) canvas.getHeight();
+			if (lastw != canvasw || lasth != canvash) {
+				setScene(canvasw, canvash);
+			}
+
+			lastw = canvasw;
+			lasth = canvash;
+
+			if (scenegroup != null) {
+				updateRuntimeObjects(env);
+
+				updateRotation();
+				updateZoom();
+
+				checkOutOfScreen(canvasw, canvash);
+
+				runTasks();
+			}
 		}
+	}
 
-		lastw = canvasw;
-		lasth = canvash;
+	private void checkOutOfScreen(int canvasw, int canvash) {
+		double w = canvasw * 0.9;
+		double h = canvash * 0.9;
 
-		if (scenegroup != null) {
-			updateRuntimeObjects(env);
+		boolean somethingoutofscreen = false;
 
-			updateRotation();
-			updateZoom();
+		for (LOTRuntimeObject tu : nodes.keySet()) {
+			NodeInfo nodei = nodes.get(tu);
+			Group node = nodei.group;
 
-			double w = canvasw * 0.9;
-			double h = canvash * 0.9;
-
-			boolean somethingoutofscreen = false;
-
-			for (LOTRuntimeObject tu : nodes.keySet()) {
-				NodeInfo nodei = nodes.get(tu);
-				Group node = nodei.group;
-
-				Point2D screen = node.localToScreen(0, 0, 0);
+			Point2D screen = node.localToScreen(0, 0, 0);
+			if (screen != null) {
 				Point2D upperleft = canvas.getUpperLeft();
 				screen = screen.subtract(upperleft);
 
@@ -506,19 +539,27 @@ public class JFXSimulationView implements RunEnvironmentListener,
 					somethingoutofscreen = true;
 				}
 			}
+		}
 
-			if (somethingoutofscreen) {
-				zoomspeed *= 0.90;
-				if (zoomspeed < ZOOMSPEED_MINIMUM) {
-					zoomspeed = ZOOMSPEED_MINIMUM;
-				}
-			} else {
-				zoomspeed *= 1.03;
-				if (zoomspeed > ZOOMSPEED_MAXIMUM) {
-					zoomspeed = ZOOMSPEED_MAXIMUM;
-				}
+		if (somethingoutofscreen) {
+			zoomspeed *= 0.90;
+			if (zoomspeed < ZOOMSPEED_MINIMUM) {
+				zoomspeed = ZOOMSPEED_MINIMUM;
+			}
+		} else {
+			zoomspeed *= 1.03;
+			if (zoomspeed > ZOOMSPEED_MAXIMUM) {
+				zoomspeed = ZOOMSPEED_MAXIMUM;
 			}
 		}
+	}
+
+	private synchronized void runTasks() {
+		for (Runnable task : tasks) {
+			task.run();
+		}
+
+		tasks.clear();
 	}
 
 	private synchronized void waitForFramecount() {
@@ -592,6 +633,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 		double getWidth();
 
+		boolean isVisible();
+
 		Point2D getUpperLeft();
 
 		void setScene(Scene scene);
@@ -620,7 +663,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		if (mousedown) {
 			int dx = mousex - x;
 			int dy = mousey - y;
-			rotatez += dx;
+			rotatey += dx;
 			rotatex += dy;
 
 			log.info("mouse moved " + dx + ", " + dy + " rotate " + rotatez

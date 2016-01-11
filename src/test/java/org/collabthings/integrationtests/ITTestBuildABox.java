@@ -226,6 +226,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 			square.setName("square");
 			LOTOpenSCAD scad = square.newSCAD();
 			scad.setScript(loadATestFile("scad/square.scad"));
+			scad.setScale(0.2);
 
 			square.setBoundingBox(new LVector(-1, 0, -1),
 					new LVector(1, 0.1, 1));
@@ -299,6 +300,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		box = env.getObjectFactory().getPart();
 		LOTOpenSCAD scad = box.newSCAD();
 		scad.setScript(loadATestFile("scad/cube.scad"));
+		scad.setScale(2);
 
 		box.setName("BOX");
 		for (int i = 0; i < PARTS_IN_A_BOX; i++) {
