@@ -1,13 +1,13 @@
 package org.collabthings.environment.impl;
 
 import org.collabthings.environment.LOTScriptRunner;
-import org.collabthings.environment.LOTTask;
+import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.model.LOTValues;
 import org.collabthings.util.LLog;
 
 import waazdoh.client.utils.ConditionWaiter;
 
-public final class LOTTaskImpl implements LOTTask {
+public final class LOTTaskImpl implements LOTEnvironmentTask {
 	private LOTScriptRunner s;
 	private LOTValues values;
 	private boolean isrun;

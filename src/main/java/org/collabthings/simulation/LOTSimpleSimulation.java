@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.LOTTask;
+import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.util.LLog;
 import org.collabthings.view.JFXRunEnvironmentFrame;
@@ -61,7 +61,7 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	}
 
 	@Override
-	public synchronized void taskFailed(LOTRunEnvironment runenv, LOTTask task) {
+	public synchronized void taskFailed(LOTRunEnvironment runenv, LOTEnvironmentTask task) {
 		log.info("task " + task + " failed in " + runenv);
 		allsuccess = false;
 	}

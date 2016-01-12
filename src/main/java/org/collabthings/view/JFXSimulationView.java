@@ -26,9 +26,9 @@ import javafx.scene.transform.Translate;
 
 import javax.vecmath.Matrix4d;
 
+import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.LOTTask;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTPartState;
@@ -44,6 +44,7 @@ import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTSubPart;
 import org.collabthings.util.LLog;
+import org.collabthings.util.LOTTask;
 
 public class JFXSimulationView implements RunEnvironmentListener,
 		LOTViewSimulation {
@@ -62,7 +63,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 	private Map<LOTRuntimeObject, NodeInfo> nodes;
 	private Map<LOTSubPart, NodeInfo> subpartnodes;
-	private List<Runnable> tasks = new LinkedList<Runnable>();
+	private List<LOTTask> tasks = new LinkedList<LOTTask>();
 
 	private double scenerotatex = 0;
 	private double zoom = 10;
@@ -387,7 +388,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		}
 	}
 
-	private synchronized void addTask(Runnable r) {
+	private synchronized void addTask(LOTTask r) {
 		tasks.add(r);
 	}
 
@@ -399,7 +400,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	}
 
 	@Override
-	public void taskFailed(LOTRunEnvironment runenv, LOTTask task) {
+	public void taskFailed(LOTRunEnvironment runenv, LOTEnvironmentTask task) {
 
 	}
 
@@ -555,7 +556,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	}
 
 	private synchronized void runTasks() {
-		for (Runnable task : tasks) {
+		for (LOTTask task : tasks) {
 			task.run();
 		}
 

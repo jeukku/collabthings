@@ -11,7 +11,7 @@ import java.util.Set;
 import org.collabthings.LOTClient;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.LOTTask;
+import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.math.LOrientation;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
@@ -318,7 +318,7 @@ public class LOTFactoryState implements LOTRuntimeObject {
 		return this.runenv;
 	}
 
-	public LOTTask addTask(String task, LOTValues values) throws CTRuntimeError {
+	public LOTEnvironmentTask addTask(String task, LOTValues values) throws CTRuntimeError {
 		LOTScriptRunnerImpl script = getScript(task);
 		if (script != null) {
 			return runenv.addTask(script, values);

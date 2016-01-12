@@ -1,6 +1,6 @@
 package org.collabthings.environment;
 
-public interface LOTTask {
+public interface LOTEnvironmentTask {
 
 	boolean run();
 

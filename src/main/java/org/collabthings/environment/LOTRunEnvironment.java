@@ -22,11 +22,11 @@ public interface LOTRunEnvironment {
 
 	LLog log();
 
-	List<LOTTask> getTasks();
+	List<LOTEnvironmentTask> getTasks();
 
-	LOTTask addTask(LOTScriptRunner s, LOTValues values);
+	LOTEnvironmentTask addTask(LOTScriptRunner s, LOTValues values);
 
-	LOTTask addTask(LOTScriptRunner s);
+	LOTEnvironmentTask addTask(LOTScriptRunner s);
 
 	LOTClient getClient();
 

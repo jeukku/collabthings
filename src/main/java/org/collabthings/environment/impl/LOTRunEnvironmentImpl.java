@@ -11,7 +11,7 @@ import org.collabthings.LOTClient;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTScriptRunner;
-import org.collabthings.environment.LOTTask;
+import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTEnvironment;
@@ -24,8 +24,8 @@ import waazdoh.common.ObjectID;
 
 public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 	private Map<String, String> params = new HashMap<String, String>();
-	private List<LOTTask> tasks = new LinkedList<LOTTask>();
-	private List<LOTTask> runningtasks = new LinkedList<LOTTask>();
+	private List<LOTEnvironmentTask> tasks = new LinkedList<LOTEnvironmentTask>();
+	private List<LOTEnvironmentTask> runningtasks = new LinkedList<LOTEnvironmentTask>();
 	private Map<String, LOTRuntimeObject> objects = new HashMap<>();
 
 	private LOTClient client;
@@ -69,12 +69,12 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 		po.append("LOTRunEnvironment(" + name + ");");
 		//
 		po.append("runningtasks: ");
-		for (LOTTask t : new LinkedList<>(runningtasks)) {
+		for (LOTEnvironmentTask t : new LinkedList<>(runningtasks)) {
 			po.append(1, "" + t);
 		}
 
 		po.append("tasks: ");
-		for (LOTTask t : new LinkedList<>(this.tasks)) {
+		for (LOTEnvironmentTask t : new LinkedList<>(this.tasks)) {
 			po.append(1, "" + t);
 		}
 		//
@@ -108,7 +108,7 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 
 	private synchronized void checkTasks() {
 		if (!isTasksEmpty()) {
-			final LOTTask task = getTasks().get(0);
+			final LOTEnvironmentTask task = getTasks().get(0);
 			removeTask(task);
 			runningtasks.add(task);
 			//
@@ -120,7 +120,7 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 		return this.tasks.isEmpty();
 	}
 
-	private void runTask(LOTTask task) {
+	private void runTask(LOTEnvironmentTask task) {
 		log.info("Running task " + task);
 		if (!task.run()) {
 			fireTaskFailed(task);
@@ -133,7 +133,7 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 		}
 	}
 
-	private void fireTaskFailed(LOTTask task) {
+	private void fireTaskFailed(LOTEnvironmentTask task) {
 		log.info("Task FAILED! " + task);
 		for (RunEnvironmentListener listener : listeners) {
 			listener.taskFailed(this, task);
@@ -185,12 +185,12 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 	}
 
 	@Override
-	public LOTTask addTask(LOTScriptRunner s) {
+	public LOTEnvironmentTask addTask(LOTScriptRunner s) {
 		return addTask(s, new LOTValues());
 	}
 
 	@Override
-	public LOTTask addTask(final LOTScriptRunner s, final LOTValues values) {
+	public LOTEnvironmentTask addTask(final LOTScriptRunner s, final LOTValues values) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("addTask " + s + "\n");
 		if (values != null) {
@@ -213,13 +213,13 @@ public class LOTRunEnvironmentImpl implements LOTRunEnvironment {
 	}
 
 	@Override
-	public List<LOTTask> getTasks() {
+	public List<LOTEnvironmentTask> getTasks() {
 		synchronized (tasks) {
 			return new LinkedList<>(tasks);
 		}
 	}
 
-	private void removeTask(LOTTask task) {
+	private void removeTask(LOTEnvironmentTask task) {
 		synchronized (tasks) {
 			tasks.remove(task);
 		}

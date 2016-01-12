@@ -10,7 +10,7 @@ import org.collabthings.LOTTestCase;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTScriptRunner;
-import org.collabthings.environment.LOTTask;
+import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.RunEnvironmentDrawer;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.environment.impl.CTRuntimeError;
@@ -106,7 +106,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 		runenv.addListener(new RunEnvironmentListener() {
 
 			@Override
-			public void taskFailed(LOTRunEnvironment runenv, LOTTask task) {
+			public void taskFailed(LOTRunEnvironment runenv, LOTEnvironmentTask task) {
 			}
 
 			@Override
