@@ -178,31 +178,35 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 	}
 
 	public void save() {
-		if (model != null) {
-			model.save();
-		}
+		if (getServiceObject().hasChanged()) {
+			if (model != null) {
+				model.save();
+			}
 
-		for (LOTSubPart subpart : this.subparts) {
-			subpart.getPart().save();
-		}
+			for (LOTSubPart subpart : this.subparts) {
+				subpart.getPart().save();
+			}
 
-		getServiceObject().save();
+			getServiceObject().save();
+		}
 	}
 
 	public void publish() {
-		save();
+		if (getServiceObject().hasChanged()) {
+			save();
 
-		if (model != null) {
-			model.publish();
+			if (model != null) {
+				model.publish();
+			}
+
+			for (LOTSubPart subpart : this.subparts) {
+				subpart.getPart().publish();
+			}
+
+			getServiceObject().publish();
+
+			this.env.publish(getName(), this);
 		}
-
-		for (LOTSubPart subpart : this.subparts) {
-			subpart.getPart().publish();
-		}
-
-		getServiceObject().publish();
-
-		this.env.publish(getName(), this);
 	}
 
 	@Override
