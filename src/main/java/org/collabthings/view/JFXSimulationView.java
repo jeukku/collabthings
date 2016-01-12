@@ -76,7 +76,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private boolean stopped;
 	private double rotatey = 0;
 	private double rotatez = 0;
-	private double rotatex = 0;
+	private double rotatex = 30;
 
 	private boolean mousedown;
 	private int mousex;
@@ -411,7 +411,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 		this.scenegroup = newGroup("scene");
 
-		Scene scene = new Scene(scenegroup, canvasw, canvash, Color.DARKGRAY);
+		Scene scene = new Scene(scenegroup, canvasw, canvash, true);
 
 		scenegroup.setAutoSizeChildren(false);
 		scenegroup.setDepthTest(DepthTest.ENABLE);
