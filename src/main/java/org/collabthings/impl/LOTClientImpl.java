@@ -99,12 +99,16 @@ public final class LOTClientImpl implements LOTClient {
 
 	@Override
 	public void publish(String name, LOTObject o) {
+		log.info("publish " + name + " " + o);
+
 		createBookmark("/" + o.getObject().getType() + "/" + name + "/"
 				+ LOTClient.getDateTime(), o);
 		createBookmark("/" + o.getObject().getType() + "/" + name + "/latest",
 				o);
 		createBookmark("/" + o.getObject().getType() + "/" + name, o);
 		createBookmark("/" + o.getObject().getType() + "/latest", o);
+
+		log.info("published " + name + " " + o);
 	}
 
 	private void createBookmark(String string, LOTObject o) {

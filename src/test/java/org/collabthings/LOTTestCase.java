@@ -48,6 +48,7 @@ public class LOTTestCase extends TestCase {
 	private FileBeanStorage beanstorage;
 	protected LOTClient clientb;
 	protected LOTClient clienta;
+	protected long starttime;
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -82,6 +83,8 @@ public class LOTTestCase extends TestCase {
 		log.info("**************** SETUP TEST " + getName()
 				+ " ************** ");
 		super.setUp();
+
+		starttime = System.currentTimeMillis();
 	}
 
 	protected void createTwoClients() {
@@ -90,11 +93,12 @@ public class LOTTestCase extends TestCase {
 		assertNotNull(clienta);
 		assertNotNull(clientb);
 
-		ConditionWaiter.wait(() -> {
-			return clientb.isRunning() && clienta.isRunning()
-					&& clienta.getBinarySource().isRunning()
-					&& clientb.isRunning();
-		}, getWaitTime());
+		ConditionWaiter.wait(
+				() -> {
+					return clientb.isRunning() && clienta.isRunning()
+							&& clienta.getBinarySource().isRunning()
+							&& clientb.isRunning();
+				}, getWaitTime());
 	}
 
 	public LOTClient getNewClient() {

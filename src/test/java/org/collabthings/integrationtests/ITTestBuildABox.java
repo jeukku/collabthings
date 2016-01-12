@@ -42,16 +42,20 @@ public final class ITTestBuildABox extends LOTTestCase {
 			IOException, SAXException, ScriptException, LOTToolException,
 			InterruptedException {
 		LOTClient client = getNewClient();
+		info("client " + client);
 
 		LOTFactory factory = client.getObjectFactory().getFactory();
 		setupFactoryThatUsesBoxes(factory, client);
+		info("factory setup done");
 
 		factory.setToolUserSpawnLocation(new LVector(20, 0, 20));
 		factory.setName("boxsetfactory");
 
 		factory.publish();
+		info("Factory published");
 		//
 		LOTPart line = getLineOfBoxes(client);
+		info("line of boxes " + line);
 		//
 		LOTRunEnvironmentBuilder builder = new LOTRunEnvironmentBuilderImpl(
 				client);
@@ -66,13 +70,17 @@ public final class ITTestBuildABox extends LOTTestCase {
 		builder.getEnvironment().setParameter("partid", line.getID());
 
 		builder.setName("boxsetfactorybuilder");
+		info("Builder created");
 
 		builder.publish();
+		info("Builder published");
 
 		LOTRunEnvironment runenv = builder.getRunEnvironment();
 		assertNotNull(runenv);
+		info("RunEnv " + runenv);
 		//
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv, true);
+		info("Simulation " + simulation);
 
 		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
 		//
@@ -86,6 +94,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 	}
 
 	private LOTPart getLineOfBoxes(LOTClient client) {
+		info("line of boxes");
+
 		LOTPart line = client.getObjectFactory().getPart();
 		line.setName("line");
 		assertNotNull(line);
@@ -97,7 +107,11 @@ public final class ITTestBuildABox extends LOTTestCase {
 					Math.PI / 2);
 		}
 
+		info("line of boxes publishing");
+
 		line.publish();
+
+		info("line of boxes done");
 
 		return line;
 	}
@@ -112,7 +126,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 			LOTClient client) throws IOException, NoSuchMethodException,
 			ScriptException {
 		createAssemblyFactory(factory, client);
-		log.info("factory that uses boxes " + factory);
+		info("factory that uses boxes " + factory);
 
 		factory.setBoundingBox(new LVector(-100, 0, -100), new LVector(100, 10,
 				100));
@@ -140,6 +154,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 		LOTFactory boxfactory = client.getObjectFactory().getFactory();
 		createBoxFactory(boxfactory, client);
 
+		info("creating builder");
+		
 		LOTRunEnvironmentBuilder builder = new LOTRunEnvironmentBuilderImpl(
 				client);
 
@@ -151,6 +167,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 				"addorder",
 				loadScript(new LOTScriptImpl(client),
 						"boxfactory_runenv_order.js"));
+		
+		info("publishing builder");
 		builder.publish();
 
 		LOTRunEnvironment runenv = builder.getRunEnvironment();
@@ -160,7 +178,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
 		//
 		String partid = boxfactory.getEnvironment().getParameter("partid");
-		log.info(runenv.printOut().toText());
+		info(runenv.printOut().toText());
 
 		LOTPart nbox = ((LOTFactoryState) runenv.getRunObject("boxfactory"))
 				.getPool().getPart(partid);
@@ -179,7 +197,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 			throws NoSuchMethodException, ScriptException, IOException {
 		createAssemblyFactory(boxfactory, client);
 		boxfactory.setName("boxfactory");
-		log.info("Boxfactory " + boxfactory);
+		info("Boxfactory " + boxfactory);
 
 		// TODO picking up plates, moving them and leaving them somewhere
 		LOTPart square = getSquare(client);
@@ -187,6 +205,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 		// Create a box object
 		LOTPart box = createBox(client, square);
 		box.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
+		
+		info("publishing box");
 		box.publish();
 
 		boxfactory.getEnvironment().setParameter("fillpool", "2");
@@ -196,7 +216,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		boxfactory.getEnvironment().setVectorParameter("buildingpartlocation",
 				new LVector(0, 1, 0));
 
-		log.info("box " + box);
+		info("box " + box);
 
 		// Create a plate source
 		LOTFactory squarefactory = createPlateSource(
@@ -211,10 +231,13 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		boxfactory.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 10,
 				10));
-		log.info("platesource " + squarefactory + " with square " + square);
-		log.info("square bean " + square.getObject());
+		info("platesource " + squarefactory + " with square " + square);
+		info("square bean " + square.getObject());
 
 		boxfactory.publish();
+
+		info("boxfactory done");
+		
 		return boxfactory;
 	}
 
@@ -230,7 +253,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 			square.setBoundingBox(new LVector(-1, 0, -1),
 					new LVector(1, 0.1, 1));
-			log.info("Square " + square);
+			info("Square " + square);
 			square.publish();
 		}
 		return square;
@@ -278,13 +301,18 @@ public final class ITTestBuildABox extends LOTTestCase {
 
 		List<String> searchValue = client.getService().getStorageArea()
 				.searchValue(square.getID().toString());
-		log.info("createPlateSource square search result " + searchValue);
+		info("createPlateSource square search result " + searchValue);
 		platesource.getEnvironment()
 				.setParameter("bmplate", searchValue.get(0));
 		loadScript(platesource.addScript("order"), "platesource_order.js");
 		loadScript(platesource.addScript("build"), "platesource_build.js");
 
 		return platesource;
+	}
+
+	private void info(String string) {
+		log.info("dt:" + (System.currentTimeMillis() - starttime) + " "
+				+ string);
 	}
 
 	private LOTTool getPickupTool(LOTClient client) throws IOException,
@@ -297,6 +325,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 	}
 
 	private LOTPart createBox(LOTClient env, LOTPart square) throws IOException {
+		info("creating box");
+
 		box = env.getObjectFactory().getPart();
 		LOTOpenSCAD scad = box.newSCAD();
 		scad.setScript(loadATestFile("scad/cube.scad"));
@@ -335,6 +365,8 @@ public final class ITTestBuildABox extends LOTTestCase {
 						Math.PI);
 
 		box.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
+
+		info("box created");
 
 		return box;
 	}
