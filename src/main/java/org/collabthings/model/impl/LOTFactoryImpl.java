@@ -150,7 +150,11 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	private WObject getContent() {
-		return this.bean.get("content");
+		if (bean != null) {
+			return this.bean.get("content");
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -316,7 +320,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	private Map<String, LOTAttachedFactory> getFactoryMap() {
-		if (factories == null) {
+		if (factories == null && bean != null) {
 			factories = new HashMap<String, LOTAttachedFactory>();
 
 			List<WObject> bcfs = getContent().getObjectList("factories");
@@ -352,8 +356,8 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	private LOTEnvironment getEnv() {
 		if (env == null && bean != null) {
-			env = new LOTEnvironmentImpl(client,
-					getContent().getIDValue(VALUENAME_ENVIRONMENTID));
+			env = new LOTEnvironmentImpl(client, getContent().getIDValue(
+					VALUENAME_ENVIRONMENTID));
 		}
 		return env;
 	}

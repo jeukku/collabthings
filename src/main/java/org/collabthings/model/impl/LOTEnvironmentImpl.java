@@ -138,7 +138,7 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 		parseParameters(bean);
 		parseVParameters(bean);
 		parseScripts(bean);
-		
+
 		name = bean.getValue("name");
 
 		return true;
@@ -154,13 +154,15 @@ public class LOTEnvironmentImpl implements LOTEnvironment, ServiceObjectData {
 
 	private void parseScripts(WObject bean) {
 		scripts = new HashMap<>();
-		List<WObject> sbeans = bean.getObjectList(VALUENAME_SCRIPTS);
-		for (WObject sbean : sbeans) {
-			String scriptname = sbean.getValue("name");
-			MStringID id = sbean.getIDValue("id");
-			LOTScriptImpl script = new LOTScriptImpl(client);
-			script.load(id);
-			getScriptsSet().put(scriptname, script);
+		if (bean != null) {
+			List<WObject> sbeans = bean.getObjectList(VALUENAME_SCRIPTS);
+			for (WObject sbean : sbeans) {
+				String scriptname = sbean.getValue("name");
+				MStringID id = sbean.getIDValue("id");
+				LOTScriptImpl script = new LOTScriptImpl(client);
+				script.load(id);
+				getScriptsSet().put(scriptname, script);
+			}
 		}
 	}
 

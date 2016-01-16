@@ -98,7 +98,10 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 	public WObject getObject() {
 		WObject content = o.getBean();
 
-		content.addValue(VALUE_SCRIPT, this.script.getID());
+		if (script != null) {
+			content.addValue(VALUE_SCRIPT, this.script.getID());
+		}
+		
 		content.addValue(VALUE_NAME, getName());
 		content.addValue(VALUE_ENV, e.getID().toString());
 
