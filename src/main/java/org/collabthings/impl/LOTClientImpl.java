@@ -1,5 +1,6 @@
 package org.collabthings.impl;
 
+import org.collabthings.LOTBookmarks;
 import org.collabthings.LOTClient;
 import org.collabthings.LOTStorage;
 import org.collabthings.factory.LOTObjectFactory;
@@ -20,6 +21,7 @@ public final class LOTClientImpl implements LOTClient {
 	private final LOTStorage storage;
 	private final LOTObjectFactory factory;
 	private LLog log = LLog.getLogger(this);
+	private LOTBookmarks bookmarks;
 
 	public LOTClientImpl(WPreferences p, BinarySource binarysource,
 			BeanStorage beanstorage, ServiceClient service) {
@@ -101,17 +103,17 @@ public final class LOTClientImpl implements LOTClient {
 	public void publish(String name, LOTObject o) {
 		log.info("publish " + name + " " + o);
 
-		createBookmark("/" + o.getObject().getType() + "/" + name + "/"
+		createPublishedStorage("/" + o.getObject().getType() + "/" + name + "/"
 				+ LOTClient.getDateTime(), o);
-		createBookmark("/" + o.getObject().getType() + "/" + name + "/latest",
-				o);
-		createBookmark("/" + o.getObject().getType() + "/" + name, o);
-		createBookmark("/" + o.getObject().getType() + "/latest", o);
+		createPublishedStorage("/" + o.getObject().getType() + "/" + name
+				+ "/latest", o);
+		createPublishedStorage("/" + o.getObject().getType() + "/" + name, o);
+		createPublishedStorage("/" + o.getObject().getType() + "/latest", o);
 
 		log.info("published " + name + " " + o);
 	}
 
-	private void createBookmark(String string, LOTObject o) {
+	private void createPublishedStorage(String string, LOTObject o) {
 		String path = "published/" + string;
 		path = path.replace("//", "/");
 
@@ -145,5 +147,14 @@ public final class LOTClientImpl implements LOTClient {
 		path = path.substring(path.indexOf('/'));
 
 		return getPublished(username, path);
+	}
+
+	@Override
+	public LOTBookmarks getBookmarks() {
+		if (bookmarks == null) {
+			this.bookmarks = new LOTBookmarksImpl(this);
+		}
+
+		return bookmarks;
 	}
 }

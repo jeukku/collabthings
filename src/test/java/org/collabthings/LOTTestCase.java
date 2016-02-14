@@ -49,6 +49,7 @@ public class LOTTestCase extends TestCase {
 	protected LOTClient clientb;
 	protected LOTClient clienta;
 	protected long starttime;
+	private boolean enablenetwork = true;
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -112,11 +113,15 @@ public class LOTTestCase extends TestCase {
 		String username = "test_username_" + (usercounter) + "@localhost";
 		usercounter++;
 		try {
-			return getNewEnv(username, bind);
+			return getNewEnv(username, bind && enablenetwork);
 		} catch (MalformedURLException | SAXException e) {
 			assertNull(e);
 			return null;
 		}
+	}
+
+	public void disableNetwork() {
+		enablenetwork = false;
 	}
 
 	public LOTClient getNewEnv(String email, boolean bind)
@@ -124,7 +129,8 @@ public class LOTTestCase extends TestCase {
 		//
 		WPreferences p = new StaticTestPreferences("lottests", email);
 
-		BinarySource binarysource = getBinarySource(p, bind);
+		BinarySource binarysource = enablenetwork ? getBinarySource(p, bind)
+				: null;
 		LOTClient c = new LOTClientImpl(p, binarysource, beanstorage,
 				getTestService(email, p, binarysource));
 
