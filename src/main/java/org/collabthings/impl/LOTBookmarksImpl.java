@@ -8,6 +8,7 @@ import org.collabthings.LOTStorage;
 
 public class LOTBookmarksImpl implements LOTBookmarks {
 
+	private static final String DATA_VARIABLE = "_date";
 	private LOTStorage storage;
 	private String username;
 
@@ -22,13 +23,18 @@ public class LOTBookmarksImpl implements LOTBookmarks {
 		return getStorage().listStorage("bookmarks");
 	}
 
+	@Override
+	public List<String> list(String string) {
+		return getStorage().listStorage("bookmarks/" + string);
+	}
+
 	private LOTStorage getStorage() {
 		return storage;
 	}
 
 	@Override
-	public void add(String string) {
-		getStorage().writeToStorage("bookmarks/" + string, "date",
+	public void addFolder(String string) {
+		getStorage().writeToStorage("bookmarks/" + string, DATA_VARIABLE,
 				"" + new Date());
 	}
 

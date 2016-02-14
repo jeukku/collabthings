@@ -13,13 +13,20 @@ public final class TestBookmarks extends LOTTestCase {
 		disableNetwork();
 
 		LOTClient e = getNewClient(false);
-		e.getBookmarks().add("test");
+		String listname = "test" + System.currentTimeMillis();
+
+		e.getBookmarks().addFolder(listname);
 		List<String> bookmarks = e.getBookmarks().list();
 		assertNotNull(bookmarks);
 		assertTrue(bookmarks.size() > 0);
 
 		String testvalue = "testvalue";
-		e.getBookmarks().add("test/testbm", testvalue);
-		assertEquals(testvalue, e.getBookmarks().get("test/testbm"));
+		e.getBookmarks().add(listname + "/testbm", testvalue);
+		assertEquals(testvalue, e.getBookmarks().get(listname + "/testbm"));
+
+		List<String> testlist = e.getBookmarks().list(listname);
+		assertNotNull(testlist);
+		assertEquals(2, testlist.size()); // testbm and _date
+
 	}
 }
