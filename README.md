@@ -12,7 +12,9 @@ https://www.youtube.com/watch?v=1R0Mu75DU3Q
 Development
 ===========
 
-Run waazdoh and waazdoh.wab services locally (https://github.com/jeukku/waazdoh.service , https://github.com/jeukku/waazdoh.web). 
-  mvn appengine:devserver
+Run waazdoh and waazdoh.wab services locally (
+ - git clone git@github.com:jeukku/waazdoh.service.git
+ - git clone git@github.com:jeukku/waazdoh.web.git
+ - mvn appengine:devserver in both paths
+ - UI: git clone git@github.com:jeukku/collabthings.swt.git and run org.collabthings.swt.AppLauncher
 
-UI: https://github.com/jeukku/collabthings.swt
