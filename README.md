@@ -16,5 +16,5 @@ Run waazdoh and waazdoh.wab services locally:
  - git clone git@github.com:jeukku/waazdoh.service.git
  - git clone git@github.com:jeukku/waazdoh.web.git
  - mvn appengine:devserver in both paths
- - UI: git clone git@github.com:jeukku/collabthings.swt.git and run org.collabthings.swt.AppLauncher
+ - UI: git clone git@github.com:jeukku/collabthings.swt.git and run org.collabthings.swt.AppLauncher with variable -Dservice.url=http://localhost:18099/waazdoh  
 
