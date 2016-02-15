@@ -9,4 +9,10 @@ The platform is designed so that, it should handle cities as well as small parts
 
 https://www.youtube.com/watch?v=1R0Mu75DU3Q
 
+Development
+===========
+
+Run waazdoh and waazdoh.wab services locally (https://github.com/jeukku/waazdoh.service , https://github.com/jeukku/waazdoh.web). 
+  mvn appengine:devserver
+
 UI: https://github.com/jeukku/collabthings.swt
