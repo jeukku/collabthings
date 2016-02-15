@@ -91,8 +91,8 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 		WObject b = org.add("content");
 		b.addValue(VALUENAME_NAME, getName());
 
-		if (getEnv() != null) {
-			b.addValue(VALUENAME_ENVIRONMENTID, getEnv().getID());
+		if (getEnvironment() != null) {
+			b.addValue(VALUENAME_ENVIRONMENTID, getEnvironment().getID());
 		}
 
 		addVectorBean(b, VALUENAME_SPAWNLOCATION, tooluserspawnlocation);
@@ -164,12 +164,12 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	@Override
 	public Set<String> getScripts() {
-		return getEnv().getScripts();
+		return getEnvironment().getScripts();
 	}
 
 	@Override
 	public LOTScript getScript(String string) {
-		return getEnv().getScript(string.toLowerCase());
+		return getEnvironment().getScript(string.toLowerCase());
 	}
 
 	private ServiceObject getServiceObject() {
@@ -208,7 +208,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	@Override
 	public boolean isReady() {
-		if (!getEnv().isReady()) {
+		if (!getEnvironment().isReady()) {
 			return false;
 		}
 
@@ -217,7 +217,7 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 
 	@Override
 	public LOTScript addScript(String scriptname, LOTScript lotScript) {
-		getEnv().addScript(scriptname.toLowerCase(), lotScript);
+		getEnvironment().addScript(scriptname.toLowerCase(), lotScript);
 		return lotScript;
 	}
 
@@ -266,11 +266,6 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	@Override
 	public String toString() {
 		return "F[" + name + "]";
-	}
-
-	@Override
-	public LOTEnvironment getEnvironment() {
-		return this.env;
 	}
 
 	@Override
@@ -351,10 +346,10 @@ public final class LOTFactoryImpl implements ServiceObjectData, LOTFactory {
 	}
 
 	public LOTTool getTool(String name) {
-		return getEnv().getTool(name);
+		return getEnvironment().getTool(name);
 	}
 
-	private LOTEnvironment getEnv() {
+	public LOTEnvironment getEnvironment() {
 		if (env == null && bean != null) {
 			env = new LOTEnvironmentImpl(client, getContent().getIDValue(
 					VALUENAME_ENVIRONMENTID));
