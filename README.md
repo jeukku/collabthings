@@ -9,8 +9,14 @@ The platform is designed so that, it should handle cities as well as small parts
 
 https://www.youtube.com/watch?v=1R0Mu75DU3Q
 
-Development
-===========
+
+Trello
+======
+
+https://trello.com/b/A0jQVmXl/collabthings
+
+Development Environment
+=======================
 
 Run waazdoh and waazdoh.wab services locally:
  - git clone git@github.com:jeukku/waazdoh.service.git
