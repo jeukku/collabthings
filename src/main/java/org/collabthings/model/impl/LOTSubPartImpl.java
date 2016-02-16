@@ -16,6 +16,7 @@ public final class LOTSubPartImpl implements LOTSubPart {
 	private double angle = 0;
 	private final LOTClient client;
 	private LTransformation transformation;
+	private MStringID partid;
 
 	/**
 	 * @param nparent
@@ -27,24 +28,32 @@ public final class LOTSubPartImpl implements LOTSubPart {
 	}
 
 	public LOTPart getPart() {
+		if (part == null) {
+			part = this.client.getObjectFactory().getPart(partid);
+		}
+
 		return part;
 	}
 
 	public void parse(WObject bpart) {
-		MStringID partid = bpart.getIDValue("id");
-		part = this.client.getObjectFactory().getPart(partid);
+		partid = bpart.getIDValue("id");
 		p.set(bpart.get("p"));
 		n.set(bpart.get("n"));
 	}
 
 	public void getBean(WObject bpart) {
-		bpart.setAttribute("id", "" + part.getID());
+		if (part != null) {
+			partid = part.getID().getStringID();
+		}
+
+		bpart.setAttribute("id", "" + partid);
 		bpart.add("p", p.getBean());
 		bpart.add("n", n.getBean());
 	}
 
 	@Override
 	public void setPart(LOTPart part2) {
+		partid = null;
 		this.part = (LOTPartImpl) part2;
 	}
 
