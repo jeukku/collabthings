@@ -120,8 +120,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private void doCreateCanvas() {
 		updateScene();
 
-		if (!stopped) {
 			timeline = new Timeline();
+			if (!stopped) {
 			timeline.setCycleCount(Timeline.INDEFINITE);
 			timeline.setAutoReverse(true);
 			timer = new AnimationTimer() {
