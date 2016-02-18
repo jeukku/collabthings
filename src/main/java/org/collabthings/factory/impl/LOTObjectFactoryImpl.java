@@ -167,8 +167,12 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 	@Override
 	public LOTPartImpl getPart(final MStringID partid) {
 		synchronized (parts) {
-			for (LOTPartImpl part : parts) {
-				if (part.getID().equals(partid)) {
+			LinkedList<LOTPartImpl> ps = new LinkedList<LOTPartImpl>(parts);
+
+			for (LOTPartImpl part : ps) {
+				if (part.getID() == null) {
+					parts.remove(part);
+				} else if (part.getID().equals(partid)) {
 					return part;
 				}
 			}
@@ -180,8 +184,8 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 				return part;
 			} else {
 				log.info("Failed to load part " + partid);
-				log.info("Current parts " + parts);
-				for (LOTPartImpl p : parts) {
+				log.info("Current parts " + ps);
+				for (LOTPartImpl p : ps) {
 					log.info("Part " + p.getObject());
 				}
 				return null;

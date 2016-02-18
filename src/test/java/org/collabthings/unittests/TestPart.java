@@ -48,6 +48,9 @@ public final class TestPart extends LOTTestCase {
 		assertEquals(bsubpart.getPart().getID(), subpart.getPart().getID());
 		assertEquals(subpart.toString(), bsubpart.toString());
 		//
+		assertEquals(bpart.getObject().toText(), benv.getObjectFactory()
+				.getPart(bpart.getID().getStringID()).getObject().toText());
+
 		assertEquals(bpart,
 				benv.getObjectFactory().getPart(bpart.getID().getStringID()));
 	}
