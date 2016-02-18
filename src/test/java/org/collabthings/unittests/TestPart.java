@@ -30,7 +30,7 @@ public final class TestPart extends LOTTestCase {
 		m.getBinary().add(new String(testbinarydatastring).getBytes());
 		//
 		LOTSubPart subpart = part.newSubPart();
-
+		subpart.getPart();
 		//
 		part.save();
 		part.publish();

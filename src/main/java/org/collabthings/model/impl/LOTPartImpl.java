@@ -192,7 +192,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 			}
 
 			for (LOTSubPart subpart : this.subparts) {
-				subpart.getPart().save();
+				subpart.save();
 			}
 
 			getServiceObject().save();
@@ -208,7 +208,7 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 			}
 
 			for (LOTSubPart subpart : this.subparts) {
-				subpart.getPart().publish();
+				subpart.publish();
 			}
 
 			getServiceObject().publish();

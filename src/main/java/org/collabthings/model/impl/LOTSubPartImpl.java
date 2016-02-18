@@ -26,6 +26,20 @@ public final class LOTSubPartImpl implements LOTSubPart {
 		this.client = env;
 	}
 
+	@Override
+	public void save() {
+		if (part != null) {
+			part.save();
+		}
+	}
+
+	@Override
+	public void publish() {
+		if (part != null) {
+			part.publish();
+		}
+	}
+
 	public LOTPart getPart() {
 		if (part == null) {
 			if (partid == null) {
