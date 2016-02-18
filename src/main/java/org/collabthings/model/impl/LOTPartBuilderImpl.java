@@ -76,6 +76,8 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 
 	@Override
 	public void publish() {
+		save();
+
 		script.publish();
 		e.publish();
 		o.publish();
@@ -101,7 +103,7 @@ public class LOTPartBuilderImpl implements LOTPartBuilder, ServiceObjectData {
 		if (script != null) {
 			content.addValue(VALUE_SCRIPT, this.script.getID());
 		}
-		
+
 		content.addValue(VALUE_NAME, getName());
 		content.addValue(VALUE_ENV, e.getID().toString());
 

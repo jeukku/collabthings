@@ -19,6 +19,4 @@ public interface LOTSubPart {
 
 	void setOrientation(LVector location, LVector normal, double angle);
 
-	void setOrientation(LVector location, LVector normal);
-
 }

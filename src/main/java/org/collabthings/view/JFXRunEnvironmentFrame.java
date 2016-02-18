@@ -43,8 +43,8 @@ public class JFXRunEnvironmentFrame {
 		view.setCanvas(new ViewCanvas() {
 			@Override
 			public boolean isVisible() {
-				return panel.isShowing();
-		}
+				return panel.isShowing() && panel.isVisible();
+			}
 
 			@Override
 			public void setScene(Scene scene) {

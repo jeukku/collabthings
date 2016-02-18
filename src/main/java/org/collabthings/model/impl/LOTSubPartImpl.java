@@ -24,12 +24,16 @@ public final class LOTSubPartImpl implements LOTSubPart {
 	 */
 	public LOTSubPartImpl(final LOTPartImpl nparent, final LOTClient env) {
 		this.client = env;
-		part = new LOTPartImpl(env);
 	}
 
 	public LOTPart getPart() {
 		if (part == null) {
-			part = this.client.getObjectFactory().getPart(partid);
+			if (partid == null) {
+				// new part
+				part = this.client.getObjectFactory().getPart();
+			} else {
+				part = this.client.getObjectFactory().getPart(partid);
+			}
 		}
 
 		return part;
@@ -37,6 +41,7 @@ public final class LOTSubPartImpl implements LOTSubPart {
 
 	public void parse(WObject bpart) {
 		partid = bpart.getIDValue("id");
+		part = null;
 		p.set(bpart.get("p"));
 		n.set(bpart.get("n"));
 	}
@@ -68,16 +73,12 @@ public final class LOTSubPartImpl implements LOTSubPart {
 		return transformation;
 	}
 
-	public void setOrientation(LVector location, LVector normal, double angle) {
-		setOrientation(location, normal);
-		this.angle = angle;
-	}
-
 	@Override
-	public void setOrientation(LVector location, LVector normal) {
+	public void setOrientation(LVector location, LVector normal, double angle) {
 		this.p.set(location);
 		this.n.set(normal);
 		transformation = null;
+		this.angle = angle;
 	}
 
 	public LVector getNormal() {

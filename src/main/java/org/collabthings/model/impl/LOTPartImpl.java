@@ -87,6 +87,8 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 
 	@Override
 	public boolean parse(WObject bean) {
+		LLog.getLogger(this).info("Loading " + bean);
+
 		bean = bean.get("content");
 		if (bean != null) {
 			setName(bean.getValue(VALUENAME_NAME));
@@ -109,8 +111,14 @@ public final class LOTPartImpl implements ServiceObjectData, LOTPart {
 				}
 			}
 			//
-			return getName() != null;
+			if (getName() != null) {
+				return true;
+			} else {
+				LLog.getLogger(this).info("Loading failed. Name null. " + bean);
+				return false;
+			}
 		} else {
+			LLog.getLogger(this).info("No content info " + bean);
 			return false;
 		}
 	}

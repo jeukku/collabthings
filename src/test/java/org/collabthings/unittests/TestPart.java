@@ -44,7 +44,7 @@ public final class TestPart extends LOTTestCase {
 		//
 		assertEquals(m, bpart.getModel());
 		//
-		LOTSubPart bsubpart = part.getSubParts().get(0);
+		LOTSubPart bsubpart = bpart.getSubParts().get(0);
 		assertEquals(bsubpart.getPart().getID(), subpart.getPart().getID());
 		assertEquals(subpart.toString(), bsubpart.toString());
 		//
@@ -57,7 +57,7 @@ public final class TestPart extends LOTTestCase {
 		LOTPartImpl p = new LOTPartImpl(e);
 		LOTSubPart subpart = p.newSubPart();
 		subpart.setPart(new LOTPartImpl(e));
-		subpart.setOrientation(new LVector(10, 10, 10), new LVector(0, 1, 0));
+		subpart.setOrientation(new LVector(10, 10, 10), new LVector(0, 1, 0), 1);
 		//
 		assertEquals(subpart.getLocation().toString(),
 				new LVector(10, 10, 10).toString());
@@ -124,7 +124,7 @@ public final class TestPart extends LOTTestCase {
 			LOTSubPart newSubPart = a.newSubPart();
 			newSubPart.setPart(c);
 			newSubPart.setOrientation(new LVector(i, i, i),
-					new LVector(i, i, i));
+					new LVector(i, i, i), 1);
 		}
 	}
 }
