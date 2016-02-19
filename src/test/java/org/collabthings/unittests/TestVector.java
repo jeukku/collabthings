@@ -3,6 +3,8 @@ package org.collabthings.unittests;
 import org.collabthings.LOTTestCase;
 import org.collabthings.math.LVector;
 
+import waazdoh.common.WObject;
+
 public final class TestVector extends LOTTestCase {
 
 	private static final double LENGTH_1_1_1 = 1.7320508075688;
@@ -29,6 +31,13 @@ public final class TestVector extends LOTTestCase {
 		return v;
 	}
 
+	public void testWObject() {
+		LVector v = new LVector(1, 2, 3);
+		WObject w = v.getBean();
+		String t = w.toText();
+		assertTrue(t, t.split("\n").length < 2);
+	}
+
 	public void testSub() {
 		LVector v = getV().getSub(new LVector(1, 1, 0));
 		assertReallyClose(v.length(), 1.0);
@@ -46,6 +55,7 @@ public final class TestVector extends LOTTestCase {
 	}
 
 	public void testShortString() {
-		assertEquals("[0.00. 0.00. 0.00]", new LVector().asShortString().replace(',', '.'));
+		assertEquals("[0.00. 0.00. 0.00]", new LVector().asShortString()
+				.replace(',', '.'));
 	}
 }
