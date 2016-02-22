@@ -8,7 +8,7 @@ import javax.swing.SwingUtilities;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.util.LLog;
 
-public class SwingSimulationFrame implements LOTViewSimulation {
+public class SwingSimulationFrame implements LOTRunEnvironmentView {
 	LOTRunEnvironment runenv;
 
 	LLog log = LLog.getLogger(this);
@@ -51,9 +51,9 @@ public class SwingSimulationFrame implements LOTViewSimulation {
 		return new SwingSimulation4xView(runenv);
 	}
 
-	public void step(double dtime) {
+	public void update() {
 		if (view != null) {
-			view.step(dtime);
+			view.update();
 		}
 	}
 

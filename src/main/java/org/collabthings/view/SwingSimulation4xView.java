@@ -70,8 +70,7 @@ public class SwingSimulation4xView extends JPanel {
 		fview.callRepaint();
 	}
 
-	public void step(double dtime) {
-		freeangle += dtime * freeanglespeed;
+	public void update() {
 		setupFreeTransform();
 		//
 		doRepaint();

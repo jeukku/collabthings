@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.Timeline;
@@ -21,39 +20,26 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
 
 import javax.vecmath.Matrix4d;
 
-import org.collabthings.environment.LOTEnvironmentTask;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.RunEnvironmentListener;
-import org.collabthings.environment.impl.LOTFactoryState;
-import org.collabthings.environment.impl.LOTPartState;
-import org.collabthings.environment.impl.LOTPartState.LOTPartStateListener;
-import org.collabthings.environment.impl.LOTToolState;
-import org.collabthings.environment.impl.LOTToolUser;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTPart;
-import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTSubPart;
 import org.collabthings.util.LLog;
 import org.collabthings.util.LOTTask;
 
-public class JFXSimulationView implements RunEnvironmentListener,
-		LOTViewSimulation {
-
+public class JFXPartView implements LOTPartView {
 	private static final double ZOOMSPEED_MINIMUM = 0.1;
 	private static final double ZOOMSPEED_MAXIMUM = 4;
 	private static final int ZOOM_MAXIMUM = 1000;
 	private static final double ZOOM_MINIMUM = 0.000001;
-	private LOTRunEnvironment env;
+
 	private Group scenegroup;
 	private PerspectiveCamera camera;
 	private Group cameraGroup;
@@ -61,13 +47,13 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private Group rx, ry, rz;
 	private Group objectgroup;
 
-	private Map<LOTRuntimeObject, NodeInfo> nodes;
+	private LOTPart part;
 	private Map<LOTSubPart, NodeInfo> subpartnodes;
 	private List<LOTTask> tasks = new LinkedList<LOTTask>();
 
 	private double scenerotatex = 0;
 	private double zoom = 10;
-	private double zoomspeed = 2;
+
 	private Timeline timeline;
 	private AnimationTimer timer;
 
@@ -86,9 +72,11 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private int lasth;
 	private int framecount;
 
-	public JFXSimulationView(LOTRunEnvironment e) {
-		this.env = e;
-		env.addListener(this);
+	public JFXPartView() {
+	}
+
+	public void setPart(LOTPart npart) {
+		this.part = npart;
 	}
 
 	public void setCanvas(ViewCanvas ncanvas) {
@@ -120,8 +108,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private void doCreateCanvas() {
 		updateScene();
 
-			timeline = new Timeline();
-			if (!stopped) {
+		timeline = new Timeline();
+		if (!stopped) {
 			timeline.setCycleCount(Timeline.INDEFINITE);
 			timeline.setAutoReverse(true);
 			timer = new AnimationTimer() {
@@ -140,40 +128,51 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	private void setScene(int canvasw, int canvash) {
 		Scene scene = createScene(canvasw, canvash);
 		canvas.setScene(scene);
+
+		updatePart();
 	}
 
-	private void updateRuntimeObjects(LOTRunEnvironment env) {
+	private void updatePart() {
 		LTransformationStack stack = new LTransformationStack();
-		Set<LOTRuntimeObject> runos = env.getRunObjects();
-		for (LOTRuntimeObject runo : runos) {
-			updateRuntimeObject(stack, runo);
+		List<LOTSubPart> foundparts = new LinkedList<LOTSubPart>();
+		updateSubparts(stack, foundparts, part);
+		//
+		List<LOTSubPart> currentnodes = new LinkedList<LOTSubPart>(
+				subpartnodes.keySet());
+		for (LOTSubPart node : currentnodes) {
+			if (!foundparts.contains(node)) {
+				NodeInfo n = subpartnodes.get(node);
+				subpartnodes.remove(node);
+				n.group.setDisable(true);
+				Group g = (Group) n.group.getParent();
+				g.getChildren().remove(n.group);
+			}
 		}
 	}
 
-	private void updateRuntimeObject(LTransformationStack stack,
-			LOTRuntimeObject runo) {
-		if (runo instanceof LOTFactoryState) {
-			LOTFactoryState fs = (LOTFactoryState) runo;
-			updateFactoryState(stack, fs);
-		} else if (runo instanceof LOTToolState) {
-			LOTToolState ts = (LOTToolState) runo;
-			updateToolState(stack, ts);
-		} else if (runo instanceof LOTToolUser) {
-			updateToolUser(stack, (LOTToolUser) runo);
-		} else if (runo instanceof LOTPartState) {
-			updatePartState(stack, (LOTPartState) runo);
+	private void updateSubparts(LTransformationStack stack,
+			List<LOTSubPart> foundparts, LOTPart part) {
+		List<LOTSubPart> subparts = part.getSubParts();
+		for (LOTSubPart sp : subparts) {
+			updatePartState(stack, foundparts, sp);
 		}
 	}
 
-	private void updatePartState(LTransformationStack stack, LOTPartState ps) {
-		NodeInfo n = addPartState(ps);
+	private void updatePartState(LTransformationStack stack,
+			List<LOTSubPart> foundparts, LOTSubPart sp) {
+		foundparts.add(sp);
+
+		NodeInfo n = addPart(sp);
 
 		Group g = n.group;
 
-		LTransformation transformation = ps.getTransformation();
+		LTransformation transformation = sp.getTransformation();
 		stack.push(transformation);
 
 		setTransformation(stack, g);
+
+		// updateSubparts(stack, sp.getPart());
+
 		stack.pull();
 	}
 
@@ -202,132 +201,25 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		}
 	}
 
-	private void updateFactoryState(LTransformationStack stack,
-			LOTFactoryState fs) {
-		stack.push(fs.getTransformation());
-
-		NodeInfo n = this.nodes.get(fs);
-		if (n == null) {
-			Group g = newGroup("factory " + fs);
-			LOTBoundingBox bb = fs.getFactory().getBoundingBox();
-			LVector bba = bb.getA();
-			LVector bbb = bb.getB();
-			double width = bbb.x - bba.x;
-			double height = bbb.y - bba.y;
-			double depth = bbb.z - bba.z;
-
-			if (fs.getOrientation().getNormal().dot(new LVector(0, 1, 0)) > 0.99) {
-				// height /= 10;
-			}
-
-			Box sp = new Box(width, height, depth);
-			sp.setMaterial(getRandomMaterial());
-			sp.setDrawMode(DrawMode.LINE);
-
-			g.getChildren().add(sp);
-
-			objectgroup.getChildren().add(g);
-
-			n = new NodeInfo();
-			n.group = g;
-
-			nodes.put(fs, n);
-		}
-
-		if (n != null) {
-			setTransformation(stack, n.group);
-		}
-
-		List<LOTToolUser> ftus = fs.getToolUsers();
-		for (LOTToolUser lotToolUser : ftus) {
-			updateToolUser(stack, lotToolUser);
-		}
-
-		List<LOTFactoryState> fss = fs.getFactories();
-		for (LOTFactoryState lotFactoryState : fss) {
-			updateFactoryState(stack, lotFactoryState);
-		}
-
-		Set<LOTPartState> ps = fs.getParts();
-		for (LOTPartState p : ps) {
-			updatePartState(stack, p);
-		}
-
-		stack.pull();
-	}
-
-	private void updateToolUser(LTransformationStack stack,
-			LOTToolUser lotToolUser) {
-		if (nodes.get(lotToolUser) == null) {
-			addToolUser(lotToolUser);
-		}
-
-		stack.push(lotToolUser.getTransformation());
-
-		NodeInfo n = nodes.get(lotToolUser);
-		setTransformation(stack, n.group);
-
-		if (lotToolUser.getTool() != null) {
-			updateToolState(stack, lotToolUser.getTool());
-		}
-
-		stack.pull();
-	}
-
-	private void updateToolState(LTransformationStack stack, LOTToolState ts) {
-		addToolState(ts);
-
-		stack.push(new LTransformation(ts.getOrientation()));
-
-		NodeInfo n = nodes.get(ts);
-		setTransformation(stack, n.group);
-
-		stack.pull();
-	}
-
-	private void addToolState(LOTToolState ts) {
-		NodeInfo n = nodes.get(ts);
-		if (n == null) {
-			Group g = newGroup("tool " + ts);
-			Box sp = new Box(1, 1, 1);
-			sp.setMaterial(getRandomMaterial());
-			g.getChildren().add(sp);
-
-			addNewGroup(ts, g);
-		}
-	}
-
-	private NodeInfo addNewGroup(LOTRuntimeObject o, Group g) {
+	private NodeInfo addNewGroup(LOTSubPart o, Group g) {
 		NodeInfo n;
 		objectgroup.getChildren().add(g);
 
 		n = new NodeInfo();
 		n.group = g;
 
-		nodes.put(o, n);
+		subpartnodes.put(o, n);
 		return n;
 	}
 
-	private NodeInfo addPartState(final LOTPartState partstate) {
-		NodeInfo n = nodes.get(partstate);
+	private NodeInfo addPart(final LOTSubPart part) {
+		NodeInfo n = subpartnodes.get(part);
 		if (n == null) {
-			Group g = newGroup("part " + partstate);
-			n = addNewGroup(partstate, g);
-			partstate.addListener(new LOTPartStateListener() {
-
-				@Override
-				public void destroyed() {
-					addTask(() -> {
-						NodeInfo dn = nodes.get(partstate);
-						objectgroup.getChildren().remove(dn.group);
-					});
-				}
-			});
-
+			Group g = newGroup("part " + part);
+			n = addNewGroup(part, g);
 		}
 
-		LOTPart part = partstate.getPart();
-		addPart(n, part);
+		addPart(n, part.getPart());
 
 		return n;
 	}
@@ -372,26 +264,6 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		}
 	}
 
-	private void addToolUser(LOTToolUser lotToolUser) {
-		if (nodes.get(lotToolUser) == null) {
-			Group g = newGroup("tool " + lotToolUser);
-			Sphere sp = new Sphere(1);
-			sp.setMaterial(getRandomMaterial());
-			g.getChildren().add(sp);
-			objectgroup.getChildren().add(g);
-
-			NodeInfo i = new NodeInfo();
-
-			i.group = g;
-
-			nodes.put(lotToolUser, i);
-		}
-	}
-
-	private synchronized void addTask(LOTTask r) {
-		tasks.add(r);
-	}
-
 	private PhongMaterial getRandomMaterial() {
 		PhongMaterial m = new javafx.scene.paint.PhongMaterial(Color.WHITE);
 		m.setDiffuseColor(Color.hsb(Math.random() * 360, 1, 1));
@@ -399,14 +271,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		return m;
 	}
 
-	@Override
-	public void taskFailed(LOTRunEnvironment runenv, LOTEnvironmentTask task) {
-
-	}
-
 	private synchronized Scene createScene(double canvasw, double canvash) {
-		nodes = new HashMap<LOTRuntimeObject, JFXSimulationView.NodeInfo>();
-		subpartnodes = new HashMap<LOTSubPart, JFXSimulationView.NodeInfo>();
+		subpartnodes = new HashMap<LOTSubPart, JFXPartView.NodeInfo>();
 
 		log.info("new scene " + canvasw + "," + canvash);
 
@@ -480,14 +346,9 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	}
 
 	@Override
-	public synchronized void step(double dtime) {
+	public synchronized void update() {
 		framecount++;
 
-		scenerotatex += dtime * 10;
-
-		zoom += (zoomspeed - 1) * dtime;
-		// log.info("zoomspeed " + zoomspeed + " zoom " + zoom + " fs "+ (1 /
-		// dtime));
 		if (zoom > ZOOM_MAXIMUM) {
 			zoom = ZOOM_MAXIMUM;
 		} else if (zoom < ZOOM_MINIMUM) {
@@ -497,7 +358,7 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 	private synchronized void updateScene() {
 		if (canvas.isVisible()) {
-			waitForFramecount();
+			// waitForFramecount();
 
 			int canvasw = (int) canvas.getWidth();
 			int canvash = (int) canvas.getHeight();
@@ -509,14 +370,12 @@ public class JFXSimulationView implements RunEnvironmentListener,
 			lasth = canvash;
 
 			if (scenegroup != null) {
-				updateRuntimeObjects(env);
+				updatePart();
 
 				updateRotation();
 				updateZoom();
 
 				checkOutOfScreen(canvasw, canvash);
-
-				runTasks();
 			}
 		}
 	}
@@ -527,8 +386,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 
 		boolean somethingoutofscreen = false;
 
-		for (LOTRuntimeObject tu : nodes.keySet()) {
-			NodeInfo nodei = nodes.get(tu);
+		for (LOTSubPart tu : subpartnodes.keySet()) {
+			NodeInfo nodei = subpartnodes.get(tu);
 			Group node = nodei.group;
 
 			Point2D screen = node.localToScreen(0, 0, 0);
@@ -543,24 +402,8 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		}
 
 		if (somethingoutofscreen) {
-			zoomspeed *= 0.90;
-			if (zoomspeed < ZOOMSPEED_MINIMUM) {
-				zoomspeed = ZOOMSPEED_MINIMUM;
-			}
-		} else {
-			zoomspeed *= 1.03;
-			if (zoomspeed > ZOOMSPEED_MAXIMUM) {
-				zoomspeed = ZOOMSPEED_MAXIMUM;
-			}
-		}
-	}
 
-	private synchronized void runTasks() {
-		for (LOTTask task : tasks) {
-			task.run();
 		}
-
-		tasks.clear();
 	}
 
 	private synchronized void waitForFramecount() {
@@ -618,10 +461,6 @@ public class JFXSimulationView implements RunEnvironmentListener,
 	}
 
 	@Override
-	public void event(LOTRuntimeEvent e) {
-	}
-
-	@Override
 	public void close() {
 		timeline.stop();
 	}
@@ -674,4 +513,9 @@ public class JFXSimulationView implements RunEnvironmentListener,
 		mousex = x;
 		mousey = y;
 	}
+
+	public void mouseScrolled(int count) {
+		zoom += count * 0.1;
+	}
+
 }

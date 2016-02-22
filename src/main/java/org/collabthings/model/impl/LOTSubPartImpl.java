@@ -108,6 +108,11 @@ public final class LOTSubPartImpl implements LOTSubPart {
 	}
 
 	@Override
+	public void setAngle(double angle) {
+		this.angle = angle;
+	}
+
+	@Override
 	public String toString() {
 		return "SubPart[" + p + "][" + n + "]";
 	}

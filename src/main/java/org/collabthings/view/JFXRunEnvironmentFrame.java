@@ -14,12 +14,12 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.view.JFXSimulationView.ViewCanvas;
+import org.collabthings.view.JFXRunEnvironmentView.ViewCanvas;
 
 public class JFXRunEnvironmentFrame {
 	private LOTRunEnvironment env;
 	private JFrame f;
-	private JFXSimulationView view;
+	private JFXRunEnvironmentView view;
 
 	public JFXRunEnvironmentFrame(LOTRunEnvironment env) {
 		this.env = env;
@@ -39,7 +39,7 @@ public class JFXRunEnvironmentFrame {
 		f.getContentPane().setLayout(new BorderLayout());
 
 		JFXPanel panel = new JFXPanel();
-		view = new JFXSimulationView(env);
+		view = new JFXRunEnvironmentView(env);
 		view.setCanvas(new ViewCanvas() {
 			@Override
 			public boolean isVisible() {
@@ -116,7 +116,7 @@ public class JFXRunEnvironmentFrame {
 
 	public void step(double dtime) {
 		if (view != null) {
-			view.step(dtime);
+			view.update();
 		}
 	}
 

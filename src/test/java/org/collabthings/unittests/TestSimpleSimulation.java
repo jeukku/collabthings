@@ -7,10 +7,10 @@ import java.util.Map;
 
 import org.collabthings.LOTClient;
 import org.collabthings.LOTTestCase;
+import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTScriptRunner;
-import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.RunEnvironmentDrawer;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.environment.impl.CTRuntimeError;
@@ -106,7 +106,8 @@ public class TestSimpleSimulation extends LOTTestCase {
 		runenv.addListener(new RunEnvironmentListener() {
 
 			@Override
-			public void taskFailed(LOTRunEnvironment runenv, LOTEnvironmentTask task) {
+			public void taskFailed(LOTRunEnvironment runenv,
+					LOTEnvironmentTask task) {
 			}
 
 			@Override
@@ -228,7 +229,7 @@ public class TestSimpleSimulation extends LOTTestCase {
 		rune.addTask(runner);
 		LOTSimulation s = new LOTSimpleSimulation(rune);
 		SwingSimulationFrame frame = new SwingSimulationFrame(rune);
-		frame.step(0);
+		frame.update();
 
 		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
 
