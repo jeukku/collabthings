@@ -77,12 +77,17 @@ public final class TestPart extends LOTTestCase {
 		LOTPart p = testSubPartOrientation();
 		JFXPartViewFrame f = new JFXPartViewFrame(p);
 		f.update();
-		
+
 		Condition c = new Condition() {
 			@Override
 			public boolean test() {
 				f.getScene();
-				return f.getScene() != null;
+				if (f.getScene() != null && f.getView() != null
+						&& f.getView().getUpdates() > 10) {
+					return false;
+				} else {
+					return true;
+				}
 			}
 		};
 		ConditionWaiter.wait(c, 10000);

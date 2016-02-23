@@ -118,6 +118,10 @@ public class JFXPartViewFrame {
 		}
 	}
 
+	public JFXPartView getView() {
+		return view;
+	}
+	
 	public void close() {
 		if (f != null) {
 			f.dispose();

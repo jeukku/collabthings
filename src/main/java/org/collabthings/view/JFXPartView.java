@@ -71,6 +71,7 @@ public class JFXPartView implements LOTPartView {
 	private int lastw;
 	private int lasth;
 	private int framecount;
+	private int updates;
 
 	public JFXPartView() {
 	}
@@ -133,6 +134,8 @@ public class JFXPartView implements LOTPartView {
 	}
 
 	private void updatePart() {
+		this.updates++;
+
 		LTransformationStack stack = new LTransformationStack();
 		List<LOTSubPart> foundparts = new LinkedList<LOTSubPart>();
 		updateSubparts(stack, foundparts, part);
@@ -406,53 +409,8 @@ public class JFXPartView implements LOTPartView {
 		}
 	}
 
-	private synchronized void waitForFramecount() {
-		while (framecount < 1) {
-			try {
-				this.wait(10);
-			} catch (InterruptedException e) {
-				log.error(this, "waitForFrameCount", e);
-			}
-		}
-
-		framecount--;
-	}
-
-	private void print(Group g, int i) {
-		StringBuffer sb = getIndentBuffer(i);
-		sb.append(" tr:" + g.getRotationAxis() + "(" + g.getRotate() + ") "
-				+ getTranslateString(g) + " id:" + g.getId() + " g:" + g);
-		log.info(sb.toString());
-
-		sb = getIndentBuffer(i);
-		sb.append(" localtoscene:" + g.localToScene(0, 0, 0)
-				+ " localtoscreen:" + g.localToScreen(0, 0, 0));
-		log.info(sb.toString());
-
-		ObservableList<Node> cs = g.getChildren();
-		for (Node node : cs) {
-			if (node instanceof Group) {
-				Group cg = (Group) node;
-				print(cg, i + 1);
-			} else {
-				StringBuffer sb2 = getIndentBuffer(i + 1);
-				sb2.append(" " + node);
-				log.info(sb2.toString());
-			}
-		}
-	}
-
-	private String getTranslateString(Group g) {
-		return "{" + g.getTranslateX() + "," + g.getTranslateY() + ","
-				+ g.getTranslateZ() + "}";
-	}
-
-	private StringBuffer getIndentBuffer(int i) {
-		StringBuffer sb = new StringBuffer();
-		for (int indent = 0; indent < i; indent++) {
-			sb.append("--");
-		}
-		return sb;
+	public int getUpdates() {
+		return updates;
 	}
 
 	private boolean pointOutOfScreen(double w, double h, Point2D screen) {
