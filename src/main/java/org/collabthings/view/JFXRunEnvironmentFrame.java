@@ -73,33 +73,6 @@ public class JFXRunEnvironmentFrame {
 			}
 		});
 
-		panel.addMouseMotionListener(new MouseMotionListener() {
-
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				view.mouseMove(e.getX(), e.getY(), e.getButton());
-			}
-
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				view.mouseMove(e.getX(), e.getY(), e.getButton());
-			}
-		});
-
-		panel.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				view.mouseUp(e.getX(), e.getY(), e.getButton());
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				view.mouseDown(e.getX(), e.getY(), e.getButton());
-			}
-
-		});
-
 		f.getContentPane().add(panel, BorderLayout.CENTER);
 
 		f.setVisible(true);

@@ -428,7 +428,7 @@ public class JFXPartView implements LOTPartView {
 
 	@Override
 	public void close() {
-		timeline.stop();
+		stop();
 	}
 
 	private class NodeInfo {
