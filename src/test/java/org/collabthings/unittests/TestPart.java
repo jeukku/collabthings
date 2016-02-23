@@ -10,8 +10,11 @@ import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTSubPart;
 import org.collabthings.model.impl.LOTPartImpl;
+import org.collabthings.view.JFXPartViewFrame;
 import org.xml.sax.SAXException;
 
+import waazdoh.client.utils.ConditionWaiter;
+import waazdoh.client.utils.ConditionWaiter.Condition;
 import waazdoh.common.MStringID;
 import waazdoh.common.WObject;
 
@@ -55,7 +58,7 @@ public final class TestPart extends LOTTestCase {
 				benv.getObjectFactory().getPart(bpart.getID().getStringID()));
 	}
 
-	public void testSubPartOrientation() throws IOException, SAXException {
+	public LOTPart testSubPartOrientation() throws IOException, SAXException {
 		LOTClient e = getNewClient();
 		LOTPartImpl p = new LOTPartImpl(e);
 		LOTSubPart subpart = p.newSubPart();
@@ -66,6 +69,24 @@ public final class TestPart extends LOTTestCase {
 				new LVector(10, 10, 10).toString());
 		assertEquals(subpart.getNormal().toString(),
 				new LVector(0, 1, 0).toString());
+
+		return p;
+	}
+
+	public void testPartView() throws IOException, SAXException {
+		LOTPart p = testSubPartOrientation();
+		JFXPartViewFrame f = new JFXPartViewFrame(p);
+		f.update();
+		
+		Condition c = new Condition() {
+			@Override
+			public boolean test() {
+				f.getScene();
+				return f.getScene() != null;
+			}
+		};
+		ConditionWaiter.wait(c, 10000);
+		f.close();
 	}
 
 	public void testLoadRandomID() throws IOException, SAXException {
