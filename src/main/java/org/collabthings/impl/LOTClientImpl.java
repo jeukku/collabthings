@@ -26,9 +26,8 @@ public final class LOTClientImpl implements LOTClient {
 	public LOTClientImpl(WPreferences p, BinarySource binarysource,
 			BeanStorage beanstorage, ServiceClient service) {
 		client = new WClient(p, binarysource, beanstorage, service);
-		client.addObjectFilter((o) -> {
-			return LOTClient.checkVersion(o.getValue("version"));
-		});
+		client.addObjectFilter((o) -> LOTClient.checkVersion(o
+				.getValue("version")));
 
 		this.factory = new LOTObjectFactoryImpl(this);
 		this.storage = new LOTStorageImpl(service);
