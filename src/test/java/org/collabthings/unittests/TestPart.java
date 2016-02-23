@@ -16,6 +16,7 @@ import org.xml.sax.SAXException;
 import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.client.utils.ConditionWaiter.Condition;
 import waazdoh.common.MStringID;
+import waazdoh.common.MTimedFlag;
 import waazdoh.common.WObject;
 
 public final class TestPart extends LOTTestCase {
@@ -78,20 +79,25 @@ public final class TestPart extends LOTTestCase {
 		JFXPartViewFrame f = new JFXPartViewFrame(p);
 		f.update();
 
+		MTimedFlag flag = new MTimedFlag(10000);
+
 		Condition c = new Condition() {
 			@Override
 			public boolean test() {
 				f.getScene();
 				if (f.getScene() != null && f.getView() != null
-						&& f.getView().getUpdates() > 10) {
-					return false;
-				} else {
+						&& f.getView().getUpdates() > 20) {
+					flag.trigger();
 					return true;
+				} else {
+					return false;
 				}
 			}
 		};
 		ConditionWaiter.wait(c, 10000);
 		f.close();
+
+		assertTrue(flag.wasTriggerCalled());
 	}
 
 	public void testLoadRandomID() throws IOException, SAXException {

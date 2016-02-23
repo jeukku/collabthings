@@ -134,30 +134,38 @@ public class JFXPartView implements LOTPartView {
 	}
 
 	private void updatePart() {
-		this.updates++;
+		if (part != null) {
+			this.updates++;
 
-		LTransformationStack stack = new LTransformationStack();
-		List<LOTSubPart> foundparts = new LinkedList<LOTSubPart>();
-		updateSubparts(stack, foundparts, part);
-		//
-		List<LOTSubPart> currentnodes = new LinkedList<LOTSubPart>(
-				subpartnodes.keySet());
-		for (LOTSubPart node : currentnodes) {
-			if (!foundparts.contains(node)) {
-				NodeInfo n = subpartnodes.get(node);
-				subpartnodes.remove(node);
-				n.group.setDisable(true);
-				Group g = (Group) n.group.getParent();
-				g.getChildren().remove(n.group);
+			LTransformationStack stack = new LTransformationStack();
+			List<LOTSubPart> foundparts = new LinkedList<LOTSubPart>();
+			updateSubparts(stack, foundparts, part);
+			//
+			List<LOTSubPart> currentnodes = new LinkedList<LOTSubPart>(
+					subpartnodes.keySet());
+			for (LOTSubPart node : currentnodes) {
+				if (!foundparts.contains(node)) {
+					NodeInfo n = subpartnodes.get(node);
+					subpartnodes.remove(node);
+					n.group.setDisable(true);
+					Group g = (Group) n.group.getParent();
+					g.getChildren().remove(n.group);
+				}
 			}
+		} else {
+			LLog.getLogger(this).info("part null");
 		}
 	}
 
 	private void updateSubparts(LTransformationStack stack,
 			List<LOTSubPart> foundparts, LOTPart part) {
-		List<LOTSubPart> subparts = part.getSubParts();
-		for (LOTSubPart sp : subparts) {
-			updatePartState(stack, foundparts, sp);
+		if (part != null) {
+			List<LOTSubPart> subparts = part.getSubParts();
+			for (LOTSubPart sp : subparts) {
+				updatePartState(stack, foundparts, sp);
+			}
+		} else {
+			LLog.getLogger(this).info("part null");
 		}
 	}
 

@@ -42,6 +42,8 @@ public class JFXPartViewFrame {
 		panel = new JFXPanel();
 
 		view = new JFXPartView();
+		view.setPart(part);
+
 		view.setCanvas(new ViewCanvas() {
 			@Override
 			public boolean isVisible() {
@@ -121,7 +123,7 @@ public class JFXPartViewFrame {
 	public JFXPartView getView() {
 		return view;
 	}
-	
+
 	public void close() {
 		if (f != null) {
 			f.dispose();
