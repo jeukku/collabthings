@@ -10,13 +10,9 @@ import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTSubPart;
 import org.collabthings.model.impl.LOTPartImpl;
-import org.collabthings.view.JFXPartViewFrame;
 import org.xml.sax.SAXException;
 
-import waazdoh.client.utils.ConditionWaiter;
-import waazdoh.client.utils.ConditionWaiter.Condition;
 import waazdoh.common.MStringID;
-import waazdoh.common.MTimedFlag;
 import waazdoh.common.WObject;
 
 public final class TestPart extends LOTTestCase {
@@ -52,11 +48,10 @@ public final class TestPart extends LOTTestCase {
 		assertEquals(bsubpart.getPart().getID(), subpart.getPart().getID());
 		assertEquals(subpart.toString(), bsubpart.toString());
 		//
-		assertEquals(bpart.getObject().toText(), benv.getObjectFactory()
-				.getPart(bpart.getID().getStringID()).getObject().toText());
+		assertEquals(bpart.getObject().toText(),
+				benv.getObjectFactory().getPart(bpart.getID().getStringID()).getObject().toText());
 
-		assertEquals(bpart,
-				benv.getObjectFactory().getPart(bpart.getID().getStringID()));
+		assertEquals(bpart, benv.getObjectFactory().getPart(bpart.getID().getStringID()));
 	}
 
 	public LOTPart testSubPartOrientation() throws IOException, SAXException {
@@ -66,38 +61,10 @@ public final class TestPart extends LOTTestCase {
 		subpart.setPart(new LOTPartImpl(e));
 		subpart.setOrientation(new LVector(10, 10, 10), new LVector(0, 1, 0), 1);
 		//
-		assertEquals(subpart.getLocation().toString(),
-				new LVector(10, 10, 10).toString());
-		assertEquals(subpart.getNormal().toString(),
-				new LVector(0, 1, 0).toString());
+		assertEquals(subpart.getLocation().toString(), new LVector(10, 10, 10).toString());
+		assertEquals(subpart.getNormal().toString(), new LVector(0, 1, 0).toString());
 
 		return p;
-	}
-
-	public void testPartView() throws IOException, SAXException {
-		LOTPart p = testSubPartOrientation();
-		JFXPartViewFrame f = new JFXPartViewFrame(p);
-		f.update();
-
-		MTimedFlag flag = new MTimedFlag(10000);
-
-		Condition c = new Condition() {
-			@Override
-			public boolean test() {
-				f.getScene();
-				if (f.getScene() != null && f.getView() != null
-						&& f.getView().getUpdates() > 20) {
-					flag.trigger();
-					return true;
-				} else {
-					return false;
-				}
-			}
-		};
-		ConditionWaiter.wait(c, 10000);
-		f.close();
-
-		assertTrue(flag.wasTriggerCalled());
 	}
 
 	public void testLoadRandomID() throws IOException, SAXException {
@@ -122,8 +89,7 @@ public final class TestPart extends LOTTestCase {
 		p.setBoundingBox(av, bv);
 		p.publish();
 		//
-		LOTPart pb = getNewClient().getObjectFactory().getPart(
-				p.getID().getStringID());
+		LOTPart pb = getNewClient().getObjectFactory().getPart(p.getID().getStringID());
 		LOTBoundingBox bounding = pb.getBoundingBox();
 		assertEquals(bounding.getA(), av);
 		assertEquals(bounding.getB(), bv);
@@ -133,8 +99,7 @@ public final class TestPart extends LOTTestCase {
 		LOTClient e = getNewClient();
 		LOTPart p = e.getObjectFactory().getPart();
 		LOTBinaryModel bm = p.newBinaryModel();
-		bm.importModel(LOTBinaryModel.TYPE_X3D,
-				getClass().getResourceAsStream(cubemodelpath));
+		bm.importModel(LOTBinaryModel.TYPE_X3D, getClass().getResourceAsStream(cubemodelpath));
 		assertNotNull(p.getModel());
 		assertTrue(bm.getBinary().length() > 0);
 	}
@@ -158,8 +123,7 @@ public final class TestPart extends LOTTestCase {
 		for (int i = 0; i < 10; i++) {
 			LOTSubPart newSubPart = a.newSubPart();
 			newSubPart.setPart(c);
-			newSubPart.setOrientation(new LVector(i, i, i),
-					new LVector(i, i, i), 1);
+			newSubPart.setOrientation(new LVector(i, i, i), new LVector(i, i, i), 1);
 		}
 	}
 }
