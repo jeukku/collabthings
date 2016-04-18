@@ -1,6 +1,7 @@
 package org.collabthings.unittests;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.collabthings.LOTClient;
 import org.collabthings.LOTTestCase;
@@ -52,6 +53,21 @@ public final class TestPart extends LOTTestCase {
 				benv.getObjectFactory().getPart(bpart.getID().getStringID()).getObject().toText());
 
 		assertEquals(bpart, benv.getObjectFactory().getPart(bpart.getID().getStringID()));
+	}
+
+	public void testPublishAndSearch() {
+		String search = "searchtest" + System.currentTimeMillis();
+
+		LOTClient c = getNewClient();
+		LOTPart part = new LOTPartImpl(c);
+		String name = search + " " + System.currentTimeMillis();
+		part.setName("testing changing name " + name);
+		part.publish();
+		//
+		LOTClient c2 = getNewClient();
+		List<String> items = c2.getService().getObjects().search(search, 0, 100);
+		assertTrue(items.size() > 0);
+		assertTrue(items.contains(part.getID().toString()));
 	}
 
 	public LOTPart testSubPartOrientation() throws IOException, SAXException {
