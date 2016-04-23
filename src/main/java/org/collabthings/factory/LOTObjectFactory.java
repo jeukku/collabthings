@@ -41,4 +41,6 @@ public interface LOTObjectFactory {
 
 	LOTPartBuilder getPartBuilder(MStringID id);
 
+	String getType(MStringID id);
+
 }

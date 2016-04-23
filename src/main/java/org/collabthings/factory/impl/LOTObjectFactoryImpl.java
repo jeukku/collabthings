@@ -23,6 +23,7 @@ import org.collabthings.model.run.impl.LOTRunEnvironmentBuilderImpl;
 import org.collabthings.util.LLog;
 
 import waazdoh.common.MStringID;
+import waazdoh.common.vo.ObjectVO;
 
 public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 
@@ -41,6 +42,12 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 
 	public LOTObjectFactoryImpl(final LOTClient nenv) {
 		this.client = nenv;
+	}
+
+	@Override
+	public String getType(MStringID id) {
+		ObjectVO o = client.getService().getObjects().read(id.toString());
+		return o.getObject().getType();
 	}
 
 	@Override
@@ -226,8 +233,7 @@ public final class LOTObjectFactoryImpl implements LOTObjectFactory {
 				}
 			}
 
-			LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(
-					client, id);
+			LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(client, id);
 			runtimebuilders.add(b);
 			return b;
 		}
