@@ -3,17 +3,15 @@ package org.collabthings.simulation;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.util.LLog;
-import org.collabthings.view.JFXRunEnvironmentFrame;
 
 import waazdoh.client.utils.ConditionWaiter;
 
-public class LOTSimpleSimulation implements LOTSimulation,
-		RunEnvironmentListener {
+public class LOTSimpleSimulation implements LOTSimulation, RunEnvironmentListener {
 	private static final double MAX_STEP = 0.002;
 	private static final double MIN_STEP = 0.001;
 	//
@@ -23,20 +21,12 @@ public class LOTSimpleSimulation implements LOTSimulation,
 	private boolean allsuccess = true;
 	private LOTStepRunner runner;
 	//
-	private JFXRunEnvironmentFrame view;
 	private List<LOTRuntimeEvent> events = new LinkedList<LOTRuntimeEvent>();
 	private boolean done;
 
 	public LOTSimpleSimulation(LOTRunEnvironment runenv) {
 		this.env = runenv;
 		env.addListener(this);
-	}
-
-	public LOTSimpleSimulation(LOTRunEnvironment runenv, boolean b) {
-		this(runenv);
-		if (b) {
-			view = new JFXRunEnvironmentFrame(runenv);
-		}
 	}
 
 	@Override
@@ -70,9 +60,6 @@ public class LOTSimpleSimulation implements LOTSimulation,
 		log.info("Stopping");
 		env.stop();
 		runner.stop();
-		if (view != null) {
-			view.close();
-		}
 	}
 
 	private void start() {
@@ -82,9 +69,6 @@ public class LOTSimpleSimulation implements LOTSimulation,
 
 	private boolean step(double dtime) {
 		env.step(dtime);
-		if (view != null) {
-			view.step(dtime);
-		}
 		return !isReady();
 	}
 

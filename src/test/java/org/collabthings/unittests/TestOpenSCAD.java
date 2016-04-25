@@ -88,7 +88,7 @@ public final class TestOpenSCAD extends LOTTestCase {
 			}
 		});
 
-		LOTSimulation simulation = new LOTSimpleSimulation(runenv, true);
+		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		simulation.run(MAX_RUNTIME);
 
 		assertEquals("true", map.get("run"));

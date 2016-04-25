@@ -56,7 +56,10 @@ public final class TestPart extends LOTTestCase {
 	}
 
 	public void testPublishAndSearch() {
-		String search = "searchtest" + System.currentTimeMillis();
+		String search = "searchtest";
+		for (int c = 0; c < 20; c++) {
+			search = search + (char) ('a' + (int) (Math.random() * 20));
+		}
 
 		LOTClient c = getNewClient();
 		LOTPart part = new LOTPartImpl(c);
