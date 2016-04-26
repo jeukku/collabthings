@@ -59,6 +59,23 @@ public final class TestOpenSCAD extends LOTTestCase {
 		assertEquals(scad.getScript(), bscad.getScript());
 	}
 
+	public void testGear() throws IOException, SAXException {
+		LOTClient env = getNewClient(true);
+		assertNotNull(env);
+		//
+		LOTPart part = new LOTPartImpl(env);
+		LOTOpenSCAD scad = part.newSCAD();
+		scad.setName("gear");
+		part.setName("testing gear model");
+
+		scad.setScript(loadATestFile("scad/gears_helical.scad"));
+
+		LOTBinaryModel m = scad.getModel();
+		assertNotNull(m);
+
+		part.publish();
+	}
+
 	public void testView() throws FileNotFoundException, IOException {
 		LOTClient client = getNewClient(true);
 		assertNotNull(client);
