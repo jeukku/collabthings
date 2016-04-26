@@ -38,8 +38,7 @@ import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
  * @author Juuso Vilmunen
  * 
  */
-public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
-		LOTModel {
+public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD, LOTModel {
 	private static final String VARIABLE_NAME = "name";
 	private static final String SCRIPT = "value";
 	private static final String VARIABLE_SCALE = "scale";
@@ -70,12 +69,10 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 	 */
 	public LOTOpenSCADImpl(final LOTClient env) {
 		this.client = env;
-		o = new ServiceObject(LOTModel.SCAD, env.getClient(), this,
-				env.getVersion(), env.getPrefix());
+		o = new ServiceObject(LOTModel.SCAD, env.getClient(), this, env.getVersion(), env.getPrefix());
 		setName("OpenSCAD" + (LOTOpenSCADImpl.namecounter++));
 		StringBuffer b = new StringBuffer();
-		b.append("// created " + new Date() + " by "
-				+ env.getService().getUser().getUsername() + "\n");
+		b.append("// created " + new Date() + " by " + env.getService().getUser().getUsername() + "\n");
 		b.append("// Version " + env.getVersion() + "\n");
 		b.append("color(\"red\")\n");
 		b.append("  rotate_extrude()\n");
@@ -107,9 +104,10 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 			meshview.setScaleY(scale);
 			meshview.setScaleZ(scale);
 
-			Color c = Color.RED;
+			PhongMaterial m = new javafx.scene.paint.PhongMaterial(Color.WHITE);
+			m.setDiffuseColor(Color.hsb(Math.random() * 360, 1, 1));
+			m.setSpecularColor(Color.WHITE);
 
-			Material m = new PhongMaterial(c);
 			meshview.setMaterial(m);
 
 			g.getChildren().add(meshview);
@@ -157,10 +155,8 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 		}
 	}
 
-	private File createSTL() throws IOException, FileNotFoundException,
-			InterruptedException {
-		String path = client.getPreferences().get("software.openscad.path",
-				"openscad");
+	private File createSTL() throws IOException, FileNotFoundException, InterruptedException {
+		String path = client.getPreferences().get("software.openscad.path", "openscad");
 		File tempfile = File.createTempFile("collabthings", ".scad");
 		FileOutputStream fos = new FileOutputStream(tempfile);
 		String s = getScript();
@@ -188,8 +184,7 @@ public final class LOTOpenSCADImpl implements ServiceObjectData, LOTOpenSCAD,
 	}
 
 	private void readStream(InputStream errorStream) {
-		BufferedReader es = new BufferedReader(new InputStreamReader(
-				errorStream));
+		BufferedReader es = new BufferedReader(new InputStreamReader(errorStream));
 
 		new Thread(() -> {
 			try {
