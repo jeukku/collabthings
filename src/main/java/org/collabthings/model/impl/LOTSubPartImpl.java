@@ -12,7 +12,7 @@ import waazdoh.common.WObject;
 public final class LOTSubPartImpl implements LOTSubPart {
 	private LOTPart part;
 	private final LVector p = new LVector();
-	private final LVector n = new LVector();
+	private final LVector n = new LVector(0, 1, 0);
 	private double angle = 0;
 	private final LOTClient client;
 	private LTransformation transformation;
@@ -79,10 +79,9 @@ public final class LOTSubPartImpl implements LOTSubPart {
 	@Override
 	public LTransformation getTransformation() {
 		if (transformation == null) {
-			transformation = new LTransformation(getLocation(), getNormal(),
-					angle); // TODO
-							// fix
-							// angle
+			transformation = new LTransformation(getLocation(), getNormal(), angle); // TODO
+																						// fix
+																						// angle
 		}
 		return transformation;
 	}
@@ -91,6 +90,7 @@ public final class LOTSubPartImpl implements LOTSubPart {
 	public void setOrientation(LVector location, LVector normal, double angle) {
 		this.p.set(location);
 		this.n.set(normal);
+		this.n.normalize();
 		transformation = null;
 		this.angle = angle;
 	}
