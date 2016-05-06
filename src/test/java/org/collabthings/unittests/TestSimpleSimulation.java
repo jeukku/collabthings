@@ -11,7 +11,6 @@ import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTScriptRunner;
-import org.collabthings.environment.RunEnvironmentDrawer;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.environment.impl.CTRuntimeError;
 import org.collabthings.environment.impl.LOTFactoryState;
@@ -32,7 +31,6 @@ import org.collabthings.model.impl.LOTScriptImpl;
 import org.collabthings.model.impl.LOTToolImpl;
 import org.collabthings.simulation.LOTSimpleSimulation;
 import org.collabthings.simulation.LOTSimulation;
-import org.collabthings.view.RunEnvironmentDrawerImpl;
 import org.xml.sax.SAXException;
 
 public class TestSimpleSimulation extends LOTTestCase {
@@ -89,10 +87,6 @@ public class TestSimpleSimulation extends LOTTestCase {
 		String name = "testvaluename";
 		String value = "testvalue";
 
-		RunEnvironmentDrawer d = new RunEnvironmentDrawerImpl(runenv, (e, b) -> {
-
-		}, "test");
-
 		LOTGraphicsTest g = new LOTGraphicsTest();
 
 		runenv.addListener(new RunEnvironmentListener() {
@@ -123,8 +117,6 @@ public class TestSimpleSimulation extends LOTTestCase {
 					f2s.getOrientation().set(new LVector(1, 1, 0), System.currentTimeMillis() / 700.0);
 					f21s.getOrientation().set(new LVector(0, 1, 0), System.currentTimeMillis() / 500.0);
 					p21s.getOrientation().set(new LVector(0, 1, 0), System.currentTimeMillis() / 800.0);
-
-					d.draw(g);
 
 					try {
 						wait(20);
