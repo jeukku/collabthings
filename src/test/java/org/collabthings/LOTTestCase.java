@@ -11,14 +11,13 @@ import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.collabthings.impl.LOTClientImpl;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTObject;
 import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
 
+import junit.framework.TestCase;
 import waazdoh.client.BinarySource;
 import waazdoh.client.storage.local.FileBeanStorage;
 import waazdoh.client.utils.ConditionWaiter;

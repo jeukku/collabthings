@@ -87,8 +87,6 @@ public class TestSimpleSimulation extends LOTTestCase {
 		String name = "testvaluename";
 		String value = "testvalue";
 
-		LOTGraphicsTest g = new LOTGraphicsTest();
-
 		runenv.addListener(new RunEnvironmentListener() {
 
 			@Override
@@ -139,8 +137,6 @@ public class TestSimpleSimulation extends LOTTestCase {
 
 		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
 		assertTrue(simulation.run(MAX_SIMUALTION_RUNTIME));
-
-		assertTrue(g.setcolorcount > 0);
 
 		assertEquals(value, valuesmap.get("testvaluename"));
 	}

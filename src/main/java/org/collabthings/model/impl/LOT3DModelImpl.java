@@ -18,20 +18,16 @@ import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.TriangleMesh;
-
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTTriangle;
 import org.collabthings.model.LOTTriangleMesh;
+import org.collabthings.scene.CTGroup;
+import org.collabthings.scene.CTTriangleMesh;
+import org.collabthings.scene.StlMeshImporter;
+import org.collabthings.scene.X3dModelImporter;
 import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
 
@@ -45,11 +41,7 @@ import waazdoh.common.WData;
 import waazdoh.common.WObject;
 import waazdoh.common.XML;
 
-import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
-import com.interactivemesh.jfx.importer.x3d.X3dModelImporter;
-
-public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
-		LOTModel {
+public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData, LOTModel {
 	private static final String BEANNAME = "model3d";
 	private static final String SCALE = "scale";
 	private static final String TRANSLATION = "translation";
@@ -72,8 +64,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 
 	public LOT3DModelImpl(final LOTClient nenv) {
 		this.env = nenv;
-		o = new ServiceObject(BEANNAME, nenv.getClient(), this,
-				nenv.getVersion(), nenv.getPrefix());
+		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.getVersion(), nenv.getPrefix());
 		log = LLog.getLogger(this);
 		newBinary();
 	}
@@ -216,8 +207,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		try {
 			Reader fr;
 			fr = new FileReader(file);
-			String extension = file.getName().substring(
-					file.getName().lastIndexOf('.') + 1);
+			String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
 			log.info("Import model extension " + extension);
 			return importModel(fr, extension);
 		} catch (IOException | SAXException e) {
@@ -226,8 +216,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		}
 	}
 
-	private boolean importModel(Reader fr, String extension)
-			throws IOException, SAXException {
+	private boolean importModel(Reader fr, String extension) throws IOException, SAXException {
 		setType(extension);
 
 		if (LOTBinaryModel.TYPE_STL.equals(extension)) {
@@ -241,30 +230,19 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 	}
 
 	@Override
-	public void addTo(Group g) {
+	public void addTo(CTGroup g) {
 		try {
 			if (LOTBinaryModel.TYPE_X3D.equals(getType())) {
-				X3dModelImporter x3dImporter = new X3dModelImporter();
-				x3dImporter.read(getModelFile());
+				X3dModelImporter i = new X3dModelImporter();
+				i.read(getModelFile());
 
-				Node[] rootNodes = x3dImporter.getImport();
-				log.info("imported nodes " + rootNodes);
-				for (Node node : rootNodes) {
-					g.getChildren().add(node);
-				}
-
+				CTTriangleMesh mesh = i.getImport();
+				g.add(mesh);
 			} else if (LOTBinaryModel.TYPE_STL.equals(getType())) {
 				StlMeshImporter i = new StlMeshImporter();
 				i.read(getModelFile());
-				TriangleMesh mesh = i.getImport();
-				MeshView meshview = new MeshView(mesh);
-
-				Color c = Color.RED;
-
-				Material m = new PhongMaterial(c);
-				meshview.setMaterial(m);
-
-				g.getChildren().add(meshview);
+				CTTriangleMesh mesh = i.getImport();
+				g.add(mesh);
 			}
 		} catch (SAXException | IOException e) {
 			log.error(this, "addTo", e);
@@ -308,8 +286,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		log.fine("importing " + b.toText());
 		if (importX3D(b)) {
 			newBinary();
-			getBinary().load(
-					new ByteArrayInputStream(b.toXML().toString().getBytes()));
+			getBinary().load(new ByteArrayInputStream(b.toXML().toString().getBytes()));
 			getBinary().setReady();
 			return true;
 		} else {
@@ -335,8 +312,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 	}
 
 	private String findSpecificationsResources() throws IOException {
-		Enumeration<URL> systemResources = ClassLoader
-				.getSystemResources("specifications");
+		Enumeration<URL> systemResources = ClassLoader.getSystemResources("specifications");
 		List<String> searchlist = new LinkedList<String>();
 		while (systemResources.hasMoreElements()) {
 			URL u = systemResources.nextElement();
@@ -368,8 +344,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		return true;
 	}
 
-	private void importReplaceURLAttribute(WData b, String urlattribute)
-			throws IOException {
+	private void importReplaceURLAttribute(WData b, String urlattribute) throws IOException {
 		log.info("Found URL attribute " + urlattribute);
 		log.info("current dir " + new File(".").getAbsolutePath());
 		//
@@ -386,8 +361,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		}
 		//
 		String extensions = surl.substring(surl.lastIndexOf('.') + 1);
-		Binary childbinary = this.env.getBinarySource().newBinary(surl,
-				extensions);
+		Binary childbinary = this.env.getBinarySource().newBinary(surl, extensions);
 		childbinary.importStream(is);
 		addChildBinary(childbinary);
 		b.setAttribute("url", childbinary.getID().toString());
@@ -407,9 +381,8 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 			return null;
 		}
 
-		File f = File.createTempFile("" + System.currentTimeMillis() + "_"
-				+ getBinary().getID().toString(), "."
-				+ getBinary().getExtension());
+		File f = File.createTempFile("" + System.currentTimeMillis() + "_" + getBinary().getID().toString(),
+				"." + getBinary().getExtension());
 		f.delete();
 
 		if (getType().equals(LOTBinaryModel.TYPE_X3D)) {
@@ -430,18 +403,15 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 		if (isReady()) {
 			XML xml;
 			try {
-				xml = new XML(new InputStreamReader(getBinary()
-						.getInputStream()));
+				xml = new XML(new InputStreamReader(getBinary().getInputStream()));
 				log.info("getModelStream parsing " + xml);
 				WData b = new WData(xml);
 				// FIXME TODO
-				b.find("X3D").setAttribute("xmlns:xsd",
-						"http://www.w3.org/2001/XMLSchema-instance");
+				b.find("X3D").setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema-instance");
 
 				convertX3DURLs(b);
 				log.info("getModelStream returning " + b.toXML().toString());
-				return new BufferedInputStream(new ByteArrayInputStream(b
-						.toXML().toString().getBytes()));
+				return new BufferedInputStream(new ByteArrayInputStream(b.toXML().toString().getBytes()));
 			} catch (IOException e) {
 				log.error(this, "getModelStream", e);
 				return null;
@@ -454,8 +424,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 	private void convertX3DURLs(WData b) {
 		String surl = b.getAttribute("url");
 		if (surl != null) {
-			Binary cbin = env.getBinarySource().getOrDownload(
-					new BinaryID(surl));
+			Binary cbin = env.getBinarySource().getOrDownload(new BinaryID(surl));
 			//
 			String path = cbin.getFile().getAbsolutePath();
 			String stextureurl = path.replace('\\', '/');
@@ -538,9 +507,7 @@ public class LOT3DModelImpl implements LOTBinaryModel, ServiceObjectData,
 						mesh.getVectors().add(s.pop());
 						mesh.getVectors().add(s.pop());
 						mesh.getVectors().add(s.pop());
-						mesh.getTriangles()
-								.add(new LOTTriangle(index, index + 1,
-										index + 2, n));
+						mesh.getTriangles().add(new LOTTriangle(index, index + 1, index + 2, n));
 					}
 				}
 			}

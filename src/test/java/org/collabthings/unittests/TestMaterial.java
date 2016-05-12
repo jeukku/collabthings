@@ -1,10 +1,9 @@
 package org.collabthings.unittests;
 
-import junit.framework.TestCase;
-
 import org.collabthings.model.LOTMaterial;
 import org.collabthings.model.impl.LOTMaterialImpl;
 
+import junit.framework.TestCase;
 import waazdoh.common.WObject;
 
 public class TestMaterial extends TestCase {

@@ -1,8 +1,8 @@
 package org.collabthings.unittests;
 
-import junit.framework.TestCase;
-
 import org.collabthings.LOTClient;
+
+import junit.framework.TestCase;
 
 public class TestVersions extends TestCase {
 

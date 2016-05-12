@@ -2,9 +2,8 @@ package org.collabthings.model;
 
 import java.io.File;
 
-import javafx.scene.Group;
-
 import org.collabthings.math.LVector;
+import org.collabthings.scene.CTGroup;
 
 import waazdoh.common.ObjectID;
 
@@ -34,5 +33,5 @@ public interface LOTModel {
 
 	void setTranslation(LVector translation);
 
-	void addTo(Group g);
+	void addTo(CTGroup g);
 }

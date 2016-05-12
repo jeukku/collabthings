@@ -217,29 +217,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>javafx</artifactId>
-			<version>2.2.3</version>
-			<scope>system</scope>
-			<systemPath>${env.JAVA_HOME}/jre/lib/jfxswt.jar</systemPath>
-		</dependency>
-
-		<dependency>
-			<groupId>com.interactivemesh</groupId>
-			<artifactId>x3d</artifactId>
-			<version>2.2.3</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/lib/jimX3dModelImporterJFX.jar
-			</systemPath>
-		</dependency>
-
-		<dependency>
-			<groupId>com.interactivemesh</groupId>
-			<artifactId>stl</artifactId>
-			<version>2.2.3</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/lib/jimStlMeshImporterJFX.jar
-			</systemPath>
+			<groupId>org.lwjgl.lwjgl</groupId>
+			<artifactId>lwjgl</artifactId>
+			<version>2.9.3</version>
 		</dependency>
 	</dependencies>
 

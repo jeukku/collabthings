@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.collabthings.LOTClient;
+import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTScriptRunner;
-import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTEnvironment;
