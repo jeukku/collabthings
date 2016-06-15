@@ -2,8 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>client</artifactId>
 	<groupId>org.collabthings</groupId>
+	<artifactId>client</artifactId>
 
 	<packaging>jar</packaging>
 	<version>0.3.2-SNAPSHOT</version>
