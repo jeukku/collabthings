@@ -70,7 +70,7 @@ public class CTPool {
 		waitForPart(string, CTPool.MAX_WAIT_TIME);
 	}
 
-	public synchronized void waitForPart(String pool, int maxtime) {
+	public synchronized void waitForPart(String pool, long maxtime) {
 		long st = System.currentTimeMillis();
 
 		if (isPartPoolEmpty(pool)) {
