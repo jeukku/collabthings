@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOTBinaryModel;
-import org.collabthings.model.impl.LOT3DModelImpl;
+import org.collabthings.model.CTBinaryModel;
+import org.collabthings.model.impl.CT3DModelImpl;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.utils.ConditionWaiter;
@@ -18,42 +18,42 @@ import waazdoh.common.MStringID;
 import waazdoh.common.WData;
 import waazdoh.common.XML;
 
-public final class Test3DModel extends LOTTestCase {
+public final class Test3DModel extends CTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException {
-		LOTClient env = getNewClient();
+		CTClient env = getNewClient();
 		assertNotNull(env);
 		//
-		LOTBinaryModel am = new LOT3DModelImpl(env);
+		CTBinaryModel am = new CT3DModelImpl(env);
 		am.setName("TEST");
 		am.setTranslation(new LVector(1, 0, 1));
 		am.setScale(10);
 
 		am.publish();
 		//
-		LOTClient benv = getNewClient();
+		CTClient benv = getNewClient();
 		assertNotNull(benv);
-		LOT3DModelImpl bm = new LOT3DModelImpl(benv);
+		CT3DModelImpl bm = new CT3DModelImpl(benv);
 		bm.load(am.getID().getStringID());
 		assertEquals(am.getName(), bm.getName());
 		assertEquals(am, bm);
 	}
 
 	public void testSaveAndLoadBinary() throws IOException, SAXException {
-		LOTClient env = getNewClient(true);
+		CTClient env = getNewClient(true);
 		assertNotNull(env);
-		LOTClient benv = getNewClient(true);
+		CTClient benv = getNewClient(true);
 		assertNotNull(benv);
 		benv.getBinarySource().waitUntilReady();
 		//
-		LOT3DModelImpl s = new LOT3DModelImpl(env);
+		CT3DModelImpl s = new CT3DModelImpl(env);
 		s.setName("TEST");
 		String testbinarydatastring = "TESTIBINARYDATA";
 		s.getBinary().add(new String(testbinarydatastring).getBytes());
 		s.getBinary().setReady();
 		s.publish();
 		//
-		LOTBinaryModel bs = new LOT3DModelImpl(benv);
+		CTBinaryModel bs = new CT3DModelImpl(benv);
 		bs.load(s.getID().getStringID());
 		assertEquals(s.getName(), bs.getName());
 		//
@@ -64,9 +64,9 @@ public final class Test3DModel extends LOTTestCase {
 	}
 
 	public void testFailBinary() throws IOException, SAXException {
-		LOTClient env = getNewClient();
+		CTClient env = getNewClient();
 		try {
-			LOT3DModelImpl m = new LOT3DModelImpl(env);
+			CT3DModelImpl m = new CT3DModelImpl(env);
 			m.load(new MStringID());
 		} catch (NullPointerException e) {
 			assertNotNull(e);
@@ -75,10 +75,9 @@ public final class Test3DModel extends LOTTestCase {
 
 	public void testImport() throws IOException, SAXException {
 
-		LOTClient env = getNewClient();
-		LOT3DModelImpl m = new LOT3DModelImpl(env);
-		assertTrue(m.importModel("x3d",
-				getClass().getResourceAsStream(cubemodelpath)));
+		CTClient env = getNewClient();
+		CT3DModelImpl m = new CT3DModelImpl(env);
+		assertTrue(m.importModel("x3d", getClass().getResourceAsStream(cubemodelpath)));
 		ConditionWaiter.wait(() -> m.isReady(), 5000);
 		//
 		assertTrue(m.isReady());

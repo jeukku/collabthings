@@ -6,44 +6,44 @@ import java.util.List;
 
 import javax.script.ScriptException;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
-import org.collabthings.LOTToolException;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.impl.LOTFactoryState;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
+import org.collabthings.CTToolException;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOTAttachedFactory;
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTOpenSCAD;
-import org.collabthings.model.LOTPart;
-import org.collabthings.model.LOTScript;
-import org.collabthings.model.LOTSubPart;
-import org.collabthings.model.LOTTool;
-import org.collabthings.model.impl.LOTScriptImpl;
-import org.collabthings.model.run.LOTRunEnvironmentBuilder;
-import org.collabthings.model.run.impl.LOTRunEnvironmentBuilderImpl;
-import org.collabthings.simulation.LOTSimpleSimulation;
-import org.collabthings.simulation.LOTSimulation;
+import org.collabthings.model.CTAttachedFactory;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTOpenSCAD;
+import org.collabthings.model.CTPart;
+import org.collabthings.model.CTScript;
+import org.collabthings.model.CTSubPart;
+import org.collabthings.model.CTTool;
+import org.collabthings.model.impl.CTScriptImpl;
+import org.collabthings.model.run.CTRunEnvironmentBuilder;
+import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
+import org.collabthings.simulation.CTSimpleSimulation;
+import org.collabthings.simulation.CTSimulation;
 import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
 
 import waazdoh.common.MStringID;
 
-public final class ITTestBuildABox extends LOTTestCase {
+public final class ITTestBuildABox extends CTTestCase {
 
 	private static final int PARTS_IN_A_BOX = 6;
 	private static final int MAX_SIMULATION_RUNTIME = 600000;
 	//
-	private LOTPart box;
+	private CTPart box;
 	private LLog log = LLog.getLogger(this);
-	private LOTPart square;
+	private CTPart square;
 
 	public synchronized void testBoxLine() throws NoSuchMethodException, IOException, SAXException, ScriptException,
-			LOTToolException, InterruptedException {
-		LOTClient client = getNewClient();
+			CTToolException, InterruptedException {
+		CTClient client = getNewClient();
 		info("client " + client);
 
-		LOTFactory factory = client.getObjectFactory().getFactory();
+		CTFactory factory = client.getObjectFactory().getFactory();
 		setupFactoryThatUsesBoxes(factory, client);
 		info("factory setup done");
 
@@ -53,13 +53,13 @@ public final class ITTestBuildABox extends LOTTestCase {
 		factory.publish();
 		info("Factory published");
 		//
-		LOTPart line = getLineOfBoxes(client);
+		CTPart line = getLineOfBoxes(client);
 		info("line of boxes " + line);
 		//
-		LOTRunEnvironmentBuilder builder = new LOTRunEnvironmentBuilderImpl(client);
-		builder.getEnvironment().addScript("init", loadScript(new LOTScriptImpl(client), "linefactory_runenv_init.js"));
+		CTRunEnvironmentBuilder builder = new CTRunEnvironmentBuilderImpl(client);
+		builder.getEnvironment().addScript("init", loadScript(new CTScriptImpl(client), "linefactory_runenv_init.js"));
 		builder.getEnvironment().addScript("addorder",
-				loadScript(new LOTScriptImpl(client), "linefactory_runenv_order.js"));
+				loadScript(new CTScriptImpl(client), "linefactory_runenv_order.js"));
 		builder.getEnvironment().setParameter("partid", line.getID());
 
 		builder.setName("boxsetfactorybuilder");
@@ -68,32 +68,32 @@ public final class ITTestBuildABox extends LOTTestCase {
 		builder.publish();
 		info("Builder published");
 
-		LOTRunEnvironment runenv = builder.getRunEnvironment();
+		CTRunEnvironment runenv = builder.getRunEnvironment();
 		assertNotNull(runenv);
 		info("RunEnv " + runenv);
 		//
-		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
+		CTSimulation simulation = new CTSimpleSimulation(runenv);
 		info("Simulation " + simulation);
 
 		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
 		//
-		LOTFactoryState factorystate = ((LOTFactoryState) runenv.getRunObject("boxsetfactory"));
-		LOTPart builtline = factorystate.getPool().getPart("" + line.getID());
+		CTFactoryState factorystate = ((CTFactoryState) runenv.getRunObject("boxsetfactory"));
+		CTPart builtline = factorystate.getPool().getPart("" + line.getID());
 		assertNotNull(builtline);
 		//
 
 		assertTrue(builtline.isAnEqualPart(line));
 	}
 
-	private LOTPart getLineOfBoxes(LOTClient client) {
+	private CTPart getLineOfBoxes(CTClient client) {
 		info("line of boxes");
 
-		LOTPart line = client.getObjectFactory().getPart();
+		CTPart line = client.getObjectFactory().getPart();
 		line.setName("line");
 		assertNotNull(line);
 		//
 		for (int i = 0; i < 3; i++) {
-			LOTSubPart sb = line.newSubPart();
+			CTSubPart sb = line.newSubPart();
 			sb.setPart(box);
 			sb.setOrientation(new LVector(i * 2, 0, 0), new LVector(0, 1, 0), Math.PI / 2);
 		}
@@ -108,11 +108,11 @@ public final class ITTestBuildABox extends LOTTestCase {
 	}
 
 	public void testBuildABox() throws NoSuchMethodException, ScriptException, IOException {
-		LOTRunEnvironment runenv = testBox();
+		CTRunEnvironment runenv = testBox();
 		assertNotNull(runenv);
 	}
 
-	private LOTFactory setupFactoryThatUsesBoxes(LOTFactory factory, LOTClient client)
+	private CTFactory setupFactoryThatUsesBoxes(CTFactory factory, CTClient client)
 			throws IOException, NoSuchMethodException, ScriptException {
 		createAssemblyFactory(factory, client);
 		info("factory that uses boxes " + factory);
@@ -121,47 +121,47 @@ public final class ITTestBuildABox extends LOTTestCase {
 		factory.getEnvironment().setVectorParameter("storage", new LVector(15, 1, 50));
 		factory.getEnvironment().setVectorParameter("buildingpartlocation", new LVector(15, 1, 0));
 
-		LOTAttachedFactory boxfactory1 = factory.addFactory("source");
+		CTAttachedFactory boxfactory1 = factory.addFactory("source");
 		createBoxFactory(boxfactory1.getFactory(), client);
 		boxfactory1.setLocation(new LVector(-5, 0, 10));
 
-		LOTAttachedFactory boxfactory2 = factory.addFactory("source2", boxfactory1.getFactory());
+		CTAttachedFactory boxfactory2 = factory.addFactory("source2", boxfactory1.getFactory());
 		boxfactory2.setLocation(new LVector(-5, 0, -10));
 
 		return factory;
 	}
 
-	public LOTRunEnvironment testBox() throws NoSuchMethodException, ScriptException, IOException {
-		LOTClient client = getNewClient();
+	public CTRunEnvironment testBox() throws NoSuchMethodException, ScriptException, IOException {
+		CTClient client = getNewClient();
 		assertNotNull(client);
 
-		LOTFactory boxfactory = client.getObjectFactory().getFactory();
+		CTFactory boxfactory = client.getObjectFactory().getFactory();
 		createBoxFactory(boxfactory, client);
 
 		info("creating builder");
 
-		LOTRunEnvironmentBuilder builder = new LOTRunEnvironmentBuilderImpl(client);
+		CTRunEnvironmentBuilder builder = new CTRunEnvironmentBuilderImpl(client);
 
-		builder.getEnvironment().addScript("init", loadScript(new LOTScriptImpl(client), "boxfactory_runenv_init.js"));
+		builder.getEnvironment().addScript("init", loadScript(new CTScriptImpl(client), "boxfactory_runenv_init.js"));
 		builder.getEnvironment().addScript("addorder",
-				loadScript(new LOTScriptImpl(client), "boxfactory_runenv_order.js"));
+				loadScript(new CTScriptImpl(client), "boxfactory_runenv_order.js"));
 
 		info("publishing builder");
 		builder.publish();
 
-		LOTRunEnvironment runenv = builder.getRunEnvironment();
+		CTRunEnvironment runenv = builder.getRunEnvironment();
 
 		//
-		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
+		CTSimulation simulation = new CTSimpleSimulation(runenv);
 		assertTrue(simulation.run(MAX_SIMULATION_RUNTIME));
 		//
 		String partid = boxfactory.getEnvironment().getParameter("partid");
 		info(runenv.printOut().toText());
 
-		LOTPart nbox = ((LOTFactoryState) runenv.getRunObject("boxfactory")).getPool().getPart(partid);
+		CTPart nbox = ((CTFactoryState) runenv.getRunObject("boxfactory")).getPool().getPart(partid);
 		assertNotNull(nbox);
 		//
-		LOTPart modelpart = client.getObjectFactory().getPart(new MStringID(partid));
+		CTPart modelpart = client.getObjectFactory().getPart(new MStringID(partid));
 		assertNotNull(modelpart);
 		//
 		assertBuiltBox(nbox, modelpart);
@@ -169,17 +169,17 @@ public final class ITTestBuildABox extends LOTTestCase {
 		return runenv;
 	}
 
-	private LOTFactory createBoxFactory(LOTFactory boxfactory, LOTClient client)
+	private CTFactory createBoxFactory(CTFactory boxfactory, CTClient client)
 			throws NoSuchMethodException, ScriptException, IOException {
 		createAssemblyFactory(boxfactory, client);
 		boxfactory.setName("boxfactory");
 		info("Boxfactory " + boxfactory);
 
 		// TODO picking up plates, moving them and leaving them somewhere
-		LOTPart square = getSquare(client);
+		CTPart square = getSquare(client);
 
 		// Create a box object
-		LOTPart box = createBox(client, square);
+		CTPart box = createBox(client, square);
 		box.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
 
 		info("publishing box");
@@ -193,7 +193,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		info("box " + box);
 
 		// Create a plate source
-		LOTFactory squarefactory = createPlateSource(boxfactory.addFactory("source").getFactory(), client, square);
+		CTFactory squarefactory = createPlateSource(boxfactory.addFactory("source").getFactory(), client, square);
 		squarefactory.setName("squarefactory");
 		squarefactory.setBoundingBox(new LVector(-3, 0, -3), new LVector(3, 3, 3));
 		squarefactory.getEnvironment().setVectorParameter("storage", new LVector(-3, 1, 0));
@@ -210,12 +210,12 @@ public final class ITTestBuildABox extends LOTTestCase {
 		return boxfactory;
 	}
 
-	private LOTPart getSquare(LOTClient client) throws FileNotFoundException, IOException {
+	private CTPart getSquare(CTClient client) throws FileNotFoundException, IOException {
 		// Create a plate object
 		if (this.square == null) {
 			this.square = client.getObjectFactory().getPart();
 			square.setName("square");
-			LOTOpenSCAD scad = square.newSCAD();
+			CTOpenSCAD scad = square.newSCAD();
 			scad.setScript(loadATestFile("scad/square.scad"));
 			scad.setScale(0.2);
 
@@ -226,10 +226,10 @@ public final class ITTestBuildABox extends LOTTestCase {
 		return square;
 	}
 
-	private LOTFactory createAssemblyFactory(LOTFactory factory, LOTClient client)
+	private CTFactory createAssemblyFactory(CTFactory factory, CTClient client)
 			throws IOException, NoSuchMethodException, ScriptException {
 		// Create a tool to pick up plates
-		LOTTool tool = getPickupTool(client);
+		CTTool tool = getPickupTool(client);
 		factory.getEnvironment().addTool("pickuptool", tool);
 		// scripts
 
@@ -240,15 +240,15 @@ public final class ITTestBuildABox extends LOTTestCase {
 		return factory;
 	}
 
-	private void assertBuiltBox(LOTPart nbox, LOTPart destinationpart) {
+	private void assertBuiltBox(CTPart nbox, CTPart destinationpart) {
 		assertTrue(destinationpart.getSubParts().size() == PARTS_IN_A_BOX);
 		// Checking out everything is in place
-		List<LOTSubPart> boxsubparts = nbox.getSubParts();
-		List<LOTSubPart> destsubparts = destinationpart.getSubParts();
+		List<CTSubPart> boxsubparts = nbox.getSubParts();
+		List<CTSubPart> destsubparts = destinationpart.getSubParts();
 
 		for (int i = 0; i < boxsubparts.size(); i++) {
-			LOTSubPart boxsubpart = boxsubparts.get(i);
-			LOTSubPart destsubpart = destsubparts.get(i);
+			CTSubPart boxsubpart = boxsubparts.get(i);
+			CTSubPart destsubpart = destsubparts.get(i);
 			String boxlstring = boxsubpart.getLocation().toString();
 			String destlstring = destsubpart.getLocation().toString();
 			assertEquals("subpart index " + i, boxlstring, destlstring);
@@ -256,7 +256,7 @@ public final class ITTestBuildABox extends LOTTestCase {
 		}
 	}
 
-	private LOTFactory createPlateSource(LOTFactory platesource, LOTClient client, LOTPart square)
+	private CTFactory createPlateSource(CTFactory platesource, CTClient client, CTPart square)
 			throws NoSuchMethodException, ScriptException, IOException {
 		platesource.setName("platesource");
 
@@ -275,25 +275,25 @@ public final class ITTestBuildABox extends LOTTestCase {
 		log.info("dt:" + (System.currentTimeMillis() - starttime) + " " + string);
 	}
 
-	private LOTTool getPickupTool(LOTClient client) throws IOException, NoSuchMethodException, ScriptException {
-		LOTTool tool = client.getObjectFactory().getTool();
+	private CTTool getPickupTool(CTClient client) throws IOException, NoSuchMethodException, ScriptException {
+		CTTool tool = client.getObjectFactory().getTool();
 		loadScript(tool.addScript("pickup"), "assembly_pickup.js");
 		loadScript(tool.addScript("attach"), "assembly_attach.js");
 		loadScript(tool.addScript("draw"), "assembly_drawtool.js");
 		return tool;
 	}
 
-	private LOTPart createBox(LOTClient env, LOTPart square) throws IOException {
+	private CTPart createBox(CTClient env, CTPart square) throws IOException {
 		info("creating box");
 
 		box = env.getObjectFactory().getPart();
-		LOTOpenSCAD scad = box.newSCAD();
+		CTOpenSCAD scad = box.newSCAD();
 		scad.setScript(loadATestFile("scad/cube.scad"));
 		scad.setScale(2);
 
 		box.setName("BOX");
 		for (int i = 0; i < PARTS_IN_A_BOX; i++) {
-			LOTSubPart wall = box.newSubPart();
+			CTSubPart wall = box.newSubPart();
 			wall.setPart(square);
 		}
 
@@ -312,11 +312,11 @@ public final class ITTestBuildABox extends LOTTestCase {
 		return box;
 	}
 
-	private LOTScript loadScript(LOTScript lots, String scriptname) throws IOException {
+	private CTScript loadScript(CTScript cts, String scriptname) throws IOException {
 		String s = loadATestScript(scriptname);
-		lots.setScript(s);
-		lots.setName(scriptname);
-		assertNotNull(lots.getScript());
-		return lots;
+		cts.setScript(s);
+		cts.setName(scriptname);
+		assertNotNull(cts.getScript());
+		return cts;
 	}
 }

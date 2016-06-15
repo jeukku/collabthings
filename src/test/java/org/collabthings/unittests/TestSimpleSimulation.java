@@ -5,82 +5,82 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
-import org.collabthings.environment.LOTEnvironmentTask;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.LOTScriptRunner;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
+import org.collabthings.environment.CTEnvironmentTask;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.CTRuntimeEvent;
+import org.collabthings.environment.CTScriptRunner;
 import org.collabthings.environment.RunEnvironmentListener;
+import org.collabthings.environment.impl.CTFactoryState;
+import org.collabthings.environment.impl.CTPartState;
+import org.collabthings.environment.impl.CTRunEnvironmentImpl;
 import org.collabthings.environment.impl.CTRuntimeError;
-import org.collabthings.environment.impl.LOTFactoryState;
-import org.collabthings.environment.impl.LOTPartState;
-import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
-import org.collabthings.environment.impl.LOTScriptRunnerImpl;
-import org.collabthings.environment.impl.LOTToolState;
+import org.collabthings.environment.impl.CTScriptRunnerImpl;
+import org.collabthings.environment.impl.CTToolState;
 import org.collabthings.environment.impl.ReallySimpleSuperheroRobot;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOTAttachedFactory;
-import org.collabthings.model.LOTEnvironment;
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTOpenSCAD;
-import org.collabthings.model.LOTValues;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
-import org.collabthings.model.impl.LOTFactoryImpl;
-import org.collabthings.model.impl.LOTScriptImpl;
-import org.collabthings.model.impl.LOTToolImpl;
-import org.collabthings.simulation.LOTSimpleSimulation;
-import org.collabthings.simulation.LOTSimulation;
+import org.collabthings.model.CTAttachedFactory;
+import org.collabthings.model.CTEnvironment;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTOpenSCAD;
+import org.collabthings.model.CTValues;
+import org.collabthings.model.impl.CTFactoryImpl;
+import org.collabthings.model.impl.CTScriptImpl;
+import org.collabthings.model.impl.CTToolImpl;
+import org.collabthings.model.impl.CTEnvironmentImpl;
+import org.collabthings.simulation.CTSimpleSimulation;
+import org.collabthings.simulation.CTSimulation;
 import org.xml.sax.SAXException;
 
-public class TestSimpleSimulation extends LOTTestCase {
+public class TestSimpleSimulation extends CTTestCase {
 
 	private static final int MAX_SIMUALTION_RUNTIME = 2000000;
 
 	public void testSimpleTransformation() throws FileNotFoundException, IOException {
-		LOTClient client = getNewClient();
-		LOTEnvironment env = new LOTEnvironmentImpl(client);
+		CTClient client = getNewClient();
+		CTEnvironment env = new CTEnvironmentImpl(client);
 
-		LOTFactory f1 = client.getObjectFactory().getFactory();
+		CTFactory f1 = client.getObjectFactory().getFactory();
 		f1.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 10, 10));
 
-		LOTAttachedFactory f2 = f1.addFactory("f2");
+		CTAttachedFactory f2 = f1.addFactory("f2");
 		f2.getFactory().setBoundingBox(new LVector(-3, 0, -3), new LVector(3, 3, 3));
 		f2.setLocation(new LVector(5, 0, 0));
 		f2.setOrientation(new LVector(1, 1, 0), Math.PI / 6);
 
-		LOTAttachedFactory f21 = f2.getFactory().addFactory("f21");
+		CTAttachedFactory f21 = f2.getFactory().addFactory("f21");
 		f21.getFactory().setBoundingBox(new LVector(-1, 0, -1), new LVector(1, 1, 1));
 		f21.setLocation(new LVector(2, 1, 0));
 
-		LOTAttachedFactory f3 = f1.addFactory("f3");
+		CTAttachedFactory f3 = f1.addFactory("f3");
 		f3.getFactory().setBoundingBox(new LVector(-2, 0, -2), new LVector(2, 1.5, 2));
 		f3.setLocation(new LVector(-3, 2, -3));
 
-		LOTAttachedFactory f4 = f1.addFactory();
+		CTAttachedFactory f4 = f1.addFactory();
 		f4.getFactory().setBoundingBox(new LVector(-1, 0, -1), new LVector(1, 1, 1));
 		f4.setLocation(new LVector(20, 0, 0));
 
-		LOTFactoryState f1s = new LOTFactoryState(client, env, "f1s", f1);
+		CTFactoryState f1s = new CTFactoryState(client, env, "f1s", f1);
 		f1s.newPart().getPart().newSubPart();
 		f1s.newPart().getPart().setBoundingBox(new LVector(), new LVector(1, 1, 1));
 
-		LOTFactoryState f2s = f1s.getFactory("f2");
-		LOTPartState f2part = f2s.newPart();
+		CTFactoryState f2s = f1s.getFactory("f2");
+		CTPartState f2part = f2s.newPart();
 		f2part.getPart().setName("p2");
-		LOTOpenSCAD scad2 = f2part.getPart().newSCAD();
+		CTOpenSCAD scad2 = f2part.getPart().newSCAD();
 		scad2.setScript(loadATestFile("scad/test.scad"));
 		scad2.setScale(0.03);
 
-		LOTFactoryState f21s = f2s.getFactory("f21");
-		LOTPartState p21s = f21s.newPart();
+		CTFactoryState f21s = f2s.getFactory("f21");
+		CTPartState p21s = f21s.newPart();
 		p21s.getPart().setName("p21");
 
-		LOTOpenSCAD scad21 = p21s.getPart().newSCAD();
+		CTOpenSCAD scad21 = p21s.getPart().newSCAD();
 		scad21.setScript(loadATestFile("scad/test.scad"));
 		scad21.setScale(0.04);
 
-		LOTRunEnvironment runenv = f1s.getRunEnvironment();
+		CTRunEnvironment runenv = f1s.getRunEnvironment();
 
 		final Map<String, Object> valuesmap = new HashMap<String, Object>();
 
@@ -90,11 +90,11 @@ public class TestSimpleSimulation extends LOTTestCase {
 		runenv.addListener(new RunEnvironmentListener() {
 
 			@Override
-			public void taskFailed(LOTRunEnvironment runenv, LOTEnvironmentTask task) {
+			public void taskFailed(CTRunEnvironment runenv, CTEnvironmentTask task) {
 			}
 
 			@Override
-			public void event(LOTRuntimeEvent e) {
+			public void event(CTRuntimeEvent e) {
 				assertNotNull(e);
 				assertNotNull(e.getName());
 				assertNotNull(e.getValues());
@@ -103,10 +103,10 @@ public class TestSimpleSimulation extends LOTTestCase {
 			}
 		});
 
-		runenv.addTask(new LOTScriptRunner() {
+		runenv.addTask(new CTScriptRunner() {
 
 			@Override
-			public boolean run(LOTValues values) {
+			public boolean run(CTValues values) {
 				valuesmap.put(name, values.get(name));
 
 				long st = System.currentTimeMillis();
@@ -131,74 +131,74 @@ public class TestSimpleSimulation extends LOTTestCase {
 			public String getError() {
 				return null;
 			}
-		}, new LOTValues(name, value));
+		}, new CTValues(name, value));
 
 		assertNotNull(runenv.getInfo());
 
-		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
+		CTSimulation simulation = new CTSimpleSimulation(runenv);
 		assertTrue(simulation.run(MAX_SIMUALTION_RUNTIME));
 
 		assertEquals(value, valuesmap.get("testvaluename"));
 	}
 
 	public void testFailingScript() throws IOException, SAXException {
-		LOTClient client = getNewClient();
+		CTClient client = getNewClient();
 
-		LOTScriptImpl s = new LOTScriptImpl(client);
+		CTScriptImpl s = new CTScriptImpl(client);
 		s.setScript("function test() {}");
 
-		LOTEnvironment env = new LOTEnvironmentImpl(client);
-		LOTRunEnvironment runenv = new LOTRunEnvironmentImpl(client, env);
+		CTEnvironment env = new CTEnvironmentImpl(client);
+		CTRunEnvironment runenv = new CTRunEnvironmentImpl(client, env);
 
-		LOTScriptRunner runner = new LOTScriptRunnerImpl(s, runenv, null);
+		CTScriptRunner runner = new CTScriptRunnerImpl(s, runenv, null);
 		runenv.addTask(runner);
-		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
+		CTSimulation simulation = new CTSimpleSimulation(runenv);
 		assertFalse(simulation.run(MAX_SIMUALTION_RUNTIME));
 	}
 
 	public void testSimpleScript() throws IOException, SAXException {
-		LOTClient client = getNewClient();
+		CTClient client = getNewClient();
 
-		LOTEnvironment env = new LOTEnvironmentImpl(client);
+		CTEnvironment env = new CTEnvironmentImpl(client);
 		String testvalue = "testvalue" + System.currentTimeMillis();
 		//
-		LOTScriptImpl s = new LOTScriptImpl(client);
+		CTScriptImpl s = new CTScriptImpl(client);
 		s.setScript(
 				"function info() {} function run(env, params) { env.setParameter('testparam', '" + testvalue + "'); }");
 
-		LOTRunEnvironment runenv = new LOTRunEnvironmentImpl(client, env);
-		LOTScriptRunner runner = new LOTScriptRunnerImpl(s, runenv, null);
+		CTRunEnvironment runenv = new CTRunEnvironmentImpl(client, env);
+		CTScriptRunner runner = new CTScriptRunnerImpl(s, runenv, null);
 		runenv.addTask(runner);
-		LOTSimulation simulation = new LOTSimpleSimulation(runenv);
+		CTSimulation simulation = new CTSimpleSimulation(runenv);
 		assertTrue(simulation.run(MAX_SIMUALTION_RUNTIME));
 		assertEquals(testvalue, runenv.getParameter("testparam"));
 	}
 
 	public void testSimpleRobotSimulation() throws IOException, SAXException {
-		LOTClient client = getNewClient();
+		CTClient client = getNewClient();
 
-		LOTEnvironment env = new LOTEnvironmentImpl(client);
-		LOTFactoryImpl factory = new LOTFactoryImpl(client);
+		CTEnvironment env = new CTEnvironmentImpl(client);
+		CTFactoryImpl factory = new CTFactoryImpl(client);
 		factory.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
-		LOTFactoryState factorystate = new LOTFactoryState(client, env, "testfactory", factory);
-		LOTRunEnvironment rune = factorystate.getRunEnvironment();
+		CTFactoryState factorystate = new CTFactoryState(client, env, "testfactory", factory);
+		CTRunEnvironment rune = factorystate.getRunEnvironment();
 
 		ReallySimpleSuperheroRobot robot = new ReallySimpleSuperheroRobot(rune, factorystate);
 		factorystate.addToolUser(robot);
 		factorystate.addToolUser(new ReallySimpleSuperheroRobot(rune, factorystate));
 
-		LOTPartState p = factorystate.newPart();
+		CTPartState p = factorystate.newPart();
 		p.getPart().newSubPart();
 
-		LOTToolState toolstate = factorystate.addTool("tool", new LOTToolImpl(client));
+		CTToolState toolstate = factorystate.addTool("tool", new CTToolImpl(client));
 		//
-		LOTScriptImpl script = new LOTScriptImpl(client);
+		CTScriptImpl script = new CTScriptImpl(client);
 		String nscript = "function info(){} function run(e, factory) { factory.newPart(); factory.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0), 6); } ";
 		script.setScript(nscript);
 		assertTrue(script.isOK());
-		LOTScriptRunner runner = new LOTScriptRunnerImpl(script, rune, factorystate);
+		CTScriptRunner runner = new CTScriptRunnerImpl(script, rune, factorystate);
 		rune.addTask(runner);
-		LOTSimulation s = new LOTSimpleSimulation(rune);
+		CTSimulation s = new CTSimpleSimulation(rune);
 
 		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
 
@@ -209,37 +209,37 @@ public class TestSimpleSimulation extends LOTTestCase {
 	}
 
 	public void testCallTool() throws CTRuntimeError {
-		LOTClient client = getNewClient();
-		LOTEnvironment env = new LOTEnvironmentImpl(client);
+		CTClient client = getNewClient();
+		CTEnvironment env = new CTEnvironmentImpl(client);
 
-		LOTFactoryImpl f = new LOTFactoryImpl(client);
-		LOTScriptImpl startscript = new LOTScriptImpl(client);
+		CTFactoryImpl f = new CTFactoryImpl(client);
+		CTScriptImpl startscript = new CTScriptImpl(client);
 		f.addScript("start", startscript);
 
-		LOTScriptImpl taskscript = new LOTScriptImpl(client);
+		CTScriptImpl taskscript = new CTScriptImpl(client);
 		String nscript = "function info(){} function run(e, factory, values) { "
 				+ "e.log().info('calling tooltest'); factory.getTool('tool').call('tooltest', values); } ";
 		taskscript.setScript(nscript);
 		assertTrue(taskscript.isOK());
 		f.addScript("factorytest", taskscript);
 
-		LOTFactoryState factorystate = new LOTFactoryState(client, env, "testfactory", f);
-		LOTRunEnvironment rune = factorystate.getRunEnvironment();
+		CTFactoryState factorystate = new CTFactoryState(client, env, "testfactory", f);
+		CTRunEnvironment rune = factorystate.getRunEnvironment();
 		//
-		LOTToolImpl tool = new LOTToolImpl(client);
-		LOTScriptImpl testscript = new LOTScriptImpl(client);
+		CTToolImpl tool = new CTToolImpl(client);
+		CTScriptImpl testscript = new CTScriptImpl(client);
 		tool.addScript("tooltest", testscript);
 		String testscriptvalue = "testvalue" + Math.random();
 		testscript.setScript("function info() {} function run(e, runo, values) { e.setParameter('testfromtool', '"
 				+ testscriptvalue + "'); }");
 		//
-		LOTToolState toolstate = factorystate.addTool("tool", tool);
+		CTToolState toolstate = factorystate.addTool("tool", tool);
 		assertNotNull(toolstate);
 		//
 
 		factorystate.addTask("factorytest", null);
 		//
-		LOTSimulation s = new LOTSimpleSimulation(rune);
+		CTSimulation s = new CTSimpleSimulation(rune);
 		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
 		//
 		assertNotNull(rune.getParameter("testfromtool"));

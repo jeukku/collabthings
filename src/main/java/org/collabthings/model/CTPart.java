@@ -1,0 +1,34 @@
+package org.collabthings.model;
+
+import java.io.File;
+import java.util.List;
+
+import org.collabthings.math.LVector;
+
+public interface CTPart extends CTObject {
+
+	CTSubPart newSubPart();
+
+	List<CTSubPart> getSubParts();
+
+	void setName(String string);
+
+	CTModel getModel();
+
+	boolean isAnEqualPart(CTPart b);
+
+	String getName();
+
+	boolean importModel(File file);
+
+	void setBoundingBox(LVector a, LVector b);
+
+	CTBoundingBox getBoundingBox();
+
+	CTOpenSCAD newSCAD();
+
+	CTBinaryModel newBinaryModel();
+
+	CTMaterial getMaterial();
+
+}

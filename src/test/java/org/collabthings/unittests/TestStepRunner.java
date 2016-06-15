@@ -1,12 +1,12 @@
 package org.collabthings.unittests;
 
-import org.collabthings.LOTTestCase;
-import org.collabthings.simulation.LOTStepRunner;
+import org.collabthings.CTTestCase;
+import org.collabthings.simulation.CTStepRunner;
 
 import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MTimedFlag;
 
-public final class TestStepRunner extends LOTTestCase {
+public final class TestStepRunner extends CTTestCase {
 	class Values {
 		int count = 0;
 		double totaltime = 0;
@@ -17,17 +17,16 @@ public final class TestStepRunner extends LOTTestCase {
 		Values v = new Values();
 
 		MTimedFlag f = new MTimedFlag(20000);
-		LOTStepRunner runner = new LOTStepRunner(0.00002, 0.00001,
-				(double step) -> {
-					v.count++;
-					v.totaltime += step;
+		CTStepRunner runner = new CTStepRunner(0.00002, 0.00001, (double step) -> {
+			v.count++;
+			v.totaltime += step;
 
-					if (v.count > 1000) {
-						f.trigger();
-					}
+			if (v.count > 1000) {
+				f.trigger();
+			}
 
-					return !f.isTriggered();
-				});
+			return !f.isTriggered();
+		});
 
 		f.waitTimer();
 		assertTrue("" + v.count, v.count >= 1000);
@@ -35,7 +34,7 @@ public final class TestStepRunner extends LOTTestCase {
 
 	public void testStop() throws InterruptedException {
 		MTimedFlag f = new MTimedFlag(2000000);
-		LOTStepRunner runner = new LOTStepRunner(0.02, 0.01, (double step) -> {
+		CTStepRunner runner = new CTStepRunner(0.02, 0.01, (double step) -> {
 			return !f.isTriggered();
 		});
 		assertFalse(runner.isStopped());
@@ -54,7 +53,7 @@ public final class TestStepRunner extends LOTTestCase {
 
 	public void testExceptionInTest() throws InterruptedException {
 		MTimedFlag f = new MTimedFlag(2000000);
-		LOTStepRunner runner = new LOTStepRunner(0.02, 0.01, (double step) -> {
+		CTStepRunner runner = new CTStepRunner(0.02, 0.01, (double step) -> {
 			throw new RuntimeException();
 		});
 		assertFalse(runner.isStopped());

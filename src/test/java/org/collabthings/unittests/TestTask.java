@@ -2,58 +2,52 @@ package org.collabthings.unittests;
 
 import java.io.IOException;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
-import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
-import org.collabthings.environment.impl.LOTScriptRunnerImpl;
-import org.collabthings.environment.impl.LOTTaskImpl;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
-import org.collabthings.model.impl.LOTScriptImpl;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
+import org.collabthings.environment.impl.CTRunEnvironmentImpl;
+import org.collabthings.environment.impl.CTScriptRunnerImpl;
+import org.collabthings.environment.impl.CTTaskImpl;
+import org.collabthings.model.impl.CTScriptImpl;
+import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.xml.sax.SAXException;
 
-public final class TestTask extends LOTTestCase {
+public final class TestTask extends CTTestCase {
 
 	public void testRun() throws IOException, SAXException {
-		LOTClient c = getNewClient();
+		CTClient c = getNewClient();
 		assertNotNull(c);
 		//
-		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(c,
-				new LOTEnvironmentImpl(c));
+		CTRunEnvironmentImpl runenv = new CTRunEnvironmentImpl(c, new CTEnvironmentImpl(c));
 
-		LOTScriptImpl script = new LOTScriptImpl(c);
-		LOTScriptRunnerImpl runner = new LOTScriptRunnerImpl(script, runenv,
-				null);
-		LOTTaskImpl t = new LOTTaskImpl(runner, null);
+		CTScriptImpl script = new CTScriptImpl(c);
+		CTScriptRunnerImpl runner = new CTScriptRunnerImpl(script, runenv, null);
+		CTTaskImpl t = new CTTaskImpl(runner, null);
 		assertTrue(t.run());
 		assertNull(t.getError());
 	}
 
 	public void testFail() throws IOException, SAXException {
-		LOTClient c = getNewClient();
+		CTClient c = getNewClient();
 		assertNotNull(c);
 		//
-		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(c,
-				new LOTEnvironmentImpl(c));
-		LOTScriptImpl script = new LOTScriptImpl(c);
+		CTRunEnvironmentImpl runenv = new CTRunEnvironmentImpl(c, new CTEnvironmentImpl(c));
+		CTScriptImpl script = new CTScriptImpl(c);
 		script.setScript("function info() {} function run() { foo.bar(); }");
-		LOTScriptRunnerImpl runner = new LOTScriptRunnerImpl(script, runenv,
-				null);
-		LOTTaskImpl t = new LOTTaskImpl(runner, null);
+		CTScriptRunnerImpl runner = new CTScriptRunnerImpl(script, runenv, null);
+		CTTaskImpl t = new CTTaskImpl(runner, null);
 		assertFalse(t.run());
 		assertNotNull(t.getError());
 	}
 
 	public void testWait() throws IOException, SAXException {
-		LOTClient c = getNewClient();
+		CTClient c = getNewClient();
 		assertNotNull(c);
 		//
-		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(c,
-				new LOTEnvironmentImpl(c));
-		LOTScriptImpl script = new LOTScriptImpl(c);
-		LOTScriptRunnerImpl runner = new LOTScriptRunnerImpl(script, runenv,
-				null);
+		CTRunEnvironmentImpl runenv = new CTRunEnvironmentImpl(c, new CTEnvironmentImpl(c));
+		CTScriptImpl script = new CTScriptImpl(c);
+		CTScriptRunnerImpl runner = new CTScriptRunnerImpl(script, runenv, null);
 
-		LOTTaskImpl t = new LOTTaskImpl(runner, null);
+		CTTaskImpl t = new CTTaskImpl(runner, null);
 		new Thread(() -> {
 			t.run();
 		}).start();

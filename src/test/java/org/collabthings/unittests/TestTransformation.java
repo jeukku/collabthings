@@ -1,15 +1,14 @@
 package org.collabthings.unittests;
 
-import org.collabthings.LOTTestCase;
+import org.collabthings.CTTestCase;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
 
-public final class TestTransformation extends LOTTestCase {
+public final class TestTransformation extends CTTestCase {
 
 	public void testNormalRotationAndTranslation() {
 		LVector v = new LVector(1, 0, 0);
-		LTransformation t = new LTransformation(new LVector(2, 0, 0),
-				new LVector(0, 1, 0), Math.PI / 2);
+		LTransformation t = new LTransformation(new LVector(2, 0, 0), new LVector(0, 1, 0), Math.PI / 2);
 		t.transform(v);
 		assertReallyClose(new LVector(2, 0, -1), v);
 	}

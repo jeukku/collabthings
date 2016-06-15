@@ -2,39 +2,39 @@ package org.collabthings.unittests;
 
 import java.io.IOException;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
-import org.collabthings.environment.impl.LOTPool;
-import org.collabthings.model.LOTPart;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
+import org.collabthings.environment.impl.CTPool;
+import org.collabthings.model.CTPart;
 import org.xml.sax.SAXException;
 
-public final class TestPool extends LOTTestCase {
+public final class TestPool extends CTTestCase {
 
 	public void testgetNull() throws IOException, SAXException {
-		LOTClient e = getNewClient();
+		CTClient e = getNewClient();
 		assertNotNull(e);
 		//
-		LOTPool p = new LOTPool(null, null);
+		CTPool p = new CTPool(null, null);
 		assertNull(p.getPart("null"));
 	}
 
 	public void testCount() {
-		LOTPool p = new LOTPool(null, null);
+		CTPool p = new CTPool(null, null);
 		assertEquals(0, p.countParts("test"));
 	}
 
 	public void testAddPartGetPart() throws IOException, SAXException {
-		LOTClient e = getNewClient();
+		CTClient e = getNewClient();
 		assertNotNull(e);
 
-		LOTPool pool = new LOTPool(null, null);
+		CTPool pool = new CTPool(null, null);
 		pool.addPart("test", e.getObjectFactory().getPart());
-		
+
 		assertEquals(1, pool.countParts("test"));
 		//
-		LOTPart peekPart = pool.peekPart("test");
+		CTPart peekPart = pool.peekPart("test");
 		assertNotNull(peekPart);
-		LOTPart part = pool.getPart("test");
+		CTPart part = pool.getPart("test");
 		assertNotNull(part);
 		assertSame(peekPart, part);
 
@@ -45,10 +45,10 @@ public final class TestPool extends LOTTestCase {
 	}
 
 	public void testAddPartGetPartTwice() throws IOException, SAXException {
-		LOTClient e = getNewClient();
+		CTClient e = getNewClient();
 		assertNotNull(e);
 
-		LOTPool pool = new LOTPool(null, null);
+		CTPool pool = new CTPool(null, null);
 		pool.addPart("test", e.getObjectFactory().getPart());
 		//
 		assertNotNull(pool.getPart("test"));
@@ -57,10 +57,10 @@ public final class TestPool extends LOTTestCase {
 	}
 
 	public void testAddPartGetPartDouble() throws IOException, SAXException {
-		LOTClient e = getNewClient();
+		CTClient e = getNewClient();
 		assertNotNull(e);
 
-		LOTPool pool = new LOTPool(null, null);
+		CTPool pool = new CTPool(null, null);
 		pool.addPart("test1", e.getObjectFactory().getPart());
 		pool.addPart("test2", e.getObjectFactory().getPart());
 		//
@@ -70,10 +70,10 @@ public final class TestPool extends LOTTestCase {
 	}
 
 	public void testWaitForAPart() throws IOException, SAXException {
-		final LOTClient e = getNewClient();
+		final CTClient e = getNewClient();
 		assertNotNull(e);
 
-		final LOTPool pool = new LOTPool(null, null);
+		final CTPool pool = new CTPool(null, null);
 		new Thread(() -> {
 			pool.addPart("test", e.getObjectFactory().getPart());
 		}).start();

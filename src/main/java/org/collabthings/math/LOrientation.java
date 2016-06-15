@@ -23,8 +23,7 @@ public class LOrientation {
 
 	@Override
 	public String toString() {
-		return "[O:(" + getLocation() + ")(" + getNormal() + ")(" + getAngle()
-				+ ")]";
+		return "[O:(" + getLocation() + ")(" + getNormal() + ")(" + getAngle() + ")]";
 	}
 
 	public WObject getBean() {

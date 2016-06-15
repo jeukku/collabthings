@@ -4,27 +4,27 @@ import java.io.IOException;
 
 import javax.script.ScriptException;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
-import org.collabthings.LOTToolException;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
-import org.collabthings.environment.impl.LOTToolState;
-import org.collabthings.model.LOTEnvironment;
-import org.collabthings.model.LOTScript;
-import org.collabthings.model.LOTTool;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
-import org.collabthings.model.impl.LOTToolImpl;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
+import org.collabthings.CTToolException;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.impl.CTRunEnvironmentImpl;
+import org.collabthings.environment.impl.CTToolState;
+import org.collabthings.model.CTEnvironment;
+import org.collabthings.model.CTScript;
+import org.collabthings.model.CTTool;
+import org.collabthings.model.impl.CTToolImpl;
+import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.xml.sax.SAXException;
 
-public final class TestTool extends LOTTestCase {
+public final class TestTool extends CTTestCase {
 
 	public void testGetAgain() throws IOException, SAXException {
-		LOTClient env = getNewClient();
+		CTClient env = getNewClient();
 		assertNotNull(env);
 		//
 		env.getObjectFactory().getTool();
-		LOTTool t = env.getObjectFactory().getTool();
+		CTTool t = env.getObjectFactory().getTool();
 		assertNotNull(t);
 		t.save();
 		//
@@ -32,65 +32,60 @@ public final class TestTool extends LOTTestCase {
 		assertEquals(t, env.getObjectFactory().getTool(t.getID().getStringID()));
 	}
 
-	public void testSaveAndLoad() throws IOException, SAXException,
-			NoSuchMethodException, ScriptException {
+	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ScriptException {
 		createTwoClients();
 		//
-		LOTTool t = clienta.getObjectFactory().getTool();
+		CTTool t = clienta.getObjectFactory().getTool();
 		t.setName("testing changing name");
 		t.save();
 		//
-		LOTScript lotScript = t.addScript("test");
-		lotScript
-				.setScript("function info() { return \"testing tool script\"; }");
+		CTScript ctScript = t.addScript("test");
+		ctScript.setScript("function info() { return \"testing tool script\"; }");
 		//
 		t.newPart();
 		String testbinarydatastring = "TESTIBINARYDATA";
-		t.getPart().newBinaryModel().getBinary()
-				.add(new String(testbinarydatastring).getBytes());
+		t.getPart().newBinaryModel().getBinary().add(new String(testbinarydatastring).getBytes());
 		//
 		t.save();
 		t.publish();
 		//
 		assertNotNull(clientb);
-		LOTTool btool = clientb.getObjectFactory().getTool(
-				t.getID().getStringID());
+		CTTool btool = clientb.getObjectFactory().getTool(t.getID().getStringID());
 		assertEquals(btool.getName(), t.getName());
 		waitObject(btool);
 		//
-		LOTScript bscript = btool.getScript("test");
+		CTScript bscript = btool.getScript("test");
 		assertNotNull(bscript);
-		assertEquals(lotScript.getScript(), bscript.getScript());
+		assertEquals(ctScript.getScript(), bscript.getScript());
 	}
 
 	public void testNullPart() throws IOException, SAXException {
-		LOTToolImpl t = new LOTToolImpl(getNewClient());
+		CTToolImpl t = new CTToolImpl(getNewClient());
 		t.save();
 		t.publish();
 		//
-		LOTTool b = getNewClient().getObjectFactory().getTool(
-				t.getID().getStringID());
+		CTTool b = getNewClient().getObjectFactory().getTool(t.getID().getStringID());
 		assertTrue(b.isReady());
-		assertTrue(b.toString().indexOf("LOTTool") >= 0);
+		assertTrue(b.toString().indexOf("CTTool") >= 0);
 	}
 
 	public void testGetUnknownScript() throws IOException, SAXException {
-		LOTClient e = getNewClient();
-		LOTTool tool = e.getObjectFactory().getTool();
+		CTClient e = getNewClient();
+		CTTool tool = e.getObjectFactory().getTool();
 		assertNull(tool.getScript("FAIL"));
 	}
 
 	public void testCallUnknownScript() {
-		LOTClient c = getNewClient();
-		LOTTool tool = c.getObjectFactory().getTool();
-		LOTEnvironment env = new LOTEnvironmentImpl(c);
-		LOTRunEnvironment runenv = new LOTRunEnvironmentImpl(c, env);
-		LOTToolState ts = new LOTToolState("test", runenv, tool, null);
+		CTClient c = getNewClient();
+		CTTool tool = c.getObjectFactory().getTool();
+		CTEnvironment env = new CTEnvironmentImpl(c);
+		CTRunEnvironment runenv = new CTRunEnvironmentImpl(c, env);
+		CTToolState ts = new CTToolState("test", runenv, tool, null);
 		//
 		boolean ecaught = false;
 		try {
 			ts.call("fail", null);
-		} catch (LOTToolException e) {
+		} catch (CTToolException e) {
 			assertNotNull(e);
 			ecaught = true;
 		}
@@ -98,8 +93,8 @@ public final class TestTool extends LOTTestCase {
 	}
 
 	public void testAddGetScript() {
-		LOTClient c = getNewClient();
-		LOTTool tool = c.getObjectFactory().getTool();
+		CTClient c = getNewClient();
+		CTTool tool = c.getObjectFactory().getTool();
 		tool.addScript("testscript");
 		assertNotNull(tool.getScript("testscript"));
 	}

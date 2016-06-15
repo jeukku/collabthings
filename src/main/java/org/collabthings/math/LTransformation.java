@@ -7,7 +7,7 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 
 public class LTransformation implements Serializable {
-	
+
 	private Matrix4d m = new Matrix4d();
 	public static final Vector3d UP = new Vector3d(0, 1, 0);
 
@@ -21,8 +21,7 @@ public class LTransformation implements Serializable {
 		this(o.getLocation(), o.getNormal(), o.getAngle());
 	}
 
-	public LTransformation(LVector location, LVector orientationnormal,
-			double orientationangle) {
+	public LTransformation(LVector location, LVector orientationnormal, double orientationangle) {
 		m.setIdentity();
 
 		// RotationAxis = cross(N, N')
@@ -46,9 +45,9 @@ public class LTransformation implements Serializable {
 	}
 
 	public Matrix4d getMatrix() {
-		return m;	
+		return m;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "LT:" + m;

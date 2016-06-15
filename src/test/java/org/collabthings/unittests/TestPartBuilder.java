@@ -2,26 +2,26 @@ package org.collabthings.unittests;
 
 import java.io.IOException;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
-import org.collabthings.model.LOTPart;
-import org.collabthings.model.LOTPartBuilder;
-import org.collabthings.model.LOTScript;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
+import org.collabthings.model.CTPart;
+import org.collabthings.model.CTPartBuilder;
+import org.collabthings.model.CTScript;
 
-public final class TestPartBuilder extends LOTTestCase {
+public final class TestPartBuilder extends CTTestCase {
 
 	public void testSaveAndLoad() throws IOException {
-		LOTClient client = getNewClient();
+		CTClient client = getNewClient();
 		assertNotNull(client);
 		//
-		LOTPartBuilder pba = client.getObjectFactory().getPartBuilder();
+		CTPartBuilder pba = client.getObjectFactory().getPartBuilder();
 		assertNotNull(pba);
 
 		String name = "PartBuilderTest";
 		pba.setName(name);
 
 		String stext = loadATestScript("partbuilder/test.js");
-		LOTScript s = client.getObjectFactory().getScript();
+		CTScript s = client.getObjectFactory().getScript();
 		s.setScript(stext);
 		pba.setScript(s);
 
@@ -30,11 +30,10 @@ public final class TestPartBuilder extends LOTTestCase {
 		//
 		clientb = getNewClient();
 
-		LOTPartBuilder pbb = clientb.getObjectFactory().getPartBuilder(
-				pba.getID().getStringID());
+		CTPartBuilder pbb = clientb.getObjectFactory().getPartBuilder(pba.getID().getStringID());
 		assertEquals(pba.getObject().toText(), pbb.getObject().toText());
 
-		LOTPart p = clientb.getObjectFactory().getPart();
+		CTPart p = clientb.getObjectFactory().getPart();
 		boolean success = pbb.run(p);
 		assertNull(pbb.getError());
 		assertTrue(success);

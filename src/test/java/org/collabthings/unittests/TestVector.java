@@ -1,11 +1,11 @@
 package org.collabthings.unittests;
 
-import org.collabthings.LOTTestCase;
+import org.collabthings.CTTestCase;
 import org.collabthings.math.LVector;
 
 import waazdoh.common.WObject;
 
-public final class TestVector extends LOTTestCase {
+public final class TestVector extends CTTestCase {
 
 	private static final double LENGTH_1_1_1 = 1.7320508075688;
 
@@ -55,7 +55,6 @@ public final class TestVector extends LOTTestCase {
 	}
 
 	public void testShortString() {
-		assertEquals("[0.00. 0.00. 0.00]", new LVector().asShortString()
-				.replace(',', '.'));
+		assertEquals("[0.00. 0.00. 0.00]", new LVector().asShortString().replace(',', '.'));
 	}
 }

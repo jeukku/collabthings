@@ -2,16 +2,16 @@ package org.collabthings.unittests;
 
 import java.io.IOException;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
 import org.xml.sax.SAXException;
 
 import waazdoh.common.vo.AppLoginVO;
 
-public final class TestLogin extends LOTTestCase {
+public final class TestLogin extends CTTestCase {
 
 	public void testClient() throws IOException, SAXException {
-		LOTClient c = getNewClient();
+		CTClient c = getNewClient();
 		assertNotNull(c);
 
 		assertNotNull(c.getService());
@@ -19,7 +19,7 @@ public final class TestLogin extends LOTTestCase {
 	}
 
 	public void testAppLogin() throws IOException, SAXException {
-		LOTClient e = getNewClient();
+		CTClient e = getNewClient();
 		assertNotNull(e);
 		AppLoginVO applogin = e.getClient().requestAppLogin();
 		assertNotNull(applogin);

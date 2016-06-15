@@ -3,49 +3,49 @@ package org.collabthings.unittests;
 import java.io.IOException;
 import java.util.List;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOTBinaryModel;
-import org.collabthings.model.LOTBoundingBox;
-import org.collabthings.model.LOTPart;
-import org.collabthings.model.LOTSubPart;
-import org.collabthings.model.impl.LOTPartImpl;
+import org.collabthings.model.CTBinaryModel;
+import org.collabthings.model.CTBoundingBox;
+import org.collabthings.model.CTPart;
+import org.collabthings.model.CTSubPart;
+import org.collabthings.model.impl.CTPartImpl;
 import org.xml.sax.SAXException;
 
 import waazdoh.common.MStringID;
 import waazdoh.common.WObject;
 
-public final class TestPart extends LOTTestCase {
+public final class TestPart extends CTTestCase {
 
 	public void testSaveAndLoad() throws IOException, SAXException {
-		LOTClient env = getNewClient(true);
+		CTClient env = getNewClient(true);
 		assertNotNull(env);
 		//
-		LOTPart part = new LOTPartImpl(env);
+		CTPart part = new CTPartImpl(env);
 		part.setName("testing changing name");
 		part.save();
 		//
-		LOTBinaryModel m = part.newBinaryModel();
+		CTBinaryModel m = part.newBinaryModel();
 		String testbinarydatastring = "TESTIBINARYPARTDATA";
 		m.getBinary().add(new String(testbinarydatastring).getBytes());
 		//
-		LOTSubPart subpart = part.newSubPart();
+		CTSubPart subpart = part.newSubPart();
 		subpart.getPart();
 		//
 		part.save();
 		part.publish();
 		//
-		LOTClient benv = getNewClient(true);
+		CTClient benv = getNewClient(true);
 		assertNotNull(benv);
 		MStringID bpartid = part.getID().getStringID();
-		LOTPart bpart = benv.getObjectFactory().getPart(bpartid);
+		CTPart bpart = benv.getObjectFactory().getPart(bpartid);
 		assertEquals(part.getName(), bpart.getName());
 		waitObject(bpart);
 		//
 		assertEquals(m, bpart.getModel());
 		//
-		LOTSubPart bsubpart = bpart.getSubParts().get(0);
+		CTSubPart bsubpart = bpart.getSubParts().get(0);
 		assertEquals(bsubpart.getPart().getID(), subpart.getPart().getID());
 		assertEquals(subpart.toString(), bsubpart.toString());
 		//
@@ -61,23 +61,23 @@ public final class TestPart extends LOTTestCase {
 			search = search + (char) ('a' + (int) (Math.random() * 20));
 		}
 
-		LOTClient c = getNewClient();
-		LOTPart part = new LOTPartImpl(c);
+		CTClient c = getNewClient();
+		CTPart part = new CTPartImpl(c);
 		String name = search + " " + System.currentTimeMillis();
 		part.setName("testing changing name " + name);
 		part.publish();
 		//
-		LOTClient c2 = getNewClient();
+		CTClient c2 = getNewClient();
 		List<String> items = c2.getService().getObjects().search(search, 0, 100);
 		assertTrue(items.size() > 0);
 		assertTrue(items.contains(part.getID().toString()));
 	}
 
-	public LOTPart testSubPartOrientation() throws IOException, SAXException {
-		LOTClient e = getNewClient();
-		LOTPartImpl p = new LOTPartImpl(e);
-		LOTSubPart subpart = p.newSubPart();
-		subpart.setPart(new LOTPartImpl(e));
+	public CTPart testSubPartOrientation() throws IOException, SAXException {
+		CTClient e = getNewClient();
+		CTPartImpl p = new CTPartImpl(e);
+		CTSubPart subpart = p.newSubPart();
+		subpart.setPart(new CTPartImpl(e));
 		subpart.setOrientation(new LVector(10, 10, 10), new LVector(0, 1, 0), 1);
 		//
 		assertEquals(subpart.getLocation().toString(), new LVector(10, 10, 10).toString());
@@ -87,13 +87,13 @@ public final class TestPart extends LOTTestCase {
 	}
 
 	public void testLoadRandomID() throws IOException, SAXException {
-		LOTClient e = getNewClient();
+		CTClient e = getNewClient();
 		assertNull(e.getObjectFactory().getPart(new MStringID()));
 	}
 
 	public void testParseFalseBean() throws IOException, SAXException {
-		LOTClient e = getNewClient();
-		LOTPartImpl p = (LOTPartImpl) e.getObjectFactory().getPart();
+		CTClient e = getNewClient();
+		CTPartImpl p = (CTPartImpl) e.getObjectFactory().getPart();
 		WObject bean = new WObject("part");
 		bean.addValue("parts", 0);
 		boolean success = p.parse(bean);
@@ -101,33 +101,33 @@ public final class TestPart extends LOTTestCase {
 	}
 
 	public void testBoundingBox() {
-		LOTClient c = getNewClient();
-		LOTPart p = new LOTPartImpl(c);
+		CTClient c = getNewClient();
+		CTPart p = new CTPartImpl(c);
 		LVector av = new LVector(-1, -1, -1);
 		LVector bv = new LVector(1, 1, 1);
 		p.setBoundingBox(av, bv);
 		p.publish();
 		//
-		LOTPart pb = getNewClient().getObjectFactory().getPart(p.getID().getStringID());
-		LOTBoundingBox bounding = pb.getBoundingBox();
+		CTPart pb = getNewClient().getObjectFactory().getPart(p.getID().getStringID());
+		CTBoundingBox bounding = pb.getBoundingBox();
 		assertEquals(bounding.getA(), av);
 		assertEquals(bounding.getB(), bv);
 	}
 
 	public void testImportModel() throws IOException, SAXException {
-		LOTClient e = getNewClient();
-		LOTPart p = e.getObjectFactory().getPart();
-		LOTBinaryModel bm = p.newBinaryModel();
-		bm.importModel(LOTBinaryModel.TYPE_X3D, getClass().getResourceAsStream(cubemodelpath));
+		CTClient e = getNewClient();
+		CTPart p = e.getObjectFactory().getPart();
+		CTBinaryModel bm = p.newBinaryModel();
+		bm.importModel(CTBinaryModel.TYPE_X3D, getClass().getResourceAsStream(cubemodelpath));
 		assertNotNull(p.getModel());
 		assertTrue(bm.getBinary().length() > 0);
 	}
 
 	public void testEqualPart() {
-		LOTClient client = getNewClient();
-		LOTPart a = client.getObjectFactory().getPart();
-		LOTPart b = client.getObjectFactory().getPart();
-		LOTPart c = client.getObjectFactory().getPart();
+		CTClient client = getNewClient();
+		CTPart a = client.getObjectFactory().getPart();
+		CTPart b = client.getObjectFactory().getPart();
+		CTPart c = client.getObjectFactory().getPart();
 
 		setupSubparts(a, c);
 		setupSubparts(b, c);
@@ -138,9 +138,9 @@ public final class TestPart extends LOTTestCase {
 		assertTrue(b.isAnEqualPart(a));
 	}
 
-	private void setupSubparts(LOTPart a, LOTPart c) {
+	private void setupSubparts(CTPart a, CTPart c) {
 		for (int i = 0; i < 10; i++) {
-			LOTSubPart newSubPart = a.newSubPart();
+			CTSubPart newSubPart = a.newSubPart();
 			newSubPart.setPart(c);
 			newSubPart.setOrientation(new LVector(i, i, i), new LVector(i, i, i), 1);
 		}

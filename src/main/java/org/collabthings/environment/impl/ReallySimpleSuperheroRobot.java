@@ -1,25 +1,21 @@
 package org.collabthings.environment.impl;
 
-import org.collabthings.LOTToolException;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.RunEnvironmentDrawer;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.math.LOrientation;
 import org.collabthings.math.LTransformation;
-import org.collabthings.math.LTransformationStack;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOTValues;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 
-public class ReallySimpleSuperheroRobot implements LOTToolUser {
+public class ReallySimpleSuperheroRobot implements CTToolUser {
 
 	private static final long WAIT_A_BIT = 20;
 	private static final float MOVING_ORIENTATION_LENGTH_TRIGGER = 0.000000001f;
 	private static final double ORIENTATION_PRINTOUT = 20000;
 	//
-	private final LOTRunEnvironment simenv;
-	private LOTToolState tool;
+	private final CTRunEnvironment simenv;
+	private CTToolState tool;
 
 	private final LOrientation orientation = new LOrientation();
 	private final LOrientation targetorientation = new LOrientation();
@@ -29,13 +25,12 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	//
 	private double orientationprintouttimer = 0;
 	private double speed = 10;
-	private final LOTFactoryState factory;
-	private LOTEvents events = new LOTEvents();
+	private final CTFactoryState factory;
+	private CTEvents events = new CTEvents();
 	private long movestarttime;
 	private boolean stopped;
 
-	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
-			LOTFactoryState factory, LVector norientation) {
+	public ReallySimpleSuperheroRobot(CTRunEnvironment simenv, CTFactoryState factory, LVector norientation) {
 		this.simenv = simenv;
 		this.factory = factory;
 		if (norientation != null) {
@@ -43,8 +38,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		}
 	}
 
-	public ReallySimpleSuperheroRobot(LOTRunEnvironment simenv,
-			LOTFactoryState factory) {
+	public ReallySimpleSuperheroRobot(CTRunEnvironment simenv, CTFactoryState factory) {
 		this.simenv = simenv;
 		this.factory = factory;
 	}
@@ -67,20 +61,18 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 	@Override
 	public String toString() {
-		return "SuperHeroRobot[" + super.hashCode() + "][" + tool + "]["
-				+ orientation + "]";
+		return "SuperHeroRobot[" + super.hashCode() + "][" + tool + "][" + orientation + "]";
 	}
 
 	@Override
-	public LOTToolState getTool() {
+	public CTToolState getTool() {
 		return tool;
 	}
 
 	@Override
 	public synchronized void move(LVector l, LVector n, double angle) {
 		targetorientation.getLocation().set(l);
-		events.add(new LOTRuntimeEvent(this, "Moving to " + targetorientation,
-				null));
+		events.add(new CTRuntimeEvent(this, "Moving to " + targetorientation, null));
 
 		movestarttime = System.currentTimeMillis();
 
@@ -89,10 +81,8 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		log("Target orientation " + targetorientation);
 		log("factory " + this.factory);
 		//
-		while (simenv.isRunning()
-				&& !stopped
-				&& targetorientation.getLocation()
-						.getSub(orientation.getLocation()).length() > MOVING_ORIENTATION_LENGTH_TRIGGER) {
+		while (simenv.isRunning() && !stopped && targetorientation.getLocation().getSub(orientation.getLocation())
+				.length() > MOVING_ORIENTATION_LENGTH_TRIGGER) {
 			try {
 				this.wait(WAIT_A_BIT);
 			} catch (InterruptedException e) {
@@ -101,8 +91,8 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 		}
 
 		if (!stopped) {
-			tool.setOrientation(targetorientation.getLocation(),
-					targetorientation.getNormal(), targetorientation.getAngle());
+			tool.setOrientation(targetorientation.getLocation(), targetorientation.getNormal(),
+					targetorientation.getAngle());
 
 			log("Moved to " + targetorientation + " " + orientation + " in "
 					+ (System.currentTimeMillis() - movestarttime) + "ms");
@@ -110,7 +100,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	}
 
 	@Override
-	public void setTool(LOTToolState lotToolState) {
+	public void setTool(CTToolState ctToolState) {
 		String name;
 		if (tool != null) {
 			name = tool.getName();
@@ -118,9 +108,9 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 			name = null;
 		}
 
-		events.add(new LOTRuntimeEvent(this, "set tool " + name, null));
-		log("setting tool " + lotToolState);
-		this.tool = lotToolState;
+		events.add(new CTRuntimeEvent(this, "set tool " + name, null));
+		log("setting tool " + ctToolState);
+		this.tool = ctToolState;
 		initLogger();
 	}
 
@@ -160,8 +150,7 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	}
 
 	private synchronized void move(double dtime) {
-		LVector vdistance = targetorientation.getLocation().getSub(
-				orientation.getLocation());
+		LVector vdistance = targetorientation.getLocation().getSub(orientation.getLocation());
 		double distance = vdistance.length();
 
 		double dangle = targetorientation.getAngle() - orientation.getAngle();
@@ -221,13 +210,11 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 
 		orientation.getLocation().add(direction);
 		if (tool != null) {
-			tool.setOrientation(orientation.getLocation(),
-					orientation.getNormal(), orientation.getAngle());
+			tool.setOrientation(orientation.getLocation(), orientation.getNormal(), orientation.getAngle());
 		}
 	}
 
-	private void moveToTarget(LVector vdistance, double distance,
-			double maxdistance) {
+	private void moveToTarget(LVector vdistance, double distance, double maxdistance) {
 		// just move to right direction
 		double scale = 0.8;
 		if (distance < maxdistance / 10) {
@@ -246,31 +233,21 @@ public class ReallySimpleSuperheroRobot implements LOTToolUser {
 	}
 
 	private void log(String string) {
-		log.info("" + (System.currentTimeMillis() - movestarttime) + "ms -- "
-				+ string);
+		log.info("" + (System.currentTimeMillis() - movestarttime) + "ms -- " + string);
 	}
 
 	private void debugInfo(double dtime) {
-		log("tool:" + tool + " orientation " + orientation + " step:" + dtime
-				+ " targetorientation:" + targetorientation);
+		log("tool:" + tool + " orientation " + orientation + " step:" + dtime + " targetorientation:"
+				+ targetorientation);
 	}
 
 	@Override
-	public boolean isAvailable(LOTToolState toolstate) {
+	public boolean isAvailable(CTToolState toolstate) {
 		return this.tool == toolstate || tool == null;
 	}
 
 	@Override
-	public void callDraw(RunEnvironmentDrawer view, LTransformationStack tstack)
-			throws LOTToolException {
-		if (tool != null) {
-			LOTValues values = new LOTValues("view", view, "tstack", tstack);
-			this.tool.call("draw", values);
-		}
-	}
-
-	@Override
-	public LOTEvents getEvents() {
+	public CTEvents getEvents() {
 		return this.events;
 	}
 }
