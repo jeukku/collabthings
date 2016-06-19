@@ -77,7 +77,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	}
 
 	@Override
-	public CTBinaryModel getModel() {
+	public synchronized CTBinaryModel getModel() {
 		if (loadedscadhash != getScript().hashCode()) {
 			loadModel();
 			loadedscadhash = getScript().hashCode();

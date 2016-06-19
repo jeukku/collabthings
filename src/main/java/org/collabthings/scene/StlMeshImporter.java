@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -31,6 +32,8 @@ public class StlMeshImporter {
 		if (c != null) {
 			LVector n = new LVector(0, 1, 0);
 			CTTriangleMeshImpl mesh = new CTTriangleMeshImpl();
+			List<LVector> vectors = mesh.getVectors();
+
 			StringTokenizer st = new StringTokenizer(c);
 			Stack<LVector> s = new Stack<LVector>();
 			while (st.hasMoreTokens()) {
@@ -46,10 +49,10 @@ public class StlMeshImporter {
 					double sz = Double.parseDouble(st.nextToken());
 					n = new LVector(sx, sy, sz);
 				} else if ("endfacet".equals(t)) {
-					int index = mesh.getVectors().size();
-					mesh.getVectors().add(s.pop());
-					mesh.getVectors().add(s.pop());
-					mesh.getVectors().add(s.pop());
+					int index = vectors.size();
+					vectors.add(s.pop());
+					vectors.add(s.pop());
+					vectors.add(s.pop());
 					mesh.getTriangles().add(new CTTriangle(index, index + 1, index + 2, n));
 				}
 			}

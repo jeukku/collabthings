@@ -469,7 +469,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	}
 
 	@Override
-	public CTTriangleMesh getTriangleMesh() {
+	public synchronized CTTriangleMesh getTriangleMesh() {
 		if (mesh == null) {
 			createTriangleMesh();
 		}
