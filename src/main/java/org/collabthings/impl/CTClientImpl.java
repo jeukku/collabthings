@@ -1,5 +1,7 @@
 package org.collabthings.impl;
 
+import java.util.Date;
+
 import org.collabthings.CTBookmarks;
 import org.collabthings.CTClient;
 import org.collabthings.CTStorage;
@@ -29,6 +31,8 @@ public final class CTClientImpl implements CTClient {
 
 		this.factory = new CTObjectFactoryImpl(this);
 		this.storage = new CTStorageImpl(service);
+
+		p.set("date", "" + new Date());
 	}
 
 	@Override
