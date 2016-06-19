@@ -1,7 +1,6 @@
 package org.collabthings.model.impl;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,14 +14,12 @@ import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
 import java.util.StringTokenizer;
 
 import org.collabthings.CTClient;
 import org.collabthings.math.LVector;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTModel;
-import org.collabthings.model.CTTriangle;
 import org.collabthings.model.CTTriangleMesh;
 import org.collabthings.scene.CTGroup;
 import org.collabthings.scene.StlMeshImporter;
@@ -239,7 +236,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 				g.add(mesh);
 			} else if (CTBinaryModel.TYPE_STL.equals(getType())) {
 				StlMeshImporter i = new StlMeshImporter();
-				i.read(getModelFile());
+				i.setFile(getModelFile());
 				CTTriangleMesh mesh = i.getImport();
 				g.add(mesh);
 			}
@@ -482,54 +479,16 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 
 	private void createTriangleMesh() {
 		if (CTBinaryModel.TYPE_STL.equals(getType())) {
-			String c = getModelFileContent();
-			if (c != null) {
-				log.info("STL " + c);
-				LVector n = new LVector(0, 1, 0);
-				mesh = new CTTriangleMeshImpl();
-				StringTokenizer st = new StringTokenizer(c);
-				Stack<LVector> s = new Stack<LVector>();
-				while (st.hasMoreTokens()) {
-					String t = st.nextToken();
-					if ("vertex".equals(t)) {
-						double sx = Double.parseDouble(st.nextToken());
-						double sy = Double.parseDouble(st.nextToken());
-						double sz = Double.parseDouble(st.nextToken());
-						s.push(new LVector(sx, sy, sz));
-					} else if ("normal".equals(t)) {
-						double sx = Double.parseDouble(st.nextToken());
-						double sy = Double.parseDouble(st.nextToken());
-						double sz = Double.parseDouble(st.nextToken());
-						n = new LVector(sx, sy, sz);
-					} else if ("endfacet".equals(t)) {
-						int index = mesh.getVectors().size();
-						mesh.getVectors().add(s.pop());
-						mesh.getVectors().add(s.pop());
-						mesh.getVectors().add(s.pop());
-						mesh.getTriangles().add(new CTTriangle(index, index + 1, index + 2, n));
-					}
-				}
+			StlMeshImporter i = new StlMeshImporter();
+			try {
+				i.setFile(getModelFile());
+				mesh = i.getImport();
+			} catch (SAXException | IOException e) {
+				log.error(this, "createTriangleMesh", e);
+
 			}
 		} else {
 			mesh = new CTTriangleMeshImpl();
-		}
-	}
-
-	private String getModelFileContent() {
-		try {
-			File f = getModelFile();
-			BufferedReader r = new BufferedReader(new FileReader(f));
-			StringBuilder b = new StringBuilder();
-			String line;
-			while ((line = r.readLine()) != null) {
-				b.append(line);
-				b.append("\n");
-			}
-			r.close();
-			return b.toString();
-		} catch (SAXException | IOException e) {
-			log.error(this, "getModelFileContent", e);
-			return null;
 		}
 	}
 }

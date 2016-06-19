@@ -89,7 +89,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	public void addTo(CTGroup g) {
 		try {
 			StlMeshImporter i = new StlMeshImporter();
-			i.read(getModel().getModelFile());
+			i.setFile(getModel().getModelFile());
 			CTTriangleMesh mesh = i.getImport();
 
 			g.add(mesh);
