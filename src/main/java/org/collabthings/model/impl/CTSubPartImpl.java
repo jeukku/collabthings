@@ -58,6 +58,7 @@ public final class CTSubPartImpl implements CTSubPart {
 		part = null;
 		p.set(bpart.get("p"));
 		n.set(bpart.get("n"));
+		angle = bpart.getDoubleValue("a");
 	}
 
 	public void getBean(WObject bpart) {
@@ -68,6 +69,7 @@ public final class CTSubPartImpl implements CTSubPart {
 		bpart.setAttribute("id", "" + partid);
 		bpart.add("p", p.getBean());
 		bpart.add("n", n.getBean());
+		bpart.addValue("a", angle);
 	}
 
 	@Override
