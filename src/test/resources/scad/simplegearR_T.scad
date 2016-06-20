@@ -19,9 +19,9 @@ teethNum=10; //number of teeth (int)
 addendum=2;
 $fn = 20;
 
-gearRadius = 10;
+gearRadius = _RADIUS_;
 gearThickness = 3;
-toothCount = 10;
+toothCount = _TOOTHCOUNT_;
 
 spurGearApproximation(gearRadius, gearThickness, toothCount);
 
