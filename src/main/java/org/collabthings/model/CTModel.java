@@ -34,4 +34,5 @@ public interface CTModel {
 	void setTranslation(LVector translation);
 
 	void addTo(CTGroup g);
+
 }

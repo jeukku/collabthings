@@ -12,7 +12,7 @@ public interface CTOpenSCAD extends CTObject, CTModel {
 
 	String getName();
 
-	CTBinaryModel getModel();
+	CTModel getModel();
 
 	void setName(String string);
 

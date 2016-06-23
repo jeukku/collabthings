@@ -10,14 +10,14 @@ import org.collabthings.CTTestCase;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTScriptRunner;
 import org.collabthings.environment.impl.CTFactoryState;
-import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTModel;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTValues;
-import org.collabthings.model.impl.CTPartImpl;
 import org.collabthings.model.impl.CTEnvironmentImpl;
+import org.collabthings.model.impl.CTPartImpl;
 import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.simulation.CTSimulation;
 import org.xml.sax.SAXException;
@@ -40,7 +40,7 @@ public final class TestOpenSCAD extends CTTestCase {
 
 		scad.setScript(loadATestFile("scad/test.scad"));
 
-		CTBinaryModel m = scad.getModel();
+		CTModel m = scad.getModel();
 		assertNotNull(m);
 
 		part.publish();
@@ -70,7 +70,7 @@ public final class TestOpenSCAD extends CTTestCase {
 
 		scad.setScript(loadATestFile("scad/gears_helical.scad"));
 
-		CTBinaryModel m = scad.getModel();
+		CTModel m = scad.getModel();
 		assertNotNull(m);
 
 		part.publish();

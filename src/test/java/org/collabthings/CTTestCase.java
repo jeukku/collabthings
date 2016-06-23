@@ -129,6 +129,11 @@ public class CTTestCase extends TestCase {
 		boolean setsession = c.getClient().setSession(getSession(p));
 		if (setsession) {
 			clients.add(c);
+
+			ConditionWaiter.wait(() -> {
+				return binarysource.isReady();
+			}, 1000);
+
 			return c;
 		} else {
 			AppLoginVO applogin = c.getClient().requestAppLogin();
@@ -145,11 +150,17 @@ public class CTTestCase extends TestCase {
 
 			if (applogin != null && applogin.getSessionid() != null) {
 				p.set("session", applogin.getSessionid());
+
+				ConditionWaiter.wait(() -> {
+					return binarysource.isReady();
+				}, 1000);
+
 				return c;
 			} else {
 				return null;
 			}
 		}
+
 	}
 
 	public BinarySource getBinarySource(WPreferences p, boolean bind) {

@@ -43,6 +43,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	private static final String TRANSLATION = "translation";
 	private static final String NAME = "name";
 	private static final String BINARYID = "binaryid";
+	private static final String TYPE = "type";
 	//
 	private static int counter = 1;
 	//
@@ -87,6 +88,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		b.addValue(BINARYID, "" + getBinaryID());
 		b.addValue(SCALE, scale);
 		b.add(TRANSLATION, translation.getBean());
+		b.addValue(TYPE, "" + type);
 		//
 		for (Binary binary : childbinaries) {
 			b.addToList("binaries", binary.getID().toString());
@@ -103,6 +105,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		binaryid = new BinaryID(bean.getIDValue(BINARYID));
 		scale = bean.getDoubleValue(SCALE);
 		translation = new LVector(bean.get(TRANSLATION));
+		type = bean.getValue(TYPE);
 		//
 
 		List<String> bchildbinaries = bean.getList("binaries");
@@ -214,6 +217,8 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 
 	private boolean importModel(Reader fr, String extension) throws IOException, SAXException {
 		setType(extension);
+
+		mesh = null;
 
 		if (CTBinaryModel.TYPE_STL.equals(extension)) {
 			return importSTL(fr);

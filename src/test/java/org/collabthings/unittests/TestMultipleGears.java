@@ -21,15 +21,16 @@ public final class TestMultipleGears extends CTTestCase {
 	private Map<String, CTPart> gearcontent = new HashMap<>();
 
 	public void testGears() throws IOException, SAXException {
-		CTClient env = getNewClient(true);
-		assertNotNull(env);
+		CTClient ctclient = getNewClient(true);
+		assertNotNull(ctclient);
+				
 		//
-		CTPart mainpart = new CTPartImpl(env);
+		CTPart mainpart = new CTPartImpl(ctclient);
 
 		for (int c = 0; c < 10; c++) {
 			double z = -15 + c * 3;
 
-			CTPart gear = LoadGear(env, 10 + c, 10 + c);
+			CTPart gear = LoadGear(ctclient, 10 + c, 10 + c);
 
 			for (int i = 0; i < 5; i++) {
 				CTSubPart sp = mainpart.newSubPart();
@@ -46,7 +47,7 @@ public final class TestMultipleGears extends CTTestCase {
 
 			CTSubPart center = mainpart.newSubPart();
 			center.setOrientation(new LVector(0, 0, z), new LVector(0, 0, 1), 0);
-			CTPart centerpart = LoadGear(env, 15 + c, 15 + c);
+			CTPart centerpart = LoadGear(ctclient, 15 + c, 15 + c);
 			center.setPart(centerpart);
 		}
 

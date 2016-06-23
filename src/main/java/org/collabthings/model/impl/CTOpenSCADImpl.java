@@ -16,9 +16,7 @@ import org.collabthings.model.CTModel;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTTriangleMesh;
 import org.collabthings.scene.CTGroup;
-import org.collabthings.scene.StlMeshImporter;
 import org.collabthings.util.LLog;
-import org.xml.sax.SAXException;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -35,6 +33,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	private static final String VARIABLE_NAME = "name";
 	private static final String SCRIPT = "value";
 	private static final String VARIABLE_SCALE = "scale";
+	private static final String VARIABLE_MODEL = "model";
 	//
 	private ServiceObject o;
 	private String script;
@@ -77,26 +76,19 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	}
 
 	@Override
-	public synchronized CTBinaryModel getModel() {
+	public synchronized CTModel getModel() {
 		if (loadedscadhash != getScript().hashCode()) {
-			loadModel();
+			createModel();
 			loadedscadhash = getScript().hashCode();
 		}
+
 		return model;
 	}
 
 	@Override
 	public void addTo(CTGroup g) {
-		try {
-			StlMeshImporter i = new StlMeshImporter();
-			i.setFile(getModel().getModelFile());
-			CTTriangleMesh mesh = i.getImport();
+		this.getModel().addTo(g);
 
-			g.add(mesh);
-
-		} catch (SAXException | IOException e) {
-			log.error(this, "addTo", e);
-		}
 	}
 
 	@Override
@@ -124,7 +116,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		return CTModel.SCAD;
 	}
 
-	private void loadModel() {
+	private void createModel() {
 		try {
 			File stl = createSTL();
 			model.importModel(stl);
@@ -204,11 +196,15 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		b.setBase64Value(SCRIPT, script);
 		b.addValue(VARIABLE_NAME, name);
 		b.addValue(VARIABLE_SCALE, scale);
+		b.addValue(VARIABLE_MODEL, model.getID());
 	}
 
 	@Override
 	public boolean parse(final WObject bean) {
 		script = bean.getBase64Value(SCRIPT);
+		loadedscadhash = getScript().hashCode();
+		model.load(bean.getIDValue(VARIABLE_MODEL));
+
 		this.name = bean.getValue(VARIABLE_NAME);
 		this.scale = bean.getDoubleValue(VARIABLE_SCALE);
 
@@ -245,11 +241,12 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 
 	@Override
 	public boolean isReady() {
-		return true;
+		return model.isReady();
 	}
 
 	@Override
 	public void publish() {
+		getModel().publish();
 		getServiceObject().publish();
 	}
 

@@ -11,6 +11,15 @@ public class CTMaterialImpl implements CTMaterial {
 	private double[] color = new double[] { 1.0, 1.0, 0.0 };
 
 	public CTMaterialImpl() {
+		double r, g, b;
+		do {
+			r = Math.random();
+			g = Math.random();
+			b = Math.random();
+		} while ((r + g + b) / 3 > 0.8);
+		color[0] = r;
+		color[1] = g;
+		color[2] = b;
 	}
 
 	@Override

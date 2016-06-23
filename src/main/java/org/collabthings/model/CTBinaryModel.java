@@ -10,7 +10,7 @@ import org.xml.sax.SAXException;
 import waazdoh.client.model.objects.Binary;
 import waazdoh.common.MStringID;
 
-public interface CTBinaryModel extends CTObject {
+public interface CTBinaryModel extends CTObject, CTModel {
 	public static final String TYPE_X3D = "x3d";
 	public static final String TYPE_STL = "stl";
 	public static final String TYPE = "binary";
