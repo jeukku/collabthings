@@ -1,5 +1,6 @@
 package org.collabthings;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,6 +9,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -130,30 +133,44 @@ public class CTTestCase extends TestCase {
 		if (setsession) {
 			clients.add(c);
 
-			ConditionWaiter.wait(() -> {
-				return binarysource.isReady();
-			}, 1000);
+			if (binarysource != null) {
+				ConditionWaiter.wait(() -> {
+					return binarysource.isReady();
+				}, 1000);
+			}
 
 			return c;
 		} else {
 			AppLoginVO applogin = c.getClient().requestAppLogin();
 			String apploginid = applogin.getId();
 			String url = applogin.getUrl();
-			log.info("applogin url " + url + (url.charAt(url.length() - 1) == '/' ? "" : "/") + apploginid);
+			String apploginurl = url + (url.charAt(url.length() - 1) == '/' ? "" : "/") + apploginid;
+			log.info("applogin url " + apploginurl);
+
+			try {
+				Desktop.getDesktop().browse(new URI(apploginurl + "?username=" + email));
+			} catch (IOException | URISyntaxException e) {
+				log.error(this, "getAppLogin failed to open browser " + url, e);
+			}
 
 			ConditionWaiter.wait(() -> {
 				AppLoginVO al = c.getClient().checkAppLogin(apploginid);
+				if (al.getSessionid() == null) {
+					doWait(4000);
+				}
 				return al.getSessionid() != null;
-			}, 100000);
+			}, 1000000);
 
 			applogin = c.getClient().checkAppLogin(applogin.getId());
 
 			if (applogin != null && applogin.getSessionid() != null) {
 				p.set("session", applogin.getSessionid());
 
-				ConditionWaiter.wait(() -> {
-					return binarysource.isReady();
-				}, 1000);
+				if (binarysource != null) {
+					ConditionWaiter.wait(() -> {
+						return binarysource.isReady();
+					}, 1000);
+				}
 
 				return c;
 			} else {
