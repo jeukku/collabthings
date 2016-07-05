@@ -14,8 +14,8 @@ import waazdoh.common.WPreferences;
 import waazdoh.common.client.ServiceClient;
 
 public interface CTClient {
-	public static final String VERSION = "0.0.2";
-	public final String LOWEST_ACCEPTED_VERSION = "0.0.2";
+	public static final String VERSION = "0.0.3";
+	public final String LOWEST_ACCEPTED_VERSION = "0.0.3";
 
 	public static final String JAVASCRIPT_FORBIDDENWORDS = "ct.javascript.forbiddenwords";
 
