@@ -31,6 +31,7 @@ import waazdoh.common.client.ServiceClient;
 import waazdoh.common.testing.StaticService;
 import waazdoh.common.testing.StaticTestPreferences;
 import waazdoh.common.vo.AppLoginVO;
+import waazdoh.common.vo.StorageAreaVO;
 import waazdoh.cp2p.P2PBinarySource;
 import waazdoh.cp2p.P2PServer;
 
@@ -203,7 +204,8 @@ public class CTTestCase extends TestCase {
 			}
 		}
 		StaticService mockservice = new StaticService(username);
-		mockservice.getStorageArea().write("/public/LOT/settings/ct.javascript.forbiddenwords", "forbiddenword");
+		mockservice.getStorageArea()
+				.write(new StorageAreaVO("/public/LOT/settings/ct.javascript.forbiddenwords", "forbiddenword"));
 		return mockservice;
 	}
 

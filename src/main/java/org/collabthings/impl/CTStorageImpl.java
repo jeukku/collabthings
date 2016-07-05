@@ -6,6 +6,7 @@ import org.collabthings.CTStorage;
 import org.collabthings.util.LLog;
 
 import waazdoh.common.client.ServiceClient;
+import waazdoh.common.vo.StorageAreaVO;
 import waazdoh.common.vo.UserVO;
 
 public class CTStorageImpl implements CTStorage {
@@ -19,7 +20,7 @@ public class CTStorageImpl implements CTStorage {
 
 	@Override
 	public void writeToStorage(String path, String name, String data) {
-		service.getStorageArea().write(path + "/" + name, data);
+		service.getStorageArea().write(new StorageAreaVO(path + "/" + name, data));
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class CTStorageImpl implements CTStorage {
 		if (indexOf >= 0) {
 			String username = npath.substring(0, indexOf);
 			String path = npath.substring(indexOf + 1);
-			String value = service.getStorageArea().read(username, path);
+			String value = service.getStorageArea().read(new StorageAreaVO(username, path, null));
 			log.info("readStorage username:" + username + " path:" + path + " got value:\"" + value + "\"");
 
 			return value;
@@ -57,7 +58,7 @@ public class CTStorageImpl implements CTStorage {
 	@Override
 	public String readStorage(UserVO u, String item) {
 		if (u != null) {
-			return service.getStorageArea().read(u.getUsername(), item);
+			return service.getStorageArea().read(new StorageAreaVO(u.getUsername(), item, null));
 		} else {
 			LLog.getLogger(this).info("User null -> returning null");
 			return null;

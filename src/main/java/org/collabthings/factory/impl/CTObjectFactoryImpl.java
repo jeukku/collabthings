@@ -47,7 +47,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	@Override
 	public String getType(MStringID id) {
 		ObjectVO o = client.getService().getObjects().read(id.toString());
-		return o.getObject().getType();
+		return o.toObject().getType();
 	}
 
 	@Override

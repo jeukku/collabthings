@@ -15,6 +15,7 @@ import waazdoh.client.WClient;
 import waazdoh.common.BeanStorage;
 import waazdoh.common.WPreferences;
 import waazdoh.common.client.ServiceClient;
+import waazdoh.common.vo.StorageAreaVO;
 
 public final class CTClientImpl implements CTClient {
 	private final static String PREFIX = "CT";
@@ -119,7 +120,7 @@ public final class CTClientImpl implements CTClient {
 
 		log.info("writing " + path + " value:" + id);
 
-		client.getService().getStorageArea().write(path, id);
+		client.getService().getStorageArea().write(new StorageAreaVO(path, id));
 	}
 
 	@Override
@@ -131,7 +132,7 @@ public final class CTClientImpl implements CTClient {
 
 		path = path.replace("//", "/");
 		log.info("reading " + username + " path:" + path);
-		return client.getService().getStorageArea().read(username, path);
+		return client.getService().getStorageArea().read(new StorageAreaVO(username, path, null));
 	}
 
 	@Override
