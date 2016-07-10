@@ -9,11 +9,13 @@ import org.collabthings.CTClient;
 import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTInfo;
+import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.impl.CT3DModelImpl;
 import org.collabthings.model.impl.CTFactoryImpl;
+import org.collabthings.model.impl.CTOpenSCADImpl;
 import org.collabthings.model.impl.CTPartBuilderImpl;
 import org.collabthings.model.impl.CTPartImpl;
 import org.collabthings.model.impl.CTScriptImpl;
@@ -35,6 +37,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	private List<CTScriptImpl> scripts = new LinkedList<>();
 	private List<CTRunEnvironmentBuilder> runtimebuilders = new LinkedList<>();
 	private List<CTPartBuilder> partbuilders = new LinkedList<>();
+	private List<CTOpenSCAD> openscads = new LinkedList<>();
 
 	private LLog log = LLog.getLogger(this);
 
@@ -222,6 +225,22 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			models.add(model);
 			return model;
 		}
+	}
+
+	@Override
+	public CTOpenSCAD getOpenScad(MStringID scadid) {
+		synchronized (openscads) {
+			for (CTOpenSCAD os : openscads) {
+				if (os.getID().getStringID().equals(scadid)) {
+					return os;
+				}
+			}
+		}
+
+		CTOpenSCADImpl scad = new CTOpenSCADImpl(client);
+		scad.load(scadid);
+		openscads.add(scad);
+		return scad;
 	}
 
 	@Override

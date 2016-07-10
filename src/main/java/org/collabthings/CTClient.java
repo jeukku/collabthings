@@ -18,6 +18,9 @@ public interface CTClient {
 	public final String LOWEST_ACCEPTED_VERSION = "0.0.3";
 
 	public static final String JAVASCRIPT_FORBIDDENWORDS = "ct.javascript.forbiddenwords";
+	public static final String PREFERENCES_OPENSCADPATH = "software.openscad.path";
+
+	public static final String ERROR_OPENSCADFAILED = "error_openscadfailed";
 
 	CTObjectFactory getObjectFactory();
 
@@ -47,6 +50,12 @@ public interface CTClient {
 
 	String getPublished(String value);
 
+	void errorEvent(String error, Exception e);
+
+	CTBookmarks getBookmarks();
+
+	void addErrorListener(CTErrorListener listener);
+
 	public static String getDateTime() {
 		Date date = Calendar.getInstance().getTime();
 		SimpleDateFormat d = new SimpleDateFormat("yyyyMMdd");
@@ -72,5 +81,4 @@ public interface CTClient {
 		return s;
 	}
 
-	CTBookmarks getBookmarks();
 }

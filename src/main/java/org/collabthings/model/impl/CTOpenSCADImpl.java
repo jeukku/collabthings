@@ -78,8 +78,9 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	@Override
 	public synchronized CTModel getModel() {
 		if (loadedscadhash != getScript().hashCode()) {
-			createModel();
-			loadedscadhash = getScript().hashCode();
+			if (createModel()) {
+				loadedscadhash = getScript().hashCode();
+			}
 		}
 
 		return model;
@@ -116,21 +117,24 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		return CTModel.SCAD;
 	}
 
-	private void createModel() {
+	private boolean createModel() {
 		try {
 			File stl = createSTL();
 			model.importModel(stl);
 			model.setTranslation(getTranslation());
 			model.setScale(getScale());
+			return true;
 		} catch (IOException e) {
 			log.error(this, "loadModel", e);
+			client.errorEvent(CTClient.ERROR_OPENSCADFAILED, e);
 		} catch (InterruptedException e) {
 			log.error(this, "loadModel", e);
 		}
+		return false;
 	}
 
 	private File createSTL() throws IOException, FileNotFoundException, InterruptedException {
-		String path = client.getPreferences().get("software.openscad.path", "openscad");
+		String path = client.getPreferences().get(CTClient.PREFERENCES_OPENSCADPATH, "openscad");
 		File tempfile = File.createTempFile("collabthings", ".scad");
 		FileOutputStream fos = new FileOutputStream(tempfile);
 		String s = getScript();

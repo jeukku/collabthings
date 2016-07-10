@@ -1,9 +1,12 @@
 package org.collabthings.impl;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.collabthings.CTBookmarks;
 import org.collabthings.CTClient;
+import org.collabthings.CTErrorListener;
 import org.collabthings.CTStorage;
 import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.factory.impl.CTObjectFactoryImpl;
@@ -25,6 +28,7 @@ public final class CTClientImpl implements CTClient {
 	private final CTObjectFactory factory;
 	private LLog log = LLog.getLogger(this);
 	private CTBookmarks bookmarks;
+	private Set<CTErrorListener> errorlisteners = new HashSet<>();
 
 	public CTClientImpl(WPreferences p, BinarySource binarysource, BeanStorage beanstorage, ServiceClient service) {
 		client = new WClient(p, binarysource, beanstorage, service);
@@ -155,5 +159,17 @@ public final class CTClientImpl implements CTClient {
 		}
 
 		return bookmarks;
+	}
+
+	@Override
+	public void addErrorListener(CTErrorListener listener) {
+		errorlisteners.add(listener);
+	}
+
+	@Override
+	public void errorEvent(String error, Exception e) {
+		for (CTErrorListener l : errorlisteners) {
+			l.error(error, e);
+		}
 	}
 }

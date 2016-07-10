@@ -126,8 +126,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			String type = data.getValue("type");
 			if (CTModel.SCAD.equals(type)) {
 				MStringID scadid = data.getIDValue(VALUENAME_MODELID);
-				CTOpenSCADImpl nscad = new CTOpenSCADImpl(this.env);
-				nscad.load(scadid);
+				CTOpenSCAD nscad = this.env.getObjectFactory().getOpenScad(scadid);
 				model = nscad;
 			} else {
 				MStringID modelid = data.getIDValue(VALUENAME_MODELID);
