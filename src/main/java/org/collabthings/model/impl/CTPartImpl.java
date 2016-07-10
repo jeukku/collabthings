@@ -75,7 +75,6 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	private synchronized void addSubParts(WObject b) {
-		List<WObject> list = new LinkedList<>();
 		for (CTSubPart part : getSubParts()) {
 			WObject bpart = new WObject("part");
 			((CTSubPartImpl) part).getBean(bpart);
@@ -84,7 +83,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	@Override
-	public boolean parse(WObject bean) {
+	public synchronized boolean parse(WObject bean) {
 		LLog.getLogger(this).info("Loading " + bean);
 
 		bean = bean.get("content");
@@ -100,6 +99,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				boundingbox = new CTBoundingBox(beanboundingbox);
 			}
 			//
+			subparts.clear();
+
 			List<WObject> parts = bean.getObjectList("parts");
 			if (parts != null) {
 				for (WObject bpart : parts) {
