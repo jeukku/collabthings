@@ -42,7 +42,7 @@ public final class CTSubPartImpl implements CTSubPart {
 
 	public CTPart getPart() {
 		if (part == null) {
-			if (partid == null) {
+			if (partid == null || !partid.isId()) {
 				// new part
 				part = this.client.getObjectFactory().getPart();
 			} else {

@@ -280,6 +280,11 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	@Override
+	public void resetModel() {
+		model = null;
+	}
+
+	@Override
 	public CTOpenSCAD newSCAD() {
 		CTOpenSCADImpl scad = new CTOpenSCADImpl(env);
 		model = scad;

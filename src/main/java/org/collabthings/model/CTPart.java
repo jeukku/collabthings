@@ -20,6 +20,7 @@ public interface CTPart extends CTObject {
 	String getName();
 
 	boolean importModel(File file);
+	void resetModel();
 
 	void setBoundingBox(LVector a, LVector b);
 
