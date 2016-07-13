@@ -77,13 +77,17 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 
 	@Override
 	public synchronized CTModel getModel() {
-		if (loadedscadhash != getScript().hashCode()) {
+		if (isChanged()) {
 			if (createModel()) {
 				loadedscadhash = getScript().hashCode();
 			}
 		}
 
 		return model;
+	}
+
+	private boolean isChanged() {
+		return loadedscadhash != getScript().hashCode();
 	}
 
 	@Override
@@ -245,7 +249,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 
 	@Override
 	public boolean isReady() {
-		return model.isReady();
+		return isChanged() || model.isReady();
 	}
 
 	@Override
