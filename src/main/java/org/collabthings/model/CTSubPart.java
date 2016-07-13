@@ -25,4 +25,6 @@ public interface CTSubPart {
 
 	void save();
 
+	void set(CTSubPart subpart);
+
 }

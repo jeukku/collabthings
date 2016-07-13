@@ -34,6 +34,15 @@ public final class CTSubPartImpl implements CTSubPart {
 	}
 
 	@Override
+	public void set(CTSubPart nsubpart) {
+		CTSubPartImpl subpart = (CTSubPartImpl) nsubpart;
+		part = subpart.part;
+		p.set(subpart.p);
+		n.set(subpart.n);
+		angle = subpart.angle;
+	}
+
+	@Override
 	public void publish() {
 		if (part != null) {
 			part.publish();

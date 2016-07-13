@@ -32,4 +32,6 @@ public interface CTPart extends CTObject {
 
 	CTMaterial getMaterial();
 
+	void removeSubPart(CTSubPart subpart);
+
 }

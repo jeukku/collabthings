@@ -234,6 +234,11 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	@Override
+	public void removeSubPart(CTSubPart subpart) {
+		subparts.remove(subpart);
+	}
+
+	@Override
 	public synchronized List<CTSubPart> getSubParts() {
 		return new LinkedList<>(subparts);
 	}
