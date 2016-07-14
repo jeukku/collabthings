@@ -21,7 +21,7 @@ import waazdoh.common.ObjectID;
 import waazdoh.common.WObject;
 
 public final class CTPartImpl implements ServiceObjectData, CTPart {
-	private static final String BEANNAME = "part";
+	public static final String BEANNAME = "part";
 	private static final String VALUENAME_NAME = "name";
 	private static final String VALUENAME_MODELID = "id";
 	//

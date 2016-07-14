@@ -102,18 +102,20 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 			b.addValue(VALUENAME_MODELID, model.getID());
 		}
 
-		for (String cname : getFactoryMap().keySet()) {
-			CTAttachedFactory cf = getFactory(cname);
-			WObject bchildfactory = new WObject();
-			bchildfactory.addValue("name", cname);
-			if (cf.getBookmark() != null) {
-				bchildfactory.addValue("bookmark", cf.getBookmark());
-			} else {
-				bchildfactory.addValue("id", cf.getFactory().getID().toString());
-			}
-			bchildfactory.add("orientation", cf.getOrientation().getBean());
+		if (getFactoryMap() != null) {
+			for (String cname : getFactoryMap().keySet()) {
+				CTAttachedFactory cf = getFactory(cname);
+				WObject bchildfactory = new WObject();
+				bchildfactory.addValue("name", cname);
+				if (cf.getBookmark() != null) {
+					bchildfactory.addValue("bookmark", cf.getBookmark());
+				} else {
+					bchildfactory.addValue("id", cf.getFactory().getID().toString());
+				}
+				bchildfactory.add("orientation", cf.getOrientation().getBean());
 
-			b.addToList("factories", bchildfactory);
+				b.addToList("factories", bchildfactory);
+			}
 		}
 		//
 		return org;

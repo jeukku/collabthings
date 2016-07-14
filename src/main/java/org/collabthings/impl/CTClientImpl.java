@@ -110,7 +110,6 @@ public final class CTClientImpl implements CTClient {
 
 		createPublishedStorage("/" + o.getObject().getType() + "/" + name + "/" + CTClient.getDateTime(), o);
 		createPublishedStorage("/" + o.getObject().getType() + "/" + name + "/latest", o);
-		createPublishedStorage("/" + o.getObject().getType() + "/" + name, o);
 		createPublishedStorage("/" + o.getObject().getType() + "/latest", o);
 
 		log.info("published " + name + " " + o);

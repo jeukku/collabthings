@@ -25,7 +25,7 @@ public class CTStorageImpl implements CTStorage {
 
 	@Override
 	public List<String> listStorage(String string) {
-		return service.getStorageArea().list(string);
+		return service.getStorageArea().list(new StorageAreaVO(string));
 	}
 
 	@Override
