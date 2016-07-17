@@ -39,6 +39,8 @@ public interface CTBinaryModel extends CTObject, CTModel {
 
 	String getType();
 
+	void setType(String string);
+
 	CTTriangleMesh getTriangleMesh();
 
 }

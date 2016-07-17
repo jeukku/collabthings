@@ -63,7 +63,6 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		this.env = nenv;
 		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.getVersion(), nenv.getPrefix());
 		log = LLog.getLogger(this);
-		newBinary();
 	}
 
 	@Override
@@ -146,7 +145,11 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 
 	@Override
 	public Binary getBinary() {
-		return this.env.getBinarySource().getOrDownload(binaryid);
+		if (binaryid != null) {
+			return this.env.getBinarySource().getOrDownload(binaryid);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -171,7 +174,10 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		save();
 		//
 		o.publish();
-		getBinary().publish();
+		if (binaryid != null) {
+			getBinary().publish();
+		}
+
 		for (Binary b : childbinaries) {
 			b.publish();
 		}
@@ -255,7 +261,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		return CT3DModelImpl.TYPE;
 	}
 
-	private void setType(String ntype) {
+	public void setType(String ntype) {
 		this.type = ntype;
 		newBinary();
 	}
