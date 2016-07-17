@@ -10,6 +10,7 @@ import org.collabthings.CTToolException;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTRunEnvironmentImpl;
 import org.collabthings.environment.impl.CTToolState;
+import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
@@ -44,7 +45,9 @@ public final class TestTool extends CTTestCase {
 		//
 		t.newPart();
 		String testbinarydatastring = "TESTIBINARYDATA";
-		t.getPart().newBinaryModel().getBinary().add(new String(testbinarydatastring).getBytes());
+		CTBinaryModel model = t.getPart().newBinaryModel();
+		model.setType("bin");
+		model.getBinary().add(new String(testbinarydatastring).getBytes());
 		//
 		t.save();
 		t.publish();

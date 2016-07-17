@@ -48,6 +48,7 @@ public final class Test3DModel extends CTTestCase {
 		//
 		CT3DModelImpl s = new CT3DModelImpl(env);
 		s.setName("TEST");
+		s.setType("test");
 		String testbinarydatastring = "TESTIBINARYDATA";
 		s.getBinary().add(new String(testbinarydatastring).getBytes());
 		s.getBinary().setReady();

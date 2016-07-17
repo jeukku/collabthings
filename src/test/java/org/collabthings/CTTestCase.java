@@ -58,16 +58,7 @@ public class CTTestCase extends TestCase {
 	protected void tearDown() throws Exception {
 		log.info("**************** STOP TEST " + getName() + " ************** ");
 
-		new ThreadChecker(() -> {
-			boolean running = false;
-			for (CTClient e : clients) {
-				if (e.isRunning()) {
-					running = true;
-				}
-			}
-
-			return running;
-		});
+//		startThreadChecker();
 
 		StaticTestPreferences.clearPorts();
 		for (CTClient e : clients) {
@@ -79,6 +70,19 @@ public class CTTestCase extends TestCase {
 
 		clienta = null;
 		clientb = null;
+	}
+
+	private void startThreadChecker() {
+		new ThreadChecker(() -> {
+			boolean running = false;
+			for (CTClient e : clients) {
+				if (e.isRunning()) {
+					running = true;
+				}
+			}
+
+			return running;
+		});
 	}
 
 	@Override
