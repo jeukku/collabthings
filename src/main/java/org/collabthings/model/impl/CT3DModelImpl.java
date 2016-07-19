@@ -102,6 +102,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	public boolean parse(WObject bean) {
 		name = bean.getValue("name");
 		binaryid = new BinaryID(bean.getIDValue(BINARYID));
+		
 		scale = bean.getDoubleValue(SCALE);
 		translation = new LVector(bean.get(TRANSLATION));
 		type = bean.getValue(TYPE);

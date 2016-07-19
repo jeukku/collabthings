@@ -211,10 +211,15 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	public boolean parse(final WObject bean) {
 		script = bean.getBase64Value(SCRIPT);
 		loadedscadhash = getScript().hashCode();
-		model.load(bean.getIDValue(VARIABLE_MODEL));
 
 		this.name = bean.getValue(VARIABLE_NAME);
 		this.scale = bean.getDoubleValue(VARIABLE_SCALE);
+
+		if (!model.load(bean.getIDValue(VARIABLE_MODEL))) {
+			log.info("Loading model failed. Creating it.");
+
+			createModel();
+		}
 
 		return name != null && script != null;
 	}
