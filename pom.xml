@@ -6,7 +6,7 @@
 	<artifactId>client</artifactId>
 
 	<packaging>jar</packaging>
-	<version>0.3.2-SNAPSHOT</version>
+	<version>0.3.3-SNAPSHOT</version>
 
 	<name>Collabthings Client</name>
 	<url>http://maven.apache.org</url>
