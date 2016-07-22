@@ -11,15 +11,20 @@ public interface CTPart extends CTObject {
 
 	List<CTSubPart> getSubParts();
 
-	void setName(String string);
-
 	CTModel getModel();
 
 	boolean isAnEqualPart(CTPart b);
 
+	void setName(String string);
+
 	String getName();
 
+	void setShortname(String sname);
+
+	String getShortname();
+
 	boolean importModel(File file);
+
 	void resetModel();
 
 	void setBoundingBox(LVector a, LVector b);

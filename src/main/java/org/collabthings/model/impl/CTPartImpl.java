@@ -24,9 +24,11 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public static final String BEANNAME = "part";
 	private static final String VALUENAME_NAME = "name";
 	private static final String VALUENAME_MODELID = "id";
+	private static final String VALUENAME_SHORTNAME = "shortname";
 	//
 	private ServiceObject o;
 	private String name = "part";
+	private String shortname = "part";
 
 	CTClient env;
 
@@ -55,6 +57,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		WObject org = o.getBean();
 		WObject b = org.add("content");
 		b.addValue(VALUENAME_NAME, getName());
+		b.addValue(VALUENAME_SHORTNAME, getShortname());
 
 		if (model != null) {
 			WObject md = b.add("model");
@@ -149,6 +152,16 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	private ServiceObject getServiceObject() {
 		return o;
+	}
+
+	@Override
+	public String getShortname() {
+		return shortname;
+	}
+
+	@Override
+	public void setShortname(String sname) {
+		this.shortname = sname;
 	}
 
 	public String getName() {
