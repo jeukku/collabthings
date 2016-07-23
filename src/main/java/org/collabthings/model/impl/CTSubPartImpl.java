@@ -27,6 +27,7 @@ public final class CTSubPartImpl implements CTSubPart {
 	public CTSubPartImpl(final CTPartImpl nparent, final CTClient env) {
 		this.parent = nparent;
 		this.client = env;
+		defaultName();
 	}
 
 	@Override
@@ -39,11 +40,16 @@ public final class CTSubPartImpl implements CTSubPart {
 	public String getNamePath() {
 		return part.getShortname() + "->" + name;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
+	@Override
+	public void setName(String text) {
+		this.name = text;
+	}
+
 	@Override
 	public void set(CTSubPart nsubpart) {
 		CTSubPartImpl subpart = (CTSubPartImpl) nsubpart;
@@ -80,6 +86,18 @@ public final class CTSubPartImpl implements CTSubPart {
 		n.set(bpart.get("n"));
 		angle = bpart.getDoubleValue("a");
 		name = bpart.getValue("name");
+
+		defaultName();
+	}
+
+	private void defaultName() {
+		if (name == null || "null".equals(name)) {
+			if (parent != null) {
+				name = "sub" + parent.getSubParts().size();
+			} else {
+				name = "sub";
+			}
+		}
 	}
 
 	public void getBean(WObject bpart) {

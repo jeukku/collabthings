@@ -15,7 +15,7 @@
 		<echo file="target/build.trig">Done</echo>
 
 		<ant target="runmvn">
-			<property name="args" value="compile" />
+			<property name="args" value="install" />
 		</ant>
 	</target>
 

@@ -27,4 +27,8 @@ public interface CTSubPart {
 
 	void set(CTSubPart subpart);
 
+	String getName();
+
+	void setName(String text);
+
 }
