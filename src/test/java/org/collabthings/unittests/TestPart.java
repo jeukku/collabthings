@@ -24,6 +24,7 @@ public final class TestPart extends CTTestCase {
 		//
 		CTPart part = new CTPartImpl(env);
 		part.setName("testing changing name");
+		part.setShortname("testshortname");
 		part.save();
 		//
 		CTBinaryModel m = part.newBinaryModel();
@@ -33,6 +34,7 @@ public final class TestPart extends CTTestCase {
 		//
 		CTSubPart subpart = part.newSubPart();
 		subpart.getPart();
+		subpart.setName("subpartname");
 		//
 		part.save();
 		part.publish();
@@ -49,6 +51,10 @@ public final class TestPart extends CTTestCase {
 		CTSubPart bsubpart = bpart.getSubParts().get(0);
 		assertEquals(bsubpart.getPart().getID(), subpart.getPart().getID());
 		assertEquals(subpart.toString(), bsubpart.toString());
+
+		assertTrue(bsubpart.getNamePath(), bsubpart.getNamePath().indexOf("testshortname") == 0);
+		assertTrue(bsubpart.getNamePath(), bsubpart.getNamePath().indexOf("subpartname") > 0);
+
 		//
 		assertEquals(bpart.getObject().toText(),
 				benv.getObjectFactory().getPart(bpart.getID().getStringID()).getObject().toText());
