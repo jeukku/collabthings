@@ -38,7 +38,7 @@ public final class CTSubPartImpl implements CTSubPart {
 	}
 
 	public String getNamePath() {
-		return part.getShortname() + "->" + name;
+		return parent.getShortname() + "->" + name;
 	}
 
 	public String getName() {

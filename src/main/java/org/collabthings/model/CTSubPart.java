@@ -31,4 +31,6 @@ public interface CTSubPart {
 
 	void setName(String text);
 
+	String getNamePath();
+
 }
