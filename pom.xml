@@ -218,21 +218,6 @@
 			<version>1.5.3-SNAPSHOT</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.lwjgl/lwjgl-platform -->
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-platform</artifactId>
-			<version>3.0.0</version>
-			<type>pom</type>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.lwjgl/lwjgl -->
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-
 	</dependencies>
 
 	<repositories>
