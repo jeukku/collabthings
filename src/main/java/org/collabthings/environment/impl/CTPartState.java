@@ -1,6 +1,6 @@
 package org.collabthings.environment.impl;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.collabthings.environment.CTRunEnvironment;
@@ -59,7 +59,7 @@ public class CTPartState implements CTRuntimeObject {
 
 	public void addListener(CTPartStateListener l) {
 		if (listeners == null) {
-			listeners = new LinkedList<CTPartState.CTPartStateListener>();
+			listeners = new ArrayList<CTPartState.CTPartStateListener>();
 		}
 		listeners.add(l);
 	}

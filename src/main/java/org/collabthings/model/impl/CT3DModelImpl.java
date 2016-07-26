@@ -12,7 +12,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Enumeration;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -52,7 +52,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	private BinaryID binaryid;
 	private final CTClient env;
 	private final LLog log;
-	private final List<Binary> childbinaries = new LinkedList<Binary>();
+	private final List<Binary> childbinaries = new ArrayList<Binary>();
 	private double scale = 1.0;
 	private LVector translation = new LVector();
 	private String type;
@@ -321,7 +321,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 
 	private String findSpecificationsResources() throws IOException {
 		Enumeration<URL> systemResources = ClassLoader.getSystemResources("specifications");
-		List<String> searchlist = new LinkedList<String>();
+		List<String> searchlist = new ArrayList<String>();
 		while (systemResources.hasMoreElements()) {
 			URL u = systemResources.nextElement();
 			String pathname = u.getFile().toString();

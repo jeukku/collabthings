@@ -2,7 +2,7 @@ package org.collabthings.environment.impl;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,15 +24,15 @@ import waazdoh.common.ObjectID;
 
 public class CTRunEnvironmentImpl implements CTRunEnvironment {
 	private Map<String, String> params = new HashMap<String, String>();
-	private List<CTEnvironmentTask> tasks = new LinkedList<CTEnvironmentTask>();
-	private List<CTEnvironmentTask> runningtasks = new LinkedList<CTEnvironmentTask>();
+	private List<CTEnvironmentTask> tasks = new ArrayList<CTEnvironmentTask>();
+	private List<CTEnvironmentTask> runningtasks = new ArrayList<CTEnvironmentTask>();
 	private Map<String, CTRuntimeObject> objects = new HashMap<>();
 
 	private CTClient client;
 	//
 	private boolean stopped;
 	//
-	private List<RunEnvironmentListener> listeners = new LinkedList<>();
+	private List<RunEnvironmentListener> listeners = new ArrayList<>();
 	private CTEnvironment environment;
 	private String name;
 	//
@@ -67,12 +67,12 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 		po.append("CTRunEnvironment(" + name + ");");
 		//
 		po.append("runningtasks: ");
-		for (CTEnvironmentTask t : new LinkedList<>(runningtasks)) {
+		for (CTEnvironmentTask t : new ArrayList<>(runningtasks)) {
 			po.append(1, "" + t);
 		}
 
 		po.append("tasks: ");
-		for (CTEnvironmentTask t : new LinkedList<>(this.tasks)) {
+		for (CTEnvironmentTask t : new ArrayList<>(this.tasks)) {
 			po.append(1, "" + t);
 		}
 		//
@@ -212,7 +212,7 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 	@Override
 	public List<CTEnvironmentTask> getTasks() {
 		synchronized (tasks) {
-			return new LinkedList<>(tasks);
+			return new ArrayList<>(tasks);
 		}
 	}
 

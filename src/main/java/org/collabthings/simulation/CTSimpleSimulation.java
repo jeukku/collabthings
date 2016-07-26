@@ -1,6 +1,6 @@
 package org.collabthings.simulation;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.collabthings.environment.CTEnvironmentTask;
@@ -21,7 +21,7 @@ public class CTSimpleSimulation implements CTSimulation, RunEnvironmentListener 
 	private boolean allsuccess = true;
 	private CTStepRunner runner;
 	//
-	private List<CTRuntimeEvent> events = new LinkedList<CTRuntimeEvent>();
+	private List<CTRuntimeEvent> events = new ArrayList<CTRuntimeEvent>();
 	private boolean done;
 
 	public CTSimpleSimulation(CTRunEnvironment runenv) {

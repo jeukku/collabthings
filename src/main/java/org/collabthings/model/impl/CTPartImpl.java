@@ -1,7 +1,7 @@
 package org.collabthings.model.impl;
 
 import java.io.File;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.collabthings.CTClient;
@@ -32,7 +32,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	CTClient env;
 
-	private List<CTSubPart> subparts = new LinkedList<>();
+	private List<CTSubPart> subparts = new ArrayList<>();
 	private CTBoundingBox boundingbox = new CTBoundingBox(new LVector(), new LVector());
 	private CTMaterial material = new CTMaterialImpl();
 
@@ -84,7 +84,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			b.addToList("parts", bpart);
 		}
 	}
-
+;
 	@Override
 	public synchronized boolean parse(WObject bean) {
 		LLog.getLogger(this).info("Loading " + bean);
@@ -203,9 +203,9 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				model.save();
 			}
 
-			for (CTSubPart subpart : this.subparts) {
+			subparts.parallelStream().forEach(subpart -> {
 				subpart.save();
-			}
+			});
 
 			getServiceObject().save();
 		}
@@ -219,9 +219,9 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				model.publish();
 			}
 
-			for (CTSubPart subpart : this.subparts) {
+			subparts.parallelStream().forEach(subpart -> {
 				subpart.publish();
-			}
+			});
 
 			getServiceObject().publish();
 
@@ -254,7 +254,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	@Override
 	public synchronized List<CTSubPart> getSubParts() {
-		return new LinkedList<>(subparts);
+		return new ArrayList<>(subparts);
 	}
 
 	public boolean importModel(File file) {

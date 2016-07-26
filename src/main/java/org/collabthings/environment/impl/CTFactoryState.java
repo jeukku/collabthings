@@ -3,7 +3,7 @@ package org.collabthings.environment.impl;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,8 +38,8 @@ public class CTFactoryState implements CTRuntimeObject {
 	private final String name;
 
 	private Set<CTToolState> tools = new HashSet<CTToolState>();
-	private List<CTToolUser> toolusers = new LinkedList<CTToolUser>();
-	private List<CTFactoryState> factories = new LinkedList<>();
+	private List<CTToolUser> toolusers = new ArrayList<CTToolUser>();
+	private List<CTFactoryState> factories = new ArrayList<>();
 	private Set<CTRuntimeStepper> steppers = new HashSet<>();
 	private Map<String, String> params = new HashMap<>();
 	private Set<CTPartState> parts = new HashSet<>();
@@ -281,7 +281,7 @@ public class CTFactoryState implements CTRuntimeObject {
 	}
 
 	private CTToolUser getAvailableToolUser(CTToolState toolstate, LVector l) {
-		LinkedList<CTToolUser> ts = new LinkedList<CTToolUser>(toolusers);
+		ArrayList<CTToolUser> ts = new ArrayList<CTToolUser>(toolusers);
 		ts.sort(new Comparator<CTToolUser>() {
 			@Override
 			public int compare(CTToolUser a, CTToolUser b) {
@@ -306,7 +306,7 @@ public class CTFactoryState implements CTRuntimeObject {
 	}
 
 	public List<CTToolUser> getToolUsers() {
-		return new LinkedList<>(toolusers);
+		return new ArrayList<>(toolusers);
 	}
 
 	public CTRunEnvironment getRunEnvironment() {
@@ -408,7 +408,7 @@ public class CTFactoryState implements CTRuntimeObject {
 	}
 
 	public List<CTFactoryState> getFactories() {
-		return new LinkedList<CTFactoryState>(this.factories);
+		return new ArrayList<CTFactoryState>(this.factories);
 	}
 
 	public LVector getVector(String name) {

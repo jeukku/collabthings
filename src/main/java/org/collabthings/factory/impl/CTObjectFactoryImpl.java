@@ -1,7 +1,7 @@
 package org.collabthings.factory.impl;
 
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -30,14 +30,14 @@ import waazdoh.common.vo.ObjectVO;
 public final class CTObjectFactoryImpl implements CTObjectFactory {
 
 	private CTClient client;
-	private List<CTPartImpl> parts = new LinkedList<>();
-	private List<CTToolImpl> tools = new LinkedList<>();
-	private List<CTFactoryImpl> factories = new LinkedList<>();
-	private List<CT3DModelImpl> models = new LinkedList<>();
-	private List<CTScriptImpl> scripts = new LinkedList<>();
-	private List<CTRunEnvironmentBuilder> runtimebuilders = new LinkedList<>();
-	private List<CTPartBuilder> partbuilders = new LinkedList<>();
-	private List<CTOpenSCAD> openscads = new LinkedList<>();
+	private List<CTPartImpl> parts = new ArrayList<>();
+	private List<CTToolImpl> tools = new ArrayList<>();
+	private List<CTFactoryImpl> factories = new ArrayList<>();
+	private List<CT3DModelImpl> models = new ArrayList<>();
+	private List<CTScriptImpl> scripts = new ArrayList<>();
+	private List<CTRunEnvironmentBuilder> runtimebuilders = new ArrayList<>();
+	private List<CTPartBuilder> partbuilders = new ArrayList<>();
+	private List<CTOpenSCAD> openscads = new ArrayList<>();
 
 	private LLog log = LLog.getLogger(this);
 
@@ -177,7 +177,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	@Override
 	public CTPartImpl getPart(final MStringID partid) {
 		synchronized (parts) {
-			LinkedList<CTPartImpl> ps = new LinkedList<CTPartImpl>(parts);
+			ArrayList<CTPartImpl> ps = new ArrayList<CTPartImpl>(parts);
 
 			for (CTPartImpl part : ps) {
 				if (part.getID() == null) {

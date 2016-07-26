@@ -1,6 +1,6 @@
 package org.collabthings.util;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -8,7 +8,7 @@ public class PrintOut {
 	public static final int INDENT = 1;
 	public static final int INDENT2 = 2;
 
-	private List<Line> lines = new LinkedList<Line>();
+	private List<Line> lines = new ArrayList<Line>();
 
 	public void append(String string) {
 		append(0, string);

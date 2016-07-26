@@ -1,7 +1,7 @@
 package org.collabthings.environment.impl;
 
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +58,7 @@ public class CTPool {
 		log.info("Adding part " + p + " to pool " + pool);
 		List<CTPart> list = parts.get(pool);
 		if (list == null) {
-			list = new LinkedList<CTPart>();
+			list = new ArrayList<CTPart>();
 			parts.put(pool, list);
 		}
 		list.add(p);
