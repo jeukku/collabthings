@@ -1,6 +1,7 @@
 package org.collabthings.model;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.collabthings.math.LVector;
@@ -23,7 +24,7 @@ public interface CTPart extends CTObject {
 
 	String getShortname();
 
-	boolean importModel(File file);
+	boolean importModel(File file) throws IOException;
 
 	void resetModel();
 

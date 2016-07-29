@@ -1,6 +1,7 @@
 package org.collabthings.model.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -257,7 +258,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		return new ArrayList<>(subparts);
 	}
 
-	public boolean importModel(File file) {
+	public boolean importModel(File file) throws IOException {
 		return getModel().importModel(file);
 	}
 

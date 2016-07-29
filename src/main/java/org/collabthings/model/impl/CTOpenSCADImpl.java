@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
 
 import org.collabthings.CTClient;
@@ -112,8 +115,15 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	}
 
 	@Override
-	public boolean importModel(File file) {
-		throw new RuntimeException("not supported");
+	public boolean importModel(File file) throws IOException {
+		StringBuffer b = new StringBuffer();
+		Files.readAllLines(Paths.get(file.getAbsolutePath())).forEach(l -> {
+			b.append(l);
+			b.append("\n");
+		});
+
+		setScript(b.toString());
+		return true;
 	}
 
 	@Override
