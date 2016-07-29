@@ -167,8 +167,6 @@ public final class CTClientImpl implements CTClient {
 
 	@Override
 	public void errorEvent(String error, Exception e) {
-		errorlisteners.stream().forEach((l) -> {
-			l.error(error, e);
-		});
+		errorlisteners.stream().forEach(l -> l.error(error, e));
 	}
 }
