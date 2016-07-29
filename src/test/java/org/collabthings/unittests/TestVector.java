@@ -35,7 +35,8 @@ public final class TestVector extends CTTestCase {
 		LVector v = new LVector(1, 2, 3);
 		WObject w = v.getBean();
 		String t = w.toText();
-		assertTrue(t, t.split("\n").length < 2);
+		int length = t.split("\n").length;
+		assertTrue("lines in " + t + " is " + length, length == 3);
 	}
 
 	public void testSub() {
