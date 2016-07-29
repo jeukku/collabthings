@@ -7,8 +7,6 @@ import org.collabthings.CTErrorListener;
 import org.collabthings.CTTestCase;
 import org.xml.sax.SAXException;
 
-import waazdoh.common.vo.AppLoginVO;
-
 public final class TestClient extends CTTestCase {
 
 	public void testErrorEvents() throws IOException, SAXException {
