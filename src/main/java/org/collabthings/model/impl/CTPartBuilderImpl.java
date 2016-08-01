@@ -34,6 +34,7 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 		this.client = client;
 		o = new ServiceObject(BEANNAME, client.getClient(), this, client.getVersion(), client.getPrefix());
 		e = new CTEnvironmentImpl(client);
+		script = new CTScriptImpl(client);
 	}
 
 	@Override

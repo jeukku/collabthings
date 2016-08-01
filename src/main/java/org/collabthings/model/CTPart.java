@@ -40,4 +40,8 @@ public interface CTPart extends CTObject {
 
 	void removeSubPart(CTSubPart subpart);
 
+	CTPartBuilder getBuilder();
+
+	CTPartBuilder newBuilder();
+
 }

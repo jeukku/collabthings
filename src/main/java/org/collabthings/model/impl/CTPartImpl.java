@@ -12,6 +12,7 @@ import org.collabthings.model.CTMaterial;
 import org.collabthings.model.CTModel;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
+import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.util.LLog;
 
@@ -26,6 +27,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private static final String VALUENAME_NAME = "name";
 	private static final String VALUENAME_MODELID = "id";
 	private static final String VALUENAME_SHORTNAME = "shortname";
+	private static final String VALIENAME_BUILDERID = "builder";
 	//
 	private ServiceObject o;
 	private String name = "part";
@@ -38,6 +40,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private CTMaterial material = new CTMaterialImpl();
 
 	private CTModel model;
+	private CTPartBuilder builder;
 
 	public CTPartImpl(final CTClient nenv) {
 		this.env = nenv;
@@ -66,6 +69,10 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			md.addValue("type", model.getModelType());
 		}
 
+		if (builder != null) {
+			b.addValue(VALIENAME_BUILDERID, builder.getID().toString());
+		}
+
 		b.add("material", material.getBean());
 
 		if (getBoundingBox() != null) {
@@ -84,8 +91,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			((CTSubPartImpl) part).getBean(bpart);
 			b.addToList("parts", bpart);
 		}
-	}
-;
+	};
+
 	@Override
 	public synchronized boolean parse(WObject bean) {
 		LLog.getLogger(this).info("Loading " + bean);
@@ -96,6 +103,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			setShortname(bean.getValue(VALUENAME_SHORTNAME));
 
 			parseModel(bean.get("model"));
+			parseBuilder(bean.getValue(VALIENAME_BUILDERID));
 
 			material = new CTMaterialImpl(bean.get("material"));
 
@@ -124,6 +132,12 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		} else {
 			LLog.getLogger(this).info("No content info " + bean);
 			return false;
+		}
+	}
+
+	private void parseBuilder(String pbid) {
+		if (pbid != null) {
+			builder = this.env.getObjectFactory().getPartBuilder(new MStringID(pbid));
 		}
 	}
 
@@ -190,6 +204,17 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	@Override
+	public CTPartBuilder getBuilder() {
+		return builder;
+	}
+
+	@Override
+	public CTPartBuilder newBuilder() {
+		builder = new CTPartBuilderImpl(env);
+		return builder;
+	}
+
+	@Override
 	public boolean isReady() {
 		if (getModel() != null && !getModel().isReady()) {
 			return false;
@@ -202,6 +227,10 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		if (getServiceObject().hasChanged()) {
 			if (model != null) {
 				model.save();
+			}
+
+			if (builder != null) {
+				builder.save();
 			}
 
 			subparts.parallelStream().forEach(subpart -> {
@@ -218,6 +247,10 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 			if (model != null) {
 				model.publish();
+			}
+
+			if (builder != null) {
+				builder.publish();
 			}
 
 			subparts.parallelStream().forEach(subpart -> {
