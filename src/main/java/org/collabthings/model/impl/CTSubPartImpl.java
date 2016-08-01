@@ -1,6 +1,7 @@
 package org.collabthings.model.impl;
 
 import org.collabthings.CTClient;
+import org.collabthings.math.CTMath;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
 import org.collabthings.model.CTPart;
@@ -146,12 +147,12 @@ public final class CTSubPartImpl implements CTSubPart {
 	}
 
 	public double getAngle() {
-		return angle;
+		return CTMath.limitAngle(angle);
 	}
 
 	@Override
 	public void setAngle(double angle) {
-		this.angle = angle;
+		this.angle = CTMath.limitAngle(angle);
 	}
 
 	@Override

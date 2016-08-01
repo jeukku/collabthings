@@ -71,8 +71,8 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		b.append("// Version " + env.getVersion() + "\n");
 		b.append("color(\"red\")\n");
 		b.append("  rotate_extrude()\n");
-		b.append("    translate([1, 0])\n");
-		b.append("      square(1);\n");
+		b.append("    translate([1000, 0])\n");
+		b.append("      square(400);\n");
 		setScript(b.toString());
 
 		model = new CT3DModelImpl(env);

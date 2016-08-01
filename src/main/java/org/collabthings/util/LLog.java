@@ -31,7 +31,7 @@ public class LLog {
 	}
 
 	public void fine(String string) {
-		log.info(getLine(string));
+		log.fine(getLine(string));
 	}
 
 	public LLog instance(Object o) {
