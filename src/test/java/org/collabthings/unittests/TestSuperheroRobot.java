@@ -10,11 +10,11 @@ import org.collabthings.environment.impl.CTRunEnvironmentImpl;
 import org.collabthings.environment.impl.CTToolState;
 import org.collabthings.environment.impl.CTToolUser;
 import org.collabthings.environment.impl.ReallySimpleSuperheroRobot;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTFactory;
+import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.model.impl.CTToolImpl;
-import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.xml.sax.SAXException;
 
 import waazdoh.common.MTimedFlag;
@@ -32,12 +32,12 @@ public final class TestSuperheroRobot extends CTTestCase {
 		CTToolState ctToolState = new CTToolState("test", rune, new CTToolImpl(e), null);
 		robot.setTool(ctToolState);
 
-		final MTimedFlag flag = new MTimedFlag(3000);
+		final MTimedFlag flag = new MTimedFlag(3000000);
 
 		new Thread(() -> {
 			try {
 				while (rune.isRunning() && !flag.isTriggered()) {
-					robot.step(10);
+					robot.step(0.10);
 				}
 			} finally {
 				rune.stop();
@@ -45,11 +45,11 @@ public final class TestSuperheroRobot extends CTTestCase {
 			}
 		}).start();
 
-		LVector targetlocation = new LVector(10, 0, 0);
-		robot.move(targetlocation, new LVector(0, 1, 0), Math.PI / 2);
+		Vector3f targetlocation = new Vector3f(10, 0, 0);
+		robot.move(targetlocation, new Vector3f(0, 1, 0), Math.PI / 2);
 
 		assertTrue("" + targetlocation + " " + robot.getOrientation().getLocation(),
-				targetlocation.getSub(robot.getOrientation().getLocation()).length() < MAX_DISTANCE);
+				targetlocation.subtract(robot.getOrientation().getLocation()).length() < MAX_DISTANCE);
 
 		rune.stop();
 	}
@@ -58,7 +58,7 @@ public final class TestSuperheroRobot extends CTTestCase {
 		final CTClient c = getNewClient();
 		assertNotNull(c);
 
-		LVector spawnlocation = new LVector(10, 10, 10);
+		Vector3f spawnlocation = new Vector3f(10, 10, 10);
 
 		CTFactory f = new CTFactoryImpl(c);
 		f.setToolUserSpawnLocation(spawnlocation);
@@ -69,7 +69,7 @@ public final class TestSuperheroRobot extends CTTestCase {
 		assertFalse(state.getToolUsers().isEmpty());
 		CTToolUser user = state.getToolUsers().get(0);
 		assertNotNull(user);
-		LVector l = user.getOrientation().getLocation();
+		Vector3f l = user.getOrientation().getLocation();
 		assertReallyClose(spawnlocation, l);
 	}
 }

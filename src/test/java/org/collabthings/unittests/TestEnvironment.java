@@ -6,10 +6,10 @@ import javax.script.ScriptException;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTScript;
-import org.collabthings.model.impl.CTScriptImpl;
 import org.collabthings.model.impl.CTEnvironmentImpl;
+import org.collabthings.model.impl.CTScriptImpl;
 import org.xml.sax.SAXException;
 
 public final class TestEnvironment extends CTTestCase {
@@ -104,13 +104,13 @@ public final class TestEnvironment extends CTTestCase {
 	public void testVectorParameters() {
 		CTClient c = getNewClient();
 		CTEnvironmentImpl e = new CTEnvironmentImpl(c);
-		LVector LVector3d = new LVector(1, 1, 1);
+		Vector3f Vector3f3d = new Vector3f(1, 1, 1);
 		String vname = "test";
-		e.setVectorParameter(vname, LVector3d);
+		e.setVectorParameter(vname, Vector3f3d);
 		e.save();
 		CTEnvironmentImpl benv = new CTEnvironmentImpl(c, e.getID().getStringID());
 		assertNotNull(benv.getVectorParameter(vname));
-		assertEquals(LVector3d, benv.getVectorParameter(vname));
+		assertEquals(Vector3f3d, benv.getVectorParameter(vname));
 
 	}
 }

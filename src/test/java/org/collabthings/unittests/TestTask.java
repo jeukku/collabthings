@@ -7,8 +7,8 @@ import org.collabthings.CTTestCase;
 import org.collabthings.environment.impl.CTRunEnvironmentImpl;
 import org.collabthings.environment.impl.CTScriptRunnerImpl;
 import org.collabthings.environment.impl.CTTaskImpl;
-import org.collabthings.model.impl.CTScriptImpl;
 import org.collabthings.model.impl.CTEnvironmentImpl;
+import org.collabthings.model.impl.CTScriptImpl;
 import org.xml.sax.SAXException;
 
 public final class TestTask extends CTTestCase {

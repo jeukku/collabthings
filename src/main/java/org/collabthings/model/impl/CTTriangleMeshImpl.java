@@ -3,14 +3,14 @@ package org.collabthings.model.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTTriangle;
 import org.collabthings.model.CTTriangleMesh;
 
 public class CTTriangleMeshImpl implements CTTriangleMesh {
 
 	private List<CTTriangle> ts = new ArrayList<CTTriangle>();
-	private List<LVector> vs = new ArrayList<LVector>();
+	private List<Vector3f> vs = new ArrayList<Vector3f>();
 
 	@Override
 	public List<CTTriangle> getTriangles() {
@@ -18,7 +18,7 @@ public class CTTriangleMeshImpl implements CTTriangleMesh {
 	}
 
 	@Override
-	public List<LVector> getVectors() {
+	public List<Vector3f> getVectors() {
 		return vs;
 	}
 }

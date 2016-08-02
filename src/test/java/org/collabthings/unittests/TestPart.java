@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTPart;
@@ -39,6 +39,10 @@ public final class TestPart extends CTTestCase {
 		CTSubPart subpart2 = part.newSubPart();
 		subpart2.set(subpart);
 		subpart.setName("subpartname2");
+	
+		CTSubPart subsub = subpart2.getPart().newSubPart();
+		subsub.getPart().newSubPart().setName("thesub");
+		 
 		//
 		part.save();
 		part.publish();
@@ -89,10 +93,10 @@ public final class TestPart extends CTTestCase {
 		CTPartImpl p = new CTPartImpl(e);
 		CTSubPart subpart = p.newSubPart();
 		subpart.setPart(new CTPartImpl(e));
-		subpart.setOrientation(new LVector(10, 10, 10), new LVector(0, 1, 0), 1);
+		subpart.setOrientation(new Vector3f(10, 10, 10), new Vector3f(0, 1, 0), 1);
 		//
-		assertEquals(subpart.getLocation().toString(), new LVector(10, 10, 10).toString());
-		assertEquals(subpart.getNormal().toString(), new LVector(0, 1, 0).toString());
+		assertEquals(subpart.getLocation().toString(), new Vector3f(10, 10, 10).toString());
+		assertEquals(subpart.getNormal().toString(), new Vector3f(0, 1, 0).toString());
 
 		return p;
 	}
@@ -114,8 +118,8 @@ public final class TestPart extends CTTestCase {
 	public void testBoundingBox() {
 		CTClient c = getNewClient();
 		CTPart p = new CTPartImpl(c);
-		LVector av = new LVector(-1, -1, -1);
-		LVector bv = new LVector(1, 1, 1);
+		Vector3f av = new Vector3f(-1, -1, -1);
+		Vector3f bv = new Vector3f(1, 1, 1);
 		p.setBoundingBox(av, bv);
 		p.publish();
 		//
@@ -153,7 +157,7 @@ public final class TestPart extends CTTestCase {
 		for (int i = 0; i < 10; i++) {
 			CTSubPart newSubPart = a.newSubPart();
 			newSubPart.setPart(c);
-			newSubPart.setOrientation(new LVector(i, i, i), new LVector(i, i, i), 1);
+			newSubPart.setOrientation(new Vector3f(i, i, i), new Vector3f(i, i, i), 1);
 		}
 	}
 }

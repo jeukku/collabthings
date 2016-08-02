@@ -14,8 +14,8 @@ import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
-import org.collabthings.model.impl.CTToolImpl;
 import org.collabthings.model.impl.CTEnvironmentImpl;
+import org.collabthings.model.impl.CTToolImpl;
 import org.xml.sax.SAXException;
 
 public final class TestTool extends CTTestCase {

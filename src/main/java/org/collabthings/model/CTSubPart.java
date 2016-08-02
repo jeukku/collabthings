@@ -1,23 +1,23 @@
 package org.collabthings.model;
 
-import org.collabthings.math.LTransformation;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
+import com.jme3.math.Transform;
 
 public interface CTSubPart {
 
 	CTPart getPart();
 
-	LTransformation getTransformation();
+	Transform getTransformation();
 
-	LVector getLocation();
+	Vector3f getLocation();
 
 	void setPart(CTPart part);
 
-	LVector getNormal();
+	Vector3f getNormal();
 
 	double getAngle();
 
-	void setOrientation(LVector location, LVector normal, double angle);
+	void setOrientation(Vector3f location, Vector3f normal, double angle);
 
 	void setAngle(double angle);
 

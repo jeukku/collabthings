@@ -11,13 +11,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.Enumeration;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import org.collabthings.CTClient;
-import org.collabthings.math.LVector;
+import org.collabthings.CTListener;
+import org.collabthings.math.CTMath;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTModel;
 import org.collabthings.model.CTTriangleMesh;
@@ -26,6 +27,8 @@ import org.collabthings.scene.StlMeshImporter;
 import org.collabthings.scene.X3dModelImporter;
 import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -54,10 +57,11 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	private final LLog log;
 	private final List<Binary> childbinaries = new ArrayList<Binary>();
 	private double scale = 1.0;
-	private LVector translation = new LVector();
+	private Vector3f translation = new Vector3f();
 	private String type;
 
 	private CTTriangleMesh mesh;
+	private boolean disabled;
 
 	public CT3DModelImpl(final CTClient nenv) {
 		this.env = nenv;
@@ -86,7 +90,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		b.addValue(NAME, name);
 		b.addValue(BINARYID, "" + getBinaryID());
 		b.addValue(SCALE, scale);
-		b.add(TRANSLATION, translation.getBean());
+		b.add(TRANSLATION, CTMath.getBean(translation));
 		b.addValue(TYPE, "" + type);
 		//
 		for (Binary binary : childbinaries) {
@@ -102,9 +106,9 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	public boolean parse(WObject bean) {
 		name = bean.getValue("name");
 		binaryid = new BinaryID(bean.getIDValue(BINARYID));
-		
+
 		scale = bean.getDoubleValue(SCALE);
-		translation = new LVector(bean.get(TRANSLATION));
+		translation = CTMath.parseVector(bean.get(TRANSLATION));
 		type = bean.getValue(TYPE);
 		//
 
@@ -456,12 +460,12 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	}
 
 	@Override
-	public LVector getTranslation() {
+	public Vector3f getTranslation() {
 		return translation;
 	}
 
 	@Override
-	public void setTranslation(LVector t) {
+	public void setTranslation(Vector3f t) {
 		translation.set(t);
 	}
 
@@ -502,5 +506,20 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		} else {
 			mesh = new CTTriangleMeshImpl();
 		}
+	}
+
+	@Override
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	@Override
+	public void setDisabled(boolean b) {
+		this.disabled = b;
+	}
+
+	@Override
+	public void addChangeListener(CTListener l) {
+		// TODO Auto-generated method stub
 	}
 }

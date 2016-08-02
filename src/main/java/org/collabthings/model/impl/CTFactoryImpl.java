@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.collabthings.CTClient;
-import org.collabthings.math.LVector;
+import org.collabthings.math.CTMath;
 import org.collabthings.model.CTAttachedFactory;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTBoundingBox;
@@ -16,6 +16,8 @@ import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.util.PrintOut;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -39,9 +41,9 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	private CTEnvironment env;
 	//
 	private Map<String, CTAttachedFactory> factories;
-	private final CTBoundingBox bbox = new CTBoundingBox(new LVector(), new LVector());
+	private final CTBoundingBox bbox = new CTBoundingBox(new Vector3f(), new Vector3f());
 	private CTBinaryModel model;
-	private LVector tooluserspawnlocation = new LVector();
+	private Vector3f tooluserspawnlocation = new Vector3f();
 
 	// used as a proxy
 	private WObject bean;
@@ -53,7 +55,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
 		addScript("start", new CTScriptImpl(client));
-		setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
+		setBoundingBox(new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
 	}
 
 	public boolean load(MStringID id) {
@@ -121,9 +123,9 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 		return org;
 	}
 
-	private void addVectorBean(WObject b, String valuename, LVector v) {
+	private void addVectorBean(WObject b, String valuename, Vector3f v) {
 		if (v != null) {
-			WObject vectorbean = v.getBean();
+			WObject vectorbean = CTMath.getBean(v);
 			b.add(valuename, vectorbean);
 		}
 	}
@@ -136,7 +138,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 
 		WObject beansl = c.get(VALUENAME_SPAWNLOCATION);
 		if (beansl != null) {
-			tooluserspawnlocation = new LVector(beansl);
+			tooluserspawnlocation = CTMath.parseVector(beansl);
 		}
 
 		WObject bbbox = c.get(CTBoundingBox.BEAN_NAME);
@@ -200,7 +202,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	}
 
 	@Override
-	public void setBoundingBox(LVector a, LVector b) {
+	public void setBoundingBox(Vector3f a, Vector3f b) {
 		bbox.set(a, b);
 	}
 
@@ -289,7 +291,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	@Override
 	public CTAttachedFactory addFactory(String string) {
 		CTFactoryImpl childfactory = new CTFactoryImpl(client);
-		childfactory.setBoundingBox(getBoundingBox().getA().getScaled(0.5), getBoundingBox().getB().getScaled(0.5));
+		childfactory.setBoundingBox(getBoundingBox().getA().mult(0.5f), getBoundingBox().getB().mult(0.5f));
 		return addFactory(string, childfactory);
 	}
 
@@ -356,12 +358,12 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	}
 
 	@Override
-	public void setToolUserSpawnLocation(LVector spawnlocation) {
+	public void setToolUserSpawnLocation(Vector3f spawnlocation) {
 		this.tooluserspawnlocation = spawnlocation;
 	}
 
 	@Override
-	public LVector getToolUserSpawnLocation() {
+	public Vector3f getToolUserSpawnLocation() {
 		if (tooluserspawnlocation != null) {
 			return tooluserspawnlocation;
 		} else {

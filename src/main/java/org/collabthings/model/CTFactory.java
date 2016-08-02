@@ -2,7 +2,7 @@ package org.collabthings.model;
 
 import java.util.Set;
 
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.util.PrintOut;
 
 public interface CTFactory extends CTObject {
@@ -33,15 +33,15 @@ public interface CTFactory extends CTObject {
 
 	CTBoundingBox getBoundingBox();
 
-	void setBoundingBox(LVector LVector3d, LVector LVector3d2);
+	void setBoundingBox(Vector3f Vector3f3d, Vector3f Vector3f3d2);
 
 	void setBoundingBox(CTBoundingBox ctBoundingBox);
 
 	void setModel(CTBinaryModel model);
 
-	void setToolUserSpawnLocation(LVector spawnlocation);
+	void setToolUserSpawnLocation(Vector3f spawnlocation);
 
-	LVector getToolUserSpawnLocation();
+	Vector3f getToolUserSpawnLocation();
 
 	PrintOut printOut();
 

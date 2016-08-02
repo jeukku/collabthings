@@ -5,12 +5,13 @@ import java.util.List;
 
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.math.LOrientation;
-import org.collabthings.math.LTransformation;
-import org.collabthings.math.LVector;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTRuntimeObject;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.util.PrintOut;
+
+import com.jme3.math.Transform;
+import com.jme3.math.Vector3f;
 
 public class CTPartState implements CTRuntimeObject {
 	private CTPart part;
@@ -64,11 +65,11 @@ public class CTPartState implements CTRuntimeObject {
 		listeners.add(l);
 	}
 
-	public LVector getLocation() {
-		return orientation.getLocation().copy();
+	public Vector3f getLocation() {
+		return orientation.getLocation().clone();
 	}
 
-	public void setLocation(LVector v) {
+	public void setLocation(Vector3f v) {
 		orientation.getLocation().set(v);
 	}
 
@@ -106,8 +107,8 @@ public class CTPartState implements CTRuntimeObject {
 		return "PartState[" + part + "][" + orientation + "]";
 	}
 
-	public LTransformation getTransformation() {
-		return new LTransformation(orientation);
+	public Transform getTransformation() {
+		return orientation.getTransformation();
 	}
 
 	public static interface CTPartStateListener {

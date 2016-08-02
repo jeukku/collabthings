@@ -1,15 +1,17 @@
 package org.collabthings.model;
 
-import org.collabthings.math.LVector;
+import org.collabthings.math.CTMath;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.common.WObject;
 
 public class CTBoundingBox {
 	public static final String BEAN_NAME = "bbox";
-	private LVector a;
-	private LVector b;
+	private Vector3f a;
+	private Vector3f b;
 
-	public CTBoundingBox(LVector a, LVector b) {
+	public CTBoundingBox(Vector3f a, Vector3f b) {
 		this.a = a;
 		this.b = b;
 	}
@@ -18,29 +20,29 @@ public class CTBoundingBox {
 		set(beanboundingbox);
 	}
 
-	public LVector getA() {
+	public Vector3f getA() {
 		return a;
 	}
 
-	public LVector getB() {
+	public Vector3f getB() {
 		return b;
 	}
 
 	public WObject getBean() {
 		WObject bean = new WObject();
-		WObject beana = a.getBean();
+		WObject beana = CTMath.getBean(a);
 		bean.add("a", beana);
-		WObject beanb = b.getBean();
+		WObject beanb = CTMath.getBean(b);
 		bean.add("b", beanb);
 		return bean;
 	}
 
 	public void set(WObject bbbox) {
-		a = new LVector(bbbox.get("a"));
-		b = new LVector(bbbox.get("b"));
+		a = CTMath.parseVector(bbbox.get("a"));
+		b = CTMath.parseVector(bbbox.get("b"));
 	}
 
-	public void set(LVector a2, LVector b2) {
+	public void set(Vector3f a2, Vector3f b2) {
 		a.set(a2);
 		b.set(b2);
 	}

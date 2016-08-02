@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.collabthings.CTListener;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 
 public interface CTPart extends CTObject {
 
@@ -29,7 +29,7 @@ public interface CTPart extends CTObject {
 
 	void resetModel();
 
-	void setBoundingBox(LVector a, LVector b);
+	void setBoundingBox(Vector3f a, Vector3f b);
 
 	CTBoundingBox getBoundingBox();
 

@@ -3,16 +3,17 @@ package org.collabthings.environment.impl;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.math.LOrientation;
-import org.collabthings.math.LTransformation;
-import org.collabthings.math.LVector;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
+
+import com.jme3.math.Transform;
+import com.jme3.math.Vector3f;
 
 public class ReallySimpleSuperheroRobot implements CTToolUser {
 
 	private static final long WAIT_A_BIT = 20;
 	private static final float MOVING_ORIENTATION_LENGTH_TRIGGER = 0.000000001f;
-	private static final double ORIENTATION_PRINTOUT = 20000;
+	private static final float ORIENTATION_PRINTOUT = 2000;
 	//
 	private final CTRunEnvironment simenv;
 	private CTToolState tool;
@@ -23,18 +24,18 @@ public class ReallySimpleSuperheroRobot implements CTToolUser {
 	//
 	private LLog log = LLog.getLogger(this);
 	//
-	private double orientationprintouttimer = 0;
-	private double speed = 10;
+	private float orientationprintouttimer = 0;
+	private float speed = 10;
 	private final CTFactoryState factory;
 	private CTEvents events = new CTEvents();
 	private long movestarttime;
 	private boolean stopped;
 
-	public ReallySimpleSuperheroRobot(CTRunEnvironment simenv, CTFactoryState factory, LVector norientation) {
+	public ReallySimpleSuperheroRobot(CTRunEnvironment simenv, CTFactoryState factory, Vector3f norientation) {
 		this.simenv = simenv;
 		this.factory = factory;
 		if (norientation != null) {
-			this.orientation.getLocation().set(norientation.copy());
+			this.orientation.getLocation().set(norientation.clone());
 		}
 	}
 
@@ -70,7 +71,7 @@ public class ReallySimpleSuperheroRobot implements CTToolUser {
 	}
 
 	@Override
-	public synchronized void move(LVector l, LVector n, double angle) {
+	public synchronized void move(Vector3f l, Vector3f n, double angle) {
 		targetorientation.getLocation().set(l);
 		events.add(new CTRuntimeEvent(this, "Moving to " + targetorientation, null));
 
@@ -81,14 +82,15 @@ public class ReallySimpleSuperheroRobot implements CTToolUser {
 		log("Target orientation " + targetorientation);
 		log("factory " + this.factory);
 		//
-		while (simenv.isRunning() && !stopped && targetorientation.getLocation().getSub(orientation.getLocation())
-				.length() > MOVING_ORIENTATION_LENGTH_TRIGGER) {
+		float distance = 100;
+		do {
 			try {
 				this.wait(WAIT_A_BIT);
 			} catch (InterruptedException e) {
 				log.error(this, "waitAWhile", e);
 			}
-		}
+			distance = targetorientation.getLocation().subtract(orientation.getLocation()).length();
+		} while (simenv.isRunning() && !stopped && distance > MOVING_ORIENTATION_LENGTH_TRIGGER);
 
 		if (!stopped) {
 			tool.setOrientation(targetorientation.getLocation(), targetorientation.getNormal(),
@@ -129,8 +131,8 @@ public class ReallySimpleSuperheroRobot implements CTToolUser {
 	}
 
 	@Override
-	public LTransformation getTransformation() {
-		return new LTransformation(orientation);
+	public Transform getTransformation() {
+		return orientation.getTransformation();
 	}
 
 	@Override
@@ -143,24 +145,24 @@ public class ReallySimpleSuperheroRobot implements CTToolUser {
 		orientationprintouttimer += dtime;
 
 		if (targetorientation != null) {
-			move(dtime);
+			move((float) dtime);
 		}
 
-		printOut(dtime);
+		printOut((float) dtime);
 	}
 
-	private synchronized void move(double dtime) {
-		LVector vdistance = targetorientation.getLocation().getSub(orientation.getLocation());
-		double distance = vdistance.length();
+	private synchronized void move(float dtime) {
+		Vector3f vdistance = targetorientation.getLocation().subtract(orientation.getLocation());
+		float distance = vdistance.length();
 
-		double dangle = targetorientation.getAngle() - orientation.getAngle();
+		float dangle = (float) (targetorientation.getAngle() - orientation.getAngle());
 		dangle *= dtime * speed;
 		orientation.setAngle(orientation.getAngle() + dangle);
 
-		LVector nnormal = targetorientation.getNormal().getNormalized();
+		Vector3f nnormal = targetorientation.getNormal().normalize();
 
 		// slow moving if orientation is not right
-		double normaldot = nnormal.dot(orientation.getNormal());
+		float normaldot = nnormal.dot(orientation.getNormal());
 		if (normaldot < -0.9) {
 			nnormal.x += nnormal.y;
 			nnormal.y += nnormal.z;
@@ -173,12 +175,13 @@ public class ReallySimpleSuperheroRobot implements CTToolUser {
 			distance *= normaldot;
 		}
 
-		nnormal.scale(dtime * speed);
+		nnormal.multLocal(dtime * speed);
 
-		orientation.getNormal().add(nnormal);
-		orientation.getNormal().normalize();
+		Vector3f n = orientation.getNormal().add(nnormal);
+		n = n.normalize();
+		orientation.getNormal().set(n);
 
-		double maxdistance = dtime * speed;
+		float maxdistance = dtime * speed;
 		if (distance > MOVING_ORIENTATION_LENGTH_TRIGGER) {
 			if (vdistance.length() < maxdistance) {
 				moveToTarget(vdistance, distance, maxdistance);
@@ -190,42 +193,42 @@ public class ReallySimpleSuperheroRobot implements CTToolUser {
 		}
 	}
 
-	private void move(LVector vdistance, double maxdistance) {
-		double distance;
+	private void move(Vector3f vdistance, float maxdistance) {
+		float distance;
 		distance = maxdistance;
 
 		// this is a bit random, but not going straight from a to b.
-		LVector direction = vdistance.getNormalized();
-		double ddot = direction.dot(targetorientation.getNormal());
+		Vector3f direction = vdistance.normalize();
+		float ddot = direction.dot(targetorientation.getNormal());
 		if (ddot > 0) {
-			direction.add(new LVector(direction.y, direction.z, direction.x));
+			direction.addLocal(new Vector3f(direction.y, direction.z, direction.x));
 		} else if (ddot > -0.99) {
-			LVector cross = new LVector();
-			cross.cross(direction, targetorientation.getNormal());
-			direction.add(cross);
+			Vector3f cross = new Vector3f();
+			cross = direction.cross(targetorientation.getNormal());
+			direction.addLocal(cross);
 		}
 
-		direction.normalize();
-		direction.scale(distance);
+		direction.normalizeLocal();
+		direction.multLocal(distance);
 
-		orientation.getLocation().add(direction);
+		orientation.getLocation().addLocal(direction);
 		if (tool != null) {
 			tool.setOrientation(orientation.getLocation(), orientation.getNormal(), orientation.getAngle());
 		}
 	}
 
-	private void moveToTarget(LVector vdistance, double distance, double maxdistance) {
+	private void moveToTarget(Vector3f vdistance, float distance, float maxdistance) {
 		// just move to right direction
-		double scale = 0.8;
+		float scale = 0.8f;
 		if (distance < maxdistance / 10) {
 			// close enough, just go there.
 			scale = 1;
 		}
-		LVector scaled = vdistance.getScaled(scale);
-		orientation.getLocation().add(scaled);
+		Vector3f scaled = vdistance.mult(scale);
+		orientation.getLocation().addLocal(scaled);
 	}
 
-	private void printOut(double dtime) {
+	private void printOut(float dtime) {
 		if (orientationprintouttimer > ORIENTATION_PRINTOUT) {
 			debugInfo(dtime);
 			orientationprintouttimer = 0;
@@ -236,7 +239,7 @@ public class ReallySimpleSuperheroRobot implements CTToolUser {
 		log.info("" + (System.currentTimeMillis() - movestarttime) + "ms -- " + string);
 	}
 
-	private void debugInfo(double dtime) {
+	private void debugInfo(float dtime) {
 		log("tool:" + tool + " orientation " + orientation + " step:" + dtime + " targetorientation:"
 				+ targetorientation);
 	}

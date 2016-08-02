@@ -8,11 +8,12 @@ import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
-import org.collabthings.math.LVector;
 import org.collabthings.model.CTTriangle;
 import org.collabthings.model.CTTriangleMesh;
 import org.collabthings.model.impl.CTTriangleMeshImpl;
 import org.collabthings.util.LLog;
+
+import com.jme3.math.Vector3f;
 
 public class StlMeshImporter {
 
@@ -30,24 +31,24 @@ public class StlMeshImporter {
 	public CTTriangleMesh getImport() {
 		String c = this.content;
 		if (c != null) {
-			LVector n = new LVector(0, 1, 0);
+			Vector3f n = new Vector3f(0, 1, 0);
 			CTTriangleMeshImpl mesh = new CTTriangleMeshImpl();
-			List<LVector> vectors = mesh.getVectors();
+			List<Vector3f> vectors = mesh.getVectors();
 
 			StringTokenizer st = new StringTokenizer(c);
-			Stack<LVector> s = new Stack<LVector>();
+			Stack<Vector3f> s = new Stack<Vector3f>();
 			while (st.hasMoreTokens()) {
 				String t = st.nextToken();
 				if ("vertex".equals(t)) {
-					double sx = Double.parseDouble(st.nextToken());
-					double sy = Double.parseDouble(st.nextToken());
-					double sz = Double.parseDouble(st.nextToken());
-					s.push(new LVector(sx, sy, sz));
+					float sx = Float.parseFloat(st.nextToken());
+					float sy = Float.parseFloat(st.nextToken());
+					float sz = Float.parseFloat(st.nextToken());
+					s.push(new Vector3f(sx, sy, sz));
 				} else if ("normal".equals(t)) {
-					double sx = Double.parseDouble(st.nextToken());
-					double sy = Double.parseDouble(st.nextToken());
-					double sz = Double.parseDouble(st.nextToken());
-					n = new LVector(sx, sy, sz);
+					float sx = Float.parseFloat(st.nextToken());
+					float sy = Float.parseFloat(st.nextToken());
+					float sz = Float.parseFloat(st.nextToken());
+					n = new Vector3f(sx, sy, sz);
 				} else if ("endfacet".equals(t)) {
 					int index = vectors.size();
 					vectors.add(s.pop());

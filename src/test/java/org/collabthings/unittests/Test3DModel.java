@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.impl.CT3DModelImpl;
 import org.xml.sax.SAXException;
@@ -26,7 +26,7 @@ public final class Test3DModel extends CTTestCase {
 		//
 		CTBinaryModel am = new CT3DModelImpl(env);
 		am.setName("TEST");
-		am.setTranslation(new LVector(1, 0, 1));
+		am.setTranslation(new Vector3f(1, 0, 1));
 		am.setScale(10);
 
 		am.publish();

@@ -4,7 +4,7 @@ import org.collabthings.CTToolException;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.math.LOrientation;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTRuntimeObject;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.CTValues;
@@ -86,11 +86,11 @@ public class CTToolState implements CTRuntimeObject {
 		}
 	}
 
-	public void moveTo(LVector l) {
+	public void moveTo(Vector3f l) {
 		moveTo(l, o.getNormal(), o.getAngle());
 	}
 
-	public void moveTo(LVector l, LVector n, double angle) {
+	public void moveTo(Vector3f l, Vector3f n, double angle) {
 		log.info("moveTo " + l + " " + n);
 		this.factory.requestMove(this, l, n, angle);
 	}
@@ -100,11 +100,11 @@ public class CTToolState implements CTRuntimeObject {
 		return o;
 	}
 
-	public LVector getLocation() {
+	public Vector3f getLocation() {
 		return o.getLocation();
 	}
 
-	public void setOrientation(LVector l, LVector n, double angle) {
+	public void setOrientation(Vector3f l, Vector3f n, double angle) {
 		o.getLocation().set(l);
 		o.getNormal().set(n);
 		o.setAngle(angle);

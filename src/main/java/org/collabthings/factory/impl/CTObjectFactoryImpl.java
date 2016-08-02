@@ -1,8 +1,10 @@
 package org.collabthings.factory.impl;
 
-import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.collabthings.CTClient;
@@ -42,6 +44,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	private LLog log = LLog.getLogger(this);
 
 	private Set<CTInfo> infolisteners = new HashSet<CTInfo>();
+	private Map<MStringID, MStringID> errorids = new HashMap<>();
 
 	public CTObjectFactoryImpl(final CTClient nenv) {
 		this.client = nenv;
@@ -179,6 +182,52 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 		synchronized (parts) {
 			ArrayList<CTPartImpl> ps = new ArrayList<CTPartImpl>(parts);
 
+			CTPartImpl part = searchPart(partid, ps);
+			if (part == null) {
+				MStringID errorid = errorids.get(partid);
+				part = searchPart(errorid, ps);
+				if (part != null) {
+					log.info("Found a part with errorid " + errorid + " org:" + partid);
+				}
+			}
+
+			if (part != null) {
+				return part;
+			} else {
+				log.info("part not found with id " + partid);
+				ps.stream().forEach(p -> {
+					log.info("stored " + p.getID());
+				});
+
+				part = new CTPartImpl(client);
+				if (part.load(partid)) {
+					log.info("Load part " + part);
+					if (!part.getID().equals(partid)) {
+						String message = "Loaded part doesn't have the id requested. Requested:" + partid + " result:"
+								+ part.getID();
+						message += "\nObject:\n" + part.getObject().toText();
+						log.info(message);
+
+						errorids.put(partid, part.getID().getStringID());
+					}
+
+					CTPartImpl storedpart = searchPart(part.getID().getStringID(), ps);
+					if (storedpart == null) {
+						parts.add(part);
+						return part;
+					}
+					return storedpart;
+				} else {
+					log.info("Failed to load part " + partid);
+					log.info("Current parts " + ps);
+					return null;
+				}
+			}
+		}
+	}
+
+	private CTPartImpl searchPart(final MStringID partid, ArrayList<CTPartImpl> ps) {
+		if (partid != null) {
 			for (CTPartImpl part : ps) {
 				if (part.getID() == null) {
 					parts.remove(part);
@@ -186,21 +235,9 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 					return part;
 				}
 			}
-
-			CTPartImpl part = new CTPartImpl(client);
-			if (part.load(partid)) {
-				log.info("Load part " + part);
-				parts.add(part);
-				return part;
-			} else {
-				log.info("Failed to load part " + partid);
-				log.info("Current parts " + ps);
-				for (CTPartImpl p : ps) {
-					log.info("Part " + p.getObject());
-				}
-				return null;
-			}
 		}
+
+		return null;
 	}
 
 	@Override
@@ -222,8 +259,17 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			}
 			CT3DModelImpl model = new CT3DModelImpl(client);
 			model.load(modelid);
-			models.add(model);
-			return model;
+
+			if (model.getID().equals(modelid)) {
+				models.add(model);
+				return model;
+			} else {
+				String message = "Loaded model doesn't have the id requested. Requested:" + modelid + " result:"
+						+ model.getID();
+				message += "\nObject:\n" + model.getObject().toText();
+				log.info(message);
+				throw new RuntimeException(message);
+			}
 		}
 	}
 
@@ -239,8 +285,16 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 
 		CTOpenSCADImpl scad = new CTOpenSCADImpl(client);
 		scad.load(scadid);
-		openscads.add(scad);
-		return scad;
+		if (!scad.getID().equals(scadid)) {
+			String message = "Loaded model doesn't have the id requested. Requested:" + scadid + " result:"
+					+ scad.getID();
+			message += "\nObject:\n" + scad.getObject().toText();
+			log.info(message);
+			return null;
+		} else {
+			openscads.add(scad);
+			return scad;
+		}
 	}
 
 	@Override

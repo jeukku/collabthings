@@ -6,12 +6,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.collabthings.CTClient;
-import org.collabthings.math.LVector;
+import org.collabthings.math.CTMath;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -33,7 +35,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	private Map<String, CTScript> scripts;
 	private Map<String, CTTool> tools = new HashMap<>();
 	private Map<String, String> parameters = new HashMap<>();
-	private Map<String, LVector> vparameters = new HashMap<>();
+	private Map<String, Vector3f> vparameters = new HashMap<>();
 	private LLog log;
 
 	private String name = "env";
@@ -109,10 +111,10 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	private void getVectorParametersBean(WObject b) {
 		Set<String> names = vparameters.keySet();
 		for (String string : names) {
-			LVector v = getVectorParameter(string);
+			Vector3f v = getVectorParameter(string);
 			WObject sbean = new WObject();
 			sbean.addValue("name", string);
-			sbean.add("value", v.getBean());
+			sbean.add("value", CTMath.getBean(v));
 			b.addToList(VALUENAME_VPARAMS, sbean);
 		}
 	}
@@ -188,7 +190,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 		for (WObject b : pbeans) {
 			String name = b.getValue("name");
 			WObject value = b.get("value");
-			LVector v = new LVector(value);
+			Vector3f v = CTMath.parseVector(value);
 			vparameters.put(name, v);
 		}
 	}
@@ -285,12 +287,12 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	}
 
 	@Override
-	public void setVectorParameter(String string, LVector v) {
-		vparameters.put(string, new LVector(v));
+	public void setVectorParameter(String string, Vector3f v) {
+		vparameters.put(string, new Vector3f(v));
 	}
 
 	@Override
-	public LVector getVectorParameter(String string) {
+	public Vector3f getVectorParameter(String string) {
 		return vparameters.get(string);
 	}
 

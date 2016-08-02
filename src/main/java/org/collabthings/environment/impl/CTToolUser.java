@@ -1,12 +1,12 @@
 package org.collabthings.environment.impl;
 
-import org.collabthings.math.LTransformation;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
+import com.jme3.math.Transform;
 import org.collabthings.model.CTRuntimeObject;
 
 public interface CTToolUser extends CTRuntimeObject {
 
-	void move(LVector l, LVector n, double angle);
+	void move(Vector3f l, Vector3f n, double angle);
 
 	void setTool(CTToolState ctToolState);
 
@@ -16,6 +16,6 @@ public interface CTToolUser extends CTRuntimeObject {
 
 	CTToolState getTool();
 
-	LTransformation getTransformation();
+	Transform getTransformation();
 
 }

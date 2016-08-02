@@ -1,9 +1,9 @@
 package org.collabthings.environment.impl;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,8 +13,6 @@ import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.math.LOrientation;
-import org.collabthings.math.LTransformation;
-import org.collabthings.math.LVector;
 import org.collabthings.model.CTAttachedFactory;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
@@ -25,6 +23,9 @@ import org.collabthings.model.CTTool;
 import org.collabthings.model.CTValues;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
+
+import com.jme3.math.Transform;
+import com.jme3.math.Vector3f;
 
 import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MStringID;
@@ -122,14 +123,14 @@ public class CTFactoryState implements CTRuntimeObject {
 		return orientation;
 	}
 
-	public LVector getTransformedVector(final LVector l) {
-		LVector c = l.copy();
-		getTransformation().transform(c);
+	public Vector3f getTransformedVector(final Vector3f l) {
+		Vector3f c = new Vector3f();
+		getTransformation().transformVector(l, c);
 		return c;
 	}
 
-	public LTransformation getTransformation() {
-		return new LTransformation(orientation);
+	public Transform getTransformation() {
+		return orientation.getTransformation();
 	}
 
 	public CTPool getPool() {
@@ -259,14 +260,14 @@ public class CTFactoryState implements CTRuntimeObject {
 		}
 	}
 
-	public void requestMove(CTToolState ctToolState, LVector l, LVector n, double angle) {
+	public void requestMove(CTToolState ctToolState, Vector3f l, Vector3f n, double angle) {
 		CTToolUser tooluser = getToolUser(ctToolState, l);
 		getLog().info("requestMove " + tooluser + " " + l + " tool:" + ctToolState);
 		tooluser.setTool(ctToolState);
 		tooluser.move(l, n, angle);
 	}
 
-	public CTToolUser getToolUser(final CTToolState ctToolState, LVector l) {
+	public CTToolUser getToolUser(final CTToolState ctToolState, Vector3f l) {
 		ConditionWaiter.wait(() -> !isRunning() || getAvailableToolUser(ctToolState) != null, 0);
 		return getAvailableToolUser(ctToolState, l);
 	}
@@ -280,13 +281,13 @@ public class CTFactoryState implements CTRuntimeObject {
 		return null;
 	}
 
-	private CTToolUser getAvailableToolUser(CTToolState toolstate, LVector l) {
+	private CTToolUser getAvailableToolUser(CTToolState toolstate, Vector3f l) {
 		ArrayList<CTToolUser> ts = new ArrayList<CTToolUser>(toolusers);
 		ts.sort(new Comparator<CTToolUser>() {
 			@Override
 			public int compare(CTToolUser a, CTToolUser b) {
-				double adistance = a.getOrientation().getLocation().getSub(l).length();
-				double bdistance = b.getOrientation().getLocation().getSub(l).length();
+				double adistance = a.getOrientation().getLocation().subtract(l).length();
+				double bdistance = b.getOrientation().getLocation().subtract(l).length();
 				if (adistance < bdistance) {
 					return -1;
 				} else if (adistance > bdistance) {
@@ -411,7 +412,7 @@ public class CTFactoryState implements CTRuntimeObject {
 		return new ArrayList<CTFactoryState>(this.factories);
 	}
 
-	public LVector getVector(String name) {
+	public Vector3f getVector(String name) {
 		return getFactory().getEnvironment().getVectorParameter(name);
 	}
 

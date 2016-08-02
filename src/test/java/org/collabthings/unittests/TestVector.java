@@ -1,61 +1,60 @@
 package org.collabthings.unittests;
 
 import org.collabthings.CTTestCase;
-import org.collabthings.math.LVector;
+import org.collabthings.math.CTMath;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.common.WObject;
 
 public final class TestVector extends CTTestCase {
 
-	private static final double LENGTH_1_1_1 = 1.7320508075688;
+	private static final double LENGTH_1_1_1 = 1.7320507764816284;
 
 	public void testVectorLength() {
-		LVector v = new LVector(1, 0, 0);
+		Vector3f v = new Vector3f(1, 0, 0);
 		assertReallyClose(v.length(), 1.0);
-		v = new LVector(0, 1, 0);
+		v = new Vector3f(0, 1, 0);
 		assertReallyClose(v.length(), 1.0);
-		v = new LVector(0, 0, 1);
+		v = new Vector3f(0, 0, 1);
 		assertReallyClose(v.length(), 1.0);
-		v = new LVector(1, 1, 1);
+		v = new Vector3f(1, 1, 1);
 		assertReallyClose(v.length(), LENGTH_1_1_1);
 	}
 
 	public void testMultiply() {
-		LVector v = getV();
-		v.scale(6);
+		Vector3f v = getV();
+		v.multLocal(6);
 		assertReallyClose(v.length(), LENGTH_1_1_1 * 6);
 	}
 
-	private LVector getV() {
-		LVector v = new LVector(1, 1, 1);
+	private Vector3f getV() {
+		Vector3f v = new Vector3f(1, 1, 1);
 		return v;
 	}
 
 	public void testWObject() {
-		LVector v = new LVector(1, 2, 3);
-		WObject w = v.getBean();
+		Vector3f v = new Vector3f(1, 2, 3);
+		WObject w = CTMath.getBean(v);
 		String t = w.toText();
 		int length = t.split("\n").length;
 		assertTrue("lines in " + t + " is " + length, length == 3);
 	}
 
 	public void testSub() {
-		LVector v = getV().getSub(new LVector(1, 1, 0));
+		Vector3f v = getV().subtract(new Vector3f(1, 1, 0));
 		assertReallyClose(v.length(), 1.0);
 	}
 
 	public void testAdd() {
-		LVector v = new LVector(1, 1, 0).getAdd(new LVector(0, 0, 1));
+		Vector3f v = new Vector3f(1, 1, 0).addLocal(new Vector3f(0, 0, 1));
 		assertReallyClose(v.length(), LENGTH_1_1_1);
 	}
 
 	public void testNormalize() {
-		LVector l = new LVector(2, 2, 2);
-		l.normalize();
-		assertReallyClose(l.length(), 1.0);
+		Vector3f l = new Vector3f(2, 2, 2);
+		l.normalizeLocal();
+		assertReallyClose(1.0, l.length());
 	}
 
-	public void testShortString() {
-		assertEquals("[0.00. 0.00. 0.00]", new LVector().asShortString().replace(',', '.'));
-	}
 }

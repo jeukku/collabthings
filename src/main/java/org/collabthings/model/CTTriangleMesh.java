@@ -2,12 +2,12 @@ package org.collabthings.model;
 
 import java.util.List;
 
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 
 public interface CTTriangleMesh {
 
 	List<CTTriangle> getTriangles();
 
-	List<LVector> getVectors();
+	List<Vector3f> getVectors();
 
 }

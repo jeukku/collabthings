@@ -1,19 +1,19 @@
 package org.collabthings.model;
 
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 
 public final class CTTriangle {
 	private final int a, b, c;
-	private final LVector n;
+	private final Vector3f n;
 
-	public CTTriangle(int a, int b, int c, LVector n) {
+	public CTTriangle(int a, int b, int c, Vector3f n) {
 		this.a = a;
 		this.b = b;
 		this.c = c;
-		this.n = new LVector(n);
+		this.n = new Vector3f(n);
 	}
 
-	public LVector getN() {
+	public Vector3f getN() {
 		return n;
 	}
 

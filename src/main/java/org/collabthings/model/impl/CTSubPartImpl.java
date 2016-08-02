@@ -6,21 +6,23 @@ import java.util.List;
 import org.collabthings.CTClient;
 import org.collabthings.CTListener;
 import org.collabthings.math.CTMath;
-import org.collabthings.math.LTransformation;
-import org.collabthings.math.LVector;
+import org.collabthings.math.LOrientation;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
+
+import com.jme3.math.Transform;
+import com.jme3.math.Vector3f;
 
 import waazdoh.common.MStringID;
 import waazdoh.common.WObject;
 
 public final class CTSubPartImpl implements CTSubPart {
 	private CTPart part;
-	private LVector p = new LVector();
-	private LVector n = new LVector(0, 1, 0);
+	private Vector3f p = new Vector3f();
+	private Vector3f n = new Vector3f(0, 1, 0);
 	private double angle = 0;
 	private final CTClient client;
-	private LTransformation transformation;
+	private Transform transformation;
 	private MStringID partid;
 	private CTPartImpl parent;
 	private String name;
@@ -82,6 +84,7 @@ public final class CTSubPartImpl implements CTSubPart {
 			} else {
 				part = this.client.getObjectFactory().getPart(partid);
 			}
+			part.addChangeListener(() -> changed());
 		}
 
 		return part;
@@ -90,8 +93,8 @@ public final class CTSubPartImpl implements CTSubPart {
 	public void parse(WObject bpart) {
 		partid = bpart.getIDValue("id");
 		part = null;
-		p = new LVector(bpart.get("p"));
-		n = new LVector(bpart.get("n"));
+		p = CTMath.parseVector(bpart.get("p"));
+		n = CTMath.parseVector(bpart.get("n"));
 		angle = bpart.getDoubleValue("a");
 		name = bpart.getValue("name");
 
@@ -114,8 +117,8 @@ public final class CTSubPartImpl implements CTSubPart {
 		}
 
 		bpart.setAttribute("id", "" + partid);
-		bpart.add("p", p.getBean());
-		bpart.add("n", n.getBean());
+		bpart.add("p", CTMath.getBean(p));
+		bpart.add("n", CTMath.getBean(n));
 		bpart.addValue("a", angle);
 		bpart.addValue("name", "" + name);
 	}
@@ -129,17 +132,17 @@ public final class CTSubPartImpl implements CTSubPart {
 	}
 
 	@Override
-	public LTransformation getTransformation() {
+	public Transform getTransformation() {
 		if (transformation == null) {
-			transformation = new LTransformation(getLocation(), getNormal(), angle); // TODO
-																						// fix
-																						// angle
+			transformation = new LOrientation(getLocation(), getNormal(), (float) angle).getTransformation(); // TODO
+			// fix
+			// angle
 		}
 		return transformation;
 	}
 
 	@Override
-	public void setOrientation(LVector location, LVector normal, double angle) {
+	public void setOrientation(Vector3f location, Vector3f normal, double angle) {
 		this.p.set(location);
 		this.n.set(normal);
 		this.n.normalize();
@@ -148,11 +151,11 @@ public final class CTSubPartImpl implements CTSubPart {
 		changed();
 	}
 
-	public LVector getNormal() {
+	public Vector3f getNormal() {
 		return n;
 	}
 
-	public LVector getLocation() {
+	public Vector3f getLocation() {
 		return p;
 	}
 
@@ -167,6 +170,7 @@ public final class CTSubPartImpl implements CTSubPart {
 	}
 
 	private void changed() {
+		transformation = null;
 		listeners.stream().forEach((l) -> l.event());
 	}
 

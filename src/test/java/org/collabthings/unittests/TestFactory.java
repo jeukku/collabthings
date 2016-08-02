@@ -6,7 +6,7 @@ import javax.script.ScriptException;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTAttachedFactory;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTFactory;
@@ -45,8 +45,8 @@ public final class TestFactory extends CTTestCase {
 		// model
 		f.setModel(env.getObjectFactory().getModel());
 		//
-		f.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
-		f.setToolUserSpawnLocation(new LVector(4, 4, 4));
+		f.setBoundingBox(new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
+		f.setToolUserSpawnLocation(new Vector3f(4, 4, 4));
 		//
 		f.save();
 		f.publish();
@@ -112,7 +112,7 @@ public final class TestFactory extends CTTestCase {
 
 		f.publish();
 
-		childf.setToolUserSpawnLocation(new LVector(1, 1, 1));
+		childf.setToolUserSpawnLocation(new Vector3f(1, 1, 1));
 		childf.publish();
 
 		CTClient bc = getNewClient();
@@ -157,7 +157,7 @@ public final class TestFactory extends CTTestCase {
 	public void testBoundingBox() {
 		CTClient c = getNewClient();
 		CTFactory f = c.getObjectFactory().getFactory();
-		f.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 1, 10));
+		f.setBoundingBox(new Vector3f(-10, 0, -10), new Vector3f(10, 1, 10));
 		f.publish();
 		CTClient bc = getNewClient();
 		CTFactory bf = bc.getObjectFactory().getFactory(f.getID().getStringID());
@@ -168,9 +168,9 @@ public final class TestFactory extends CTTestCase {
 	public void testBoundingBoxInstance() {
 		CTClient c = getNewClient();
 		CTFactory f = c.getObjectFactory().getFactory();
-		LVector va = f.getBoundingBox().getA();
-		f.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 1, 10));
-		f.setBoundingBox(new CTBoundingBox(new LVector(), new LVector()));
+		Vector3f va = f.getBoundingBox().getA();
+		f.setBoundingBox(new Vector3f(-10, 0, -10), new Vector3f(10, 1, 10));
+		f.setBoundingBox(new CTBoundingBox(new Vector3f(), new Vector3f()));
 		assertSame(va, f.getBoundingBox().getA());
 	}
 

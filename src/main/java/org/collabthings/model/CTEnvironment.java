@@ -2,7 +2,7 @@ package org.collabthings.model;
 
 import java.util.Set;
 
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.util.PrintOut;
 
 import waazdoh.common.ObjectID;
@@ -35,9 +35,9 @@ public interface CTEnvironment extends CTObject {
 
 	String getParameter(String string);
 
-	void setVectorParameter(String string, LVector v);
+	void setVectorParameter(String string, Vector3f v);
 
-	LVector getVectorParameter(String name);
+	Vector3f getVectorParameter(String name);
 
 	boolean isReady();
 

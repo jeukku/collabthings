@@ -1,8 +1,8 @@
 package org.collabthings.model;
 
 import org.collabthings.math.LOrientation;
-import org.collabthings.math.LTransformation;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
+import com.jme3.math.Transform;
 
 import waazdoh.common.WObject;
 
@@ -31,7 +31,7 @@ public class CTAttachedFactory {
 		return factory;
 	}
 
-	public void setLocation(LVector l) {
+	public void setLocation(Vector3f l) {
 		orientation.getLocation().set(l);
 	}
 
@@ -39,13 +39,13 @@ public class CTAttachedFactory {
 		return orientation;
 	}
 
-	public void setOrientation(LVector n, double d) {
+	public void setOrientation(Vector3f n, double d) {
 		orientation.set(n, d);
 
 	}
 
-	public LTransformation getTransformation() {
-		return new LTransformation(orientation);
+	public Transform getTransformation() {
+		return orientation.getTransformation();
 	}
 
 	public void set(WObject wObject) {

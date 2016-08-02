@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.collabthings.impl.CTClientImpl;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTObject;
 import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
@@ -40,7 +40,7 @@ public class CTTestCase extends TestCase {
 	private static final int MAX_OBJECT_WAITTIME = 60000;
 	private static final String PREFERENCES_RUNAGAINSTSERVICE = "ct.test.useservice";
 	//
-	private static final double ACCEPTED_DIFFERENCE = 0.000000000001;
+	public static final double ACCEPTED_DIFFERENCE = 0.000001;
 
 	protected String cubemodelpath = "/models/cube.x3d";
 
@@ -263,7 +263,7 @@ public class CTTestCase extends TestCase {
 		return sw.getBuffer().toString();
 	}
 
-	protected void assertReallyClose(LVector a, LVector b) {
+	protected void assertReallyClose(Vector3f a, Vector3f b) {
 		assertReallyClose(a.x, b.x);
 		assertReallyClose(a.y, b.y);
 		assertReallyClose(a.z, b.z);

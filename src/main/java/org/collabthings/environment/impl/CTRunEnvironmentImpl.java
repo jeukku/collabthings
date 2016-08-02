@@ -1,8 +1,8 @@
 package org.collabthings.environment.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,12 +13,13 @@ import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.environment.CTScriptRunner;
 import org.collabthings.environment.RunEnvironmentListener;
-import org.collabthings.math.LVector;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTRuntimeObject;
 import org.collabthings.model.CTValues;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.common.ObjectID;
 
@@ -222,8 +223,8 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 		}
 	}
 
-	public LVector getVector(double x, double y, double z) {
-		return new LVector(x, y, z);
+	public Vector3f getVector(double x, double y, double z) {
+		return new Vector3f((float) x, (float) y, (float) z);
 	}
 
 	@Override

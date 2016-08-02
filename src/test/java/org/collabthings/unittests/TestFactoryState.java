@@ -6,7 +6,7 @@ import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.environment.impl.CTPartState;
 import org.collabthings.environment.impl.CTToolState;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.simulation.CTStepRunner;
@@ -65,8 +65,8 @@ public final class TestFactoryState extends CTTestCase {
 		CTToolState tool2 = s.addTool("tool", c.getObjectFactory().getTool());
 
 		tool1.setInUse();
-		tool1.setOrientation(new LVector(1000, 0, 0), new LVector(0, 1, 0), 0);
-		tool2.setOrientation(new LVector(), new LVector(0, 1, 0), 0);
+		tool1.setOrientation(new Vector3f(1000, 0, 0), new Vector3f(0, 1, 0), 0);
+		tool2.setOrientation(new Vector3f(), new Vector3f(0, 1, 0), 0);
 
 		assertEquals(tool2, s.getTool("tool"));
 		tool1.setAvailable();

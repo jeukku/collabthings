@@ -5,12 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.ChangedCharSetException;
-import javax.vecmath.Tuple3d;
-
 import org.collabthings.CTClient;
 import org.collabthings.CTListener;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTMaterial;
 import org.collabthings.model.CTModel;
@@ -40,13 +37,14 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	CTClient env;
 
 	private List<CTSubPart> subparts = new ArrayList<>();
-	private CTBoundingBox boundingbox = new CTBoundingBox(new LVector(), new LVector());
+	private CTBoundingBox boundingbox = new CTBoundingBox(new Vector3f(), new Vector3f());
 	private CTMaterial material = new CTMaterialImpl();
 
 	private CTModel model;
 	private CTPartBuilder builder;
 	private WObject storedobject;
 	private List<CTListener> listeners = new ArrayList<>();
+	private boolean loaded;
 
 	public CTPartImpl(final CTClient nenv) {
 		this.env = nenv;
@@ -106,6 +104,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public synchronized boolean parse(WObject bean) {
 		LLog.getLogger(this).info("Loading " + bean);
 
+		loaded = false;
+
 		bean = bean.get("content");
 		if (bean != null) {
 			setName(bean.getValue(VALUENAME_NAME));
@@ -133,6 +133,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			}
 			//
 			if (getName() != null) {
+				storedobject = null;
+				loaded = true;
 				return true;
 			} else {
 				LLog.getLogger(this).info("Loading failed. Name null. " + bean);
@@ -162,6 +164,10 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				CT3DModelImpl m = new CT3DModelImpl(env);
 				m.load(modelid);
 				model = m;
+			}
+
+			if (model != null) {
+				model.addChangeListener(() -> changed());
 			}
 		}
 	}
@@ -207,7 +213,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	@Override
-	public void setBoundingBox(LVector a, LVector b) {
+	public void setBoundingBox(Vector3f a, Vector3f b) {
 		boundingbox = new CTBoundingBox(a, b);
 		changed();
 	}
@@ -231,7 +237,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	@Override
 	public boolean isReady() {
-		if (getModel() != null && !getModel().isReady()) {
+		if (!loaded || getModel() != null && !getModel().isReady()) {
 			return false;
 		}
 
@@ -239,8 +245,9 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	public void save() {
-
 		if (getServiceObject().hasChanged()) {
+			changed();
+
 			if (model != null) {
 				model.save();
 			}
@@ -301,6 +308,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public void removeSubPart(CTSubPart subpart) {
 		subparts.remove(subpart);
+		changed();
 	}
 
 	@Override
@@ -358,6 +366,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public CTOpenSCAD newSCAD() {
 		CTOpenSCADImpl scad = new CTOpenSCADImpl(env);
 		model = scad;
+		model.addChangeListener(() -> changed());
+
 		changed();
 		return scad;
 	}

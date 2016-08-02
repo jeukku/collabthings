@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.xml.sax.SAXException;
 
 import waazdoh.client.model.objects.Binary;
@@ -25,11 +25,11 @@ public interface CTBinaryModel extends CTObject, CTModel {
 
 	double getScale();
 
-	LVector getTranslation();
+	Vector3f getTranslation();
 
 	File getModelFile() throws SAXException, IOException;
 
-	void setTranslation(LVector lVector);
+	void setTranslation(Vector3f Vector3f);
 
 	void setScale(double i);
 

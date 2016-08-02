@@ -7,13 +7,15 @@ import java.util.Map;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
-import org.collabthings.math.LTransformation;
-import org.collabthings.math.LVector;
+import org.collabthings.math.LOrientation;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.model.impl.CTPartImpl;
 import org.xml.sax.SAXException;
+
+import com.jme3.math.Transform;
+import com.jme3.math.Vector3f;
 
 public final class TestMultipleGears extends CTTestCase {
 
@@ -23,12 +25,12 @@ public final class TestMultipleGears extends CTTestCase {
 	public void testGears() throws IOException, SAXException {
 		CTClient ctclient = getNewClient(true);
 		assertNotNull(ctclient);
-				
+
 		//
 		CTPart mainpart = new CTPartImpl(ctclient);
 
 		for (int c = 0; c < 10; c++) {
-			double z = -15 + c * 3;
+			float z = -15 + c * 3;
 
 			CTPart gear = LoadGear(ctclient, 10 + c, 10 + c);
 
@@ -36,17 +38,18 @@ public final class TestMultipleGears extends CTTestCase {
 				CTSubPart sp = mainpart.newSubPart();
 				sp.setPart(gear);
 
-				double angle = 9;
-				LVector normal = new LVector(0, 0, 1);
-				LVector location = new LVector(28, 0, z);
+				float angle = 9;
+				Vector3f normal = new Vector3f(0, 0, 1);
+				Vector3f location = new Vector3f(28, 0, z);
 
-				LTransformation t = LTransformation.getRotate(new LVector(0, 0, 1), (double) i / 5 * Math.PI * 2);
-				location = t.transform(location);
+				Transform t = new LOrientation(new Vector3f(0, 0, 1), (float) (i / 5.0 * Math.PI * 2))
+						.getTransformation();
+				location = t.transformVector(location, new Vector3f());
 				sp.setOrientation(location, normal, angle);
 			}
 
 			CTSubPart center = mainpart.newSubPart();
-			center.setOrientation(new LVector(0, 0, z), new LVector(0, 0, 1), 0);
+			center.setOrientation(new Vector3f(0, 0, z), new Vector3f(0, 0, 1), 0);
 			CTPart centerpart = LoadGear(ctclient, 15 + c, 15 + c);
 			center.setPart(centerpart);
 		}

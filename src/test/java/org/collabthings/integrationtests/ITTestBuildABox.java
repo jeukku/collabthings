@@ -11,7 +11,7 @@ import org.collabthings.CTTestCase;
 import org.collabthings.CTToolException;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTAttachedFactory;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTOpenSCAD;
@@ -47,7 +47,7 @@ public final class ITTestBuildABox extends CTTestCase {
 		setupFactoryThatUsesBoxes(factory, client);
 		info("factory setup done");
 
-		factory.setToolUserSpawnLocation(new LVector(20, 0, 20));
+		factory.setToolUserSpawnLocation(new Vector3f(20, 0, 20));
 		factory.setName("boxsetfactory");
 
 		factory.publish();
@@ -95,7 +95,7 @@ public final class ITTestBuildABox extends CTTestCase {
 		for (int i = 0; i < 3; i++) {
 			CTSubPart sb = line.newSubPart();
 			sb.setPart(box);
-			sb.setOrientation(new LVector(i * 2, 0, 0), new LVector(0, 1, 0), Math.PI / 2);
+			sb.setOrientation(new Vector3f(i * 2, 0, 0), new Vector3f(0, 1, 0), Math.PI / 2);
 		}
 
 		info("line of boxes publishing");
@@ -117,16 +117,16 @@ public final class ITTestBuildABox extends CTTestCase {
 		createAssemblyFactory(factory, client);
 		info("factory that uses boxes " + factory);
 
-		factory.setBoundingBox(new LVector(-100, 0, -100), new LVector(100, 10, 100));
-		factory.getEnvironment().setVectorParameter("storage", new LVector(15, 1, 50));
-		factory.getEnvironment().setVectorParameter("buildingpartlocation", new LVector(15, 1, 0));
+		factory.setBoundingBox(new Vector3f(-100, 0, -100), new Vector3f(100, 10, 100));
+		factory.getEnvironment().setVectorParameter("storage", new Vector3f(15, 1, 50));
+		factory.getEnvironment().setVectorParameter("buildingpartlocation", new Vector3f(15, 1, 0));
 
 		CTAttachedFactory boxfactory1 = factory.addFactory("source");
 		createBoxFactory(boxfactory1.getFactory(), client);
-		boxfactory1.setLocation(new LVector(-5, 0, 10));
+		boxfactory1.setLocation(new Vector3f(-5, 0, 10));
 
 		CTAttachedFactory boxfactory2 = factory.addFactory("source2", boxfactory1.getFactory());
-		boxfactory2.setLocation(new LVector(-5, 0, -10));
+		boxfactory2.setLocation(new Vector3f(-5, 0, -10));
 
 		return factory;
 	}
@@ -180,26 +180,26 @@ public final class ITTestBuildABox extends CTTestCase {
 
 		// Create a box object
 		CTPart box = createBox(client, square);
-		box.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
+		box.setBoundingBox(new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
 
 		info("publishing box");
 		box.publish();
 
 		boxfactory.getEnvironment().setParameter("fillpool", "2");
 		boxfactory.getEnvironment().setParameter("partid", box.getID());
-		boxfactory.getEnvironment().setVectorParameter("storage", new LVector(10, 3, 2));
-		boxfactory.getEnvironment().setVectorParameter("buildingpartlocation", new LVector(0, 1, 0));
+		boxfactory.getEnvironment().setVectorParameter("storage", new Vector3f(10, 3, 2));
+		boxfactory.getEnvironment().setVectorParameter("buildingpartlocation", new Vector3f(0, 1, 0));
 
 		info("box " + box);
 
 		// Create a plate source
 		CTFactory squarefactory = createPlateSource(boxfactory.addFactory("source").getFactory(), client, square);
 		squarefactory.setName("squarefactory");
-		squarefactory.setBoundingBox(new LVector(-3, 0, -3), new LVector(3, 3, 3));
-		squarefactory.getEnvironment().setVectorParameter("storage", new LVector(-3, 1, 0));
-		squarefactory.getEnvironment().setVectorParameter("buildingpartlocation", new LVector(-1, 1, 0));
+		squarefactory.setBoundingBox(new Vector3f(-3, 0, -3), new Vector3f(3, 3, 3));
+		squarefactory.getEnvironment().setVectorParameter("storage", new Vector3f(-3, 1, 0));
+		squarefactory.getEnvironment().setVectorParameter("buildingpartlocation", new Vector3f(-1, 1, 0));
 
-		boxfactory.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 10, 10));
+		boxfactory.setBoundingBox(new Vector3f(-10, 0, -10), new Vector3f(10, 10, 10));
 		info("platesource " + squarefactory + " with square " + square);
 		info("square bean " + square.getObject());
 
@@ -219,7 +219,7 @@ public final class ITTestBuildABox extends CTTestCase {
 			scad.setScript(loadATestFile("scad/square.scad"));
 			scad.setScale(0.2);
 
-			square.setBoundingBox(new LVector(-1, 0, -1), new LVector(1, 0.1, 1));
+			square.setBoundingBox(new Vector3f(-1, 0, -1), new Vector3f(1, 0.1f, 1));
 			info("Square " + square);
 			square.publish();
 		}
@@ -298,14 +298,14 @@ public final class ITTestBuildABox extends CTTestCase {
 		}
 
 		int partindex = 0;
-		box.getSubParts().get(partindex++).setOrientation(new LVector(0, -1, 0), new LVector(0, -1, 0), Math.PI);
-		box.getSubParts().get(partindex++).setOrientation(new LVector(-1, 0, 0), new LVector(-1, 0, 0), Math.PI);
-		box.getSubParts().get(partindex++).setOrientation(new LVector(1, 0, 0), new LVector(1, 0, 0), Math.PI);
-		box.getSubParts().get(partindex++).setOrientation(new LVector(0, 0, -1), new LVector(0, 0, -1), Math.PI);
-		box.getSubParts().get(partindex++).setOrientation(new LVector(0, 0, 1), new LVector(0, 0, 1), Math.PI);
-		box.getSubParts().get(partindex++).setOrientation(new LVector(0, 1, 0), new LVector(0, 1, 0), Math.PI);
+		box.getSubParts().get(partindex++).setOrientation(new Vector3f(0, -1, 0), new Vector3f(0, -1, 0), Math.PI);
+		box.getSubParts().get(partindex++).setOrientation(new Vector3f(-1, 0, 0), new Vector3f(-1, 0, 0), Math.PI);
+		box.getSubParts().get(partindex++).setOrientation(new Vector3f(1, 0, 0), new Vector3f(1, 0, 0), Math.PI);
+		box.getSubParts().get(partindex++).setOrientation(new Vector3f(0, 0, -1), new Vector3f(0, 0, -1), Math.PI);
+		box.getSubParts().get(partindex++).setOrientation(new Vector3f(0, 0, 1), new Vector3f(0, 0, 1), Math.PI);
+		box.getSubParts().get(partindex++).setOrientation(new Vector3f(0, 1, 0), new Vector3f(0, 1, 0), Math.PI);
 
-		box.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
+		box.setBoundingBox(new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
 
 		info("box created");
 

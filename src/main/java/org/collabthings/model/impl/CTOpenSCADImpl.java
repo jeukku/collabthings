@@ -4,16 +4,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.collabthings.CTClient;
-import org.collabthings.math.LVector;
+import org.collabthings.CTListener;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTModel;
 import org.collabthings.model.CTOpenSCAD;
@@ -53,8 +55,10 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	private final CTBinaryModel model;
 
 	private int loadedscadhash = 0;
-	private LVector translation = new LVector();
+	private Vector3f translation = new Vector3f();
 	private double scale = 1;
+	private boolean disabled;
+	private List<CTListener> listeners = new ArrayList<>();
 
 	/**
 	 * Creates a new script with random ID.
@@ -84,9 +88,14 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 			if (createModel()) {
 				loadedscadhash = getScript().hashCode();
 			}
+			changed();
 		}
 
 		return model;
+	}
+
+	private void changed() {
+		listeners.stream().forEach((l) -> l.event());
 	}
 
 	private boolean isChanged() {
@@ -242,6 +251,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	public void setScript(final String nscript) {
 		this.script = nscript;
 		error = null;
+		changed();
 	}
 
 	@Override
@@ -300,6 +310,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	@Override
 	public void setName(String name) {
 		this.name = name;
+		changed();
 	}
 
 	@Override
@@ -315,15 +326,32 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	@Override
 	public void setScale(double scale) {
 		this.scale = scale;
+		changed();
 	}
 
 	@Override
-	public LVector getTranslation() {
+	public Vector3f getTranslation() {
 		return translation;
 	}
 
 	@Override
-	public void setTranslation(LVector translation) {
+	public void setTranslation(Vector3f translation) {
 		this.translation = translation;
+		changed();
+	}
+
+	@Override
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	@Override
+	public void setDisabled(boolean b) {
+		this.disabled = b;
+	}
+
+	@Override
+	public void addChangeListener(CTListener l) {
+		listeners.add(l);
 	}
 }

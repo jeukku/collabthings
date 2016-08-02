@@ -3,7 +3,8 @@ package org.collabthings.model;
 import java.io.File;
 import java.io.IOException;
 
-import org.collabthings.math.LVector;
+import org.collabthings.CTListener;
+import com.jme3.math.Vector3f;
 import org.collabthings.scene.CTGroup;
 
 import waazdoh.common.ObjectID;
@@ -30,10 +31,16 @@ public interface CTModel {
 
 	void setScale(double scale);
 
-	LVector getTranslation();
+	Vector3f getTranslation();
 
-	void setTranslation(LVector translation);
+	void setTranslation(Vector3f translation);
 
 	void addTo(CTGroup g);
+
+	boolean isDisabled();
+
+	void setDisabled(boolean b);
+
+	void addChangeListener(CTListener l);
 
 }
