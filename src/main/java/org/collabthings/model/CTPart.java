@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.collabthings.CTListener;
 import org.collabthings.math.LVector;
 
 public interface CTPart extends CTObject {
@@ -43,5 +44,7 @@ public interface CTPart extends CTObject {
 	CTPartBuilder getBuilder();
 
 	CTPartBuilder newBuilder();
+
+	void addChangeListener(CTListener listener);
 
 }

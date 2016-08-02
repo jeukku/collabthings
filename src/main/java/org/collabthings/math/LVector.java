@@ -15,12 +15,14 @@ public class LVector extends Vector3d {
 		super(i, j, k);
 	}
 
-	public LVector() {
-		super(0, 0, 0);
+	public LVector(WObject b) {
+		x = b.getDoubleValue("x");
+		y = b.getDoubleValue("y");
+		z = b.getDoubleValue("z");
 	}
 
-	public LVector(WObject b) {
-		set(b);
+	public LVector() {
+		super(0, 0, 0);
 	}
 
 	public LVector copy() {
@@ -51,12 +53,6 @@ public class LVector extends Vector3d {
 		b.addValue("y", y);
 		b.addValue("z", z);
 		return b;
-	}
-
-	public void set(WObject b) {
-		x = b.getDoubleValue("x");
-		y = b.getDoubleValue("y");
-		z = b.getDoubleValue("z");
 	}
 
 	public String asShortString() {

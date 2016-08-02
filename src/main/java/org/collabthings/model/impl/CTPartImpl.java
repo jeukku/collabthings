@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.text.ChangedCharSetException;
+import javax.vecmath.Tuple3d;
+
 import org.collabthings.CTClient;
+import org.collabthings.CTListener;
 import org.collabthings.math.LVector;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTMaterial;
@@ -27,7 +31,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private static final String VALUENAME_NAME = "name";
 	private static final String VALUENAME_MODELID = "id";
 	private static final String VALUENAME_SHORTNAME = "shortname";
-	private static final String VALIENAME_BUILDERID = "builder";
+	private static final String VALUENAME_BUILDERID = "builder";
 	//
 	private ServiceObject o;
 	private String name = "part";
@@ -41,6 +45,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	private CTModel model;
 	private CTPartBuilder builder;
+	private WObject storedobject;
+	private List<CTListener> listeners = new ArrayList<>();
 
 	public CTPartImpl(final CTClient nenv) {
 		this.env = nenv;
@@ -57,32 +63,35 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	@Override
-	public WObject getObject() {
-		WObject org = o.getBean();
-		WObject b = org.add("content");
-		b.addValue(VALUENAME_NAME, getName());
-		b.addValue(VALUENAME_SHORTNAME, getShortname());
+	public synchronized WObject getObject() {
+		if (storedobject == null) {
+			WObject org = o.getBean();
+			WObject b = org.add("content");
+			b.addValue(VALUENAME_NAME, getName());
+			b.addValue(VALUENAME_SHORTNAME, getShortname());
 
-		if (model != null) {
-			WObject md = b.add("model");
-			md.addValue("id", model.getID());
-			md.addValue("type", model.getModelType());
+			if (model != null) {
+				WObject md = b.add("model");
+				md.addValue("id", model.getID());
+				md.addValue("type", model.getModelType());
+			}
+
+			if (builder != null) {
+				b.addValue(VALUENAME_BUILDERID, builder.getID().toString());
+			}
+
+			b.add("material", material.getBean());
+
+			if (getBoundingBox() != null) {
+				b.add(CTBoundingBox.BEAN_NAME, getBoundingBox().getBean());
+			}
+			//
+			addSubParts(b);
+
+			storedobject = org;
 		}
 
-		if (builder != null) {
-			b.addValue(VALIENAME_BUILDERID, builder.getID().toString());
-		}
-
-		b.add("material", material.getBean());
-
-		if (getBoundingBox() != null) {
-			b.add(CTBoundingBox.BEAN_NAME, getBoundingBox().getBean());
-		}
-		//
-		addSubParts(b);
-
-		//
-		return org;
+		return storedobject;
 	}
 
 	private synchronized void addSubParts(WObject b) {
@@ -103,7 +112,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			setShortname(bean.getValue(VALUENAME_SHORTNAME));
 
 			parseModel(bean.get("model"));
-			parseBuilder(bean.getValue(VALIENAME_BUILDERID));
+			parseBuilder(bean.getValue(VALUENAME_BUILDERID));
 
 			material = new CTMaterialImpl(bean.get("material"));
 
@@ -160,6 +169,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private synchronized void addPart(CTSubPartImpl subpart) {
 		getLog().info("addPart " + subpart);
 		subparts.add(subpart);
+		subpart.addChangeListener(() -> changed());
+		changed();
 	}
 
 	private LLog getLog() {
@@ -178,6 +189,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public void setShortname(String sname) {
 		this.shortname = sname;
+		changed();
 	}
 
 	public String getName() {
@@ -186,6 +198,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	public void setName(final String nname) {
 		this.name = nname;
+		changed();
 	}
 
 	@Override
@@ -196,6 +209,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public void setBoundingBox(LVector a, LVector b) {
 		boundingbox = new CTBoundingBox(a, b);
+		changed();
 	}
 
 	@Override
@@ -211,6 +225,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public CTPartBuilder newBuilder() {
 		builder = new CTPartBuilderImpl(env);
+		changed();
 		return builder;
 	}
 
@@ -224,6 +239,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	public void save() {
+
 		if (getServiceObject().hasChanged()) {
 			if (model != null) {
 				model.save();
@@ -271,13 +287,14 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public CT3DModelImpl newBinaryModel() {
 		CT3DModelImpl m = new CT3DModelImpl(env);
 		model = m;
+		changed();
 		return m;
 	}
 
 	public synchronized CTSubPart newSubPart() {
 		CTSubPartImpl spart = new CTSubPartImpl(this, env);
-		subparts.add(spart);
 		getLog().info("New subpart " + spart);
+		addPart(spart);
 		return spart;
 	}
 
@@ -341,6 +358,17 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public CTOpenSCAD newSCAD() {
 		CTOpenSCADImpl scad = new CTOpenSCADImpl(env);
 		model = scad;
+		changed();
 		return scad;
+	}
+
+	private void changed() {
+		this.storedobject = null;
+		listeners.stream().forEach((e) -> e.event());
+	}
+
+	@Override
+	public void addChangeListener(CTListener listener) {
+		listeners.add(listener);
 	}
 }

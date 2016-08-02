@@ -1,6 +1,10 @@
 package org.collabthings.model.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.collabthings.CTClient;
+import org.collabthings.CTListener;
 import org.collabthings.math.CTMath;
 import org.collabthings.math.LTransformation;
 import org.collabthings.math.LVector;
@@ -12,14 +16,15 @@ import waazdoh.common.WObject;
 
 public final class CTSubPartImpl implements CTSubPart {
 	private CTPart part;
-	private final LVector p = new LVector();
-	private final LVector n = new LVector(0, 1, 0);
+	private LVector p = new LVector();
+	private LVector n = new LVector(0, 1, 0);
 	private double angle = 0;
 	private final CTClient client;
 	private LTransformation transformation;
 	private MStringID partid;
 	private CTPartImpl parent;
 	private String name;
+	private List<CTListener> listeners = new ArrayList<>();
 
 	/**
 	 * @param nparent
@@ -49,6 +54,7 @@ public final class CTSubPartImpl implements CTSubPart {
 	@Override
 	public void setName(String text) {
 		this.name = text;
+		changed();
 	}
 
 	@Override
@@ -58,6 +64,7 @@ public final class CTSubPartImpl implements CTSubPart {
 		p.set(subpart.p);
 		n.set(subpart.n);
 		angle = subpart.angle;
+		changed();
 	}
 
 	@Override
@@ -83,8 +90,8 @@ public final class CTSubPartImpl implements CTSubPart {
 	public void parse(WObject bpart) {
 		partid = bpart.getIDValue("id");
 		part = null;
-		p.set(bpart.get("p"));
-		n.set(bpart.get("n"));
+		p = new LVector(bpart.get("p"));
+		n = new LVector(bpart.get("n"));
 		angle = bpart.getDoubleValue("a");
 		name = bpart.getValue("name");
 
@@ -117,6 +124,8 @@ public final class CTSubPartImpl implements CTSubPart {
 	public void setPart(CTPart part2) {
 		partid = null;
 		this.part = (CTPartImpl) part2;
+		changed();
+		part.addChangeListener(() -> changed());
 	}
 
 	@Override
@@ -136,6 +145,7 @@ public final class CTSubPartImpl implements CTSubPart {
 		this.n.normalize();
 		transformation = null;
 		this.angle = angle;
+		changed();
 	}
 
 	public LVector getNormal() {
@@ -153,10 +163,19 @@ public final class CTSubPartImpl implements CTSubPart {
 	@Override
 	public void setAngle(double angle) {
 		this.angle = CTMath.limitAngle(angle);
+		changed();
+	}
+
+	private void changed() {
+		listeners.stream().forEach((l) -> l.event());
 	}
 
 	@Override
 	public String toString() {
 		return "SubPart[" + p + "][" + n + "]";
+	}
+
+	public void addChangeListener(CTListener l) {
+		listeners.add(l);
 	}
 }
