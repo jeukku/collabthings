@@ -1,7 +1,6 @@
 package org.collabthings.util;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class LLog {
 	private Logger log;
@@ -22,8 +21,8 @@ public class LLog {
 	}
 
 	public void error(Object o, String sourceMethod, Throwable e1) {
-		log.warning("ERROR in " + o + " " + sourceMethod + " throwable:" + e1);
-		log.log(Level.SEVERE, "" + o, e1);
+		log.warn("ERROR in " + o + " " + sourceMethod + " throwable:" + e1);
+		log.error("" + o, e1);
 	}
 
 	public static LLog getLogger(Object o) {
@@ -31,7 +30,7 @@ public class LLog {
 	}
 
 	public void fine(String string) {
-		log.fine(getLine(string));
+		log.debug(getLine(string));
 	}
 
 	public LLog instance(Object o) {
@@ -50,6 +49,6 @@ public class LLog {
 	}
 
 	public void warning(String string) {
-		log.warning(getLine(string));
+		log.warn(getLine(string));
 	}
 }
