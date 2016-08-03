@@ -170,6 +170,8 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	@Override
 	public CTPartImpl getPart() {
 		CTPartImpl p = new CTPartImpl(client);
+		p.setReady();
+		
 		log.info("new part " + p.getObject());
 		synchronized (parts) {
 			parts.add(p);
