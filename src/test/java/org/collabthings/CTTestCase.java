@@ -123,10 +123,6 @@ public class CTTestCase extends TestCase {
 		}
 	}
 
-	public void disableNetwork() {
-		enablenetwork = false;
-	}
-
 	public CTClient getNewEnv(String email, boolean bind) throws MalformedURLException, SAXException {
 		//
 		WPreferences p = new StaticTestPreferences("cttests", email);

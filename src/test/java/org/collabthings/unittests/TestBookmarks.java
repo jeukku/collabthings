@@ -10,9 +10,7 @@ import org.xml.sax.SAXException;
 public final class TestBookmarks extends CTTestCase {
 
 	public void testGet() throws IOException, SAXException {
-		disableNetwork();
-
-		CTClient e = getNewClient(false);
+		CTClient e = getNewClient();
 		String listname = "test" + System.currentTimeMillis();
 
 		e.getBookmarks().addFolder(listname);

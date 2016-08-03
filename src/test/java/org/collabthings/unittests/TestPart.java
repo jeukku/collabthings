@@ -39,10 +39,10 @@ public final class TestPart extends CTTestCase {
 		CTSubPart subpart2 = part.newSubPart();
 		subpart2.set(subpart);
 		subpart.setName("subpartname2");
-	
+
 		CTSubPart subsub = subpart2.getPart().newSubPart();
 		subsub.getPart().newSubPart().setName("thesub");
-		 
+
 		//
 		part.save();
 		part.publish();
@@ -99,6 +99,14 @@ public final class TestPart extends CTTestCase {
 		assertEquals(subpart.getNormal().toString(), new Vector3f(0, 1, 0).toString());
 
 		return p;
+	}
+
+	public void testPartBookmark() {
+		CTClient e = getNewClient();
+		CTPart part = e.getObjectFactory().getPart();
+		CTSubPart sp = part.newSubPart();
+		sp.getPart(); 
+		sp.setPartBookmark("test");
 	}
 
 	public void testLoadRandomID() throws IOException, SAXException {
