@@ -9,6 +9,7 @@ import org.collabthings.math.CTMath;
 import org.collabthings.math.LOrientation;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
+import org.collabthings.util.LLog;
 
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
@@ -24,6 +25,7 @@ public final class CTSubPartImpl implements CTSubPart {
 	private final CTClient client;
 	private Transform transformation;
 	private MStringID partid;
+	private String partbookmark;
 	private CTPartImpl parent;
 	private String name;
 	private List<CTListener> listeners = new ArrayList<>();
@@ -83,7 +85,12 @@ public final class CTSubPartImpl implements CTSubPart {
 				part = this.client.getObjectFactory().getPart();
 			} else {
 				part = this.client.getObjectFactory().getPart(partid);
+				if (part == null) {
+					LLog.getLogger(this).info("ERROR. Loading part failed. Creating another.");
+					part = this.client.getObjectFactory().getPart();
+				}
 			}
+
 			part.addChangeListener(() -> changed());
 		}
 
@@ -92,6 +99,7 @@ public final class CTSubPartImpl implements CTSubPart {
 
 	public void parse(WObject bpart) {
 		partid = bpart.getIDValue("id");
+		partbookmark = bpart.getValue("partbm");
 		part = null;
 		p = CTMath.parseVector(bpart.get("p"));
 		n = CTMath.parseVector(bpart.get("n"));
@@ -117,6 +125,10 @@ public final class CTSubPartImpl implements CTSubPart {
 		}
 
 		bpart.setAttribute("id", "" + partid);
+		if (partbookmark != null) {
+			bpart.setAttribute("partbm", partbookmark);
+		}
+
 		bpart.add("p", CTMath.getBean(p));
 		bpart.add("n", CTMath.getBean(n));
 		bpart.addValue("a", angle);
@@ -181,5 +193,26 @@ public final class CTSubPartImpl implements CTSubPart {
 
 	public void addChangeListener(CTListener l) {
 		listeners.add(l);
+	}
+
+	public String getPartBookmark() {
+		return partbookmark;
+	}
+
+	@Override
+	public void setPartBookmark(String string) {
+		partbookmark = string;
+	}
+
+	@Override
+	public void updateBookmark() {
+		if (partbookmark != null) {
+			String newid = client.getStorage().readStorage(partbookmark);
+			if (newid != null) {
+				partid = new MStringID(newid);
+				part = null;
+				changed();
+			}
+		}
 	}
 }

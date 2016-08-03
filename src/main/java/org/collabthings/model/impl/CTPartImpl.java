@@ -44,7 +44,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private CTPartBuilder builder;
 	private WObject storedobject;
 	private List<CTListener> listeners = new ArrayList<>();
-	private boolean loaded;
+	private boolean ready;
 
 	public CTPartImpl(final CTClient nenv) {
 		this.env = nenv;
@@ -104,7 +104,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public synchronized boolean parse(WObject bean) {
 		LLog.getLogger(this).info("Loading " + bean);
 
-		loaded = false;
+		ready = false;
 
 		bean = bean.get("content");
 		if (bean != null) {
@@ -134,7 +134,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			//
 			if (getName() != null) {
 				storedobject = null;
-				loaded = true;
+				setReady();
 				return true;
 			} else {
 				LLog.getLogger(this).info("Loading failed. Name null. " + bean);
@@ -237,7 +237,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	@Override
 	public boolean isReady() {
-		if (!loaded || getModel() != null && !getModel().isReady()) {
+		if (!ready || getModel() != null && !getModel().isReady()) {
 			return false;
 		}
 
@@ -380,5 +380,9 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public void addChangeListener(CTListener listener) {
 		listeners.add(listener);
+	}
+
+	public void setReady() {
+		ready = true;
 	}
 }
