@@ -33,4 +33,9 @@ public interface CTSubPart {
 
 	String getNamePath();
 
+	void setPartBookmark(String string);
+
+	void updateBookmark();
+
+	String getPartBookmark();
 }
