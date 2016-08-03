@@ -102,47 +102,46 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	};
 
 	@Override
-	public synchronized boolean parse(WObject bean) {
-		LLog.getLogger(this).info("Loading " + bean);
+	public synchronized boolean parse(WObject main) {
+		LLog.getLogger(this).info("Loading " + main);
 
 		ready = false;
 
-		bean = bean.get("content");
-		if (bean != null) {
-			setName(bean.getValue(VALUENAME_NAME));
-			setShortname(bean.getValue(VALUENAME_SHORTNAME));
+		WObject bean = main.get("content");
+		if (bean == null) {
+			bean = main;
+		}
 
-			parseModel(bean.get("model"));
-			parseBuilder(bean.getValue(VALUENAME_BUILDERID));
+		setName(bean.getValue(VALUENAME_NAME));
+		setShortname(bean.getValue(VALUENAME_SHORTNAME));
 
-			material = new CTMaterialImpl(bean.get("material"));
+		parseModel(bean.get("model"));
+		parseBuilder(bean.getValue(VALUENAME_BUILDERID));
 
-			WObject beanboundingbox = bean.get(CTBoundingBox.BEAN_NAME);
-			if (beanboundingbox != null) {
-				boundingbox = new CTBoundingBox(beanboundingbox);
+		material = new CTMaterialImpl(bean.get("material"));
+
+		WObject beanboundingbox = bean.get(CTBoundingBox.BEAN_NAME);
+		if (beanboundingbox != null) {
+			boundingbox = new CTBoundingBox(beanboundingbox);
+		}
+		//
+		subparts.clear();
+
+		List<WObject> parts = bean.getObjectList("parts");
+		if (parts != null) {
+			for (WObject bpart : parts) {
+				CTSubPartImpl subpart = new CTSubPartImpl(this, env);
+				subpart.parse(bpart);
+				addPart(subpart);
 			}
-			//
-			subparts.clear();
-
-			List<WObject> parts = bean.getObjectList("parts");
-			if (parts != null) {
-				for (WObject bpart : parts) {
-					CTSubPartImpl subpart = new CTSubPartImpl(this, env);
-					subpart.parse(bpart);
-					addPart(subpart);
-				}
-			}
-			//
-			if (getName() != null) {
-				storedobject = null;
-				setReady();
-				return true;
-			} else {
-				LLog.getLogger(this).info("Loading failed. Name null. " + bean);
-				return false;
-			}
+		}
+		//
+		if (getName() != null) {
+			storedobject = null;
+			setReady();
+			return true;
 		} else {
-			LLog.getLogger(this).info("No content info " + bean);
+			LLog.getLogger(this).info("Loading failed. Name null. " + bean);
 			return false;
 		}
 	}

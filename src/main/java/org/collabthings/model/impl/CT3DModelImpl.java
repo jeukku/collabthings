@@ -105,6 +105,10 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	@Override
 	public boolean parse(WObject main) {
 		WObject bean = main.get("content");
+		if (bean == null) {
+			bean = main;
+		}
+
 		name = bean.getValue("name");
 		binaryid = new BinaryID(bean.getIDValue(BINARYID));
 

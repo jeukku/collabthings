@@ -232,6 +232,10 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	@Override
 	public boolean parse(final WObject main) {
 		WObject content = main.get("content");
+		if (content == null) {
+			content = main;
+		}
+
 		script = content.getBase64Value(SCRIPT);
 		loadedscadhash = getScript().hashCode();
 
