@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.jme3.math.Vector3f;
 import org.xml.sax.SAXException;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.client.model.objects.Binary;
 import waazdoh.common.MStringID;

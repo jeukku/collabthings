@@ -15,10 +15,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.collabthings.impl.CTClientImpl;
-import com.jme3.math.Vector3f;
 import org.collabthings.model.CTObject;
 import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
+
+import com.jme3.math.Vector3f;
 
 import junit.framework.TestCase;
 import waazdoh.client.BinarySource;
@@ -46,7 +47,7 @@ public class CTTestCase extends TestCase {
 
 	//
 	private Set<CTClient> clients = new HashSet<CTClient>();
-	LLog log = LLog.getLogger(this);
+	protected LLog log = LLog.getLogger(this);
 	private int usercounter = 0;
 	private FileBeanStorage beanstorage;
 	protected CTClient clientb;
@@ -58,7 +59,7 @@ public class CTTestCase extends TestCase {
 	protected void tearDown() throws Exception {
 		log.info("**************** STOP TEST " + getName() + " ************** ");
 
-//		startThreadChecker();
+		// startThreadChecker();
 
 		StaticTestPreferences.clearPorts();
 		for (CTClient e : clients) {

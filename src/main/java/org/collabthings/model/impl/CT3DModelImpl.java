@@ -82,7 +82,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	@Override
 	public WObject getObject() {
 		WObject b = o.getBean();
-		getBean(b);
+		getBean(b.add("content"));
 		return b;
 	}
 
@@ -103,7 +103,8 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	}
 
 	@Override
-	public boolean parse(WObject bean) {
+	public boolean parse(WObject main) {
+		WObject bean = main.get("content");
 		name = bean.getValue("name");
 		binaryid = new BinaryID(bean.getIDValue(BINARYID));
 

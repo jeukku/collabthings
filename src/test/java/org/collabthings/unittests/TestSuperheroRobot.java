@@ -10,12 +10,13 @@ import org.collabthings.environment.impl.CTRunEnvironmentImpl;
 import org.collabthings.environment.impl.CTToolState;
 import org.collabthings.environment.impl.CTToolUser;
 import org.collabthings.environment.impl.ReallySimpleSuperheroRobot;
-import com.jme3.math.Vector3f;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.model.impl.CTToolImpl;
 import org.xml.sax.SAXException;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.common.MTimedFlag;
 

@@ -15,13 +15,14 @@ import java.util.List;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTListener;
-import com.jme3.math.Vector3f;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTModel;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTTriangleMesh;
 import org.collabthings.scene.CTGroup;
 import org.collabthings.util.LLog;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -215,7 +216,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	@Override
 	public WObject getObject() {
 		WObject b = o.getBean();
-		getBean(b);
+		getBean(b.add("content"));
 		return b;
 	}
 
@@ -223,18 +224,21 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		b.setBase64Value(SCRIPT, script);
 		b.addValue(VARIABLE_NAME, name);
 		b.addValue(VARIABLE_SCALE, scale);
-		b.addValue(VARIABLE_MODEL, model.getID());
+		if (model != null) {
+			b.addValue(VARIABLE_MODEL, model.getID());
+		}
 	}
 
 	@Override
-	public boolean parse(final WObject bean) {
-		script = bean.getBase64Value(SCRIPT);
+	public boolean parse(final WObject main) {
+		WObject content = main.get("content");
+		script = content.getBase64Value(SCRIPT);
 		loadedscadhash = getScript().hashCode();
 
-		this.name = bean.getValue(VARIABLE_NAME);
-		this.scale = bean.getDoubleValue(VARIABLE_SCALE);
+		this.name = content.getValue(VARIABLE_NAME);
+		this.scale = content.getDoubleValue(VARIABLE_SCALE);
 
-		if (!model.load(bean.getIDValue(VARIABLE_MODEL))) {
+		if (!model.load(content.getIDValue(VARIABLE_MODEL))) {
 			log.info("Loading model failed. Creating it.");
 
 			createModel();

@@ -44,6 +44,8 @@ public final class TestOpenSCAD extends CTTestCase {
 		assertNotNull(m);
 
 		part.publish();
+		
+		String partid = part.getID().toString();
 
 		CTClient benv = getNewClient(true);
 		assertNotNull(benv);
@@ -57,6 +59,11 @@ public final class TestOpenSCAD extends CTTestCase {
 		CTOpenSCAD bscad = (CTOpenSCAD) bpart.getModel();
 		assertNotNull(bscad);
 		assertEquals(scad.getScript(), bscad.getScript());
+
+		assertEquals(scad.getObject().toText(), bscad.getObject().toText());
+
+		assertEquals(part.getObject().toText(), bpart.getObject().toText());
+		assertEquals(bpartid, partid);
 	}
 
 	public void testGear() throws IOException, SAXException {

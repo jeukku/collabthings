@@ -3,9 +3,10 @@ package org.collabthings.model.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jme3.math.Vector3f;
 import org.collabthings.model.CTTriangle;
 import org.collabthings.model.CTTriangleMesh;
+
+import com.jme3.math.Vector3f;
 
 public class CTTriangleMeshImpl implements CTTriangleMesh {
 

@@ -6,7 +6,6 @@ import javax.script.ScriptException;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
-import com.jme3.math.Vector3f;
 import org.collabthings.model.CTAttachedFactory;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTFactory;
@@ -14,6 +13,8 @@ import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.common.MStringID;
 

@@ -76,10 +76,6 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 		return p;
 	}
 
-	public long getModifyTime() {
-		return o.getModifytime();
-	}
-
 	public long getCreationTime() {
 		return o.getCreationtime();
 	}

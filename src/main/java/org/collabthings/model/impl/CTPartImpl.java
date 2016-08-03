@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTListener;
-import com.jme3.math.Vector3f;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTMaterial;
 import org.collabthings.model.CTModel;
@@ -16,6 +15,8 @@ import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.util.LLog;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -373,6 +374,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	private void changed() {
+		o.modified();
 		this.storedobject = null;
 		listeners.stream().forEach((e) -> e.event());
 	}

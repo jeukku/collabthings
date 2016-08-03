@@ -4,12 +4,13 @@ import org.collabthings.CTToolException;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.math.LOrientation;
-import com.jme3.math.Vector3f;
 import org.collabthings.model.CTRuntimeObject;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.CTValues;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
+
+import com.jme3.math.Vector3f;
 
 public class CTToolState implements CTRuntimeObject {
 

@@ -5,13 +5,14 @@ import java.util.List;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
-import com.jme3.math.Vector3f;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.model.impl.CTPartImpl;
 import org.xml.sax.SAXException;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.common.MStringID;
 import waazdoh.common.WObject;

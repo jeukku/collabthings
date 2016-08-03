@@ -171,7 +171,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	public CTPartImpl getPart() {
 		CTPartImpl p = new CTPartImpl(client);
 		p.setReady();
-		
+
 		log.info("new part " + p.getObject());
 		synchronized (parts) {
 			parts.add(p);
@@ -291,8 +291,9 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			String message = "Loaded model doesn't have the id requested. Requested:" + scadid + " result:"
 					+ scad.getID();
 			message += "\nObject:\n" + scad.getObject().toText();
+			message += "\nService has\n" + client.getService().getObjects().read(scadid.toString()).toObject().toText();
 			log.info(message);
-			return null;
+			return scad;
 		} else {
 			openscads.add(scad);
 			return scad;

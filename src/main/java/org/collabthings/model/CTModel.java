@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.collabthings.CTListener;
-import com.jme3.math.Vector3f;
 import org.collabthings.scene.CTGroup;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.common.ObjectID;
 

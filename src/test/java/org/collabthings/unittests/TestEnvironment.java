@@ -6,11 +6,12 @@ import javax.script.ScriptException;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
-import com.jme3.math.Vector3f;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.model.impl.CTScriptImpl;
 import org.xml.sax.SAXException;
+
+import com.jme3.math.Vector3f;
 
 public final class TestEnvironment extends CTTestCase {
 

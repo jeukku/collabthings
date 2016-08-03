@@ -6,10 +6,11 @@ import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.environment.impl.CTPartState;
 import org.collabthings.environment.impl.CTToolState;
-import com.jme3.math.Vector3f;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.simulation.CTStepRunner;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.common.MTimedFlag;
 

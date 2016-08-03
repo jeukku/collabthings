@@ -8,10 +8,11 @@ import java.io.InputStreamReader;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
-import com.jme3.math.Vector3f;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.impl.CT3DModelImpl;
 import org.xml.sax.SAXException;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.common.MStringID;
@@ -29,13 +30,19 @@ public final class Test3DModel extends CTTestCase {
 		am.setTranslation(new Vector3f(1, 0, 1));
 		am.setScale(10);
 
+		log.info("amodel " + am.getObject().toText());
 		am.publish();
-		//
+		log.info("amodel " + am.getObject().toText());
+
 		CTClient benv = getNewClient();
 		assertNotNull(benv);
 		CT3DModelImpl bm = new CT3DModelImpl(benv);
 		bm.load(am.getID().getStringID());
 		assertEquals(am.getName(), bm.getName());
+		log.info("amodel " + am.getObject().toText());
+		log.info("bmodel " + bm.getObject().toText());
+
+		assertEquals(am.getObject().toText(), bm.getObject().toText());
 		assertEquals(am, bm);
 	}
 
