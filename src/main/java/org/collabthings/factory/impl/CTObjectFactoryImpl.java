@@ -198,7 +198,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			} else {
 				log.info("part not found with id " + partid);
 				ps.stream().forEach(p -> {
-					log.info("stored " + p.getID());
+					log.fine("stored " + p.getID());
 				});
 
 				part = new CTPartImpl(client);
