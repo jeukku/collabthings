@@ -36,7 +36,7 @@ public class LOrientation {
 
 	public LOrientation(Vector3f nlocation, Vector3f nnormal, float nangle) {
 		location.set(nlocation);
-		nnormal.set(nnormal);
+		normal.set(nnormal);
 		angle = nangle;
 	}
 

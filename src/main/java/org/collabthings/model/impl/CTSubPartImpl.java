@@ -152,10 +152,9 @@ public final class CTSubPartImpl implements CTSubPart {
 	@Override
 	public void setOrientation(Vector3f location, Vector3f normal, double angle) {
 		this.p.set(location);
-		this.n.set(normal);
-		this.n.normalize();
+		this.n.set(normal.normalize());
 		transformation = null;
-		this.angle = angle;
+		this.angle = CTMath.limitAngle(angle);
 		changed();
 	}
 
