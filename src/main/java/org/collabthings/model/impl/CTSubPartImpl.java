@@ -145,11 +145,7 @@ public final class CTSubPartImpl implements CTSubPart {
 
 	@Override
 	public Transform getTransformation() {
-		if (transformation == null) {
-			transformation = new LOrientation(getLocation(), getNormal(), (float) angle).getTransformation(); // TODO
-			// fix
-			// angle
-		}
+		transformation = new LOrientation(getLocation(), getNormal(), (float) angle).getTransformation(); // TODO
 		return transformation;
 	}
 
