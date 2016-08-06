@@ -17,4 +17,6 @@ public interface CTObject {
 
 	boolean parse(WObject o);
 
+	String getName();
+
 }
