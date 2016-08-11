@@ -160,11 +160,11 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				MStringID scadid = data.getIDValue(VALUENAME_MODELID);
 				CTOpenSCAD nscad = this.env.getObjectFactory().getOpenScad(scadid);
 				model = nscad;
-			} else if(CTModel.HEIGHTMAP.equals(type)) {
+			} else if (CTModel.HEIGHTMAP.equals(type)) {
 				MStringID scadid = data.getIDValue(VALUENAME_MODELID);
 				CTHeightmap nhm = this.env.getObjectFactory().getHeightmap(scadid);
-				model = nhm;				
-			} else if(CTModel.BINARY.equals(type)){
+				model = nhm;
+			} else {
 				MStringID modelid = data.getIDValue(VALUENAME_MODELID);
 				CT3DModelImpl m = new CT3DModelImpl(env);
 				m.load(modelid);
