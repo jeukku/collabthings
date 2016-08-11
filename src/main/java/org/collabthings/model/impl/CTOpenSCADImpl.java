@@ -9,9 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTListener;
@@ -19,7 +17,7 @@ import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTModel;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTTriangleMesh;
-import org.collabthings.scene.CTGroup;
+import org.collabthings.util.CTListeners;
 import org.collabthings.util.LLog;
 
 import com.jme3.math.Vector3f;
@@ -59,7 +57,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	private Vector3f translation = new Vector3f();
 	private double scale = 1;
 	private boolean disabled;
-	private List<CTListener> listeners = new ArrayList<>();
+	private CTListeners listeners = new CTListeners();
 
 	/**
 	 * Creates a new script with random ID.
@@ -96,17 +94,11 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	}
 
 	private void changed() {
-		listeners.stream().forEach((l) -> l.event());
+		listeners.fireEvent();
 	}
 
 	private boolean isChanged() {
 		return loadedscadhash != getScript().hashCode();
-	}
-
-	@Override
-	public void addTo(CTGroup g) {
-		this.getModel().addTo(g);
-
 	}
 
 	@Override

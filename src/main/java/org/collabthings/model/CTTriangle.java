@@ -6,11 +6,15 @@ public final class CTTriangle {
 	private final int a, b, c;
 	private final Vector3f n;
 
-	public CTTriangle(int a, int b, int c, Vector3f n) {
+	public CTTriangle(int a, int b, int c, Vector3f nn) {
 		this.a = a;
 		this.b = b;
 		this.c = c;
-		this.n = new Vector3f(n);
+		if (nn != null) {
+			this.n = new Vector3f(nn);
+		} else {
+			n = null;
+		}
 	}
 
 	public Vector3f getN() {

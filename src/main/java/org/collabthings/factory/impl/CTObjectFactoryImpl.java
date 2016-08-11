@@ -10,6 +10,7 @@ import java.util.Set;
 import org.collabthings.CTClient;
 import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.model.CTBinaryModel;
+import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTInfo;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPartBuilder;
@@ -17,6 +18,7 @@ import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.impl.CT3DModelImpl;
 import org.collabthings.model.impl.CTFactoryImpl;
+import org.collabthings.model.impl.CTHeightmapImpl;
 import org.collabthings.model.impl.CTOpenSCADImpl;
 import org.collabthings.model.impl.CTPartBuilderImpl;
 import org.collabthings.model.impl.CTPartImpl;
@@ -40,6 +42,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	private List<CTRunEnvironmentBuilder> runtimebuilders = new ArrayList<>();
 	private List<CTPartBuilder> partbuilders = new ArrayList<>();
 	private List<CTOpenSCAD> openscads = new ArrayList<>();
+	private List<CTHeightmap> heightmaps = new ArrayList<>();
 
 	private LLog log = LLog.getLogger(this);
 
@@ -298,6 +301,22 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			openscads.add(scad);
 			return scad;
 		}
+	}
+
+	@Override
+	public CTHeightmap getHeightmap(MStringID hmid) {
+		synchronized (heightmaps) {
+			for (CTHeightmap os : heightmaps) {
+				if (os.getID().getStringID().equals(hmid)) {
+					return os;
+				}
+			}
+		}
+
+		CTHeightmap hm = new CTHeightmapImpl(client);
+		hm.load(hmid);
+		heightmaps.add(hm);
+		return hm;
 	}
 
 	@Override

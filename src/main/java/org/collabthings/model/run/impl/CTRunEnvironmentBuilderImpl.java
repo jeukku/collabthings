@@ -59,6 +59,11 @@ public class CTRunEnvironmentBuilderImpl implements CTRunEnvironmentBuilder, Ser
 		o.load(idValue);
 	}
 
+	@Override
+	public boolean load(MStringID id) {
+		return o.load(id);
+	}
+
 	public CTFactoryState createFactoryState(String name, String id) {
 		CTFactory f = client.getObjectFactory().getFactory(new MStringID(id));
 		CTFactoryState state = new CTFactoryState(client, env, name, f);

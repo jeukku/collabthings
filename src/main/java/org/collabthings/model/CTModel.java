@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.collabthings.CTListener;
-import org.collabthings.scene.CTGroup;
 
 import com.jme3.math.Vector3f;
 
@@ -13,6 +12,8 @@ import waazdoh.common.ObjectID;
 public interface CTModel {
 
 	String SCAD = "openscad";
+	String HEIGHTMAP = "heightmap";
+	String BINARY = "binary";
 
 	ObjectID getID();
 
@@ -35,8 +36,6 @@ public interface CTModel {
 	Vector3f getTranslation();
 
 	void setTranslation(Vector3f translation);
-
-	void addTo(CTGroup g);
 
 	boolean isDisabled();
 

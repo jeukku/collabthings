@@ -22,9 +22,7 @@ import org.collabthings.math.CTMath;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTModel;
 import org.collabthings.model.CTTriangleMesh;
-import org.collabthings.scene.CTGroup;
 import org.collabthings.scene.StlMeshImporter;
-import org.collabthings.scene.X3dModelImporter;
 import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
 
@@ -243,26 +241,6 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		} else {
 			log.info("Unknown extension " + extension);
 			return false;
-		}
-	}
-
-	@Override
-	public void addTo(CTGroup g) {
-		try {
-			if (CTBinaryModel.TYPE_X3D.equals(getType())) {
-				X3dModelImporter i = new X3dModelImporter();
-				i.read(getModelFile());
-
-				CTTriangleMesh mesh = i.getImport();
-				g.add(mesh);
-			} else if (CTBinaryModel.TYPE_STL.equals(getType())) {
-				StlMeshImporter i = new StlMeshImporter();
-				i.setFile(getModelFile());
-				CTTriangleMesh mesh = i.getImport();
-				g.add(mesh);
-			}
-		} catch (SAXException | IOException e) {
-			log.error(this, "addTo", e);
 		}
 	}
 

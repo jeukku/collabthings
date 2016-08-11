@@ -40,6 +40,11 @@ public final class CTToolImpl implements ServiceObjectData, CTObject, CTTool {
 	}
 
 	@Override
+	public boolean load(MStringID id) {
+		return o.load(id);
+	}
+
+	@Override
 	public WObject getObject() {
 		WObject b = o.getBean();
 		b.addValue(VALUENAME_NAME, getName());

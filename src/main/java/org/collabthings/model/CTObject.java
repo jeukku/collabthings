@@ -1,5 +1,6 @@
 package org.collabthings.model;
 
+import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
 import waazdoh.common.WObject;
 
@@ -18,5 +19,7 @@ public interface CTObject {
 	boolean parse(WObject o);
 
 	String getName();
+
+	boolean load(MStringID id);
 
 }

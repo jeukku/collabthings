@@ -48,4 +48,6 @@ public interface CTPart extends CTObject {
 
 	void addChangeListener(CTListener listener);
 
+	CTHeightmap newHeightmap();
+
 }

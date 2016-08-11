@@ -8,6 +8,7 @@ import java.util.List;
 import org.collabthings.CTClient;
 import org.collabthings.CTListener;
 import org.collabthings.model.CTBoundingBox;
+import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTMaterial;
 import org.collabthings.model.CTModel;
 import org.collabthings.model.CTOpenSCAD;
@@ -159,7 +160,11 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				MStringID scadid = data.getIDValue(VALUENAME_MODELID);
 				CTOpenSCAD nscad = this.env.getObjectFactory().getOpenScad(scadid);
 				model = nscad;
-			} else {
+			} else if(CTModel.HEIGHTMAP.equals(type)) {
+				MStringID scadid = data.getIDValue(VALUENAME_MODELID);
+				CTHeightmap nhm = this.env.getObjectFactory().getHeightmap(scadid);
+				model = nhm;				
+			} else if(CTModel.BINARY.equals(type)){
 				MStringID modelid = data.getIDValue(VALUENAME_MODELID);
 				CT3DModelImpl m = new CT3DModelImpl(env);
 				m.load(modelid);
@@ -360,6 +365,16 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public void resetModel() {
 		model = null;
+	}
+
+	@Override
+	public CTHeightmap newHeightmap() {
+		CTHeightmapImpl map = new CTHeightmapImpl(env);
+		model = map;
+		model.addChangeListener(() -> changed());
+
+		changed();
+		return map;
 	}
 
 	@Override

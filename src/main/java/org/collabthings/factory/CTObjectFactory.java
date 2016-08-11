@@ -2,6 +2,7 @@ package org.collabthings.factory;
 
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTInfo;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
@@ -45,5 +46,7 @@ public interface CTObjectFactory {
 	String getType(MStringID id);
 
 	CTOpenSCAD getOpenScad(MStringID scadid);
+
+	CTHeightmap getHeightmap(MStringID scadid);
 
 }

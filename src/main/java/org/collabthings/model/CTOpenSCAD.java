@@ -1,7 +1,5 @@
 package org.collabthings.model;
 
-import waazdoh.common.MStringID;
-
 public interface CTOpenSCAD extends CTObject, CTModel {
 
 	String getError();
@@ -17,6 +15,4 @@ public interface CTOpenSCAD extends CTObject, CTModel {
 	void setName(String string);
 
 	String getScript();
-
-	boolean load(MStringID id);
 }

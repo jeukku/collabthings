@@ -54,6 +54,11 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	}
 
 	@Override
+	public boolean load(MStringID id) {
+		return o.load(id);
+	}
+
+	@Override
 	public String toString() {
 		return "Environment";
 	}
