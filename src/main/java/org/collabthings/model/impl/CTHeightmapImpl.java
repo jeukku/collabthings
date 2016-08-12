@@ -22,6 +22,8 @@ import waazdoh.common.ObjectID;
 import waazdoh.common.WObject;
 
 public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData {
+	private static final String SCRIPT = "script";
+
 	private CTClient client;
 	private ServiceObject o;
 	//
@@ -29,9 +31,17 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 	private Vector3f tr;
 	private boolean disabled = false;
 	private CTListeners changelisteners = new CTListeners();
-	private CTScript script;
+	private String script;
 	private CTTriangleMesh mesh;
 	private String name;
+
+	private int resolutionx = 100, resolutionz = 100;
+	private float sizex = 10000.0f, sizez = 10000.0f;
+
+	private CTListeners listeners = new CTListeners();
+	private String error;
+
+	private int loadedscadhash;
 
 	public CTHeightmapImpl(CTClient client) {
 		this.client = client;
@@ -70,30 +80,28 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 			List<Vector3f> vs = mesh.getVectors();
 			List<CTTriangle> triangles = mesh.getTriangles();
 
-			int isize = 100;
-			float size = 100000.0f;
+			for (int ix = 0; ix < resolutionx; ix++) {
+				for (int iz = 0; iz < resolutionz; iz++) {
+					float xa = (ix - sizex / 2.0f) / resolutionx;
+					float za = (iz - sizez / 2.0f) / resolutionz;
 
-			for (int ix = 0; ix < isize; ix++) {
-				for (int iz = 0; iz < isize; iz++) {
-					float xa = (ix - isize / 2) * size;
-					float za = (iz - isize / 2) * size;
-
-					float ya = (float) (Math.sin(xa / size / isize * 13) * (size * isize / 10));
-					ya += (float) (Math.sin(za / size / isize * 13) * (size * isize / 10));
+					float ya = (float) (Math.sin(xa * 13) * (sizex / 10));
+					ya += (float) (Math.sin(za * 13) * (sizez / 10));
 
 					int iv = vs.size();
-					vs.add(new Vector3f(xa, ya, za));
+					vs.add(new Vector3f(xa * sizex, ya, za * sizez));
 				}
 			}
 
-			for (int ixa = 0; ixa < isize - 1; ixa++) {
-				for (int iza = 0; iza < isize - 1; iza++) {
+			for (int ixa = 0; ixa < resolutionx - 1; ixa++) {
+				for (int iza = 0; iza < resolutionz - 1; iza++) {
 					int ixb = ixa + 1;
 					int izb = iza + 1;
-					int via = ixa * isize + iza;
-					int vib = ixa * isize + iza + 1;
-					int vic = ixa * isize + iza + isize;
-					int vid = ixa * isize + iza + isize + 1;
+					int ifirst = ixa * resolutionz;
+					int via = ifirst + iza;
+					int vib = ifirst + iza + 1;
+					int vic = ifirst + iza + resolutionz;
+					int vid = ifirst + iza + resolutionz + 1;
 
 					triangles.add(new CTTriangle(via, vic, vib, null));
 					triangles.add(new CTTriangle(vid, vib, vic, null));
@@ -159,7 +167,15 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 		WObject content = bean.get("content");
 		scale = content.getDoubleValue("scale");
 		name = content.getValue("name");
-		script = client.getObjectFactory().getScript(content.getIDValue("script"));
+
+		script = content.getBase64Value(SCRIPT);
+		loadedscadhash = getScript().hashCode();
+
+		resolutionx = content.getIntValue("resolutionx");
+		resolutionz = content.getIntValue("resolutionz");
+		sizex = (float) content.getDoubleValue("sizex");
+		sizez = (float) content.getDoubleValue("sizez");
+
 		return true;
 	}
 
@@ -169,9 +185,79 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 		WObject c = ob.add("content");
 		c.addValue("scale", scale);
 		if (script != null) {
-			c.addValue("script", script.getID());
+			c.setBase64Value("script", script);
 		}
+
+		c.addValue("resolutionx", resolutionx);
+		c.addValue("resolutionz", resolutionz);
+
 		return ob;
+	}
+
+	@Override
+	public void setScript(final String nscript) {
+		this.script = nscript;
+		error = null;
+		changed();
+	}
+
+	@Override
+	public String getError() {
+		if (error == null) {
+			return null;
+		} else {
+			return error.toString();
+		}
+	}
+
+	@Override
+	public String getScript() {
+		return script;
+	}
+
+	@Override
+	public boolean isOK() {
+		return error == null;
+	}
+
+	public int getResolutionx() {
+		return resolutionx;
+	}
+
+	public void setResolutionx(int resolutionx) {
+		this.resolutionx = resolutionx;
+	}
+
+	public int getResolutionz() {
+		return resolutionz;
+	}
+
+	public void setResolutionz(int resolutionz) {
+		this.resolutionz = resolutionz;
+	}
+
+	public float getSizex() {
+		return sizex;
+	}
+
+	public void setSizex(float sizex) {
+		this.sizex = sizex;
+	}
+
+	public float getSizez() {
+		return sizez;
+	}
+
+	public void setSizez(float sizez) {
+		this.sizez = sizez;
+	}
+
+	private void changed() {
+		listeners.fireEvent();
+	}
+
+	private boolean isChanged() {
+		return loadedscadhash != getScript().hashCode();
 	}
 
 }

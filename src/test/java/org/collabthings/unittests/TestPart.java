@@ -44,7 +44,6 @@ public final class TestPart extends CTTestCase {
 		CTSubPart subsub = subpart2.getPart().newSubPart();
 		subsub.getPart().newSubPart().setName("thesub");
 
-		//
 		part.save();
 		part.publish();
 		//
