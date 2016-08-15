@@ -264,6 +264,7 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 
 	@Override
 	public void stop() {
+		stopped = true;
 		for (CTRuntimeObject o : this.objects.values()) {
 			o.stop();
 		}
