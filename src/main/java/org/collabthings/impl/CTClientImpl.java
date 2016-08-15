@@ -135,7 +135,7 @@ public final class CTClientImpl implements CTClient {
 
 		path = path.replace("//", "/");
 		log.info("reading " + username + " path:" + path);
-		return client.getService().getStorageArea().read(new StorageAreaVO(username, path, null));
+		return client.getService().getStorageArea().read(new StorageAreaVO(username, path, null)).getData();
 	}
 
 	@Override

@@ -45,7 +45,7 @@ public class CTStorageImpl implements CTStorage {
 		if (indexOf >= 0) {
 			String username = npath.substring(0, indexOf);
 			String path = npath.substring(indexOf + 1);
-			String value = service.getStorageArea().read(new StorageAreaVO(username, path, null));
+			String value = service.getStorageArea().read(new StorageAreaVO(username, path, null)).getData();
 			log.info("readStorage username:" + username + " path:" + path + " got value:\"" + value + "\"");
 
 			return value;
@@ -58,7 +58,7 @@ public class CTStorageImpl implements CTStorage {
 	@Override
 	public String readStorage(UserVO u, String item) {
 		if (u != null) {
-			return service.getStorageArea().read(new StorageAreaVO(u.getUsername(), item, null));
+			return service.getStorageArea().read(new StorageAreaVO(u.getUsername(), item, null)).getData();
 		} else {
 			LLog.getLogger(this).info("User null -> returning null");
 			return null;
