@@ -166,14 +166,14 @@ public final class CTToolImpl implements ServiceObjectData, CTObject, CTTool {
 
 	@Override
 	public int hashCode() {
-		return getObject().toText().hashCode();
+		return getObject().toYaml().hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof CTToolImpl) {
 			CTToolImpl tool = (CTToolImpl) obj;
-			return getObject().toText().equals(tool.getObject().toText());
+			return getObject().toYaml().equals(tool.getObject().toYaml());
 		} else {
 			return false;
 		}

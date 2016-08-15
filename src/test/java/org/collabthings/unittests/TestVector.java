@@ -36,7 +36,7 @@ public final class TestVector extends CTTestCase {
 	public void testWObject() {
 		Vector3f v = new Vector3f(1, 2, 3);
 		WObject w = CTMath.getBean(v);
-		String t = w.toText();
+		String t = w.toYaml();
 		int length = t.split("\n").length;
 		assertTrue("lines in " + t + " is " + length, length == 3);
 	}

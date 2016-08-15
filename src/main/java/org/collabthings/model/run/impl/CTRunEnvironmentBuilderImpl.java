@@ -159,7 +159,7 @@ public class CTRunEnvironmentBuilderImpl implements CTRunEnvironmentBuilder, Ser
 		PrintOut po = new PrintOut();
 		po.append("RunEnvBuilder");
 		po.append("Bean");
-		po.append(1, getObject().toText());
+		po.append(1, getObject().toYaml());
 
 		po.append("Env");
 		po.append(1, env.printOut());

@@ -78,6 +78,11 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	}
 
 	@Override
+	public long getModified() {
+		return o.getModified();
+	}
+
+	@Override
 	public WObject getObject() {
 		WObject b = o.getBean();
 		getBean(b.add("content"));
@@ -163,6 +168,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	@Override
 	public void setName(String n) {
 		this.name = n;
+		o.modified();
 	}
 
 	@Override
@@ -174,6 +180,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		String comment = "CT3DModel";
 		String extension = getType();
 		binaryid = env.getBinarySource().newBinary(comment, extension).getID();
+		o.modified();
 		return getBinary();
 	}
 
@@ -233,6 +240,8 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		setType(extension);
 
 		mesh = null;
+
+		o.modified();
 
 		if (CTBinaryModel.TYPE_STL.equals(extension)) {
 			return importSTL(fr);

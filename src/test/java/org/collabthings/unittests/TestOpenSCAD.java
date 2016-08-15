@@ -60,9 +60,9 @@ public final class TestOpenSCAD extends CTTestCase {
 		assertNotNull(bscad);
 		assertEquals(scad.getScript(), bscad.getScript());
 
-		assertEquals(scad.getObject().toText(), bscad.getObject().toText());
+		assertEquals(scad.getObject().toYaml(), bscad.getObject().toYaml());
 
-		assertEquals(part.getObject().toText(), bpart.getObject().toText());
+		assertEquals(part.getObject().toYaml(), bpart.getObject().toYaml());
 		assertEquals(bpartid, partid);
 	}
 

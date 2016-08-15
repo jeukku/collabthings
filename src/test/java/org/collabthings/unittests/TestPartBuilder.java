@@ -31,7 +31,7 @@ public final class TestPartBuilder extends CTTestCase {
 		clientb = getNewClient();
 
 		CTPartBuilder pbb = clientb.getObjectFactory().getPartBuilder(pba.getID().getStringID());
-		assertEquals(pba.getObject().toText(), pbb.getObject().toText());
+		assertEquals(pba.getObject().toYaml(), pbb.getObject().toYaml());
 
 		CTPart p = clientb.getObjectFactory().getPart();
 		boolean success = pbb.run(p);

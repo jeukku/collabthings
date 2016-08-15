@@ -336,8 +336,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			thisb.addValue("modifytime", 0);
 			thatb.addValue("modifytime", 0);
 			if (!thisb.equals(thatb)) {
-				LLog.getLogger(this).info("this " + thisb.toText());
-				LLog.getLogger(this).info("is not equal to " + thatb.toText());
+				LLog.getLogger(this).info("this " + thisb.toYaml());
+				LLog.getLogger(this).info("is not equal to " + thatb.toYaml());
 				return false;
 			} else {
 				return true;
@@ -365,6 +365,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public void resetModel() {
 		model = null;
+		changed();
 	}
 
 	@Override

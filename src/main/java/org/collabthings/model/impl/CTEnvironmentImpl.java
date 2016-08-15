@@ -347,7 +347,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	public PrintOut printOut() {
 		PrintOut po = new PrintOut();
 
-		po.append(0, getObject().toText());
+		po.append(0, getObject().toYaml());
 
 		return po;
 	}

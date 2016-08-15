@@ -82,6 +82,11 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	}
 
 	@Override
+	public long getModified() {
+		return o.getModified();
+	}
+
+	@Override
 	public synchronized CTModel getModel() {
 		if (isChanged()) {
 			if (createModel()) {
@@ -94,6 +99,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	}
 
 	private void changed() {
+		o.modified();		
 		listeners.fireEvent();
 	}
 
@@ -103,14 +109,14 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 
 	@Override
 	public int hashCode() {
-		return getObject().toText().hashCode();
+		return getObject().toYaml().hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof CTOpenSCADImpl) {
 			CTOpenSCADImpl o = (CTOpenSCADImpl) obj;
-			return o.getObject().toText().equals(getObject().toText());
+			return o.getObject().toYaml().equals(getObject().toYaml());
 		} else {
 			return false;
 		}
@@ -286,6 +292,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	@Override
 	public void save() {
 		getServiceObject().save();
+		changed();
 	}
 
 	public String getScript() {

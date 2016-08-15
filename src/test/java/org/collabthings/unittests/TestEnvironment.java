@@ -30,7 +30,7 @@ public final class TestEnvironment extends CTTestCase {
 
 		CTScript loadedscript = newe.getScript("test");
 		assertNotNull(loadedscript);
-		assertEquals(ctScript.getObject().toText(), loadedscript.getObject().toText());
+		assertEquals(ctScript.getObject().toYaml(), loadedscript.getObject().toYaml());
 	}
 
 	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ScriptException {
@@ -53,7 +53,7 @@ public final class TestEnvironment extends CTTestCase {
 		CTClient bc = getNewClient();
 		assertNotNull(bc);
 		CTEnvironmentImpl benv = new CTEnvironmentImpl(c, e.getServiceObject().getID().getStringID());
-		assertEquals(e.getServiceObject().getBean().toText(), benv.getServiceObject().getBean().toText());
+		assertEquals(e.getServiceObject().getBean().toYaml(), benv.getServiceObject().getBean().toYaml());
 		assertNotNull(benv.getParameter(paramname));
 		assertEquals(e.getParameter(paramname), benv.getParameter(paramname));
 	}

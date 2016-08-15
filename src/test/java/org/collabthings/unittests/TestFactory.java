@@ -67,7 +67,7 @@ public final class TestFactory extends CTTestCase {
 		//
 		assertEquals(f.getToolUserSpawnLocation(), bfact.getToolUserSpawnLocation());
 
-		assertEquals(f.getObject().toText(), bfact.getObject().toText());
+		assertEquals(f.getObject().toYaml(), bfact.getObject().toYaml());
 		assertEquals(f.hashCode(), bfact.hashCode());
 	}
 
@@ -78,12 +78,12 @@ public final class TestFactory extends CTTestCase {
 		CTClient bc = getNewClient();
 		CTFactory bf = bc.getObjectFactory().getFactory(af.getID().getStringID());
 
-		LLog.getLogger(af).info(af.getObject().toText());
-		LLog.getLogger(bf).info(bf.getObject().toText());
+		LLog.getLogger(af).info(af.getObject().toYaml());
+		LLog.getLogger(bf).info(bf.getObject().toYaml());
 		LLog.getLogger(af).info(af.printOut().toText());
 		LLog.getLogger(bf).info(bf.printOut().toText());
 
-		assertEquals(af.getObject().toText(), bf.getObject().toText());
+		assertEquals(af.getObject().toYaml(), bf.getObject().toYaml());
 		assertNotSame(af, bf);
 		assertTrue(af.getObject().equals(bf.getObject()));
 		af.setName("test");
@@ -109,7 +109,7 @@ public final class TestFactory extends CTTestCase {
 
 		childf.setName(childfactoryname);
 		childf.addScript("testscript");
-		LLog.getLogger(this).info("publishing first " + f.getObject().toText());
+		LLog.getLogger(this).info("publishing first " + f.getObject().toYaml());
 
 		f.publish();
 
@@ -126,14 +126,14 @@ public final class TestFactory extends CTTestCase {
 		MStringID factoryid = f.getID().getStringID();
 		CTFactory bf = bc.getObjectFactory().getFactory(factoryid);
 
-		LLog.getLogger(this).info("first " + f.getObject().toText());
-		LLog.getLogger(this).info("second " + bf.getObject().toText());
+		LLog.getLogger(this).info("first " + f.getObject().toYaml());
+		LLog.getLogger(this).info("second " + bf.getObject().toYaml());
 
-		assertEquals(f.getObject().toText(), bf.getObject().toText());
+		assertEquals(f.getObject().toYaml(), bf.getObject().toYaml());
 		CTFactory bchildf = bf.getFactory(childfactoryid).getFactory();
 		assertNotNull(bchildf);
 		assertEquals(childfactoryname, bchildf.getName());
-		assertEquals(childf.getObject().toText(), bchildf.getObject().toText());
+		assertEquals(childf.getObject().toYaml(), bchildf.getObject().toYaml());
 	}
 
 	public void testChildFactory() {
@@ -148,11 +148,11 @@ public final class TestFactory extends CTTestCase {
 		//
 		CTClient bc = getNewClient();
 		CTFactory bf = bc.getObjectFactory().getFactory(f.getID().getStringID());
-		assertEquals(f.getObject().toText(), bf.getObject().toText());
+		assertEquals(f.getObject().toYaml(), bf.getObject().toYaml());
 		CTFactory bchildf = bf.getFactory(childfactoryid).getFactory();
 		assertNotNull(bchildf);
 		assertEquals(childfactoryname, bchildf.getName());
-		assertEquals(childf.getObject().toText(), bchildf.getObject().toText());
+		assertEquals(childf.getObject().toYaml(), bchildf.getObject().toYaml());
 	}
 
 	public void testBoundingBox() {
@@ -163,7 +163,7 @@ public final class TestFactory extends CTTestCase {
 		CTClient bc = getNewClient();
 		CTFactory bf = bc.getObjectFactory().getFactory(f.getID().getStringID());
 		CTBoundingBox bbox = bf.getBoundingBox();
-		assertEquals(f.getBoundingBox().getBean().toText(), bbox.getBean().toText());
+		assertEquals(f.getBoundingBox().getBean().toYaml(), bbox.getBean().toYaml());
 	}
 
 	public void testBoundingBoxInstance() {

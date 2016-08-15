@@ -54,6 +54,11 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 	}
 
 	@Override
+	public long getModified() {
+		return o.getModified();
+	}
+
+	@Override
 	public ObjectID getID() {
 		return o.getID();
 	}

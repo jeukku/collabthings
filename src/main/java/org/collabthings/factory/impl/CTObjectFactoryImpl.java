@@ -210,7 +210,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 					if (!part.getID().equals(partid)) {
 						String message = "Loaded part doesn't have the id requested. Requested:" + partid + " result:"
 								+ part.getID();
-						message += "\nObject:\n" + part.getObject().toText();
+						message += "\nObject:\n" + part.getObject().toYaml();
 						log.info(message);
 
 						errorids.put(partid, part.getID().getStringID());
@@ -271,7 +271,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			} else {
 				String message = "Loaded model doesn't have the id requested. Requested:" + modelid + " result:"
 						+ model.getID();
-				message += "\nObject:\n" + model.getObject().toText();
+				message += "\nObject:\n" + model.getObject().toYaml();
 				log.info(message);
 				throw new RuntimeException(message);
 			}
@@ -293,8 +293,8 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 		if (!scad.getID().equals(scadid)) {
 			String message = "Loaded model doesn't have the id requested. Requested:" + scadid + " result:"
 					+ scad.getID();
-			message += "\nObject:\n" + scad.getObject().toText();
-			message += "\nService has\n" + client.getService().getObjects().read(scadid.toString()).toObject().toText();
+			message += "\nObject:\n" + scad.getObject().toYaml();
+			message += "\nService has\n" + client.getService().getObjects().read(scadid.toString()).toObject().toYaml();
 			log.info(message);
 			return scad;
 		} else {

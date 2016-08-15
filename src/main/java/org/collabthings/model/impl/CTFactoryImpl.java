@@ -266,14 +266,14 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 
 	@Override
 	public int hashCode() {
-		return getObject().toText().hashCode();
+		return getObject().toYaml().hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof CTFactoryImpl) {
 			CTFactoryImpl fact = (CTFactoryImpl) obj;
-			return getObject().toText().equals(fact.getObject().toText());
+			return getObject().toYaml().equals(fact.getObject().toYaml());
 		} else {
 			return false;
 		}
@@ -329,7 +329,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 					cf.setBookmark(bookmark);
 					cf.set(bchildfactory.get("orientation"));
 				} else {
-					WLogger.getLogger(this).error("failed to load childfactory " + bchildfactory.toText());
+					WLogger.getLogger(this).error("failed to load childfactory " + bchildfactory.toYaml());
 				}
 			}
 		}

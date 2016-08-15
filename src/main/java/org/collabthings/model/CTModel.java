@@ -43,4 +43,6 @@ public interface CTModel {
 
 	void addChangeListener(CTListener l);
 
+	long getModified();
+
 }

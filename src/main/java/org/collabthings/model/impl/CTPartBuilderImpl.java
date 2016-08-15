@@ -126,14 +126,14 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 
 	@Override
 	public int hashCode() {
-		return getObject().toText().hashCode();
+		return getObject().toYaml().hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof CTPartBuilderImpl) {
 			CTPartBuilderImpl builder = (CTPartBuilderImpl) obj;
-			return getObject().toText().equals(builder.getObject().toText());
+			return getObject().toYaml().equals(builder.getObject().toYaml());
 		} else {
 			return false;
 		}

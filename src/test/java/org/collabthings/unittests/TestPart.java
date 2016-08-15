@@ -64,8 +64,8 @@ public final class TestPart extends CTTestCase {
 		assertTrue(bsubpart.getNamePath(), bsubpart.getNamePath().indexOf("subpartname") > 0);
 
 		//
-		assertEquals(bpart.getObject().toText(),
-				benv.getObjectFactory().getPart(bpart.getID().getStringID()).getObject().toText());
+		assertEquals(bpart.getObject().toYaml(),
+				benv.getObjectFactory().getPart(bpart.getID().getStringID()).getObject().toYaml());
 
 		assertEquals(bpart, benv.getObjectFactory().getPart(bpart.getID().getStringID()));
 	}

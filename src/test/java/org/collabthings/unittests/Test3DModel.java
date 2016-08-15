@@ -30,19 +30,19 @@ public final class Test3DModel extends CTTestCase {
 		am.setTranslation(new Vector3f(1, 0, 1));
 		am.setScale(10);
 
-		log.info("amodel " + am.getObject().toText());
+		log.info("amodel " + am.getObject().toYaml());
 		am.publish();
-		log.info("amodel " + am.getObject().toText());
+		log.info("amodel " + am.getObject().toYaml());
 
 		CTClient benv = getNewClient();
 		assertNotNull(benv);
 		CT3DModelImpl bm = new CT3DModelImpl(benv);
 		bm.load(am.getID().getStringID());
 		assertEquals(am.getName(), bm.getName());
-		log.info("amodel " + am.getObject().toText());
-		log.info("bmodel " + bm.getObject().toText());
+		log.info("amodel " + am.getObject().toYaml());
+		log.info("bmodel " + bm.getObject().toYaml());
 
-		assertEquals(am.getObject().toText(), bm.getObject().toText());
+		assertEquals(am.getObject().toYaml(), bm.getObject().toYaml());
 		assertEquals(am, bm);
 	}
 
