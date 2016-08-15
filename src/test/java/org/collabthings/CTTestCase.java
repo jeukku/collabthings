@@ -166,7 +166,7 @@ public class CTTestCase extends TestCase {
 			applogin = c.getClient().checkAppLogin(applogin.getId());
 
 			if (applogin != null && applogin.getSessionid() != null) {
-				p.set("session", applogin.getSessionid());
+				p.set(WPreferences.PREFERENCES_SESSION, applogin.getSessionid());
 
 				if (binarysource != null) {
 					ConditionWaiter.wait(() -> {
@@ -193,7 +193,7 @@ public class CTTestCase extends TestCase {
 	}
 
 	private String getSession(WPreferences p) {
-		return p.get("session", "");
+		return p.get(WPreferences.PREFERENCES_SESSION, "");
 	}
 
 	private ServiceClient getTestService(String username, WPreferences p, BinarySource source) throws SAXException {
