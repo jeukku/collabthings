@@ -16,6 +16,7 @@ import com.jme3.math.Vector3f;
 
 import waazdoh.common.MStringID;
 import waazdoh.common.WObject;
+import waazdoh.common.vo.ObjectVO;
 
 public final class TestPart extends CTTestCase {
 
@@ -83,7 +84,7 @@ public final class TestPart extends CTTestCase {
 		part.publish();
 		//
 		CTClient c2 = getNewClient();
-		List<String> items = c2.getService().getObjects().search(search, 0, 100);
+		List<ObjectVO> items = c2.getService().getObjects().search(search, 0, 100);
 		assertTrue(items.size() > 0);
 		assertTrue(items.contains(part.getID().toString()));
 	}
