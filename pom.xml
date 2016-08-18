@@ -217,11 +217,17 @@
 			<artifactId>jme3-lwjgl</artifactId>
 			<version>3.1.0-HEAD-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.waazdoh</groupId>
 			<artifactId>client</artifactId>
 			<version>1.5.3-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.collabthings</groupId>
+			<artifactId>register</artifactId>
+			<version>0.3.3-SNAPSHOT</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
