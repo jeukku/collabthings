@@ -3,21 +3,22 @@ package org.collabthings.unittests;
 import java.io.IOException;
 import java.util.List;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
 import org.xml.sax.SAXException;
 
-public final class TestLists extends LOTTestCase {
+public final class TestLists extends CTTestCase {
 
 	public void testWrite() throws IOException, SAXException {
-		LOTClient e = getNewClient();
+		CTClient e = getNewClient();
 		assertNotNull(e);
 		//
 
 		e.getStorage().writeToStorage("testpath", "testname", "testvalue");
-		List<String> list = e.getStorage().listStorage("testpath");
+		String username = e.getService().getUser().getUsername();
+		String path = "testpath";
+		List<String> list = e.getStorage().listStorage(path);
 		assertEquals("testname", list.iterator().next());
-		assertEquals("testvalue",
-				e.getStorage().readStorage(e.getService().getUser(), "testpath/testname"));
+		assertEquals("testvalue", e.getStorage().readStorage(e.getService().getUser(), "testpath/testname"));
 	}
 }

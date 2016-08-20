@@ -1,12 +1,9 @@
 package org.collabthings.environment;
 
-
-
-
 public interface RunEnvironmentListener {
 
-	void taskFailed(LOTRunEnvironment runenv, LOTTask task);
+	void taskFailed(CTRunEnvironment runenv, CTEnvironmentTask task);
 
-	void event(LOTRuntimeEvent e);
+	void event(CTRuntimeEvent e);
 
 }

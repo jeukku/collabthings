@@ -1,48 +1,49 @@
 package org.collabthings.unittests;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.impl.LOTFactoryState;
-import org.collabthings.environment.impl.LOTPartState;
-import org.collabthings.environment.impl.LOTToolState;
-import org.collabthings.math.LVector;
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
-import org.collabthings.simulation.LOTStepRunner;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.impl.CTFactoryState;
+import org.collabthings.environment.impl.CTPartState;
+import org.collabthings.environment.impl.CTToolState;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.impl.CTEnvironmentImpl;
+import org.collabthings.simulation.CTStepRunner;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.common.MTimedFlag;
 
-public final class TestFactoryState extends LOTTestCase {
+public final class TestFactoryState extends CTTestCase {
 
-	private LOTClient c;
+	private CTClient c;
 
 	public void testDestroyPart() {
-		LOTFactoryState state = getFactoryState();
+		CTFactoryState state = getFactoryState();
 		state.newPart();
-		LOTPartState p = state.getParts().iterator().next();
+		CTPartState p = state.getParts().iterator().next();
 		p.destroy();
 		//
 		assertTrue(state.getParts().isEmpty());
 	}
 
 	public void testGetFactory() {
-		LOTClient c = getNewClient();
-		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
-		LOTFactory f = c.getObjectFactory().getFactory();
+		CTClient c = getNewClient();
+		CTEnvironmentImpl e = new CTEnvironmentImpl(c);
+		CTFactory f = c.getObjectFactory().getFactory();
 
 		f.addFactory();
 		f.addFactory();
 		f.addFactory("testname");
 
-		LOTFactoryState state = new LOTFactoryState(c, e, "state", f);
+		CTFactoryState state = new CTFactoryState(c, e, "state", f);
 
 		assertNotNull(state.getFactory("testname"));
 		assertNull(state.getFactory("testname_FAIL"));
 	}
 
 	public void testGetFactoriesEmpty() {
-		LOTFactoryState state = getFactoryState();
+		CTFactoryState state = getFactoryState();
 
 		assertNull(state.getFactory("testname"));
 
@@ -50,23 +51,23 @@ public final class TestFactoryState extends LOTTestCase {
 		assertTrue(state.getFactories().isEmpty());
 	}
 
-	private LOTFactoryState getFactoryState() {
+	private CTFactoryState getFactoryState() {
 		c = getNewClient();
-		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
-		LOTFactory f = c.getObjectFactory().getFactory();
+		CTEnvironmentImpl e = new CTEnvironmentImpl(c);
+		CTFactory f = c.getObjectFactory().getFactory();
 
-		LOTFactoryState state = new LOTFactoryState(c, e, "state", f);
+		CTFactoryState state = new CTFactoryState(c, e, "state", f);
 		return state;
 	}
 
 	public void testTools() {
-		LOTFactoryState s = getFactoryState();
-		LOTToolState tool1 = s.addTool("tool", c.getObjectFactory().getTool());
-		LOTToolState tool2 = s.addTool("tool", c.getObjectFactory().getTool());
+		CTFactoryState s = getFactoryState();
+		CTToolState tool1 = s.addTool("tool", c.getObjectFactory().getTool());
+		CTToolState tool2 = s.addTool("tool", c.getObjectFactory().getTool());
 
 		tool1.setInUse();
-		tool1.setOrientation(new LVector(1000, 0, 0), new LVector(0, 1, 0), 0);
-		tool2.setOrientation(new LVector(), new LVector(0, 1, 0), 0);
+		tool1.setOrientation(new Vector3f(1000, 0, 0), new Vector3f(0, 1, 0), 0);
+		tool2.setOrientation(new Vector3f(), new Vector3f(0, 1, 0), 0);
 
 		assertEquals(tool2, s.getTool("tool"));
 		tool1.setAvailable();
@@ -78,13 +79,13 @@ public final class TestFactoryState extends LOTTestCase {
 	}
 
 	public void testRuntime() {
-		LOTFactoryState state = getFactoryState();
-		LOTRunEnvironment rune = state.getRunEnvironment();
+		CTFactoryState state = getFactoryState();
+		CTRunEnvironment rune = state.getRunEnvironment();
 
 		MTimedFlag flag = new MTimedFlag(10000);
 		MTimedFlag delay = new MTimedFlag(400);
 
-		new LOTStepRunner(0.1, 0.01, (dtime) -> {
+		new CTStepRunner(0.1, 0.01, (dtime) -> {
 			rune.step(dtime);
 			return !flag.isTriggered();
 		});

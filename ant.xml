@@ -17,8 +17,9 @@
     		project.setProperty("logname", before.replaceAll("\:", "_").replaceAll(" ", "_"));
 		</script>
 
-		<echo message="args $args ../logs/${projectname}_${logname}.log" />
-		<exec  executable="cmd" dir="${mvndir}" output="../logs/${projectname}_${logname}.log" >
+		<echo message="args $args ../../logs/${projectname}_${logname}.log" />
+		<mkdir dir="../../logs/"/>
+		<exec  executable="cmd" dir="${mvndir}" output="../../logs/${projectname}_${logname}.log" >
 			<arg value="/C mvn ${args}" />
 		</exec>
 	</target>

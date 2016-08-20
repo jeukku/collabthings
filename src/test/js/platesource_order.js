@@ -7,6 +7,7 @@ function run(e, factory, values) {
 	var log = e.log().instance("" + tool);
 
 	log.info("tool " + tool);
+	log.info("platesource order " + values);
 
 	factory.addTask("build", values);
 

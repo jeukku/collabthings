@@ -2,7 +2,7 @@ function run(envbuilder) {
 	envbuilder.printOut();
 
 	var boxid = envbuilder
-			.readStorage("self/published/factory/boxfactory/latest");
+			.readStorage("$SELF/published/factory/boxfactory/latest");
 	if (boxid != null) {
 		var order = envbuilder.getEnvironment().getScript("addorder");
 

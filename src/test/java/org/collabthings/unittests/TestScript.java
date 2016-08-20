@@ -1,34 +1,31 @@
 package org.collabthings.unittests;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
-import org.collabthings.environment.impl.LOTScriptRunnerImpl;
-import org.collabthings.model.LOTEnvironment;
-import org.collabthings.model.LOTScript;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.impl.CTRunEnvironmentImpl;
+import org.collabthings.environment.impl.CTScriptRunnerImpl;
+import org.collabthings.model.CTEnvironment;
+import org.collabthings.model.CTScript;
+import org.collabthings.model.impl.CTEnvironmentImpl;
 
-public final class TestScript extends LOTTestCase {
+public final class TestScript extends CTTestCase {
 
 	private static final String THIS_SHOULD_WORK = "this should work.";
-	private static final String SCRIPT_TEMPLATE = "function info() { return \""
-			+ THIS_SHOULD_WORK + "\"; } \n";
-	private static final String SCRIPT_ENV_TEST_VALUE = "testvalue "
-			+ Math.random();
+	private static final String SCRIPT_TEMPLATE = "function info() { return \"" + THIS_SHOULD_WORK + "\"; } \n";
+	private static final String SCRIPT_ENV_TEST_VALUE = "testvalue " + Math.random();
 	private static final String FAILING_SCRIPT = "FAIL";
 
 	public void testSaveAndLoad() {
-		LOTClient client = getNewClient();
+		CTClient client = getNewClient();
 		assertNotNull(client);
 		//
-		LOTScript s = getAndTestWorkingScriptExample(client);
+		CTScript s = getAndTestWorkingScriptExample(client);
 		s.publish();
 		//
-		LOTClient benv = getNewClient();
+		CTClient benv = getNewClient();
 		assertNotNull(benv);
-		LOTScript bs = benv.getObjectFactory().getScript(
-				s.getID().getStringID());
+		CTScript bs = benv.getObjectFactory().getScript(s.getID().getStringID());
 		assertNotNull(bs);
 		bs = benv.getObjectFactory().getScript(s.getID().getStringID());
 		assertNotNull(bs);
@@ -36,9 +33,9 @@ public final class TestScript extends LOTTestCase {
 		assertEquals(s.getScript(), bs.getScript());
 		assertTrue(s.isOK());
 		//
-		LOTEnvironment env = new LOTEnvironmentImpl(client);
-		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client, env);
-		LOTScriptRunnerImpl runner = new LOTScriptRunnerImpl(s, runenv, null);
+		CTEnvironment env = new CTEnvironmentImpl(client);
+		CTRunEnvironmentImpl runenv = new CTRunEnvironmentImpl(client, env);
+		CTScriptRunnerImpl runner = new CTScriptRunnerImpl(s, runenv, null);
 		runner.run();
 
 		assertEquals(SCRIPT_ENV_TEST_VALUE, runenv.getParameter("testvalue"));
@@ -46,21 +43,20 @@ public final class TestScript extends LOTTestCase {
 		assertEquals(THIS_SHOULD_WORK, bs.getInfo());
 	}
 
-	private LOTScript getAndTestWorkingScriptExample(LOTClient env) {
-		LOTScript s = getWorkingScriptExample(env);
+	private CTScript getAndTestWorkingScriptExample(CTClient env) {
+		CTScript s = getWorkingScriptExample(env);
 		assertNotNull(s);
 		s.save();
 		return s;
 	}
 
-	private LOTScript getWorkingScriptExample(LOTClient env) {
-		return getScript(env, SCRIPT_TEMPLATE
-				+ "function run(env) { env.setParameter(\"testvalue\", \""
+	private CTScript getWorkingScriptExample(CTClient env) {
+		return getScript(env, SCRIPT_TEMPLATE + "function run(env) { env.setParameter(\"testvalue\", \""
 				+ SCRIPT_ENV_TEST_VALUE + "\" ); } ");
 	}
 
-	private LOTScript getScript(LOTClient env, String script) {
-		LOTScript s = env.getObjectFactory().getScript();
+	private CTScript getScript(CTClient env, String script) {
+		CTScript s = env.getObjectFactory().getScript();
 		s.setScript(script);
 		if (s.isOK()) {
 			return s;
@@ -70,25 +66,22 @@ public final class TestScript extends LOTTestCase {
 	}
 
 	public void testRuntimeEnvironmentParameters() {
-		LOTClient client = getNewClient();
-		LOTScript s = getScript(client, SCRIPT_TEMPLATE
-				+ "function run(e) { e.setParameter('test', 'testvalue'); }");
+		CTClient client = getNewClient();
+		CTScript s = getScript(client, SCRIPT_TEMPLATE + "function run(e) { e.setParameter('test', 'testvalue'); }");
 		assertNotNull(s);
-		LOTEnvironment env = new LOTEnvironmentImpl(client);
-		LOTRunEnvironment e = new LOTRunEnvironmentImpl(client, env);
-		LOTScriptRunnerImpl runner = new LOTScriptRunnerImpl(s, e, null);
+		CTEnvironment env = new CTEnvironmentImpl(client);
+		CTRunEnvironment e = new CTRunEnvironmentImpl(client, env);
+		CTScriptRunnerImpl runner = new CTScriptRunnerImpl(s, e, null);
 		runner.run();
 		assertEquals("testvalue", e.getParameter("test"));
 	}
 
 	public void testRestrictedWords() {
-		LOTClient c = getNewClient();
+		CTClient c = getNewClient();
 
 		try {
-			LOTScript s = getScript(
-					c,
-					SCRIPT_TEMPLATE
-							+ "function run(e) { r = new java.io.FileWriter('/jstest.txt'); r.flush(); }");
+			CTScript s = getScript(c,
+					SCRIPT_TEMPLATE + "function run(e) { r = new java.io.FileWriter('/jstest.txt'); r.flush(); }");
 			assertNull(s);
 		} catch (SecurityException ex) {
 			assertNotNull(ex);
@@ -96,23 +89,22 @@ public final class TestScript extends LOTTestCase {
 	}
 
 	public void testFailLoad() {
-		LOTClient env = getNewClient();
-		LOTScript s = getScript(env, FAILING_SCRIPT);
+		CTClient env = getNewClient();
+		CTScript s = getScript(env, FAILING_SCRIPT);
 		assertNull(s);
 	}
 
 	public void testMissingMethod() {
-		LOTClient env = getNewClient();
-		LOTScript s = getScript(env, "function fail() {}");
+		CTClient env = getNewClient();
+		CTScript s = getScript(env, "function fail() {}");
 		assertNull(s);
 	}
 
 	public void testMissingRunMethod() {
-		LOTClient client = getNewClient();
-		LOTScript s = getScript(client, "function info() {}");
-		LOTRunEnvironmentImpl runenv = new LOTRunEnvironmentImpl(client,
-				new LOTEnvironmentImpl(client));
-		LOTScriptRunnerImpl runner = new LOTScriptRunnerImpl(s, runenv, null);
+		CTClient client = getNewClient();
+		CTScript s = getScript(client, "function info() {}");
+		CTRunEnvironmentImpl runenv = new CTRunEnvironmentImpl(client, new CTEnvironmentImpl(client));
+		CTScriptRunnerImpl runner = new CTScriptRunnerImpl(s, runenv, null);
 		runner.run();
 
 		assertFalse(runner.run());

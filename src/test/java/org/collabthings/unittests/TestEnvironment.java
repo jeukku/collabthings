@@ -4,85 +4,80 @@ import java.io.IOException;
 
 import javax.script.ScriptException;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
-import org.collabthings.math.LVector;
-import org.collabthings.model.LOTScript;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
-import org.collabthings.model.impl.LOTScriptImpl;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
+import org.collabthings.model.CTScript;
+import org.collabthings.model.impl.CTEnvironmentImpl;
+import org.collabthings.model.impl.CTScriptImpl;
 import org.xml.sax.SAXException;
 
-public final class TestEnvironment extends LOTTestCase {
+import com.jme3.math.Vector3f;
+
+public final class TestEnvironment extends CTTestCase {
 
 	public void testGetAgain() throws IOException, SAXException {
-		LOTClient c = getNewClient();
+		CTClient c = getNewClient();
 		assertNotNull(c);
 		//
-		LOTEnvironmentImpl orge = new LOTEnvironmentImpl(c);
+		CTEnvironmentImpl orge = new CTEnvironmentImpl(c);
 
-		LOTScriptImpl lotScript = new LOTScriptImpl(c);
-		orge.addScript("test", lotScript);
+		CTScriptImpl ctScript = new CTScriptImpl(c);
+		orge.addScript("test", ctScript);
 		orge.save();
 		orge.publish();
 		//
-		LOTEnvironmentImpl newe = new LOTEnvironmentImpl(c, orge
-				.getServiceObject().getID().getStringID());
+		CTEnvironmentImpl newe = new CTEnvironmentImpl(c, orge.getServiceObject().getID().getStringID());
 
-		LOTScript loadedscript = newe.getScript("test");
+		CTScript loadedscript = newe.getScript("test");
 		assertNotNull(loadedscript);
-		assertEquals(lotScript.getBean().toText(), loadedscript.getBean()
-				.toText());
+		assertEquals(ctScript.getObject().toYaml(), loadedscript.getObject().toYaml());
 	}
 
-	public void testSaveAndLoad() throws IOException, SAXException,
-			NoSuchMethodException, ScriptException {
-		LOTClient c = getNewClient();
+	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ScriptException {
+		CTClient c = getNewClient();
 		assertNotNull(c);
 		//
-		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
+		CTEnvironmentImpl e = new CTEnvironmentImpl(c);
 		String paramname = "testparam";
 		e.setParameter(paramname, "testvalue");
 		//
-		LOTScriptImpl lotScript = new LOTScriptImpl(c);
-		e.addScript("test", lotScript);
-		lotScript
-				.setScript("function info() { return \"testing tool script\"; }");
+		CTScriptImpl ctScript = new CTScriptImpl(c);
+		e.addScript("test", ctScript);
+		ctScript.setScript("function info() { return \"testing tool script\"; }");
 		//
-		e.addScript("testscript", lotScript);
+		e.addScript("testscript", ctScript);
 		//
 		e.save();
 		e.publish();
 		//
-		LOTClient bc = getNewClient();
+		CTClient bc = getNewClient();
 		assertNotNull(bc);
-		LOTEnvironmentImpl benv = new LOTEnvironmentImpl(c, e
-				.getServiceObject().getID().getStringID());
-		assertEquals(e.getServiceObject().getBean().toText(), benv
-				.getServiceObject().getBean().toText());
+		CTEnvironmentImpl benv = new CTEnvironmentImpl(c, e.getServiceObject().getID().getStringID());
+		assertEquals(e.getServiceObject().getBean().toYaml(), benv.getServiceObject().getBean().toYaml());
 		assertNotNull(benv.getParameter(paramname));
 		assertEquals(e.getParameter(paramname), benv.getParameter(paramname));
 	}
 
 	public void testAddGetScript() throws IOException, SAXException {
-		LOTClient c = getNewClient();
-		LOTEnvironmentImpl env = new LOTEnvironmentImpl(c);
+		CTClient c = getNewClient();
+		CTEnvironmentImpl env = new CTEnvironmentImpl(c);
 		assertNull(env.getScript("FAIL"));
 		//
 		String scriptname = "testscript";
-		env.addScript(scriptname, new LOTScriptImpl(c));
+		env.addScript(scriptname, new CTScriptImpl(c));
 		assertNotNull(env.getScript(scriptname));
-		
+
 		env.renameScript("testscript", "testscript2");
 		assertNull(env.getScript("testscript"));
 		assertNotNull(env.getScript("testscript2"));
-		
+
 		env.deleteScript("testscript2");
 		assertNull(env.getScript("testscript2"));
 	}
 
 	public void testAddGetParameter() {
-		LOTClient c = getNewClient();
-		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
+		CTClient c = getNewClient();
+		CTEnvironmentImpl e = new CTEnvironmentImpl(c);
 		String testparam = "testparam";
 		String testvalue = "testvalue";
 		e.setParameter(testparam, testvalue);
@@ -90,35 +85,33 @@ public final class TestEnvironment extends LOTTestCase {
 	}
 
 	public void testAddSaveGetTool() {
-		LOTClient c = getNewClient();
-		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
+		CTClient c = getNewClient();
+		CTEnvironmentImpl e = new CTEnvironmentImpl(c);
 		String testtool = "testtool";
 		e.addTool(testtool, c.getObjectFactory().getTool());
-		e.save();
-		LOTEnvironmentImpl benv = new LOTEnvironmentImpl(c, e.getID()
-				.getStringID());
+		e.publish();
+		CTEnvironmentImpl benv = new CTEnvironmentImpl(c, e.getID().getStringID());
 		assertNotNull(benv.getTool(testtool));
 		assertEquals(e.getTool(testtool), benv.getTool(testtool));
 
 		benv.renameTool("testtool", "testtool2");
 		assertNull(benv.getTool("testtool"));
 		assertNotNull(benv.getTool("testtool2"));
-		
+
 		benv.deleteTool("testtool2");
 		assertNull(benv.getTool("testtool2"));
 	}
 
 	public void testVectorParameters() {
-		LOTClient c = getNewClient();
-		LOTEnvironmentImpl e = new LOTEnvironmentImpl(c);
-		LVector LVector3d = new LVector(1, 1, 1);
+		CTClient c = getNewClient();
+		CTEnvironmentImpl e = new CTEnvironmentImpl(c);
+		Vector3f Vector3f3d = new Vector3f(1, 1, 1);
 		String vname = "test";
-		e.setVectorParameter(vname, LVector3d);
+		e.setVectorParameter(vname, Vector3f3d);
 		e.save();
-		LOTEnvironmentImpl benv = new LOTEnvironmentImpl(c, e.getID()
-				.getStringID());
+		CTEnvironmentImpl benv = new CTEnvironmentImpl(c, e.getID().getStringID());
 		assertNotNull(benv.getVectorParameter(vname));
-		assertEquals(LVector3d, benv.getVectorParameter(vname));
+		assertEquals(Vector3f3d, benv.getVectorParameter(vname));
 
 	}
 }

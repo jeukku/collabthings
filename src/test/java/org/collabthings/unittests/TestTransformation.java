@@ -1,70 +1,77 @@
 package org.collabthings.unittests;
 
-import org.collabthings.LOTTestCase;
-import org.collabthings.math.LTransformation;
-import org.collabthings.math.LVector;
+import org.collabthings.CTTestCase;
+import org.collabthings.math.LOrientation;
 
-public final class TestTransformation extends LOTTestCase {
+import com.jme3.math.Matrix4f;
+import com.jme3.math.Transform;
+import com.jme3.math.Vector3f;
+
+public final class TestTransformation extends CTTestCase {
 
 	public void testNormalRotationAndTranslation() {
-		LVector v = new LVector(1, 0, 0);
-		LTransformation t = new LTransformation(new LVector(2, 0, 0),
-				new LVector(0, 1, 0), Math.PI / 2);
-		t.transform(v);
-		assertReallyClose(new LVector(2, 0, -1), v);
+		Vector3f v = new Vector3f();
+		LOrientation o = new LOrientation(new Vector3f(2, 0, 0), new Vector3f(0, 1, 0), (float) Math.PI / 2);
+		Transform t = o.getTransformation();
+		t.transformVector(new Vector3f(1, 0, 0), v);
+		assertReallyClose(new Vector3f(2, 0, -1), v);
 	}
 
 	public void testRotate() {
-		LVector v = new LVector(1, 0, 0);
-		LTransformation t = LTransformation.getRotateY(-Math.PI / 2); // 90
+		Vector3f v = new Vector3f();
 
-		v = t.transform(v);
+		Transform t = new LOrientation(Vector3f.UNIT_Y, (float) -Math.PI / 2).getTransformation(); // 90
+
+		t.transformVector(new Vector3f(1, 0, 0), v);
+		assertReallyClose(1, v.length());
 		assertClose(0.0, v.x);
 		assertClose(0.0, v.y);
 		assertClose(1.0, v.z);
 	}
 
 	public void testTranslation() {
-		LVector v = new LVector(1, 0, 0);
-		LTransformation o = LTransformation.getTranslate(0, 2, 0);
-		v = o.transform(v);
+		Vector3f v = new Vector3f();
+		Transform o = new LOrientation(new Vector3f(0, 2, 0)).getTransformation();
+
+		v = o.transformVector(new Vector3f(1, 0, 0), v);
 		assertClose(1.0, v.x);
 		assertClose(2.0, v.y);
 		assertClose(0.0, v.z);
 	}
 
 	public void testRotateTreeBack() {
-		LVector v = new LVector(1, 0, 0);
-		LTransformation t1 = LTransformation.getRotateY(-Math.PI / 2); // 90
-		LTransformation t2 = LTransformation.getRotateY(Math.PI / 2); // 90
+		Vector3f v = new Vector3f();
+		Transform t1 = new LOrientation(Vector3f.UNIT_Y, (float) -Math.PI / 2).getTransformation(); // 90
+		Transform t2 = new LOrientation(Vector3f.UNIT_Y, (float) Math.PI / 2).getTransformation(); // 90
 
-		t2.mult(t1);
+		t2.combineWithParent(t1);
 		//
-		v = t2.transform(v);
+		v = t2.transformVector(new Vector3f(1, 0, 0), v);
 		assertClose(1.0, v.x);
 		assertClose(0.0, v.y);
 		assertClose(0.0, v.z);
 	}
 
 	public void testRotateTranslateRotate() {
-		LVector v = new LVector(1, 0, 0);
-		LTransformation t1 = LTransformation.getRotateY(-Math.PI / 2); // 90
-		LTransformation t2 = LTransformation.getTranslate(2, 0, 0); // 90
-		LTransformation t3 = LTransformation.getRotateY(-Math.PI / 2); // 90
+		Vector3f v = new Vector3f();
+		Transform t1 = new LOrientation(Vector3f.UNIT_Y, (float) -Math.PI / 2).getTransformation(); // 90
+		Transform t2 = new LOrientation(new Vector3f(2, 0, 0)).getTransformation(); // 90
+		Transform t3 = new LOrientation(Vector3f.UNIT_Y, (float) Math.PI / 2).getTransformation(); // 90
 
-		t1.mult(t2);
-		t1.mult(t3);
+		Matrix4f m1 = t3.toTransformMatrix();
+		m1.multLocal(t2.toTransformMatrix());
+		m1.multLocal(t1.toTransformMatrix());
 
 		//
-		v = t1.transform(v);
+		m1.mult(new Vector3f(1, 0, 0), v);
 
-		assertClose(-1.0, v.x);
+		assertClose(1.0, v.x);
 		assertClose(0.0, v.y);
-		assertClose(2.0, v.z);
+		assertClose(-2.0, v.z);
 	}
 
 	private void assertClose(double z, double d) {
-		assertTrue("" + z + " was " + d, Math.abs(z - d) < 0.000000001);
+		assertTrue("" + z + " was " + d, Math.abs(z - d) < ACCEPTED_DIFFERENCE);
 	}
 
 }

@@ -5,76 +5,101 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.LOTScriptRunner;
-import org.collabthings.environment.impl.LOTFactoryState;
-import org.collabthings.model.LOTBinaryModel;
-import org.collabthings.model.LOTEnvironment;
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTOpenSCAD;
-import org.collabthings.model.LOTPart;
-import org.collabthings.model.LOTValues;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
-import org.collabthings.model.impl.LOTPartImpl;
-import org.collabthings.simulation.LOTSimpleSimulation;
-import org.collabthings.simulation.LOTSimulation;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.CTScriptRunner;
+import org.collabthings.environment.impl.CTFactoryState;
+import org.collabthings.model.CTEnvironment;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTModel;
+import org.collabthings.model.CTOpenSCAD;
+import org.collabthings.model.CTPart;
+import org.collabthings.model.CTValues;
+import org.collabthings.model.impl.CTEnvironmentImpl;
+import org.collabthings.model.impl.CTPartImpl;
+import org.collabthings.simulation.CTSimpleSimulation;
+import org.collabthings.simulation.CTSimulation;
 import org.xml.sax.SAXException;
 
 import waazdoh.common.MStringID;
 import waazdoh.common.MTimedFlag;
 
-public final class TestOpenSCAD extends LOTTestCase {
+public final class TestOpenSCAD extends CTTestCase {
 
 	private static final int MAX_RUNTIME = 3000;
 
 	public void testSaveAndLoad() throws IOException, SAXException {
-		LOTClient env = getNewClient(true);
+		CTClient env = getNewClient(true);
 		assertNotNull(env);
 		//
-		LOTPart part = new LOTPartImpl(env);
-		LOTOpenSCAD scad = part.newSCAD();
-		scad.setName("testing changing name");
+		CTPart part = new CTPartImpl(env);
+		CTOpenSCAD scad = part.newSCAD();
+		scad.setName("scad");
+		part.setName("testing scad model");
 
 		scad.setScript(loadATestFile("scad/test.scad"));
 
-		LOTBinaryModel m = scad.getModel();
+		CTModel m = scad.getModel();
 		assertNotNull(m);
 
 		part.publish();
+		
+		String partid = part.getID().toString();
 
-		LOTClient benv = getNewClient(true);
+		CTClient benv = getNewClient(true);
 		assertNotNull(benv);
 		MStringID bpartid = part.getID().getStringID();
-		LOTPart bpart = benv.getObjectFactory().getPart(bpartid);
+		CTPart bpart = benv.getObjectFactory().getPart(bpartid);
 		assertNotNull(bpart);
 
 		assertEquals(part.getName(), bpart.getName());
 		waitObject(bpart);
 
-		LOTOpenSCAD bscad = (LOTOpenSCAD) bpart.getModel();
+		CTOpenSCAD bscad = (CTOpenSCAD) bpart.getModel();
 		assertNotNull(bscad);
 		assertEquals(scad.getScript(), bscad.getScript());
+
+		assertEquals(scad.getObject().toYaml(), bscad.getObject().toYaml());
+
+		assertEquals(part.getObject().toYaml(), bpart.getObject().toYaml());
+		assertEquals(bpartid, partid);
+	}
+
+	public void testGear() throws IOException, SAXException {
+		CTClient env = getNewClient(true);
+		assertNotNull(env);
+		//
+		CTPart part = new CTPartImpl(env);
+		CTOpenSCAD scad = part.newSCAD();
+		scad.setName("gear");
+		part.setName("testing gear model");
+
+		scad.setScript(loadATestFile("scad/gears_helical.scad"));
+
+		CTModel m = scad.getModel();
+		assertNotNull(m);
+
+		part.publish();
 	}
 
 	public void testView() throws FileNotFoundException, IOException {
-		LOTClient client = getNewClient(true);
+		CTClient client = getNewClient(true);
 		assertNotNull(client);
-		LOTEnvironment env = new LOTEnvironmentImpl(client);
+		CTEnvironment env = new CTEnvironmentImpl(client);
 
-		LOTFactory f = client.getObjectFactory().getFactory();
-		LOTFactoryState fs = new LOTFactoryState(client, env, "test", f);
-		LOTOpenSCAD scad = fs.newPart().getPart().newSCAD();
+		CTFactory f = client.getObjectFactory().getFactory();
+		CTFactoryState fs = new CTFactoryState(client, env, "test", f);
+		CTOpenSCAD scad = fs.newPart().getPart().newSCAD();
 		scad.setScript(loadATestFile("scad/test.scad"));
 
 		Map<String, String> map = new HashMap<String, String>();
 
-		LOTRunEnvironment runenv = fs.getRunEnvironment();
-		runenv.addTask(new LOTScriptRunner() {
+		CTRunEnvironment runenv = fs.getRunEnvironment();
+		runenv.addTask(new CTScriptRunner() {
 
 			@Override
-			public boolean run(LOTValues values) {
+			public boolean run(CTValues values) {
 				map.put("run", "true");
 				new MTimedFlag(1000).waitTimer();
 				return true;
@@ -87,7 +112,7 @@ public final class TestOpenSCAD extends LOTTestCase {
 			}
 		});
 
-		LOTSimulation simulation = new LOTSimpleSimulation(runenv, true);
+		CTSimulation simulation = new CTSimpleSimulation(runenv);
 		simulation.run(MAX_RUNTIME);
 
 		assertEquals("true", map.get("run"));

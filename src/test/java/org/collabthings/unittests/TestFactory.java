@@ -4,126 +4,119 @@ import java.io.IOException;
 
 import javax.script.ScriptException;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTTestCase;
-import org.collabthings.math.LVector;
-import org.collabthings.model.LOTAttachedFactory;
-import org.collabthings.model.LOTBoundingBox;
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTScript;
-import org.collabthings.model.LOTTool;
+import org.collabthings.CTClient;
+import org.collabthings.CTTestCase;
+import org.collabthings.model.CTAttachedFactory;
+import org.collabthings.model.CTBoundingBox;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTScript;
+import org.collabthings.model.CTTool;
 import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
 
+import com.jme3.math.Vector3f;
+
 import waazdoh.common.MStringID;
 
-public final class TestFactory extends LOTTestCase {
+public final class TestFactory extends CTTestCase {
 
 	public void testGetAgain() throws IOException, SAXException {
-		LOTClient env = getNewClient();
+		CTClient env = getNewClient();
 		assertNotNull(env);
 		//
 		env.getObjectFactory().getFactory();
-		LOTFactory f = env.getObjectFactory().getFactory();
+		CTFactory f = env.getObjectFactory().getFactory();
 		assertNotNull(f);
 		f.save();
 		//
-		assertNotNull(env.getObjectFactory()
-				.getFactory(f.getID().getStringID()));
-		assertEquals(f,
-				env.getObjectFactory().getFactory(f.getID().getStringID()));
+		assertNotNull(env.getObjectFactory().getFactory(f.getID().getStringID()));
+		assertEquals(f, env.getObjectFactory().getFactory(f.getID().getStringID()));
 	}
 
-	public void testSaveAndLoad() throws IOException, SAXException,
-			NoSuchMethodException, ScriptException {
-		LOTClient env = getNewClient(true);
+	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ScriptException {
+		CTClient env = getNewClient(true);
 		assertNotNull(env);
 		//
-		LOTFactory f = env.getObjectFactory().getFactory();
+		CTFactory f = env.getObjectFactory().getFactory();
 		f.setName("testing changing name");
 		f.save();
 		//
-		LOTScript lotScript = f.addScript("test");
-		lotScript
-				.setScript("function info() { return \"testing tool script\"; }");
+		CTScript ctScript = f.addScript("test");
+		ctScript.setScript("function info() { return \"testing tool script\"; }");
 		// model
 		f.setModel(env.getObjectFactory().getModel());
 		//
-		f.setBoundingBox(new LVector(-1, -1, -1), new LVector(1, 1, 1));
-		f.setToolUserSpawnLocation(new LVector(4, 4, 4));
+		f.setBoundingBox(new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
+		f.setToolUserSpawnLocation(new Vector3f(4, 4, 4));
 		//
 		f.save();
 		f.publish();
 		//
-		LOTClient benv = getNewClient(true);
+		CTClient benv = getNewClient(true);
 		assertNotNull(benv);
-		LOTFactory bfact = benv.getObjectFactory().getFactory(
-				f.getID().getStringID());
+		CTFactory bfact = benv.getObjectFactory().getFactory(f.getID().getStringID());
 		assertEquals(bfact.getName(), f.getName());
 		waitObject(bfact);
 		//
-		LOTScript bscript = bfact.getScript("test");
+		CTScript bscript = bfact.getScript("test");
 		assertNotNull(bscript);
-		assertEquals(lotScript.getScript(), bscript.getScript());
+		assertEquals(ctScript.getScript(), bscript.getScript());
 		//
 		assertEquals(bfact.getBoundingBox().getA(), f.getBoundingBox().getA());
 		assertEquals(bfact.getBoundingBox().getB(), f.getBoundingBox().getB());
 		//
-		assertEquals(f.getToolUserSpawnLocation(),
-				bfact.getToolUserSpawnLocation());
+		assertEquals(f.getToolUserSpawnLocation(), bfact.getToolUserSpawnLocation());
 
-		assertEquals(f.getBean().toText(), bfact.getBean().toText());
+		assertEquals(f.getObject().toYaml(), bfact.getObject().toYaml());
 		assertEquals(f.hashCode(), bfact.hashCode());
 	}
 
 	public void testNotEqual() {
-		LOTClient ac = getNewClient();
-		LOTFactory af = ac.getObjectFactory().getFactory();
+		CTClient ac = getNewClient();
+		CTFactory af = ac.getObjectFactory().getFactory();
 		af.publish();
-		LOTClient bc = getNewClient();
-		LOTFactory bf = bc.getObjectFactory().getFactory(
-				af.getID().getStringID());
+		CTClient bc = getNewClient();
+		CTFactory bf = bc.getObjectFactory().getFactory(af.getID().getStringID());
 
-		LLog.getLogger(af).info(af.getBean().toText());
-		LLog.getLogger(bf).info(bf.getBean().toText());
+		LLog.getLogger(af).info(af.getObject().toYaml());
+		LLog.getLogger(bf).info(bf.getObject().toYaml());
 		LLog.getLogger(af).info(af.printOut().toText());
 		LLog.getLogger(bf).info(bf.printOut().toText());
 
-		assertEquals(af.getBean().toText(), bf.getBean().toText());
+		assertEquals(af.getObject().toYaml(), bf.getObject().toYaml());
 		assertNotSame(af, bf);
-		assertTrue(af.getBean().equals(bf.getBean()));
+		assertTrue(af.getObject().equals(bf.getObject()));
 		af.setName("test");
-		assertFalse(af.getBean().equals(bf.getBean()));
+		assertFalse(af.getObject().equals(bf.getObject()));
 		bf.setName("test");
 		assertEquals(af, bf);
-		assertTrue(af.getBean().equals(bf.getBean()));
+		assertTrue(af.getObject().equals(bf.getObject()));
 	}
 
 	public void testBookmarkChildFactory() {
-		LOTClient c = getNewClient();
-		LOTFactory f = c.getObjectFactory().getFactory();
+		CTClient c = getNewClient();
+		CTFactory f = c.getObjectFactory().getFactory();
 		String childfactoryid = "testchildfactory";
-		LOTAttachedFactory addFactory = f.addFactory(childfactoryid);
+		CTAttachedFactory addFactory = f.addFactory(childfactoryid);
 
 		String childfactoryname = "some child factory";
-		String bookmark = c.getService().getUser().getUsername() + "/factory/"
-				+ childfactoryname + "/latest";
+		String bookmark = c.getService().getUser().getUsername() + "/factory/" + childfactoryname + "/latest";
 
 		addFactory.setBookmark(bookmark);
 
-		LOTFactory childf = addFactory.getFactory();
+		CTFactory childf = addFactory.getFactory();
 		childf.setName(childfactoryid);
 
 		childf.setName(childfactoryname);
 		childf.addScript("testscript");
-		LLog.getLogger(this).info("publishing first " + f.getBean().toText());
+		LLog.getLogger(this).info("publishing first " + f.getObject().toYaml());
 
 		f.publish();
 
-		childf.setToolUserSpawnLocation(new LVector(1, 1, 1));
+		childf.setToolUserSpawnLocation(new Vector3f(1, 1, 1));
 		childf.publish();
 
-		LOTClient bc = getNewClient();
+		CTClient bc = getNewClient();
 		String clientausername = c.getService().getUser().getUsername();
 		assertNotNull(clientausername);
 
@@ -131,70 +124,67 @@ public final class TestFactory extends LOTTestCase {
 		assertNotNull(publishedchildfactory);
 
 		MStringID factoryid = f.getID().getStringID();
-		LOTFactory bf = bc.getObjectFactory().getFactory(factoryid);
+		CTFactory bf = bc.getObjectFactory().getFactory(factoryid);
 
-		LLog.getLogger(this).info("first " + f.getBean().toText());
-		LLog.getLogger(this).info("second " + bf.getBean().toText());
+		LLog.getLogger(this).info("first " + f.getObject().toYaml());
+		LLog.getLogger(this).info("second " + bf.getObject().toYaml());
 
-		assertEquals(f.getBean().toText(), bf.getBean().toText());
-		LOTFactory bchildf = bf.getFactory(childfactoryid).getFactory();
+		assertEquals(f.getObject().toYaml(), bf.getObject().toYaml());
+		CTFactory bchildf = bf.getFactory(childfactoryid).getFactory();
 		assertNotNull(bchildf);
 		assertEquals(childfactoryname, bchildf.getName());
-		assertEquals(childf.getBean().toText(), bchildf.getBean().toText());
+		assertEquals(childf.getObject().toYaml(), bchildf.getObject().toYaml());
 	}
 
 	public void testChildFactory() {
-		LOTClient c = getNewClient();
-		LOTFactory f = c.getObjectFactory().getFactory();
+		CTClient c = getNewClient();
+		CTFactory f = c.getObjectFactory().getFactory();
 		String childfactoryid = "testchildfactory";
-		LOTFactory childf = f.addFactory(childfactoryid).getFactory();
+		CTFactory childf = f.addFactory(childfactoryid).getFactory();
 		String childfactoryname = "some child factory";
 		childf.setName(childfactoryname);
 		childf.addScript("testscript");
 		f.publish();
 		//
-		LOTClient bc = getNewClient();
-		LOTFactory bf = bc.getObjectFactory().getFactory(
-				f.getID().getStringID());
-		assertEquals(f.getBean().toText(), bf.getBean().toText());
-		LOTFactory bchildf = bf.getFactory(childfactoryid).getFactory();
+		CTClient bc = getNewClient();
+		CTFactory bf = bc.getObjectFactory().getFactory(f.getID().getStringID());
+		assertEquals(f.getObject().toYaml(), bf.getObject().toYaml());
+		CTFactory bchildf = bf.getFactory(childfactoryid).getFactory();
 		assertNotNull(bchildf);
 		assertEquals(childfactoryname, bchildf.getName());
-		assertEquals(childf.getBean().toText(), bchildf.getBean().toText());
+		assertEquals(childf.getObject().toYaml(), bchildf.getObject().toYaml());
 	}
 
 	public void testBoundingBox() {
-		LOTClient c = getNewClient();
-		LOTFactory f = c.getObjectFactory().getFactory();
-		f.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 1, 10));
+		CTClient c = getNewClient();
+		CTFactory f = c.getObjectFactory().getFactory();
+		f.setBoundingBox(new Vector3f(-10, 0, -10), new Vector3f(10, 1, 10));
 		f.publish();
-		LOTClient bc = getNewClient();
-		LOTFactory bf = bc.getObjectFactory().getFactory(
-				f.getID().getStringID());
-		LOTBoundingBox bbox = bf.getBoundingBox();
-		assertEquals(f.getBoundingBox().getBean().toText(), bbox.getBean()
-				.toText());
+		CTClient bc = getNewClient();
+		CTFactory bf = bc.getObjectFactory().getFactory(f.getID().getStringID());
+		CTBoundingBox bbox = bf.getBoundingBox();
+		assertEquals(f.getBoundingBox().getBean().toYaml(), bbox.getBean().toYaml());
 	}
 
 	public void testBoundingBoxInstance() {
-		LOTClient c = getNewClient();
-		LOTFactory f = c.getObjectFactory().getFactory();
-		LVector va = f.getBoundingBox().getA();
-		f.setBoundingBox(new LVector(-10, 0, -10), new LVector(10, 1, 10));
-		f.setBoundingBox(new LOTBoundingBox(new LVector(), new LVector()));
+		CTClient c = getNewClient();
+		CTFactory f = c.getObjectFactory().getFactory();
+		Vector3f va = f.getBoundingBox().getA();
+		f.setBoundingBox(new Vector3f(-10, 0, -10), new Vector3f(10, 1, 10));
+		f.setBoundingBox(new CTBoundingBox(new Vector3f(), new Vector3f()));
 		assertSame(va, f.getBoundingBox().getA());
 	}
 
 	public void testCallUnknownScript() throws IOException, SAXException {
-		LOTClient e = getNewClient();
-		LOTFactory factory = e.getObjectFactory().getFactory();
+		CTClient e = getNewClient();
+		CTFactory factory = e.getObjectFactory().getFactory();
 		assertNull(factory.getScript("FAIL"));
 	}
 
 	public void testAddGetScript() {
-		LOTClient c = getNewClient();
-		LOTTool tool = c.getObjectFactory().getTool();
-		LOTScript s = tool.addScript("testscript");
+		CTClient c = getNewClient();
+		CTTool tool = c.getObjectFactory().getTool();
+		CTScript s = tool.addScript("testscript");
 		assertNotNull(s);
 		assertNotNull(tool.getScript("testscript"));
 	}

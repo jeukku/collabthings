@@ -1,11 +1,10 @@
 function run(envbuilder) {
 	envbuilder.printOut();
 
-	var factorybookmark = "self/published/factory/boxsetfactory/latest";
-	var factoryid = envbuilder
-			.readStorage(factorybookmark);
+	var factorybookmark = "$SELF/published/factory/boxsetfactory/latest";
+	var factoryid = envbuilder.readStorage(factorybookmark);
 	assert(factorybookmark, factoryid);
-	
+
 	var order = envbuilder.getEnvironment().getScript("addorder");
 
 	var state = envbuilder.createFactoryState("boxsetfactory", factoryid);
