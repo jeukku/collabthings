@@ -6,7 +6,7 @@
 	<artifactId>client</artifactId>
 
 	<packaging>jar</packaging>
-	<version>0.3.3-SNAPSHOT</version>
+	<version>0.3.3-RELEASE</version>
 
 	<name>Collabthings Client</name>
 	<url>http://maven.apache.org</url>
@@ -221,13 +221,13 @@
 		<dependency>
 			<groupId>org.waazdoh</groupId>
 			<artifactId>client</artifactId>
-			<version>1.5.3-SNAPSHOT</version>
+			<version>1.5.3-RELEASE</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.collabthings</groupId>
 			<artifactId>register</artifactId>
-			<version>0.3.3-SNAPSHOT</version>
+			<version>0.3.3-RELEASE</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
