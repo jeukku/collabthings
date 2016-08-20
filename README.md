@@ -18,9 +18,25 @@ https://trello.com/b/A0jQVmXl/collabthings
 Development Environment
 =======================
 
-Run waazdoh and waazdoh.wab services locally:
- - git clone git@github.com:jeukku/waazdoh.service.git
- - git clone git@github.com:jeukku/waazdoh.web.git
- - mvn appengine:devserver in both paths
- - UI: git clone git@github.com:jeukku/collabthings.swt.git and run org.collabthings.swt.AppLauncher with variable -Dservice.url=http://localhost:18099/waazdoh  
+Install Virtualbox, maven, eclipse and vagrant.
 
+Clone git repositories as Eclipse projects:
+
+development branches:
+- git@github.com:CollabThings/waazdoh.service.git
+- git@github.com:CollabThings/org.collabthings.web.git
+- git@github.com:CollabThings/collabthings.git
+- git@github.com:CollabThings/collabthings.ogl.git
+- git@github.com:CollabThings/collabthings.swt.git
+
+run "mvn package" in everey project.
+
+master branch:
+- git@github.com:CollabThings/collabthings.env.git
+
+run "vagrant up" in collabthings.env/vagrant. This takes about 10min.
+
+checkout that service is running http://192.168.33.20:8080/service/admin/basicchecks
+checkout that website is runnung http://192.168.33.20:8080/
+
+run Application org.collabthings.swt.AppLauncher with parameters -Dwaazdoh.prefix=ct_swt_test -Dservice.url=http://192.168.33.20:8080/service
