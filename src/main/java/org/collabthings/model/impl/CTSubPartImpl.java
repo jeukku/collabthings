@@ -200,6 +200,20 @@ public final class CTSubPartImpl implements CTSubPart {
 	}
 
 	@Override
+	public boolean isBookmarkUpdated() {
+		if (partbookmark != null) {
+			String newid = client.getStorage().readStorage(partbookmark);
+			if (newid != null && !newid.equals(partid)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	public void updateBookmark() {
 		if (partbookmark != null) {
 			String newid = client.getStorage().readStorage(partbookmark);
