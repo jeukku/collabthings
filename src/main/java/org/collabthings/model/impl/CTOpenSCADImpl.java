@@ -76,7 +76,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		b.append("  rotate_extrude()\n");
 		b.append("    translate([1000, 0])\n");
 		b.append("      square(400);\n");
-		setScript(b.toString());
+		script = b.toString();
 
 		model = new CT3DModelImpl(env);
 	}
@@ -99,7 +99,6 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	}
 
 	private void changed() {
-		o.modified();		
 		listeners.fireEvent();
 	}
 
@@ -258,6 +257,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		this.script = nscript;
 		error = null;
 		changed();
+		o.modified();
 	}
 
 	@Override

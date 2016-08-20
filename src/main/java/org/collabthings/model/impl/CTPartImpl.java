@@ -113,8 +113,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			bean = main;
 		}
 
-		setName(bean.getValue(VALUENAME_NAME));
-		setShortname(bean.getValue(VALUENAME_SHORTNAME));
+		name = bean.getValue(VALUENAME_NAME);
+		shortname = bean.getValue(VALUENAME_SHORTNAME);
 
 		parseModel(bean.get("model"));
 		parseBuilder(bean.getValue(VALUENAME_BUILDERID));
