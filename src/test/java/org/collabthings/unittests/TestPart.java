@@ -86,7 +86,9 @@ public final class TestPart extends CTTestCase {
 		CTClient c2 = getNewClient();
 		List<ObjectVO> items = c2.getService().getObjects().search(search, 0, 100);
 		assertTrue(items.size() > 0);
-		assertTrue(items.contains(part.getID().toString()));
+
+		String string = part.getID().toString();
+		assertEquals(string, items.get(0).getId());
 	}
 
 	public CTPart testSubPartOrientation() throws IOException, SAXException {
@@ -106,7 +108,7 @@ public final class TestPart extends CTTestCase {
 		CTClient e = getNewClient();
 		CTPart part = e.getObjectFactory().getPart();
 		CTSubPart sp = part.newSubPart();
-		sp.getPart(); 
+		sp.getPart();
 		sp.setPartBookmark("test");
 	}
 
