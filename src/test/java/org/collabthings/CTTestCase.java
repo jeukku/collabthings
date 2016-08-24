@@ -204,6 +204,9 @@ public class CTTestCase extends TestCase {
 				return client;
 			}
 		}
+		
+		log.info("Using static service");
+		
 		StaticService mockservice = new StaticService(username);
 		mockservice.getStorageArea()
 				.write(new StorageAreaVO("/public/LOT/settings/ct.javascript.forbiddenwords", "forbiddenword"));
