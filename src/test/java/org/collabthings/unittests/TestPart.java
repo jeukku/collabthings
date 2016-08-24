@@ -44,6 +44,7 @@ public final class TestPart extends CTTestCase {
 
 		CTSubPart subsub = subpart2.getPart().newSubPart();
 		subsub.getPart().newSubPart().setName("thesub");
+		subsub.getPart().getResourceUsage().set("resource", 10.0);
 
 		part.save();
 		part.publish();
@@ -170,5 +171,30 @@ public final class TestPart extends CTTestCase {
 			newSubPart.setPart(c);
 			newSubPart.setOrientation(new Vector3f(i, i, i), new Vector3f(i, i, i), 1);
 		}
+	}
+
+	public void testResources() {
+		CTClient client = getNewClient();
+		CTPart a = client.getObjectFactory().getPart();
+		CTPart ab = a.newSubPart().getPart();
+		ab.getResourceUsage().set("resource1", 1.0);
+
+		CTPart bb = a.newSubPart().getPart();
+		bb.getResourceUsage().set("resource2", 2.0);
+
+		CTPart cb = a.newSubPart().getPart();
+		cb.newSubPart().getPart().getResourceUsage().set("resource1", 3.0);
+
+		a.publish();
+
+		assertReallyClose(1.0, ab.getResourceUsage().get("resource1"));
+		assertReallyClose(2.0, bb.getResourceUsage().get("resource2"));
+		assertReallyClose(0.0, cb.getResourceUsage().get("resource1"));
+		assertReallyClose(3.0, cb.getResourceUsage().getTotal("resource1"));
+
+		Double res1 = a.getResourceUsage().getTotal("resource1");
+		Double res2 = a.getResourceUsage().getTotal("resource2");
+		assertReallyClose(4.0, res1);
+		assertReallyClose(2.0, res2);
 	}
 }

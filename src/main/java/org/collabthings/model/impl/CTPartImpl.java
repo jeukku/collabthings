@@ -31,12 +31,13 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private static final String VALUENAME_MODELID = "id";
 	private static final String VALUENAME_SHORTNAME = "shortname";
 	private static final String VALUENAME_BUILDERID = "builder";
+	private static final String VALUENAME_RESOURCEUSAGE = "resources";
 	//
 	private ServiceObject o;
 	private String name = "part";
 	private String shortname = "part";
 
-	CTClient env;
+	private CTClient env;
 
 	private List<CTSubPart> subparts = new ArrayList<>();
 	private CTBoundingBox boundingbox = new CTBoundingBox(new Vector3f(), new Vector3f());
@@ -44,6 +45,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	private CTModel model;
 	private CTPartBuilder builder;
+	private CTResourceUsage resourceusage;
+
 	private WObject storedobject;
 	private List<CTListener> listeners = new ArrayList<>();
 	private boolean ready;
@@ -85,7 +88,11 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			if (getBoundingBox() != null) {
 				b.add(CTBoundingBox.BEAN_NAME, getBoundingBox().getBean());
 			}
-			//
+
+			if (resourceusage != null) {
+				resourceusage.getObject(b.add(VALUENAME_RESOURCEUSAGE));
+			}
+
 			addSubParts(b);
 
 			storedobject = org;
@@ -124,6 +131,11 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		WObject beanboundingbox = bean.get(CTBoundingBox.BEAN_NAME);
 		if (beanboundingbox != null) {
 			boundingbox = new CTBoundingBox(beanboundingbox);
+		}
+
+		WObject bresourceusage = bean.get(VALUENAME_RESOURCEUSAGE);
+		if (bresourceusage != null) {
+			getResourceUsage().parse(bresourceusage);
 		}
 		//
 		subparts.clear();
@@ -265,6 +277,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				subpart.save();
 			});
 
+			updateResourceUsage();
+
 			getServiceObject().save();
 		}
 	}
@@ -391,7 +405,22 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private void changed() {
 		o.modified();
 		this.storedobject = null;
+
+		updateResourceUsage();
+
 		listeners.stream().forEach((e) -> e.event());
+	}
+
+	public void updateResourceUsage() {
+		getResourceUsage().updateTotal(subparts);
+	}
+
+	@Override
+	public CTResourceUsage getResourceUsage() {
+		if (resourceusage == null) {
+			resourceusage = new CTResourceUsage();
+		}
+		return resourceusage;
 	}
 
 	@Override

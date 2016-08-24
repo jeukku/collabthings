@@ -40,4 +40,5 @@ public interface CTSubPart {
 	String getPartBookmark();
 
 	boolean isBookmarkUpdated();
+
 }

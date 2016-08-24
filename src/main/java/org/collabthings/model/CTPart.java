@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.collabthings.CTListener;
+import org.collabthings.model.impl.CTResourceUsage;
 
 import com.jme3.math.Vector3f;
 
@@ -49,5 +50,9 @@ public interface CTPart extends CTObject {
 	void addChangeListener(CTListener listener);
 
 	CTHeightmap newHeightmap();
+
+	CTResourceUsage getResourceUsage();
+
+	void updateResourceUsage();
 
 }
