@@ -17,7 +17,7 @@ import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
 import waazdoh.common.BeanStorage;
 import waazdoh.common.WPreferences;
-import waazdoh.common.client.ServiceClient;
+import waazdoh.common.client.WServiceClient;
 import waazdoh.common.vo.StorageAreaVO;
 
 public final class CTClientImpl implements CTClient {
@@ -30,7 +30,7 @@ public final class CTClientImpl implements CTClient {
 	private CTBookmarks bookmarks;
 	private Set<CTErrorListener> errorlisteners = new HashSet<>();
 
-	public CTClientImpl(WPreferences p, BinarySource binarysource, BeanStorage beanstorage, ServiceClient service) {
+	public CTClientImpl(WPreferences p, BinarySource binarysource, BeanStorage beanstorage, WServiceClient service) {
 		client = new WClient(p, binarysource, beanstorage, service);
 		client.addObjectFilter((o) -> CTClient.checkVersion(o.getValue("version")));
 
@@ -91,7 +91,7 @@ public final class CTClientImpl implements CTClient {
 	}
 
 	@Override
-	public ServiceClient getService() {
+	public WServiceClient getService() {
 		return getClient().getService();
 	}
 

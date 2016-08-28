@@ -27,8 +27,8 @@ import waazdoh.client.storage.local.FileBeanStorage;
 import waazdoh.client.utils.ConditionWaiter;
 import waazdoh.client.utils.ThreadChecker;
 import waazdoh.common.WPreferences;
-import waazdoh.common.client.RestServiceClient;
-import waazdoh.common.client.ServiceClient;
+import waazdoh.common.client.WRestServiceClient;
+import waazdoh.common.client.WServiceClient;
 import waazdoh.common.testing.StaticService;
 import waazdoh.common.testing.StaticTestPreferences;
 import waazdoh.common.vo.AppLoginVO;
@@ -196,9 +196,9 @@ public class CTTestCase extends TestCase {
 		return p.get(WPreferences.PREFERENCES_SESSION, "");
 	}
 
-	private ServiceClient getTestService(String username, WPreferences p, BinarySource source) throws SAXException {
+	private WServiceClient getTestService(String username, WPreferences p, BinarySource source) throws SAXException {
 		if (p.getBoolean(CTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
-			RestServiceClient client = new RestServiceClient(p.get(WPreferences.SERVICE_URL, "unknown_service"),
+			WRestServiceClient client = new WRestServiceClient(p.get(WPreferences.SERVICE_URL, "unknown_service"),
 					beanstorage);
 			if (client.getUsers().requestAppLogin() != null) {
 				return client;

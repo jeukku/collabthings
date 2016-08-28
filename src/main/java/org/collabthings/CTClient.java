@@ -11,7 +11,7 @@ import org.collabthings.model.CTObject;
 import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
 import waazdoh.common.WPreferences;
-import waazdoh.common.client.ServiceClient;
+import waazdoh.common.client.WServiceClient;
 
 public interface CTClient {
 	public static final String VERSION = "0.0.3";
@@ -40,7 +40,7 @@ public interface CTClient {
 
 	String getGlobalSetting(String name);
 
-	ServiceClient getService();
+	WServiceClient getService();
 
 	CTStorage getStorage();
 

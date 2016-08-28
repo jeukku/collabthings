@@ -5,16 +5,16 @@ import java.util.List;
 import org.collabthings.CTStorage;
 import org.collabthings.util.LLog;
 
-import waazdoh.common.client.ServiceClient;
+import waazdoh.common.client.WServiceClient;
 import waazdoh.common.vo.StorageAreaVO;
 import waazdoh.common.vo.UserVO;
 
 public class CTStorageImpl implements CTStorage {
 
-	private ServiceClient service;
+	private WServiceClient service;
 	private LLog log = LLog.getLogger(this);
 
-	public CTStorageImpl(ServiceClient service) {
+	public CTStorageImpl(WServiceClient service) {
 		this.service = service;
 	}
 
