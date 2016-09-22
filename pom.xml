@@ -221,7 +221,7 @@
 		<dependency>
 			<groupId>org.waazdoh</groupId>
 			<artifactId>client</artifactId>
-			<version>1.5.4-SNAPSHOT</version>
+			<version>1.5.5-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
