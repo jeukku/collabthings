@@ -252,7 +252,7 @@
 		<repository>
 			<id>waazdoh</id>
 			<name>waazdoh</name>
-			<url>http://maven.waazdoh.com/repository</url>
+			<url>https://maven.waazdoh.com/repository</url>
 		</repository>
 	</repositories>
 </project>
