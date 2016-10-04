@@ -212,9 +212,13 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 
 	@Override
 	public boolean importModel(String type, InputStream is) {
-		Reader r = new InputStreamReader(is);
 		try {
-			return importModel(r, type);
+			Reader r = new InputStreamReader(is);
+			try {
+				return importModel(r, type);
+			} finally {
+				r.close();
+			}
 		} catch (IOException | SAXException e) {
 			log.error(this, "importModel InputStream", e);
 			return false;
@@ -229,7 +233,9 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 			fr = new FileReader(file);
 			String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
 			log.info("Import model extension " + extension);
-			return importModel(fr, extension);
+			boolean m = importModel(fr, extension);
+			fr.close();
+			return m;
 		} catch (IOException | SAXException e) {
 			log.error(this, "import model", e);
 			return false;
@@ -258,6 +264,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		return CT3DModelImpl.TYPE;
 	}
 
+	@Override
 	public void setType(String ntype) {
 		this.type = ntype;
 		newBinary();
@@ -381,26 +388,30 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 
 	@Override
 	public File getModelFile() throws SAXException, IOException {
-		if (getType() == null) {
-			return null;
-		}
+		File f = null;
+		if (getType() != null) {
 
-		File f = File.createTempFile("" + System.currentTimeMillis() + "_" + getBinary().getID().toString(),
-				"." + getBinary().getExtension());
-		f.delete();
+			f = File.createTempFile("" + System.currentTimeMillis() + "_" + getBinary().getID().toString(),
+					"." + getBinary().getExtension());
+			if (f != null) {
+				if (!f.delete()) {
+					log.info("delete failed " + f.getAbsolutePath());
+				}
 
-		if (getType().equals(CTBinaryModel.TYPE_X3D)) {
-			InputStream is = getX3DStream();
-			if (is != null) {
-				Files.copy(is, f.toPath());
-				return f;
-			} else {
-				return null;
+				if (getType().equals(CTBinaryModel.TYPE_X3D)) {
+					InputStream is = getX3DStream();
+					if (is != null) {
+						Files.copy(is, f.toPath());
+						return f;
+					} else {
+						return null;
+					}
+				} else {
+					Files.copy(getBinary().getInputStream(), f.toPath());
+				}
 			}
-		} else {
-			Files.copy(getBinary().getInputStream(), f.toPath());
-			return f;
 		}
+		return f;
 	}
 
 	private InputStream getX3DStream() throws SAXException {
