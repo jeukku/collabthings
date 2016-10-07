@@ -14,13 +14,14 @@ import waazdoh.common.WPreferences;
 import waazdoh.common.client.WServiceClient;
 
 public interface CTClient {
-	public static final String VERSION = "0.0.3";
-	public final String LOWEST_ACCEPTED_VERSION = "0.0.3";
+	public final String VERSION = "0.0.3";
+	public String LOWEST_ACCEPTED_VERSION = "0.0.3";
+	public String CHARSET = "UTF-8";
 
-	public static final String JAVASCRIPT_FORBIDDENWORDS = "ct.javascript.forbiddenwords";
-	public static final String PREFERENCES_OPENSCADPATH = "software.openscad.path";
+	public String JAVASCRIPT_FORBIDDENWORDS = "ct.javascript.forbiddenwords";
+	public String PREFERENCES_OPENSCADPATH = "software.openscad.path";
 
-	public static final String ERROR_OPENSCADFAILED = "error_openscadfailed";
+	public String ERROR_OPENSCADFAILED = "error_openscadfailed";
 
 	CTObjectFactory getObjectFactory();
 

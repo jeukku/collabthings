@@ -40,20 +40,21 @@ import waazdoh.common.XML;
 
 public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel {
 	private static final String BEANNAME = "model3d";
-	private static final String SCALE = "scale";
-	private static final String TRANSLATION = "translation";
-	private static final String NAME = "name";
-	private static final String BINARYID = "binaryid";
-	private static final String TYPE = "type";
+	private static final String PARAM_SCALE = "scale";
+	private static final String PARAM_TRANSLATION = "translation";
+	private static final String PARAM_NAME = "name";
+	private static final String PARAM_BINARYID = "binaryid";
+	private static final String PARAM_TYPE = "type";
 	//
 	private static int counter = 1;
 	//
 	private final ServiceObject o;
-	private String name = "3dmodel" + (CT3DModelImpl.counter++);
+	private String name = "3dmodel" + getCount();
+
 	private BinaryID binaryid;
 	private final CTClient env;
 	private final LLog log;
-	private final List<Binary> childbinaries = new ArrayList<Binary>();
+	private final List<Binary> childbinaries = new ArrayList<>();
 	private double scale = 1.0;
 	private Vector3f translation = new Vector3f();
 	private String type;
@@ -65,6 +66,10 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		this.env = nenv;
 		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.getVersion(), nenv.getPrefix());
 		log = LLog.getLogger(this);
+	}
+
+	private static int getCount() {
+		return CT3DModelImpl.counter++;
 	}
 
 	@Override
@@ -90,11 +95,11 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	}
 
 	public void getBean(WObject b) {
-		b.addValue(NAME, name);
-		b.addValue(BINARYID, "" + getBinaryID());
-		b.addValue(SCALE, scale);
-		b.add(TRANSLATION, CTMath.getBean(translation));
-		b.addValue(TYPE, "" + type);
+		b.addValue(PARAM_NAME, name);
+		b.addValue(PARAM_BINARYID, "" + getBinaryID());
+		b.addValue(PARAM_SCALE, scale);
+		b.add(PARAM_TRANSLATION, CTMath.getBean(translation));
+		b.addValue(PARAM_TYPE, "" + type);
 		//
 		for (Binary binary : childbinaries) {
 			b.addToList("binaries", binary.getID().toString());
@@ -113,11 +118,11 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		}
 
 		name = bean.getValue("name");
-		binaryid = new BinaryID(bean.getIDValue(BINARYID));
+		binaryid = new BinaryID(bean.getIDValue(PARAM_BINARYID));
 
-		scale = bean.getDoubleValue(SCALE);
-		translation = CTMath.parseVector(bean.get(TRANSLATION));
-		type = bean.getValue(TYPE);
+		scale = bean.getDoubleValue(PARAM_SCALE);
+		translation = CTMath.parseVector(bean.get(PARAM_TRANSLATION));
+		type = bean.getValue(PARAM_TYPE);
 		//
 
 		List<String> bchildbinaries = bean.getList("binaries");
@@ -228,8 +233,8 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	@Override
 	public boolean importModel(File file) {
 		log.info("Importing " + file);
+		Reader fr = null;
 		try {
-			Reader fr;
 			fr = new FileReader(file);
 			String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
 			log.info("Import model extension " + extension);
@@ -237,7 +242,9 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 			fr.close();
 			return m;
 		} catch (IOException | SAXException e) {
+
 			log.error(this, "import model", e);
+
 			return false;
 		}
 	}
@@ -261,7 +268,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 
 	@Override
 	public String getModelType() {
-		return CT3DModelImpl.TYPE;
+		return CT3DModelImpl.PARAM_TYPE;
 	}
 
 	@Override
@@ -278,7 +285,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	private boolean importSTL(Reader fr) throws IOException, SAXException {
 		StringBuilder sb = readFile(fr);
 		newBinary();
-		getBinary().load(new ByteArrayInputStream(sb.toString().getBytes()));
+		getBinary().load(new ByteArrayInputStream(sb.toString().getBytes(CTClient.CHARSET)));
 		getBinary().setReady();
 		return true;
 	}
@@ -297,7 +304,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		log.fine("importing " + b.toText());
 		if (importX3D(b)) {
 			newBinary();
-			getBinary().load(new ByteArrayInputStream(b.toXML().toString().getBytes()));
+			getBinary().load(new ByteArrayInputStream(b.toXML().toString().getBytes(CTClient.CHARSET)));
 			getBinary().setReady();
 			return true;
 		} else {
@@ -324,7 +331,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 
 	private String findSpecificationsResources() throws IOException {
 		Enumeration<URL> systemResources = ClassLoader.getSystemResources("specifications");
-		List<String> searchlist = new ArrayList<String>();
+		List<String> searchlist = new ArrayList<>();
 		while (systemResources.hasMoreElements()) {
 			URL u = systemResources.nextElement();
 			String pathname = u.getFile().toString();
@@ -390,7 +397,6 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	public File getModelFile() throws SAXException, IOException {
 		File f = null;
 		if (getType() != null) {
-
 			f = File.createTempFile("" + System.currentTimeMillis() + "_" + getBinary().getID().toString(),
 					"." + getBinary().getExtension());
 			if (f != null) {
@@ -399,19 +405,23 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 				}
 
 				if (getType().equals(CTBinaryModel.TYPE_X3D)) {
-					InputStream is = getX3DStream();
-					if (is != null) {
-						Files.copy(is, f.toPath());
-						return f;
-					} else {
-						return null;
-					}
+					return getX3DFile(f);
 				} else {
 					Files.copy(getBinary().getInputStream(), f.toPath());
 				}
 			}
 		}
 		return f;
+	}
+
+	private File getX3DFile(File f) throws SAXException, IOException {
+		InputStream is = getX3DStream();
+		if (is != null) {
+			Files.copy(is, f.toPath());
+			return f;
+		} else {
+			return null;
+		}
 	}
 
 	private InputStream getX3DStream() throws SAXException {
@@ -426,7 +436,8 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 
 				convertX3DURLs(b);
 				log.info("getModelStream returning " + b.toXML().toString());
-				return new BufferedInputStream(new ByteArrayInputStream(b.toXML().toString().getBytes()));
+				return new BufferedInputStream(
+						new ByteArrayInputStream(b.toXML().toString().getBytes(CTClient.CHARSET)));
 			} catch (IOException e) {
 				log.error(this, "getModelStream", e);
 				return null;
@@ -479,7 +490,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 
 	@Override
 	public boolean equals(Object b) {
-		if (b instanceof CT3DModelImpl) {
+		if (b != null && b.getClass().equals(this.getClass())) {
 			CT3DModelImpl bmodel = (CT3DModelImpl) b;
 			return getObject().equals(bmodel.getObject());
 		} else {

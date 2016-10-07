@@ -57,7 +57,7 @@ public final class Test3DModel extends CTTestCase {
 		s.setName("TEST");
 		s.setType("test");
 		String testbinarydatastring = "TESTIBINARYDATA";
-		s.getBinary().add(new String(testbinarydatastring).getBytes());
+		s.getBinary().add(new String(testbinarydatastring).getBytes(CTClient.CHARSET));
 		s.getBinary().setReady();
 		s.publish();
 		//

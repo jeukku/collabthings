@@ -3,7 +3,6 @@ package org.collabthings.environment.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.math.LOrientation;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTRuntimeObject;
@@ -20,7 +19,7 @@ public class CTPartState implements CTRuntimeObject {
 	private LOrientation orientation = new LOrientation();
 	private List<CTPartStateListener> listeners;
 
-	public CTPartState(final CTRunEnvironment runenv, final CTFactoryState factory, final CTPart part) {
+	public CTPartState(final CTFactoryState factory, final CTPart part) {
 		this.part = part;
 		this.factory = factory;
 	}
@@ -60,7 +59,7 @@ public class CTPartState implements CTRuntimeObject {
 
 	public void addListener(CTPartStateListener l) {
 		if (listeners == null) {
-			listeners = new ArrayList<CTPartState.CTPartStateListener>();
+			listeners = new ArrayList<>();
 		}
 		listeners.add(l);
 	}

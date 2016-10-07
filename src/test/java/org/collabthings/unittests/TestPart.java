@@ -32,7 +32,7 @@ public final class TestPart extends CTTestCase {
 		CTBinaryModel m = part.newBinaryModel();
 		m.setType("test");
 		String testbinarydatastring = "TESTIBINARYPARTDATA";
-		m.getBinary().add(new String(testbinarydatastring).getBytes());
+		m.getBinary().add(new String(testbinarydatastring).getBytes(CTClient.CHARSET));
 		//
 		CTSubPart subpart = part.newSubPart();
 		subpart.getPart();

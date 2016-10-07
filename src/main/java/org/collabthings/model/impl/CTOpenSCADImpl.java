@@ -2,11 +2,11 @@ package org.collabthings.model.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
@@ -35,25 +35,25 @@ import waazdoh.common.WObject;
  */
 public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTModel {
 	private static final String VARIABLE_NAME = "name";
-	private static final String SCRIPT = "value";
+	private static final String VARIABlE_SCRIPT = "value";
 	private static final String VARIABLE_SCALE = "scale";
 	private static final String VARIABLE_MODEL = "model";
 	//
-	private ServiceObject o;
+	private ServiceObject so;
 	private String script;
 
 	//
 	private LLog log = LLog.getLogger(this);
 	private final CTClient client;
 	//
-	private static int namecounter = 0;
+	private static int namecounter;
 	private String name;
 	private String info;
 
-	private StringBuffer error;
+	private StringBuilder error;
 	private final CTBinaryModel model;
 
-	private int loadedscadhash = 0;
+	private int loadedscadhash;
 	private Vector3f translation = new Vector3f();
 	private double scale = 1;
 	private boolean disabled;
@@ -67,9 +67,9 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	 */
 	public CTOpenSCADImpl(final CTClient env) {
 		this.client = env;
-		o = new ServiceObject(CTModel.SCAD, env.getClient(), this, env.getVersion(), env.getPrefix());
+		so = new ServiceObject(CTModel.SCAD, env.getClient(), this, env.getVersion(), env.getPrefix());
 		setName("OpenSCAD" + (CTOpenSCADImpl.namecounter++));
-		StringBuffer b = new StringBuffer();
+		StringBuilder b = new StringBuilder();
 		b.append("// created " + new Date() + " by " + env.getService().getUser().getUsername() + "\n");
 		b.append("// Version " + env.getVersion() + "\n");
 		b.append("color(\"red\")\n");
@@ -83,7 +83,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 
 	@Override
 	public long getModified() {
-		return o.getModified();
+		return so.getModified();
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 
 	@Override
 	public boolean importModel(File file) throws IOException {
-		StringBuffer b = new StringBuffer();
+		StringBuilder b = new StringBuilder();
 		Files.readAllLines(Paths.get(file.getAbsolutePath())).forEach(l -> {
 			b.append(l);
 			b.append("\n");
@@ -145,21 +145,19 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 			model.setTranslation(getTranslation());
 			model.setScale(getScale());
 			return true;
-		} catch (IOException e) {
-			log.error(this, "loadModel", e);
+		} catch (IOException | InterruptedException e) {
+			log.error(this, "createModel", e);
 			client.errorEvent(CTClient.ERROR_OPENSCADFAILED, e);
-		} catch (InterruptedException e) {
-			log.error(this, "loadModel", e);
 		}
 		return false;
 	}
 
-	private File createSTL() throws IOException, FileNotFoundException, InterruptedException {
+	private File createSTL() throws IOException, InterruptedException {
 		String path = client.getPreferences().get(CTClient.PREFERENCES_OPENSCADPATH, "openscad");
 		File tempfile = File.createTempFile("collabthings", ".scad");
 		FileOutputStream fos = new FileOutputStream(tempfile);
 		String s = getScript();
-		byte[] bs = s.getBytes();
+		byte[] bs = s.getBytes(CTClient.CHARSET);
 		fos.write(bs, 0, bs.length);
 		fos.close();
 
@@ -168,7 +166,6 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 
 		File stlfile = File.createTempFile(getID().toString(), ".stl");
 		String command = path + " -o " + stlfile;
-		// command += " -D 'quality=\"production\"' ";
 		command += " " + tempfile.getAbsolutePath();
 		log.info("Running " + command);
 		Process e = Runtime.getRuntime().exec(command);
@@ -182,8 +179,8 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		return stlfile;
 	}
 
-	private void readStream(InputStream errorStream) {
-		BufferedReader es = new BufferedReader(new InputStreamReader(errorStream));
+	private void readStream(InputStream errorStream) throws UnsupportedEncodingException {
+		BufferedReader es = new BufferedReader(new InputStreamReader(errorStream, CTClient.CHARSET));
 
 		new Thread(() -> {
 			try {
@@ -197,7 +194,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 					log.info("line :" + line);
 					appendError(line + "\n");
 				}
-			} catch (Exception e1) {
+			} catch (IOException e1) {
 				log.error(es, "loadModel", e1);
 			}
 		}, "OpenSCAD readStream").start();
@@ -205,20 +202,20 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 
 	private void appendError(String line) {
 		if (error == null) {
-			error = new StringBuffer();
+			error = new StringBuilder();
 		}
 		error.append(line);
 	}
 
 	@Override
 	public WObject getObject() {
-		WObject b = o.getBean();
+		WObject b = so.getBean();
 		getBean(b.add("content"));
 		return b;
 	}
 
-	public void getBean(WObject b) {
-		b.setBase64Value(SCRIPT, script);
+	private void getBean(WObject b) {
+		b.setBase64Value(VARIABlE_SCRIPT, script);
 		b.addValue(VARIABLE_NAME, name);
 		b.addValue(VARIABLE_SCALE, scale);
 		if (model != null) {
@@ -233,7 +230,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 			content = main;
 		}
 
-		script = content.getBase64Value(SCRIPT);
+		script = content.getBase64Value(VARIABlE_SCRIPT);
 		loadedscadhash = getScript().hashCode();
 
 		this.name = content.getValue(VARIABLE_NAME);
@@ -248,8 +245,9 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		return name != null && script != null;
 	}
 
+	@Override
 	public boolean load(MStringID id) {
-		return o.load(id);
+		return so.load(id);
 	}
 
 	@Override
@@ -257,7 +255,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		this.script = nscript;
 		error = null;
 		changed();
-		o.modified();
+		so.modified();
 	}
 
 	@Override
@@ -270,7 +268,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	}
 
 	private ServiceObject getServiceObject() {
-		return o;
+		return so;
 	}
 
 	@Override
@@ -295,6 +293,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		changed();
 	}
 
+	@Override
 	public String getScript() {
 		return script;
 	}

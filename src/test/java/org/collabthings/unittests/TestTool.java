@@ -47,7 +47,7 @@ public final class TestTool extends CTTestCase {
 		String testbinarydatastring = "TESTIBINARYDATA";
 		CTBinaryModel model = t.getPart().newBinaryModel();
 		model.setType("bin");
-		model.getBinary().add(new String(testbinarydatastring).getBytes());
+		model.getBinary().add(new String(testbinarydatastring).getBytes(CTClient.CHARSET));
 		//
 		t.save();
 		t.publish();

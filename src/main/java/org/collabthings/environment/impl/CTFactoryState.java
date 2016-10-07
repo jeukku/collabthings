@@ -391,7 +391,7 @@ public class CTFactoryState implements CTRuntimeObject {
 	}
 
 	public CTPartState newPart() {
-		CTPartState partstate = new CTPartState(runenv, this, runenv.getClient().getObjectFactory().getPart());
+		CTPartState partstate = new CTPartState(this, runenv.getClient().getObjectFactory().getPart());
 		addPart(partstate);
 		return partstate;
 	}
