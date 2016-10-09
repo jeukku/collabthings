@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -218,7 +217,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	@Override
 	public boolean importModel(String type, InputStream is) {
 		try {
-			Reader r = new InputStreamReader(is);
+			Reader r = new InputStreamReader(is, CTClient.CHARSET);
 			try {
 				return importModel(r, type);
 			} finally {
@@ -231,20 +230,15 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	}
 
 	@Override
-	public boolean importModel(File file) {
+	public boolean importModel(File file) throws IOException {
 		log.info("Importing " + file);
-		Reader fr = null;
-		try {
-			fr = new FileReader(file);
+
+		try (Reader fr = new InputStreamReader(new FileInputStream(file), CTClient.CHARSET)) {
 			String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
 			log.info("Import model extension " + extension);
-			boolean m = importModel(fr, extension);
-			fr.close();
-			return m;
-		} catch (IOException | SAXException e) {
-
+			return importModel(fr, extension);
+		} catch (SAXException e) {
 			log.error(this, "import model", e);
-
 			return false;
 		}
 	}
@@ -256,9 +250,9 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 
 		o.modified();
 
-		if (CTBinaryModel.TYPE_STL.equals(extension)) {
+		if (CTBinaryModel.VALUE_TYPE_STL.equals(extension)) {
 			return importSTL(fr);
-		} else if (CTBinaryModel.TYPE_X3D.equals(extension)) {
+		} else if (CTBinaryModel.VALUE_TYPE_X3D.equals(extension)) {
 			return importX3D(fr);
 		} else {
 			log.info("Unknown extension " + extension);
@@ -394,17 +388,18 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	}
 
 	@Override
-	public File getModelFile() throws SAXException, IOException {
+	public File getModelFile() throws IOException {
 		File f = null;
 		if (getType() != null) {
-			f = File.createTempFile("" + System.currentTimeMillis() + "_" + getBinary().getID().toString(),
+			f = File.createTempFile(
+					"" + Long.toString(System.currentTimeMillis()) + "_" + getBinary().getID().toString(),
 					"." + getBinary().getExtension());
 			if (f != null) {
 				if (!f.delete()) {
 					log.info("delete failed " + f.getAbsolutePath());
 				}
 
-				if (getType().equals(CTBinaryModel.TYPE_X3D)) {
+				if (getType().equals(CTBinaryModel.VALUE_TYPE_X3D)) {
 					return getX3DFile(f);
 				} else {
 					Files.copy(getBinary().getInputStream(), f.toPath());
@@ -414,7 +409,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		return f;
 	}
 
-	private File getX3DFile(File f) throws SAXException, IOException {
+	private File getX3DFile(File f) throws IOException {
 		InputStream is = getX3DStream();
 		if (is != null) {
 			Files.copy(is, f.toPath());
@@ -424,11 +419,11 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		}
 	}
 
-	private InputStream getX3DStream() throws SAXException {
+	private InputStream getX3DStream() {
 		if (isReady()) {
 			XML xml;
-			try {
-				xml = new XML(new InputStreamReader(getBinary().getInputStream()));
+			try (InputStreamReader reader = new InputStreamReader(getBinary().getInputStream(), CTClient.CHARSET)) {
+				xml = new XML(reader);
 				log.info("getModelStream parsing " + xml);
 				WData b = new WData(xml);
 				// FIXME TODO
@@ -438,7 +433,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 				log.info("getModelStream returning " + b.toXML().toString());
 				return new BufferedInputStream(
 						new ByteArrayInputStream(b.toXML().toString().getBytes(CTClient.CHARSET)));
-			} catch (IOException e) {
+			} catch (IOException | SAXException e) {
 				log.error(this, "getModelStream", e);
 				return null;
 			}
@@ -508,12 +503,12 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	}
 
 	private void createTriangleMesh() {
-		if (CTBinaryModel.TYPE_STL.equals(getType())) {
+		if (CTBinaryModel.VALUE_TYPE_STL.equals(getType())) {
 			StlMeshImporter i = new StlMeshImporter();
 			try {
 				i.setFile(getModelFile());
 				mesh = i.getImport();
-			} catch (SAXException | IOException e) {
+			} catch (IOException e) {
 				log.error(this, "createTriangleMesh", e);
 
 			}

@@ -145,7 +145,7 @@ public final class TestPart extends CTTestCase {
 		CTClient e = getNewClient();
 		CTPart p = e.getObjectFactory().getPart();
 		CTBinaryModel bm = p.newBinaryModel();
-		bm.importModel(CTBinaryModel.TYPE_X3D, getClass().getResourceAsStream(cubemodelpath));
+		bm.importModel(CTBinaryModel.VALUE_TYPE_X3D, getClass().getResourceAsStream(cubemodelpath));
 		assertNotNull(p.getModel());
 		assertTrue(bm.getBinary().length() > 0);
 	}

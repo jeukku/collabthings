@@ -24,9 +24,9 @@ import com.jme3.math.Vector3f;
 import waazdoh.common.ObjectID;
 
 public class CTRunEnvironmentImpl implements CTRunEnvironment {
-	private Map<String, String> params = new HashMap<String, String>();
-	private List<CTEnvironmentTask> tasks = new ArrayList<CTEnvironmentTask>();
-	private List<CTEnvironmentTask> runningtasks = new ArrayList<CTEnvironmentTask>();
+	private Map<String, String> params = new HashMap<>();
+	private List<CTEnvironmentTask> tasks = new ArrayList<>();
+	private List<CTEnvironmentTask> runningtasks = new ArrayList<>();
 	private Map<String, CTRuntimeObject> objects = new HashMap<>();
 
 	private CTClient client;
@@ -85,7 +85,7 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 		po.append("objects:");
 		for (String p : objects.keySet()) {
 			CTRuntimeObject o = objects.get(p);
-			po.append(1, o.printOut());
+			po.append(1, p + " -> " + o.printOut());
 		}
 
 		return po;

@@ -12,36 +12,44 @@ import waazdoh.client.model.objects.Binary;
 import waazdoh.common.MStringID;
 
 public interface CTBinaryModel extends CTObject, CTModel {
-	public static final String TYPE_X3D = "x3d";
-	public static final String TYPE_STL = "stl";
-	public static final String TYPE = "binary";
+	String VALUE_TYPE_X3D = "x3d";
+	String VALUE_TYPE_STL = "stl";
+	String VALUE_TYPE = "binary";
 
 	Binary getBinary();
 
 	void setName(String string);
 
+	@Override
 	String getName();
 
+	@Override
 	boolean load(MStringID stringID);
 
+	@Override
 	double getScale();
 
+	@Override
 	Vector3f getTranslation();
 
-	File getModelFile() throws SAXException, IOException;
+	File getModelFile() throws IOException;
 
+	@Override
 	void setTranslation(Vector3f Vector3f);
 
+	@Override
 	void setScale(double i);
 
 	boolean importModel(String type, InputStream is);
 
-	boolean importModel(File stl);
+	@Override
+	boolean importModel(File stl) throws IOException;
 
 	String getType();
 
 	void setType(String string);
 
+	@Override
 	CTTriangleMesh getTriangleMesh();
 
 }

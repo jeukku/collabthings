@@ -5,14 +5,12 @@ import org.collabthings.environment.CTScriptRunner;
 import org.collabthings.model.CTRuntimeObject;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.CTValues;
-import org.collabthings.util.LLog;
 
 public class CTScriptRunnerImpl implements CTScriptRunner {
 	private final CTScript script;
 	private final CTRunEnvironment runenv;
 	private final CTRuntimeObject runo;
 
-	private LLog log = LLog.getLogger(this);
 	private String error;
 
 	public CTScriptRunnerImpl(CTScript s, CTRunEnvironment runenv, CTRuntimeObject runtimeobject) {
@@ -36,6 +34,7 @@ public class CTScriptRunnerImpl implements CTScriptRunner {
 	 * @param o2
 	 * 
 	 */
+	@Override
 	public boolean run(CTValues values) {
 		if (script != null) {
 			CTScriptInvoker inv = new CTScriptInvoker(script);
