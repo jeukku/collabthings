@@ -14,14 +14,14 @@ import waazdoh.common.WPreferences;
 import waazdoh.common.client.WServiceClient;
 
 public interface CTClient {
-	public final String VERSION = "0.0.3";
-	public String LOWEST_ACCEPTED_VERSION = "0.0.3";
-	public String CHARSET = "UTF-8";
+	String VERSION = "0.0.3";
+	String LOWEST_ACCEPTED_VERSION = "0.0.3";
+	String CHARSET = "UTF-8";
 
-	public String JAVASCRIPT_FORBIDDENWORDS = "ct.javascript.forbiddenwords";
-	public String PREFERENCES_OPENSCADPATH = "software.openscad.path";
+	String JAVASCRIPT_FORBIDDENWORDS = "ct.javascript.forbiddenwords";
+	String PREFERENCES_OPENSCADPATH = "software.openscad.path";
 
-	public String ERROR_OPENSCADFAILED = "error_openscadfailed";
+	String ERROR_OPENSCADFAILED = "error_openscadfailed";
 
 	CTObjectFactory getObjectFactory();
 
@@ -57,13 +57,13 @@ public interface CTClient {
 
 	void addErrorListener(CTErrorListener listener);
 
-	public static String getDateTime() {
+	static String getDateTime() {
 		Date date = Calendar.getInstance().getTime();
 		SimpleDateFormat d = new SimpleDateFormat("yyyyMMdd");
 		return d.format(date);
 	}
 
-	public static boolean checkVersion(String v) {
+	static boolean checkVersion(String v) {
 		if (v != null) {
 			String a = getParsedVersionString(v);
 			String b = getParsedVersionString(LOWEST_ACCEPTED_VERSION);
@@ -73,7 +73,7 @@ public interface CTClient {
 		}
 	}
 
-	public static String getParsedVersionString(String v) {
+	static String getParsedVersionString(String v) {
 		String s = "";
 		StringTokenizer vt = new StringTokenizer(v, ".");
 		while (vt.hasMoreTokens()) {

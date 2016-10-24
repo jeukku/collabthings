@@ -27,7 +27,6 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	private static final String VALUENAME_TOOLS = "tools";
 	private static final String VALUENAME_PARAMS = "params";
 	private static final String VALUENAME_VPARAMS = "vparams";
-	private static final String VALUENAME_MAPITEM = "item";
 	//
 	private CTClient client;
 	private ServiceObject o;
@@ -43,7 +42,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 
 	public CTEnvironmentImpl(CTClient nclient) {
 		this.client = nclient;
-		scripts = new HashMap<String, CTScript>();
+		scripts = new HashMap<>();
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
 	}
 
@@ -63,6 +62,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 		return "Environment";
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -89,10 +89,10 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 		Set<String> toolnames = tools.keySet();
 		for (String string : toolnames) {
 			CTTool s = getTool(string);
-			WObject o = new WObject();
-			o.addValue("name", string);
-			o.addValue("id", s.getID());
-			b.addToList(VALUENAME_TOOLS, o);
+			WObject toolo = new WObject();
+			toolo.addValue("name", string);
+			toolo.addValue("id", s.getID());
+			b.addToList(VALUENAME_TOOLS, toolo);
 		}
 	}
 
@@ -193,10 +193,10 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	private void parseVParameters(WObject bean) {
 		List<WObject> pbeans = bean.getObjectList(VALUENAME_VPARAMS);
 		for (WObject b : pbeans) {
-			String name = b.getValue("name");
+			String vname = b.getValue("name");
 			WObject value = b.get("value");
 			Vector3f v = CTMath.parseVector(value);
-			vparameters.put(name, v);
+			vparameters.put(vname, v);
 		}
 	}
 

@@ -16,29 +16,21 @@ public class CTResourceUsage {
 
 	public void getObject(WObject add) {
 		WObject v = add.add("values");
-		map.keySet().stream().forEach(k -> {
-			v.addValue(k, map.get(k));
-		});
+		map.keySet().stream().forEach(k -> v.addValue(k, map.get(k)));
 
 		WObject t = add.add("total");
-		total.keySet().stream().forEach(k -> {
-			t.addValue(k, total.get(k));
-		});
+		total.keySet().stream().forEach(k -> t.addValue(k, total.get(k)));
 	}
 
 	public void parse(WObject bresourceusage) {
 		WObject v = bresourceusage.get("values");
 		if (v != null) {
-			v.getChildren().stream().forEach(k -> {
-				map.put(k, v.getDoubleValue(k));
-			});
+			v.getChildren().stream().forEach(k -> map.put(k, v.getDoubleValue(k)));
 		}
 
 		WObject t = bresourceusage.get("total");
 		if (t != null) {
-			t.getChildren().stream().forEach(k -> {
-				total.put(k, t.getDoubleValue(k));
-			});
+			t.getChildren().stream().forEach(k -> total.put(k, t.getDoubleValue(k)));
 		}
 	}
 
@@ -57,7 +49,7 @@ public class CTResourceUsage {
 		if (ovalue != null) {
 			Double current = total.get(okey);
 			if (current == null) {
-				current = new Double(0);
+				current = 0.0;
 			}
 
 			current += ovalue;
@@ -67,10 +59,10 @@ public class CTResourceUsage {
 
 	public void set(String string, Double value) {
 		if (value == null) {
-			value = 0.0;
+			map.put(string, 0.0);
+		} else {
+			map.put(string, value);
 		}
-
-		map.put(string, value);
 	}
 
 	public Double get(String string) {
@@ -85,11 +77,9 @@ public class CTResourceUsage {
 	public void updateTotal(List<CTSubPart> subparts) {
 		resetTotal();
 
-		map.forEach((k, v) -> addToTotal(k, v));
+		map.forEach(this::addToTotal);
 
-		subparts.stream().forEach(sp -> {
-			addTotal(sp.getPart().getResourceUsage());
-		});
+		subparts.stream().forEach(sp -> addTotal(sp.getPart().getResourceUsage()));
 	}
 
 	public double getTotal(String string) {

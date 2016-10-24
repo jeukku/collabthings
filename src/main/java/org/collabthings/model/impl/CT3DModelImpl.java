@@ -384,7 +384,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 	}
 
 	public List<Binary> getChildBinaries() {
-		return childbinaries;
+		return new ArrayList<>(childbinaries);
 	}
 
 	@Override

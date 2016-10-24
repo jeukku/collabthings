@@ -21,7 +21,7 @@ import waazdoh.common.WObject;
  * 
  */
 public final class CTScriptImpl implements ServiceObjectData, CTScript {
-	private static final String SCRIPT = "value";
+	private static final String VALUENAME_SCRIPT = "value";
 	private static final String BEANNAME = "script";
 	//
 	private ServiceObject o;
@@ -31,7 +31,7 @@ public final class CTScriptImpl implements ServiceObjectData, CTScript {
 	private LLog log = LLog.getLogger(this);
 	private final CTClient client;
 	//
-	private static int namecounter = 0;
+	private static int namecounter;
 	private String name;
 	private String info;
 
@@ -46,7 +46,8 @@ public final class CTScriptImpl implements ServiceObjectData, CTScript {
 	public CTScriptImpl(final CTClient env) {
 		this.client = env;
 		o = new ServiceObject(BEANNAME, env.getClient(), this, env.getVersion(), env.getPrefix());
-		setName("script" + (CTScriptImpl.namecounter++));
+		setName("script" + CTScriptImpl.namecounter);
+		CTScriptImpl.namecounter++;
 		setScript(
 				"function run(env, values) { env.log().info('Running ' + this); } function info() { return 'default script'; } ");
 	}
@@ -54,19 +55,20 @@ public final class CTScriptImpl implements ServiceObjectData, CTScript {
 	@Override
 	public WObject getObject() {
 		WObject b = o.getBean();
-		b.setBase64Value(SCRIPT, script);
+		b.setBase64Value(VALUENAME_SCRIPT, script);
 		b.addValue("name", name);
 		return b;
 	}
 
 	@Override
 	public boolean parse(final WObject bean) {
-		script = bean.getBase64Value(SCRIPT);
+		script = bean.getBase64Value(VALUENAME_SCRIPT);
 		inv = null;
 		this.name = bean.getValue("name");
 		return name != null && script != null;
 	}
 
+	@Override
 	public boolean load(MStringID id) {
 		return o.load(id);
 	}

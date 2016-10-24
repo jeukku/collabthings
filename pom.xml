@@ -237,6 +237,12 @@
 			<version>2.6.2</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.openstreetmap.osmosis/osmosis-core -->
+		<dependency>
+			<groupId>org.openstreetmap.osmosis</groupId>
+			<artifactId>osmosis-core</artifactId>
+			<version>0.45</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>

@@ -61,6 +61,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		return "P[" + name + "][sub:" + subparts.size() + "]";
 	}
 
+	@Override
 	public boolean load(MStringID id) {
 		return o.load(id);
 	}
@@ -215,9 +216,12 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		changed();
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
+
+	@Override
 
 	public void setName(final String nname) {
 		this.name = nname;
@@ -254,13 +258,14 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	@Override
 	public boolean isReady() {
-		if (!ready || getModel() != null && !getModel().isReady()) {
+		if (!ready || (getModel() != null && !getModel().isReady())) {
 			return false;
 		}
 
 		return true;
 	}
 
+	@Override
 	public void save() {
 		if (getServiceObject().hasChanged()) {
 			changed();
@@ -273,9 +278,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				builder.save();
 			}
 
-			subparts.parallelStream().forEach(subpart -> {
-				subpart.save();
-			});
+			subparts.parallelStream().forEach(subpart -> subpart.save());
 
 			updateResourceUsage();
 
@@ -283,6 +286,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		}
 	}
 
+	@Override
 	public void publish() {
 		if (getServiceObject().hasChanged()) {
 			save();
@@ -295,9 +299,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				builder.publish();
 			}
 
-			subparts.parallelStream().forEach(subpart -> {
-				subpart.publish();
-			});
+			subparts.parallelStream().forEach(subpart -> subpart.publish());
 
 			getServiceObject().publish();
 
@@ -310,6 +312,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		return model;
 	}
 
+	@Override
 	public CT3DModelImpl newBinaryModel() {
 		CT3DModelImpl m = new CT3DModelImpl(env);
 		model = m;
@@ -317,6 +320,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		return m;
 	}
 
+	@Override
 	public synchronized CTSubPart newSubPart() {
 		CTSubPartImpl spart = new CTSubPartImpl(this, env);
 		getLog().info("New subpart " + spart);
@@ -335,6 +339,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		return new ArrayList<>(subparts);
 	}
 
+	@Override
 	public boolean importModel(File file) throws IOException {
 		return getModel().importModel(file);
 	}
@@ -368,12 +373,6 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		} else {
 			return null;
 		}
-	}
-
-	public synchronized void destroy() {
-		this.boundingbox = null;
-		this.subparts.clear();
-		this.o = null;
 	}
 
 	@Override
@@ -411,6 +410,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		listeners.stream().forEach((e) -> e.event());
 	}
 
+	@Override
 	public void updateResourceUsage() {
 		getResourceUsage().updateTotal(subparts);
 	}

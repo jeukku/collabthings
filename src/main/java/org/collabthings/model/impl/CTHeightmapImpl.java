@@ -8,7 +8,6 @@ import org.collabthings.CTClient;
 import org.collabthings.CTListener;
 import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTModel;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTriangle;
 import org.collabthings.model.CTTriangleMesh;
 import org.collabthings.util.CTListeners;
@@ -87,14 +86,13 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 
 			for (int ix = 0; ix < resolutionx; ix++) {
 				for (int iz = 0; iz < resolutionz; iz++) {
-					float xa = (ix - sizex / 2.0f) / resolutionx;
-					float za = (iz - sizez / 2.0f) / resolutionz;
+					double xa = (ix - sizex / 2.0f) / resolutionx;
+					double za = (iz - sizez / 2.0f) / resolutionz;
 
-					float ya = (float) (Math.sin(xa * 13) * (sizex / 10));
-					ya += (float) (Math.sin(za * 13) * (sizez / 10));
+					double ya = Math.sin(xa * 13) * (sizex / 10);
+					ya += Math.sin(za * 13) * (sizez / 10);
 
-					int iv = vs.size();
-					vs.add(new Vector3f(xa * sizex, ya, za * sizez));
+					vs.add(new Vector3f((float) (xa * sizex), (float) ya, (float) (za * sizez)));
 				}
 			}
 
