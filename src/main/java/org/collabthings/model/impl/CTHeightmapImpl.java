@@ -21,7 +21,7 @@ import waazdoh.common.ObjectID;
 import waazdoh.common.WObject;
 
 public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData {
-	private static final String SCRIPT = "script";
+	private static final String PARAM_SCRIPT = "script";
 
 	private CTClient client;
 	private ServiceObject o;
@@ -86,11 +86,11 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 
 			for (int ix = 0; ix < resolutionx; ix++) {
 				for (int iz = 0; iz < resolutionz; iz++) {
-					double xa = (ix - sizex / 2.0f) / resolutionx;
-					double za = (iz - sizez / 2.0f) / resolutionz;
+					double xa = (ix - sizex / 2.0) / resolutionx;
+					double za = (iz - sizez / 2.0) / resolutionz;
 
-					double ya = Math.sin(xa * 13) * (sizex / 10);
-					ya += Math.sin(za * 13) * (sizez / 10);
+					double ya = Math.sin(xa * 13) * (sizex / 10.0);
+					ya += Math.sin(za * 13) * (sizez / 10.0);
 
 					vs.add(new Vector3f((float) (xa * sizex), (float) ya, (float) (za * sizez)));
 				}
@@ -98,8 +98,6 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 
 			for (int ixa = 0; ixa < resolutionx - 1; ixa++) {
 				for (int iza = 0; iza < resolutionz - 1; iza++) {
-					int ixb = ixa + 1;
-					int izb = iza + 1;
 					int ifirst = ixa * resolutionz;
 					int via = ifirst + iza;
 					int vib = ifirst + iza + 1;
@@ -171,7 +169,7 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 		scale = content.getDoubleValue("scale");
 		name = content.getValue("name");
 
-		script = content.getBase64Value(SCRIPT);
+		script = content.getBase64Value(PARAM_SCRIPT);
 		loadedscadhash = getScript().hashCode();
 
 		resolutionx = content.getIntValue("resolutionx");
@@ -257,10 +255,6 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 
 	private void changed() {
 		listeners.fireEvent();
-	}
-
-	private boolean isChanged() {
-		return loadedscadhash != getScript().hashCode();
 	}
 
 }

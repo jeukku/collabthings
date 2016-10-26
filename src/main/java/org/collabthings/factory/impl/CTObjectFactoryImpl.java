@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
+
 package org.collabthings.factory.impl;
 
 import java.util.ArrayList;
@@ -46,7 +57,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 
 	private LLog log = LLog.getLogger(this);
 
-	private Set<CTInfo> infolisteners = new HashSet<CTInfo>();
+	private Set<CTInfo> infolisteners = new HashSet<>();
 	private Map<MStringID, MStringID> errorids = new HashMap<>();
 
 	public CTObjectFactoryImpl(final CTClient nenv) {
@@ -185,7 +196,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	@Override
 	public CTPartImpl getPart(final MStringID partid) {
 		synchronized (parts) {
-			ArrayList<CTPartImpl> ps = new ArrayList<CTPartImpl>(parts);
+			ArrayList<CTPartImpl> ps = new ArrayList<>(parts);
 
 			CTPartImpl part = searchPart(partid, ps);
 			if (part == null) {
@@ -198,35 +209,33 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 
 			if (part != null) {
 				return part;
-			} else {
-				log.info("part not found with id " + partid);
-				ps.stream().forEach(p -> {
-					log.fine("stored " + p.getID());
-				});
+			}
 
-				part = new CTPartImpl(client);
-				if (part.load(partid)) {
-					log.info("Load part " + part);
-					if (!part.getID().equals(partid)) {
-						String message = "Loaded part doesn't have the id requested. Requested:" + partid + " result:"
-								+ part.getID();
-						message += "\nObject:\n" + part.getObject().toYaml();
-						log.info(message);
+			log.info("part not found with id " + partid);
+			ps.stream().forEach(p -> log.fine("stored " + p.getID()));
 
-						errorids.put(partid, part.getID().getStringID());
-					}
+			part = new CTPartImpl(client);
+			if (part.load(partid)) {
+				log.info("Load part " + part);
+				if (!part.getID().equals(partid)) {
+					String message = "Loaded part doesn't have the id requested. Requested:" + partid + " result:"
+							+ part.getID();
+					message += "\nObject:\n" + part.getObject().toYaml();
+					log.info(message);
 
-					CTPartImpl storedpart = searchPart(part.getID().getStringID(), ps);
-					if (storedpart == null) {
-						parts.add(part);
-						return part;
-					}
-					return storedpart;
-				} else {
-					log.info("Failed to load part " + partid);
-					log.info("Current parts " + ps);
-					return null;
+					errorids.put(partid, part.getID().getStringID());
 				}
+
+				CTPartImpl storedpart = searchPart(part.getID().getStringID(), ps);
+				if (storedpart == null) {
+					parts.add(part);
+					return part;
+				}
+				return storedpart;
+			} else {
+				log.info("Failed to load part " + partid);
+				log.info("Current parts " + ps);
+				return null;
 			}
 		}
 	}
