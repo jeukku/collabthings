@@ -24,7 +24,7 @@ public class CTJavaScriptLoader implements ScriptLoader {
 	private Set<String> forbiddenwords = new HashSet<>();
 	private Set<String> libraries = new HashSet<>();
 
-	public static ScriptLoader get(CTClient env) {
+	public static synchronized ScriptLoader get(CTClient env) {
 		if (loader == null) {
 			CTJavaScriptLoader nloader = new CTJavaScriptLoader();
 			if (nloader.init(env)) {
@@ -65,21 +65,22 @@ public class CTJavaScriptLoader implements ScriptLoader {
 	}
 
 	private void addLibrary(String name) throws IOException {
-		InputStream is = ClassLoader.getSystemResourceAsStream(name);
-		BufferedReader r = new BufferedReader(new InputStreamReader(is));
+		try (InputStream is = ClassLoader.getSystemResourceAsStream(name)) {
+			BufferedReader r = new BufferedReader(new InputStreamReader(is, CTClient.CHARSET));
 
-		StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 
-		while (true) {
-			String line = r.readLine();
-			if (line == null) {
-				break;
+			while (true) {
+				String line = r.readLine();
+				if (line == null) {
+					break;
+				}
+				sb.append(line);
+				sb.append("\n");
 			}
-			sb.append(line);
-			sb.append("\n");
-		}
 
-		libraries.add(sb.toString());
+			libraries.add(sb.toString());
+		}
 	}
 
 	@Override
@@ -113,7 +114,7 @@ public class CTJavaScriptLoader implements ScriptLoader {
 		}
 	}
 
-	public static void reset() {
+	public static synchronized void reset() {
 		loader = null;
 	}
 }

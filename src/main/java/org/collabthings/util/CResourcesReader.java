@@ -16,8 +16,7 @@ public class CResourcesReader {
 	}
 
 	private void read(String string) {
-		try {
-			InputStream s = ClassLoader.getSystemResourceAsStream(string);
+		try (InputStream s = ClassLoader.getSystemResourceAsStream(string)) {
 			if (s != null) {
 				StringWriter w = new StringWriter();
 				IOUtils.copy(s, w);

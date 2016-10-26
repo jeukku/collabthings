@@ -4,10 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.IOUtils;
+import org.collabthings.CTClient;
 import org.collabthings.model.CTTriangle;
 import org.collabthings.model.CTTriangleMesh;
 import org.collabthings.model.impl.CTTriangleMeshImpl;
@@ -36,7 +39,7 @@ public class StlMeshImporter {
 			List<Vector3f> vectors = mesh.getVectors();
 
 			StringTokenizer st = new StringTokenizer(c);
-			Stack<Vector3f> s = new Stack<Vector3f>();
+			Deque<Vector3f> s = new ArrayDeque<>();
 			while (st.hasMoreTokens()) {
 				String t = st.nextToken();
 				if ("vertex".equals(t)) {
@@ -65,9 +68,7 @@ public class StlMeshImporter {
 	}
 
 	private String getFileContent(File file) {
-		try {
-
-			BufferedReader r = new BufferedReader(new FileReader(file));
+		try (BufferedReader r = new BufferedReader(new FileReader(file))) {
 			StringBuilder b = new StringBuilder();
 			String line;
 			while ((line = r.readLine()) != null) {
