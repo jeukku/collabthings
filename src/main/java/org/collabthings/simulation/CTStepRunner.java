@@ -36,40 +36,42 @@ public class CTStepRunner {
 
 	private synchronized void runLoop(final StepListener listener) {
 		double lasttime = System.currentTimeMillis();
-		while (!stopped) {
-			double now = System.currentTimeMillis();
-			double dt = (now - lasttime) / 1000.0;
-			if (dt > minstep) {
-				lasttime = now;
+		try {
+			while (!stopped) {
+				double now = System.currentTimeMillis();
+				double dt = (now - lasttime) / 1000.0;
+				if (dt > minstep) {
+					lasttime = now;
 
-				if (dt > maxstep) {
-					dt = maxstep;
-				}
+					if (dt > maxstep) {
+						dt = maxstep;
+					}
 
-				if (totalcount % 10000 == 0) {
-					printInfo();
-				}
-				totaltime += dt;
-				totalcount++;
+					if (totalcount % 10000 == 0) {
+						printInfo();
+					}
+					totaltime += dt;
+					totalcount++;
 
-				boolean isstillrunning = listener.step(dt);
-				if (!isstillrunning) {
-					break;
-				}
-			} else {
-				double ddt = minstep - dt;
-				try {
+					boolean isstillrunning = listener.step(dt);
+					if (!isstillrunning) {
+						break;
+					}
+				} else {
+					double ddt = minstep - dt;
 					int timeout = (int) (ddt * 1000);
 					if (timeout <= 0) {
 						timeout = (int) (minstep / 2 * 1000);
 						timeout++;
 					}
 					wait(timeout);
-				} catch (InterruptedException e) {
-					log.error(this, "step", e);
 				}
 			}
+		} catch (InterruptedException e) {
+			log.error(this, "step", e);
+			Thread.currentThread().interrupt();
 		}
+		
 		thread = null;
 		stopped = true;
 		//

@@ -8,7 +8,7 @@ public class PrintOut {
 	public static final int INDENT = 1;
 	public static final int INDENT2 = 2;
 
-	private List<Line> lines = new ArrayList<Line>();
+	private List<Line> lines = new ArrayList<>();
 
 	public void append(String string) {
 		append(0, string);
@@ -47,8 +47,8 @@ public class PrintOut {
 	}
 
 	private class Line {
-		int indent;
-		String text;
+		private int indent;
+		private String text;
 	}
 
 }

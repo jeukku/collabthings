@@ -110,7 +110,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 		synchronized (partbuilders) {
 
 			for (CTPartBuilder builder : partbuilders) {
-				if (builder.getID().equals(builderid)) {
+				if (builder.getID().getStringID().equals(builderid)) {
 					return builder;
 				}
 			}
@@ -140,7 +140,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 		synchronized (factories) {
 
 			for (CTFactoryImpl factory : factories) {
-				if (factory.getID().equals(factoryid)) {
+				if (factory.getID().getStringID().equals(factoryid)) {
 					return factory;
 				}
 			}
@@ -170,7 +170,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	public CTTool getTool(MStringID toolid) {
 		synchronized (tools) {
 			for (CTTool tool : tools) {
-				if (tool.getID().equals(toolid)) {
+				if (tool.getID().getStringID().equals(toolid)) {
 					return tool;
 				}
 			}
@@ -217,7 +217,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			part = new CTPartImpl(client);
 			if (part.load(partid)) {
 				log.info("Load part " + part);
-				if (!part.getID().equals(partid)) {
+				if (!part.getID().getStringID().equals(partid)) {
 					String message = "Loaded part doesn't have the id requested. Requested:" + partid + " result:"
 							+ part.getID();
 					message += "\nObject:\n" + part.getObject().toYaml();
@@ -245,7 +245,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			for (CTPartImpl part : ps) {
 				if (part.getID() == null) {
 					parts.remove(part);
-				} else if (part.getID().equals(partid)) {
+				} else if (part.getID().getStringID().equals(partid)) {
 					return part;
 				}
 			}
@@ -274,7 +274,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			CT3DModelImpl model = new CT3DModelImpl(client);
 			model.load(modelid);
 
-			if (model.getID().equals(modelid)) {
+			if (model.getID().getStringID().equals(modelid)) {
 				models.add(model);
 				return model;
 			} else {
@@ -299,7 +299,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 
 		CTOpenSCADImpl scad = new CTOpenSCADImpl(client);
 		scad.load(scadid);
-		if (!scad.getID().equals(scadid)) {
+		if (!scad.getID().getStringID().equals(scadid)) {
 			String message = "Loaded model doesn't have the id requested. Requested:" + scadid + " result:"
 					+ scad.getID();
 			message += "\nObject:\n" + scad.getObject().toYaml();
@@ -332,7 +332,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	public CTRunEnvironmentBuilder getRuntimeBuilder(MStringID id) {
 		synchronized (runtimebuilders) {
 			for (CTRunEnvironmentBuilder b : runtimebuilders) {
-				if (b.getID().equals(id)) {
+				if (b.getID().getStringID().equals(id)) {
 					return b;
 				}
 			}

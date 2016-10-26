@@ -58,6 +58,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 		setBoundingBox(new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
 	}
 
+	@Override
 	public boolean load(MStringID id) {
 		env = null;
 		name = null;
@@ -92,9 +93,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 
 		addVectorBean(b, VALUENAME_SPAWNLOCATION, tooluserspawnlocation);
 
-		if (bbox != null) {
-			b.add(CTBoundingBox.BEAN_NAME, bbox.getBean());
-		}
+		b.add(CTBoundingBox.BEAN_NAME, bbox.getBean());
 
 		if (getModel() != null) {
 			b.addValue(VALUENAME_MODELID, model.getID());
@@ -341,6 +340,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 		return getEnvironment().getTool(name);
 	}
 
+	@Override
 	public CTEnvironment getEnvironment() {
 		if (env == null && bean != null) {
 			env = new CTEnvironmentImpl(client, getContent().getIDValue(VALUENAME_ENVIRONMENTID));
