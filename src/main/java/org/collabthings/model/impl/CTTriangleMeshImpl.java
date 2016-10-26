@@ -10,8 +10,8 @@ import com.jme3.math.Vector3f;
 
 public class CTTriangleMeshImpl implements CTTriangleMesh {
 
-	private List<CTTriangle> ts = new ArrayList<CTTriangle>();
-	private List<Vector3f> vs = new ArrayList<Vector3f>();
+	private List<CTTriangle> ts = new ArrayList<>();
+	private List<Vector3f> vs = new ArrayList<>();
 
 	@Override
 	public List<CTTriangle> getTriangles() {

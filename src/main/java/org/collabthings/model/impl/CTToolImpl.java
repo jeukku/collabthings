@@ -1,8 +1,9 @@
 package org.collabthings.model.impl;
 
+import java.util.Locale;
+
 import org.collabthings.CTClient;
 import org.collabthings.model.CTEnvironment;
-import org.collabthings.model.CTObject;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
@@ -13,15 +14,16 @@ import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
 import waazdoh.common.WObject;
 
-public final class CTToolImpl implements ServiceObjectData, CTObject, CTTool {
+public final class CTToolImpl implements ServiceObjectData, CTTool {
 	private static final String BEANNAME = "tool";
 	private static final String VALUENAME_NAME = "value";
 	private static final String VALUENAME_MODELID = "model3did";
 	private static final String VALUENAME_ENVIRONMENTID = "environmentid";
 
-	private static int counter = 0;
+	private static int counter;
 	private ServiceObject o;
-	private String name = "tool" + (CTToolImpl.counter++);
+	private String name = "tool" + CTToolImpl.getCounter();
+
 	private CTPart part;
 	private CTClient client;
 	private CTEnvironment env;
@@ -37,6 +39,11 @@ public final class CTToolImpl implements ServiceObjectData, CTObject, CTTool {
 		this.client = nclient;
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
 		o.load(id);
+	}
+
+	private static int getCounter() {
+		counter++;
+		return counter;
 	}
 
 	@Override
@@ -59,7 +66,7 @@ public final class CTToolImpl implements ServiceObjectData, CTObject, CTTool {
 
 	@Override
 	public CTScript getScript(String string) {
-		return env.getScript(string.toLowerCase());
+		return env.getScript(string.toLowerCase(Locale.ENGLISH));
 	}
 
 	@Override
@@ -115,7 +122,7 @@ public final class CTToolImpl implements ServiceObjectData, CTObject, CTTool {
 	}
 
 	public CTScript addScript(String scriptname, CTScript ctScript) {
-		env.addScript(scriptname.toLowerCase(), ctScript);
+		env.addScript(scriptname.toLowerCase(Locale.ENGLISH), ctScript);
 		return ctScript;
 	}
 
