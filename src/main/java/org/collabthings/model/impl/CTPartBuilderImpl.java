@@ -45,6 +45,7 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 		return ret;
 	}
 
+	@Override
 	public String getError() {
 		return error;
 	}
@@ -119,6 +120,7 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 		return true;
 	}
 
+	@Override
 	public boolean load(MStringID builderid) {
 		o = new ServiceObject(BEANNAME, client.getClient(), this, client.getVersion(), client.getPrefix());
 		return o.load(builderid);
@@ -131,7 +133,11 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof CTPartBuilderImpl) {
+		if (obj == null) {
+			return false;
+		}
+
+		if (obj.getClass() == this.getClass()) {
 			CTPartBuilderImpl builder = (CTPartBuilderImpl) obj;
 			return getObject().toYaml().equals(builder.getObject().toYaml());
 		} else {

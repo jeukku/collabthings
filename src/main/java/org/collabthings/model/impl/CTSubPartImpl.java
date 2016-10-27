@@ -47,10 +47,12 @@ public final class CTSubPartImpl implements CTSubPart {
 		}
 	}
 
+	@Override
 	public String getNamePath() {
 		return parent.getShortname() + "->" + name;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -78,6 +80,7 @@ public final class CTSubPartImpl implements CTSubPart {
 		}
 	}
 
+	@Override
 	public CTPart getPart() {
 		if (part == null) {
 			if (partid == null || !partid.isId()) {
@@ -158,14 +161,17 @@ public final class CTSubPartImpl implements CTSubPart {
 		changed();
 	}
 
+	@Override
 	public Vector3f getNormal() {
 		return n;
 	}
 
+	@Override
 	public Vector3f getLocation() {
 		return p;
 	}
 
+	@Override
 	public double getAngle() {
 		return CTMath.limitAngle(angle);
 	}
@@ -190,6 +196,7 @@ public final class CTSubPartImpl implements CTSubPart {
 		listeners.add(l);
 	}
 
+	@Override
 	public String getPartBookmark() {
 		return partbookmark;
 	}
@@ -203,7 +210,7 @@ public final class CTSubPartImpl implements CTSubPart {
 	public boolean isBookmarkUpdated() {
 		if (partbookmark != null) {
 			String newid = client.getStorage().readStorage(partbookmark);
-			if (newid != null && !newid.equals(partid)) {
+			if (newid != null && !new MStringID(newid).equals(partid)) {
 				return true;
 			} else {
 				return false;

@@ -25,7 +25,8 @@ public class CTMaterialImpl implements CTMaterial {
 	@Override
 	public WObject getBean() {
 		WObject d = new WObject("material");
-		d.addValue("color", "" + color[0] + ", " + color[1] + ", " + color[2]);
+		d.addValue("color",
+				"" + Double.toString(color[0]) + ", " + Double.toString(color[1]) + ", " + Double.toString(color[2]));
 		return d;
 	}
 
@@ -43,6 +44,6 @@ public class CTMaterialImpl implements CTMaterial {
 
 	@Override
 	public double[] getColor() {
-		return color;
+		return color.clone();
 	}
 }
