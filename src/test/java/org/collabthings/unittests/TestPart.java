@@ -107,10 +107,18 @@ public final class TestPart extends CTTestCase {
 
 	public void testPartBookmark() {
 		CTClient e = getNewClient();
+		CTPart bookmarkedpart = e.getObjectFactory().getPart();
+		String name = "bookmarkedpart" + System.currentTimeMillis();
+		bookmarkedpart.setName(name);
 		CTPart part = e.getObjectFactory().getPart();
 		CTSubPart sp = part.newSubPart();
-		sp.getPart();
-		sp.setPartBookmark("test");
+		assertNotNull(sp.getPart());
+		sp.setPartBookmark(name);
+		part.publish();
+		//
+		CTClient b = getNewClient();
+		CTPart bpart = b.getObjectFactory().getPart(part.getID().getStringID());
+		assertNotNull(bpart);
 	}
 
 	public void testLoadRandomID() throws IOException, SAXException {
