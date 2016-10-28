@@ -9,17 +9,16 @@ import org.collabthings.model.CTTriangleMesh;
 import com.jme3.math.Vector3f;
 
 public class CTTriangleMeshImpl implements CTTriangleMesh {
-
-	private List<CTTriangle> ts = new ArrayList<>();
-	private List<Vector3f> vs = new ArrayList<>();
+	private final List<CTTriangle> ts = new ArrayList<>();
+	private final List<Vector3f> vs = new ArrayList<>();
 
 	@Override
 	public List<CTTriangle> getTriangles() {
-		return ts;
+		return new ArrayList<>(ts);
 	}
 
 	@Override
 	public List<Vector3f> getVectors() {
-		return vs;
+		return new ArrayList<>(vs);
 	}
 }

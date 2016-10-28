@@ -8,6 +8,10 @@ import waazdoh.common.WObject;
 
 public class CTMaterialImpl implements CTMaterial {
 
+	private static final int INDEX_RED = 0;
+	private static final int INDEX_GREEN = 1;
+	private static final int INDEX_BLUE = 2;
+	private static final double MINIMUM_AVERAGE_RANDOM_COLOR_VALUE = 0.8;
 	private double[] color = new double[] { 1.0, 1.0, 0.0 };
 
 	public CTMaterialImpl() {
@@ -16,7 +20,7 @@ public class CTMaterialImpl implements CTMaterial {
 			r = Math.random();
 			g = Math.random();
 			b = Math.random();
-		} while ((r + g + b) / 3 > 0.8);
+		} while ((r + g + b) / 3 > MINIMUM_AVERAGE_RANDOM_COLOR_VALUE);
 		color[0] = r;
 		color[1] = g;
 		color[2] = b;
@@ -35,9 +39,9 @@ public class CTMaterialImpl implements CTMaterial {
 			String t = wObject.getValue("color");
 			if (t != null) {
 				StringTokenizer st = new StringTokenizer(t, ",");
-				color[0] = Double.parseDouble(st.nextToken());
-				color[1] = Double.parseDouble(st.nextToken());
-				color[2] = Double.parseDouble(st.nextToken());
+				color[INDEX_RED] = Double.parseDouble(st.nextToken());
+				color[INDEX_GREEN] = Double.parseDouble(st.nextToken());
+				color[INDEX_BLUE] = Double.parseDouble(st.nextToken());
 			}
 		}
 	}
