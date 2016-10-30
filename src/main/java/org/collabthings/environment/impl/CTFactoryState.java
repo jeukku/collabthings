@@ -38,8 +38,8 @@ public class CTFactoryState implements CTRuntimeObject {
 	private LLog log;
 	private final String name;
 
-	private Set<CTToolState> tools = new HashSet<CTToolState>();
-	private List<CTToolUser> toolusers = new ArrayList<CTToolUser>();
+	private Set<CTToolState> tools = new HashSet<>();
+	private List<CTToolUser> toolusers = new ArrayList<>();
 	private List<CTFactoryState> factories = new ArrayList<>();
 	private Set<CTRuntimeStepper> steppers = new HashSet<>();
 	private Map<String, String> params = new HashMap<>();
@@ -282,7 +282,7 @@ public class CTFactoryState implements CTRuntimeObject {
 	}
 
 	private CTToolUser getAvailableToolUser(CTToolState toolstate, Vector3f l) {
-		ArrayList<CTToolUser> ts = new ArrayList<CTToolUser>(toolusers);
+		ArrayList<CTToolUser> ts = new ArrayList<>(toolusers);
 		ts.sort(new Comparator<CTToolUser>() {
 			@Override
 			public int compare(CTToolUser a, CTToolUser b) {
@@ -409,7 +409,7 @@ public class CTFactoryState implements CTRuntimeObject {
 	}
 
 	public List<CTFactoryState> getFactories() {
-		return new ArrayList<CTFactoryState>(this.factories);
+		return new ArrayList<>(this.factories);
 	}
 
 	public Vector3f getVector(String name) {
@@ -441,6 +441,7 @@ public class CTFactoryState implements CTRuntimeObject {
 			}
 		} catch (InterruptedException e) {
 			log.error(this, "waitStepperDone", e);
+			Thread.currentThread().interrupt();
 		}
 	}
 

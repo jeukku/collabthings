@@ -58,7 +58,7 @@ public class CTPool {
 		log.info("Adding part " + p + " to pool " + pool);
 		List<CTPart> list = parts.get(pool);
 		if (list == null) {
-			list = new ArrayList<CTPart>();
+			list = new ArrayList<>();
 			parts.put(pool, list);
 		}
 		list.add(p);
@@ -84,6 +84,7 @@ public class CTPool {
 			}
 		} catch (InterruptedException e) {
 			log.error(this, "waitForPart", e);
+			Thread.currentThread().interrupt();
 		}
 
 		log.info("Waiting for pool " + pool + " done");

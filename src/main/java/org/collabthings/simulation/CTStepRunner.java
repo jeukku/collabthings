@@ -2,7 +2,7 @@ package org.collabthings.simulation;
 
 import org.collabthings.util.LLog;
 
-public class CTStepRunner {
+public final class CTStepRunner {
 
 	private Thread thread;
 	private double maxstep;
@@ -35,43 +35,13 @@ public class CTStepRunner {
 	}
 
 	private synchronized void runLoop(final StepListener listener) {
-		double lasttime = System.currentTimeMillis();
 		try {
-			while (!stopped) {
-				double now = System.currentTimeMillis();
-				double dt = (now - lasttime) / 1000.0;
-				if (dt > minstep) {
-					lasttime = now;
-
-					if (dt > maxstep) {
-						dt = maxstep;
-					}
-
-					if (totalcount % 10000 == 0) {
-						printInfo();
-					}
-					totaltime += dt;
-					totalcount++;
-
-					boolean isstillrunning = listener.step(dt);
-					if (!isstillrunning) {
-						break;
-					}
-				} else {
-					double ddt = minstep - dt;
-					int timeout = (int) (ddt * 1000);
-					if (timeout <= 0) {
-						timeout = (int) (minstep / 2 * 1000);
-						timeout++;
-					}
-					wait(timeout);
-				}
-			}
+			tryLoop(listener);
 		} catch (InterruptedException e) {
 			log.error(this, "step", e);
 			Thread.currentThread().interrupt();
 		}
-		
+
 		thread = null;
 		stopped = true;
 		//
@@ -82,12 +52,47 @@ public class CTStepRunner {
 		printInfo();
 	}
 
+	private synchronized void tryLoop(final StepListener listener) throws InterruptedException {
+		double lasttime = System.currentTimeMillis();
+		while (!stopped) {
+			double now = System.currentTimeMillis();
+			double dt = (now - lasttime) / 1000.0;
+			if (dt > minstep) {
+				lasttime = now;
+
+				if (dt > maxstep) {
+					dt = maxstep;
+				}
+
+				if (totalcount % 10_000 == 0) {
+					printInfo();
+				}
+				totaltime += dt;
+				totalcount++;
+
+				boolean isstillrunning = listener.step(dt);
+				if (!isstillrunning) {
+					break;
+				}
+			} else {
+				double ddt = minstep - dt;
+				int timeout = (int) (ddt * 1000);
+				if (timeout <= 0) {
+					timeout = (int) (minstep / 2 * 1000);
+					timeout++;
+				}
+				wait(timeout);
+			}
+		}
+	}
+
 	private void printInfo() {
 		if (totalcount > 0) {
 			log.info("Stepper count:" + totalcount + " time:" + totaltime + " avg.step:" + (totaltime / totalcount));
 		}
 	}
 
+	@FunctionalInterface
 	public interface StepListener {
 		boolean step(double dtime);
 	}
