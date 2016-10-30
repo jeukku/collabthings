@@ -3,6 +3,7 @@ package org.collabthings.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 
 public class CTListeners {
@@ -12,8 +13,8 @@ public class CTListeners {
 		this.listeners.add(l);
 	}
 
-	public void fireEvent() {
-		listeners.stream().forEach((l) -> l.event());
+	public void fireEvent(CTEvent e) {
+		listeners.stream().forEach((l) -> l.event(e));
 	}
 
 }

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.collabthings.CTClient;
+import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTHeightmap;
@@ -196,7 +197,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			}
 
 			if (model != null) {
-				model.addChangeListener(() -> changed());
+				model.addChangeListener((e) -> changed(e));
 			}
 		}
 	}
@@ -204,8 +205,13 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private synchronized void addPart(CTSubPartImpl subpart) {
 		getLog().info("addPart " + subpart);
 		subparts.add(subpart);
-		subpart.addChangeListener(() -> changed());
-		changed();
+		subpart.addChangeListener((e) -> {
+			if (!e.isHandled(this)) {
+				e.addHandled(this);
+				changed(e);
+			}
+		});
+		changed(new CTEvent("part added"));
 	}
 
 	private LLog getLog() {
@@ -224,7 +230,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public void setShortname(String sname) {
 		this.shortname = sname;
-		changed();
+		changed(new CTEvent("shortname set"));
 	}
 
 	@Override
@@ -236,7 +242,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	public void setName(final String nname) {
 		this.name = nname;
-		changed();
+		changed(new CTEvent("name set"));
 	}
 
 	@Override
@@ -247,7 +253,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public void setBoundingBox(Vector3f a, Vector3f b) {
 		boundingbox = new CTBoundingBox(a, b);
-		changed();
+		changed(new CTEvent("boundingbox set"));
 	}
 
 	@Override
@@ -263,7 +269,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public CTPartBuilder newBuilder() {
 		builder = new CTPartBuilderImpl(env);
-		changed();
+		changed(new CTEvent("new builder"));
 		return builder;
 	}
 
@@ -277,9 +283,9 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	@Override
-	public void save() {
+	public synchronized void save() {
 		if (getServiceObject().hasChanged()) {
-			changed();
+			changed(new CTEvent("saving and changed"));
 
 			if (model != null) {
 				model.save();
@@ -291,7 +297,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 			subparts.parallelStream().forEach(subpart -> subpart.save());
 
-			updateResourceUsage();
+			//			updateResourceUsage();
 
 			getServiceObject().save();
 		}
@@ -327,7 +333,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public CT3DModelImpl newBinaryModel() {
 		CT3DModelImpl m = new CT3DModelImpl(env);
 		model = m;
-		changed();
+		changed(new CTEvent("new binary model"));
 		return m;
 	}
 
@@ -342,7 +348,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public void removeSubPart(CTSubPart subpart) {
 		subparts.remove(subpart);
-		changed();
+		changed(new CTEvent("subparts removed"));
 	}
 
 	@Override
@@ -389,16 +395,16 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public void resetModel() {
 		model = null;
-		changed();
+		changed(new CTEvent("model reset"));
 	}
 
 	@Override
 	public CTHeightmap newHeightmap() {
 		CTHeightmapImpl map = new CTHeightmapImpl(env);
 		model = map;
-		model.addChangeListener(() -> changed());
+		model.addChangeListener((e) -> changed(e));
 
-		changed();
+		changed(new CTEvent("newHM"));
 		return map;
 	}
 
@@ -406,19 +412,19 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public CTOpenSCAD newSCAD() {
 		CTOpenSCADImpl scad = new CTOpenSCADImpl(env);
 		model = scad;
-		model.addChangeListener(() -> changed());
+		model.addChangeListener((e) -> changed(e));
 
-		changed();
+		changed(new CTEvent("new SCAD"));
 		return scad;
 	}
 
-	private void changed() {
+	private void changed(CTEvent e) {
 		o.modified();
 		this.storedobject = null;
 
 		updateResourceUsage();
 
-		listeners.stream().forEach((e) -> e.event());
+		listeners.stream().forEach((l) -> l.event(e));
 	}
 
 	@Override

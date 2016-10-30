@@ -66,6 +66,9 @@ public final class TestOpenSCAD extends CTTestCase {
 
 		assertEquals(part.getObject().toYaml(), bpart.getObject().toYaml());
 		assertEquals(bpartid, partid);
+		
+		assertEquals(720, bscad.getModel().getTriangleMesh().getVectors().size());
+		assertEquals(240, bscad.getModel().getTriangleMesh().getTriangles().size());
 	}
 
 	public void testGear() throws IOException, SAXException {

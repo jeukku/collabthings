@@ -21,4 +21,12 @@ public class CTTriangleMeshImpl implements CTTriangleMesh {
 	public List<Vector3f> getVectors() {
 		return new ArrayList<>(vs);
 	}
+
+	public void addVector(Vector3f nv) {
+		vs.add(nv);
+	}
+
+	public void addTriangle(CTTriangle tri) {
+		this.ts.add(tri);
+	}
 }

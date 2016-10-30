@@ -36,7 +36,6 @@ public class StlMeshImporter {
 		if (c != null) {
 			Vector3f n = new Vector3f(0, 1, 0);
 			CTTriangleMeshImpl mesh = new CTTriangleMeshImpl();
-			List<Vector3f> vectors = mesh.getVectors();
 
 			StringTokenizer st = new StringTokenizer(c);
 			Deque<Vector3f> s = new ArrayDeque<>();
@@ -53,11 +52,11 @@ public class StlMeshImporter {
 					float sz = Float.parseFloat(st.nextToken());
 					n = new Vector3f(sx, sy, sz);
 				} else if ("endfacet".equals(t)) {
-					int index = vectors.size();
-					vectors.add(s.pop());
-					vectors.add(s.pop());
-					vectors.add(s.pop());
-					mesh.getTriangles().add(new CTTriangle(index, index + 1, index + 2, n));
+					int index = mesh.getVectors().size();
+					mesh.addVector(s.pop());
+					mesh.addVector(s.pop());
+					mesh.addVector(s.pop());
+					mesh.addTriangle(new CTTriangle(index, index + 1, index + 2, n));
 				}
 			}
 

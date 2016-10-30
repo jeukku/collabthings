@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.collabthings.CTClient;
+import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.math.CTMath;
 import org.collabthings.math.LOrientation;
@@ -59,8 +60,10 @@ public final class CTSubPartImpl implements CTSubPart {
 
 	@Override
 	public void setName(String text) {
-		this.name = text;
-		changed();
+		if (name == null || !name.equals(text)) {
+			this.name = text;
+			changed(new CTEvent("name changed"));
+		}
 	}
 
 	@Override
@@ -70,7 +73,7 @@ public final class CTSubPartImpl implements CTSubPart {
 		p.set(subpart.p);
 		n.set(subpart.n);
 		angle = subpart.angle;
-		changed();
+		changed(new CTEvent("set"));
 	}
 
 	@Override
@@ -86,6 +89,7 @@ public final class CTSubPartImpl implements CTSubPart {
 			if (partid == null || !partid.isId()) {
 				// new part
 				part = this.client.getObjectFactory().getPart();
+				// part.addChangeListener((e) -> changed(e));
 			} else {
 				part = this.client.getObjectFactory().getPart(partid);
 				if (part == null) {
@@ -94,7 +98,6 @@ public final class CTSubPartImpl implements CTSubPart {
 				}
 			}
 
-			part.addChangeListener(() -> changed());
 		}
 
 		return part;
@@ -142,8 +145,8 @@ public final class CTSubPartImpl implements CTSubPart {
 	public void setPart(CTPart part2) {
 		partid = null;
 		this.part = (CTPartImpl) part2;
-		changed();
-		part.addChangeListener(() -> changed());
+		changed(new CTEvent("part set"));
+		part.addChangeListener((e) -> changed(e));
 	}
 
 	@Override
@@ -158,7 +161,7 @@ public final class CTSubPartImpl implements CTSubPart {
 		this.n.set(normal.normalize());
 		transformation = null;
 		this.angle = CTMath.limitAngle(angle);
-		changed();
+		changed(new CTEvent("Orientation changed"));
 	}
 
 	@Override
@@ -179,12 +182,12 @@ public final class CTSubPartImpl implements CTSubPart {
 	@Override
 	public void setAngle(double angle) {
 		this.angle = CTMath.limitAngle(angle);
-		changed();
+		changed(new CTEvent("Angle set"));
 	}
 
-	private void changed() {
+	private void changed(CTEvent e) {
 		transformation = null;
-		listeners.stream().forEach((l) -> l.event());
+		listeners.stream().forEach((l) -> l.event(e));
 	}
 
 	@Override
@@ -227,7 +230,7 @@ public final class CTSubPartImpl implements CTSubPart {
 			if (newid != null) {
 				partid = new MStringID(newid);
 				part = null;
-				changed();
+				changed(new CTEvent("bookmark update"));
 			}
 		}
 	}

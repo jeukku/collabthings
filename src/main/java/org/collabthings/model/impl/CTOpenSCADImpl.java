@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 
 import org.collabthings.CTClient;
+import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTModel;
@@ -91,15 +92,15 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		if (isChanged()) {
 			if (createModel()) {
 				loadedscadhash = getScript().hashCode();
+				changed(new CTEvent("model created"));
 			}
-			changed();
 		}
 
 		return model;
 	}
 
-	private void changed() {
-		listeners.fireEvent();
+	private void changed(CTEvent e) {
+		listeners.fireEvent(e);
 	}
 
 	private boolean isChanged() {
@@ -236,12 +237,19 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 		this.name = content.getValue(VARIABLE_NAME);
 		this.scale = content.getDoubleValue(VARIABLE_SCALE);
 
-		if (!model.load(content.getIDValue(VARIABLE_MODEL))) {
+		MStringID varmodel = content.getIDValue(VARIABLE_MODEL);
+		if (!model.load(varmodel)) {
 			log.info("Loading model failed. Creating it.");
-
 			createModel();
 		}
 
+		if (!model.getID().getStringID().equals(varmodel)) {
+			log.info("OpenSCAD loading model with id does not not equal with " + varmodel);
+			log.info("service has "
+					+ this.client.getClient().getObjects().read(varmodel.toString()).toObject().toYaml());
+			log.info("model now " + model.getObject().toYaml());
+			createModel();
+		}
 		return name != null && script != null;
 	}
 
@@ -254,7 +262,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	public void setScript(final String nscript) {
 		this.script = nscript;
 		error = null;
-		changed();
+		changed(new CTEvent("script set"));
 		so.modified();
 	}
 
@@ -290,7 +298,6 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	@Override
 	public void save() {
 		getServiceObject().save();
-		changed();
 	}
 
 	@Override
@@ -316,7 +323,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	@Override
 	public void setName(String name) {
 		this.name = name;
-		changed();
+		changed(new CTEvent("name set"));
 	}
 
 	@Override
@@ -332,7 +339,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	@Override
 	public void setScale(double scale) {
 		this.scale = scale;
-		changed();
+		changed(new CTEvent("scale set"));
 	}
 
 	@Override
@@ -343,7 +350,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTMo
 	@Override
 	public void setTranslation(Vector3f translation) {
 		this.translation = translation;
-		changed();
+		changed(new CTEvent("Translation set"));
 	}
 
 	@Override

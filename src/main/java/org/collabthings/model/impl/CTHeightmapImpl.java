@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.collabthings.CTClient;
+import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTModel;
@@ -199,7 +200,7 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 	public void setScript(final String nscript) {
 		this.script = nscript;
 		error = null;
-		changed();
+		changed(new CTEvent("script set"));
 	}
 
 	@Override
@@ -253,8 +254,8 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 		this.sizez = sizez;
 	}
 
-	private void changed() {
-		listeners.fireEvent();
+	private void changed(CTEvent e) {
+		listeners.fireEvent(e);
 	}
 
 }
