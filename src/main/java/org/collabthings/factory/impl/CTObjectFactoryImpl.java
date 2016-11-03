@@ -59,6 +59,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 
 	private Set<CTInfo> infolisteners = new HashSet<>();
 	private Map<MStringID, MStringID> errorids = new HashMap<>();
+	private static Map<String, CTOFID> ids = new HashMap<>();
 
 	public CTObjectFactoryImpl(final CTClient nenv) {
 		this.client = nenv;
@@ -194,11 +195,13 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public CTPartImpl getPart(final MStringID partid) {
-		synchronized (parts) {
+	public CTPartImpl getPart(final MStringID orgpartid) {
+		CTOFID partid = CTObjectFactoryImpl.getId(orgpartid.toString());
+
+		synchronized (partid) {
 			ArrayList<CTPartImpl> ps = new ArrayList<>(parts);
 
-			CTPartImpl part = searchPart(partid, ps);
+			CTPartImpl part = searchPart(partid.getId(), ps);
 			if (part == null) {
 				MStringID errorid = errorids.get(partid);
 				part = searchPart(errorid, ps);
@@ -215,7 +218,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			ps.stream().forEach(p -> log.fine("stored " + p.getID()));
 
 			part = new CTPartImpl(client);
-			if (part.load(partid)) {
+			if (part.load(partid.getId())) {
 				log.info("Load part " + part);
 				if (!part.getID().getStringID().equals(partid)) {
 					String message = "Loaded part doesn't have the id requested. Requested:" + partid + " result:"
@@ -223,12 +226,14 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 					message += "\nObject:\n" + part.getObject().toYaml();
 					log.info(message);
 
-					errorids.put(partid, part.getID().getStringID());
+					errorids.put(partid.getId(), part.getID().getStringID());
 				}
 
 				CTPartImpl storedpart = searchPart(part.getID().getStringID(), ps);
 				if (storedpart == null) {
-					parts.add(part);
+					synchronized (parts) {
+						parts.add(part);
+					}
 					return part;
 				}
 				return storedpart;
@@ -240,18 +245,29 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 		}
 	}
 
+	private synchronized static CTOFID getId(String sid) {
+		CTOFID id = ids.get(sid);
+		if (id == null) {
+			id = new CTOFID(sid);
+			ids.put(sid, id);
+		}
+		return id;
+	}
+
 	private CTPartImpl searchPart(final MStringID partid, ArrayList<CTPartImpl> ps) {
-		if (partid != null) {
-			for (CTPartImpl part : ps) {
-				if (part.getID() == null) {
-					parts.remove(part);
-				} else if (part.getID().getStringID().equals(partid)) {
-					return part;
+		synchronized (parts) {
+			if (partid != null) {
+				for (CTPartImpl part : ps) {
+					if (part.getID() == null) {
+						parts.remove(part);
+					} else if (part.getID().getStringID().equals(partid)) {
+						return part;
+					}
 				}
 			}
-		}
 
-		return null;
+			return null;
+		}
 	}
 
 	@Override
@@ -341,5 +357,35 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			runtimebuilders.add(b);
 			return b;
 		}
+	}
+
+	private static class CTOFID {
+
+		private String id;
+
+		public CTOFID(String string) {
+			this.id = string;
+		}
+
+		public MStringID getId() {
+			return new MStringID(this.id);
+		}
+
+		@Override
+		public int hashCode() {
+			return id.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof CTOFID) {
+				CTOFID b = (CTOFID) obj;
+				return b.id.equals(this.id);
+			} else {
+				return false;
+			}
+
+		}
+
 	}
 }
