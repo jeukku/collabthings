@@ -62,6 +62,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private WObject storedobject;
 	private List<CTListener> listeners = new ArrayList<>();
 	private boolean ready;
+	private WObject modeldata;
 
 	public CTPartImpl(final CTClient nenv) {
 		this.env = nenv;
@@ -90,6 +91,12 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				WObject md = b.add("model");
 				md.addValue("id", model.getID());
 				md.addValue("type", model.getModelType());
+			} else if (modeldata != null) {
+				WObject md = b.add("model");
+				MStringID scadid = modeldata.getIDValue(VALUENAME_MODELID);
+				md.addValue("id", scadid.toString());
+				String type = modeldata.getValue("type");
+				md.addValue("type", type);
 			}
 
 			if (builder != null) {
@@ -136,7 +143,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		name = bean.getValue(VALUENAME_NAME);
 		shortname = bean.getValue(VALUENAME_SHORTNAME);
 
-		parseModel(bean.get("model"));
+		modeldata = bean.get("model");
+
 		parseBuilder(bean.getValue(VALUENAME_BUILDERID));
 
 		material = new CTMaterialImpl(bean.get("material"));
@@ -297,7 +305,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 			subparts.parallelStream().forEach(subpart -> subpart.save());
 
-			//			updateResourceUsage();
+			updateResourceUsage();
 
 			getServiceObject().save();
 		}
@@ -326,6 +334,10 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	@Override
 	public CTModel getModel() {
+		if (this.model == null) {
+			parseModel(this.modeldata);
+		}
+
 		return model;
 	}
 

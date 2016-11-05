@@ -121,7 +121,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 				partbuilders.add(builder);
 				return builder;
 			} else {
-				log.info("Failed to load factory " + builderid);
+				log.info("Failed to load builder " + builderid);
 				return null;
 			}
 		}
@@ -220,10 +220,13 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			part = new CTPartImpl(client);
 			if (part.load(partid.getId())) {
 				log.info("Load part " + part);
-				if (!part.getID().getStringID().equals(partid)) {
+				if (!partid.getId().equals(part.getID().getStringID())) {
 					String message = "Loaded part doesn't have the id requested. Requested:" + partid + " result:"
 							+ part.getID();
 					message += "\nObject:\n" + part.getObject().toYaml();
+					message += "\nService has\n"
+							+ client.getService().getObjects().read(partid.toString()).toObject().toYaml();
+
 					log.info(message);
 
 					errorids.put(partid.getId(), part.getID().getStringID());
@@ -305,27 +308,49 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 
 	@Override
 	public CTOpenSCAD getOpenScad(MStringID scadid) {
+		CTOpenSCAD openscad;
 		synchronized (openscads) {
-			for (CTOpenSCAD os : openscads) {
-				if (os.getID().getStringID().equals(scadid)) {
-					return os;
-				}
+			openscad = searchOpenScad(scadid);
+
+			if (openscad != null) {
+				return openscad;
+			}
+
+			MStringID errorid = errorids.get(scadid);
+			openscad = searchOpenScad(errorid);
+			if (openscad != null) {
+				log.info("Found a part with errorid " + errorid + " org:" + scadid);
 			}
 		}
 
-		CTOpenSCADImpl scad = new CTOpenSCADImpl(client);
-		scad.load(scadid);
-		if (!scad.getID().getStringID().equals(scadid)) {
+		if (openscad != null) {
+			return openscad;
+		}
+
+		openscad = new CTOpenSCADImpl(client);
+		openscad.load(scadid);
+		if (!openscad.getID().getStringID().equals(scadid)) {
 			String message = "Loaded model doesn't have the id requested. Requested:" + scadid + " result:"
-					+ scad.getID();
-			message += "\nObject:\n" + scad.getObject().toYaml();
+					+ openscad.getID();
+			message += "\nObject:\n" + openscad.getObject().toYaml();
 			message += "\nService has\n" + client.getService().getObjects().read(scadid.toString()).toObject().toYaml();
 			log.info(message);
-			return scad;
+			errorids.put(scadid, openscad.getID().getStringID());
+			openscads.add(openscad);
+			return openscad;
 		} else {
-			openscads.add(scad);
-			return scad;
+			openscads.add(openscad);
+			return openscad;
 		}
+	}
+
+	private CTOpenSCAD searchOpenScad(MStringID scadid) {
+		for (CTOpenSCAD os : openscads) {
+			if (os.getID().getStringID().equals(scadid)) {
+				return os;
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -369,6 +394,11 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 
 		public MStringID getId() {
 			return new MStringID(this.id);
+		}
+
+		@Override
+		public String toString() {
+			return id;
 		}
 
 		@Override
