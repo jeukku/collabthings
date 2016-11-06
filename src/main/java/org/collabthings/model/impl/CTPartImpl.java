@@ -64,6 +64,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private boolean ready;
 	private WObject modeldata;
 
+	private static LLog log = LLog.getLogger("PartImpl");
+
 	public CTPartImpl(final CTClient nenv) {
 		this.env = nenv;
 		o = new ServiceObject(BEANNAME, nenv.getClient(), this, nenv.getVersion(), nenv.getPrefix());
@@ -293,6 +295,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public synchronized void save() {
 		if (getServiceObject().hasChanged()) {
+			log.info("saving " + this + " " + getID());
+
 			changed(new CTEvent("saving and changed"));
 
 			if (model != null) {

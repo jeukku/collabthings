@@ -38,8 +38,12 @@ import org.collabthings.model.impl.CTToolImpl;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 import org.collabthings.util.LLog;
+import org.eclipse.jetty.util.ArrayUtil;
 
+import difflib.DiffUtils;
+import difflib.Patch;
 import waazdoh.common.MStringID;
+import waazdoh.common.WObject;
 import waazdoh.common.vo.ObjectVO;
 
 public final class CTObjectFactoryImpl implements CTObjectFactory {
@@ -54,6 +58,8 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	private List<CTPartBuilder> partbuilders = new ArrayList<>();
 	private List<CTOpenSCAD> openscads = new ArrayList<>();
 	private List<CTHeightmap> heightmaps = new ArrayList<>();
+
+	private Map<MStringID, CTPartImpl> orgparts = new HashMap<>();
 
 	private LLog log = LLog.getLogger(this);
 
@@ -82,17 +88,38 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public CTScript getScript(MStringID id) {
+	public CTScript getScript(MStringID sid) {
 		synchronized (scripts) {
+			MStringID searchid = sid;
+
+			MStringID errorid = errorids.get(sid);
+			if (errorid != null) {
+				searchid = errorid;
+			}
+
 			for (CTScriptImpl s : scripts) {
-				if (s.getID().getStringID().equals(id)) {
+				if (s.getID().getStringID().equals(searchid)) {
 					return s;
 				}
 			}
 
 			CTScriptImpl s = new CTScriptImpl(client);
-			s.load(id);
+			s.load(searchid);
 			scripts.add(s);
+
+			if (!s.getID().getStringID().equals(searchid)) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(
+						"Loaded script doesn't have the id requested. Requested:" + searchid + " result:" + s.getID());
+				WObject oservice = client.getService().getObjects().read(searchid.toString()).toObject();
+				WObject loadedo = s.getObject();
+				diff(sb, oservice, loadedo);
+
+				errorids.put(sid, s.getID().getStringID());
+
+				log.info(sb.toString());
+			}
+
 			return s;
 		}
 	}
@@ -103,6 +130,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 		synchronized (partbuilders) {
 			partbuilders.add(pb);
 		}
+
 		return pb;
 	}
 
@@ -119,6 +147,18 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			CTPartBuilderImpl builder = new CTPartBuilderImpl(client);
 			if (builder.load(builderid)) {
 				partbuilders.add(builder);
+
+				if (!builder.getID().getStringID().equals(builderid)) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("Loaded partbuilder doesn't have the id requested. Requested:" + builder + " result:"
+							+ builder.getID());
+					WObject oservice = client.getService().getObjects().read(builderid.toString()).toObject();
+					WObject loadedo = builder.getObject();
+					diff(sb, oservice, loadedo);
+
+					log.info(sb.toString());
+				}
+
 				return builder;
 			} else {
 				log.info("Failed to load builder " + builderid);
@@ -201,9 +241,13 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 		synchronized (partid) {
 			ArrayList<CTPartImpl> ps = new ArrayList<>(parts);
 
+			if (orgparts.get(orgpartid) != null) {
+				return orgparts.get(orgpartid);
+			}
+
 			CTPartImpl part = searchPart(partid.getId(), ps);
 			if (part == null) {
-				MStringID errorid = errorids.get(partid);
+				MStringID errorid = errorids.get(partid.getId());
 				part = searchPart(errorid, ps);
 				if (part != null) {
 					log.info("Found a part with errorid " + errorid + " org:" + partid);
@@ -221,31 +265,46 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			if (part.load(partid.getId())) {
 				log.info("Load part " + part);
 				if (!partid.getId().equals(part.getID().getStringID())) {
-					String message = "Loaded part doesn't have the id requested. Requested:" + partid + " result:"
-							+ part.getID();
-					message += "\nObject:\n" + part.getObject().toYaml();
-					message += "\nService has\n"
-							+ client.getService().getObjects().read(partid.toString()).toObject().toYaml();
+					StringBuilder sb = new StringBuilder();
+					sb.append("Loaded part doesn't have the id requested. Requested:" + partid + " result:"
+							+ part.getID());
+					WObject oservice = client.getService().getObjects().read(partid.toString()).toObject();
+					WObject loadedo = part.getObject();
+					diff(sb, oservice, loadedo);
 
-					log.info(message);
+					log.info(sb.toString());
 
 					errorids.put(partid.getId(), part.getID().getStringID());
+					log.info("errorids " + errorids);
 				}
 
-				CTPartImpl storedpart = searchPart(part.getID().getStringID(), ps);
-				if (storedpart == null) {
-					synchronized (parts) {
-						parts.add(part);
-					}
-					return part;
+				synchronized (parts) {
+					parts.add(part);
+					orgparts.put(orgpartid, part);
+					log.info("parts " + parts);
 				}
-				return storedpart;
+
+				return part;
 			} else {
 				log.info("Failed to load part " + partid);
 				log.info("Current parts " + ps);
 				return null;
 			}
 		}
+	}
+
+	private void diff(StringBuilder sb, WObject oservice, WObject loadedo) {
+		String ayaml = loadedo.toYaml();
+		String byaml = oservice.toYaml();
+
+		Patch diff = DiffUtils.diff(ArrayUtil.asMutableList(ayaml.split("\n")),
+				ArrayUtil.asMutableList(byaml.split("\n")));
+		diff.getDeltas().forEach(d -> {
+			sb.append("\nDiff " + d.getOriginal() + "\n\t" + d.getRevised());
+		});
+
+		// sb.append("\nObject:\n" + ayaml);
+		// sb.append("\nService has\n" + byaml);
 	}
 
 	private synchronized static CTOFID getId(String sid) {
@@ -380,6 +439,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 
 			CTRunEnvironmentBuilder b = new CTRunEnvironmentBuilderImpl(client, id);
 			runtimebuilders.add(b);
+
 			return b;
 		}
 	}
