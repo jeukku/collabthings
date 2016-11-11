@@ -2,7 +2,6 @@ package org.collabthings.model.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTEvent;
@@ -36,7 +35,7 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 	private String name;
 
 	private int resolutionx = 100, resolutionz = 100;
-	private float sizex = 10000.0f, sizez = 10000.0f;
+	private float sizex = 10000000.0f, sizez = 10000000.0f;
 
 	private CTListeners listeners = new CTListeners();
 	private String error;
@@ -82,18 +81,16 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 	public CTTriangleMesh getTriangleMesh() {
 		if (mesh == null) {
 			mesh = new CTTriangleMeshImpl();
-			List<Vector3f> vs = mesh.getVectors();
-			List<CTTriangle> triangles = mesh.getTriangles();
 
 			for (int ix = 0; ix < resolutionx; ix++) {
 				for (int iz = 0; iz < resolutionz; iz++) {
-					double xa = (ix - sizex / 2.0) / resolutionx;
-					double za = (iz - sizez / 2.0) / resolutionz;
+					double xa = (double) ix / resolutionx * sizex - sizex / 2.0;
+					double za = (double) iz / resolutionz * sizez - sizez / 2.0;
 
-					double ya = Math.sin(xa * 13) * (sizex / 10.0);
-					ya += Math.sin(za * 13) * (sizez / 10.0);
+					double ya = Math.sin(xa * 1.1) * (sizex / 80.0);
+					ya += Math.sin(za * 1.3) * (sizez / 80.0);
 
-					vs.add(new Vector3f((float) (xa * sizex), (float) ya, (float) (za * sizez)));
+					mesh.add(new Vector3f((float) xa, (float) ya, (float) za));
 				}
 			}
 
@@ -105,8 +102,8 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 					int vic = ifirst + iza + resolutionz;
 					int vid = ifirst + iza + resolutionz + 1;
 
-					triangles.add(new CTTriangle(via, vic, vib, null));
-					triangles.add(new CTTriangle(vid, vib, vic, null));
+					mesh.add(new CTTriangle(via, vic, vib, null));
+					mesh.add(new CTTriangle(vid, vib, vic, null));
 				}
 			}
 		}
