@@ -10,4 +10,8 @@ public interface CTTriangleMesh {
 
 	List<Vector3f> getVectors();
 
+	void add(Vector3f vector3f);
+
+	void add(CTTriangle ctTriangle);
+
 }

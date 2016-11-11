@@ -53,10 +53,10 @@ public class StlMeshImporter {
 					n = new Vector3f(sx, sy, sz);
 				} else if ("endfacet".equals(t)) {
 					int index = mesh.getVectors().size();
-					mesh.addVector(s.pop());
-					mesh.addVector(s.pop());
-					mesh.addVector(s.pop());
-					mesh.addTriangle(new CTTriangle(index, index + 1, index + 2, n));
+					mesh.add(s.pop());
+					mesh.add(s.pop());
+					mesh.add(s.pop());
+					mesh.add(new CTTriangle(index, index + 1, index + 2, n));
 				}
 			}
 

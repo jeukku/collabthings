@@ -420,7 +420,11 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		model = map;
 		model.addChangeListener((e) -> changed(e));
 
+		storedobject = null;
+		builder = null;
+
 		changed(new CTEvent("newHM"));
+
 		return map;
 	}
 
