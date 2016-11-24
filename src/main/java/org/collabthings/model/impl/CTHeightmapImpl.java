@@ -20,7 +20,7 @@ import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
 import waazdoh.common.WObject;
 
-public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData {
+public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	private static final String PARAM_SCRIPT = "script";
 
 	private CTClient client;
@@ -205,7 +205,7 @@ public class CTHeightmapImpl implements CTHeightmap, CTModel, ServiceObjectData 
 		if (error == null) {
 			return null;
 		} else {
-			return error.toString();
+			return error;
 		}
 	}
 

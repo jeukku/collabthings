@@ -468,7 +468,9 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (obj instanceof CTOFID) {
+			if (obj == null) {
+				return false;
+			} else if (obj.getClass().equals(this.getClass())) {
 				CTOFID b = (CTOFID) obj;
 				return b.id.equals(this.id);
 			} else {
