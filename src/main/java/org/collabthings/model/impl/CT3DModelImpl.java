@@ -30,7 +30,6 @@ import org.collabthings.CTClient;
 import org.collabthings.CTListener;
 import org.collabthings.math.CTMath;
 import org.collabthings.model.CTBinaryModel;
-import org.collabthings.model.CTModel;
 import org.collabthings.model.CTTriangleMesh;
 import org.collabthings.scene.StlMeshImporter;
 import org.collabthings.util.LLog;
@@ -48,7 +47,7 @@ import waazdoh.common.WData;
 import waazdoh.common.WObject;
 import waazdoh.common.XML;
 
-public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel {
+public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	private static final String BEANNAME = "model3d";
 	private static final String PARAM_SCALE = "scale";
 	private static final String PARAM_TRANSLATION = "translation";
@@ -339,7 +338,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData, CTModel 
 		List<String> searchlist = new ArrayList<>();
 		while (systemResources.hasMoreElements()) {
 			URL u = systemResources.nextElement();
-			String pathname = u.getFile().toString();
+			String pathname = u.getFile();
 			searchlist.add(pathname);
 			File f = new File(pathname);
 			if (f.isDirectory()) {

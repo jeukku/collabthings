@@ -34,7 +34,7 @@ import waazdoh.common.WObject;
  * @author Juuso Vilmunen
  * 
  */
-public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD, CTModel {
+public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	private static final String VARIABLE_NAME = "name";
 	private static final String VARIABlE_SCRIPT = "value";
 	private static final String VARIABLE_SCALE = "scale";
