@@ -15,9 +15,9 @@ import org.xml.sax.SAXException;
 import com.jme3.math.Vector3f;
 
 import waazdoh.client.utils.ConditionWaiter;
-import waazdoh.common.MStringID;
+import waazdoh.common.WStringID;
 import waazdoh.common.WData;
-import waazdoh.common.XML;
+import waazdoh.common.WXML;
 
 public final class Test3DModel extends CTTestCase {
 
@@ -75,7 +75,7 @@ public final class Test3DModel extends CTTestCase {
 		CTClient env = getNewClient();
 		try {
 			CT3DModelImpl m = new CT3DModelImpl(env);
-			m.load(new MStringID());
+			m.load(new WStringID());
 		} catch (NullPointerException e) {
 			assertNotNull(e);
 		}
@@ -92,7 +92,7 @@ public final class Test3DModel extends CTTestCase {
 		assertTrue(!m.getChildBinaries().isEmpty());
 		//
 		InputStream is = new FileInputStream(m.getModelFile());
-		WData b = new WData(new XML(new InputStreamReader(is)));
+		WData b = new WData(new WXML(new InputStreamReader(is)));
 		WData imgtxt = b.find("ImageTexture");
 		String nurl = imgtxt.getAttribute("url");
 		assertNotNull(nurl);

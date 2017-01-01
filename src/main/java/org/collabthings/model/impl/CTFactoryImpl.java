@@ -21,8 +21,8 @@ import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
+import waazdoh.common.WStringID;
+import waazdoh.common.WObjectID;
 import waazdoh.common.WLogger;
 import waazdoh.common.WObject;
 
@@ -59,7 +59,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	}
 
 	@Override
-	public boolean load(MStringID id) {
+	public boolean load(WStringID id) {
 		env = null;
 		name = null;
 		factories = null;
@@ -172,7 +172,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	}
 
 	@Override
-	public ObjectID getID() {
+	public WObjectID getID() {
 		return getServiceObject().getID();
 	}
 
@@ -232,7 +232,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 
 	public CTBinaryModel getModel() {
 		if (model == null && bean != null) {
-			MStringID modelid = getContent().getIDValue(VALUENAME_MODELID);
+			WStringID modelid = getContent().getIDValue(VALUENAME_MODELID);
 			if (modelid != null) {
 				model = client.getObjectFactory().getModel(modelid);
 			}
@@ -323,7 +323,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 					cfid = client.getPublished(bookmark);
 				}
 
-				if (f.load(new MStringID(cfid))) {
+				if (f.load(new WStringID(cfid))) {
 					CTAttachedFactory cf = addFactory(cfname, f);
 					cf.setBookmark(bookmark);
 					cf.set(bchildfactory.get("orientation"));

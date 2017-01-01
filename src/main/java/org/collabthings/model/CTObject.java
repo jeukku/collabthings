@@ -1,7 +1,7 @@
 package org.collabthings.model;
 
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
+import waazdoh.common.WStringID;
+import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
 
 public interface CTObject {
@@ -12,7 +12,7 @@ public interface CTObject {
 
 	void save();
 
-	ObjectID getID();
+	WObjectID getID();
 
 	WObject getObject();
 
@@ -20,6 +20,8 @@ public interface CTObject {
 
 	String getName();
 
-	boolean load(MStringID id);
+	void setName(String n);
+
+	boolean load(WStringID id);
 
 }

@@ -17,8 +17,8 @@ import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
+import waazdoh.common.WStringID;
+import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
 
 public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
@@ -46,14 +46,14 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
 	}
 
-	public CTEnvironmentImpl(CTClient nclient, MStringID idValue) {
+	public CTEnvironmentImpl(CTClient nclient, WStringID idValue) {
 		this.client = nclient;
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
 		o.load(idValue);
 	}
 
 	@Override
-	public boolean load(MStringID id) {
+	public boolean load(WStringID id) {
 		return o.load(id);
 	}
 
@@ -163,7 +163,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 			List<WObject> sbeans = bean.getObjectList(VALUENAME_SCRIPTS);
 			for (WObject sbean : sbeans) {
 				String scriptname = sbean.getValue("name");
-				MStringID id = sbean.getIDValue("id");
+				WStringID id = sbean.getIDValue("id");
 				CTScriptImpl script = new CTScriptImpl(client);
 				script.load(id);
 				getScriptsSet().put(scriptname, script);
@@ -175,7 +175,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 		List<WObject> tbeans = bean.getObjectList(VALUENAME_TOOLS);
 		for (WObject b : tbeans) {
 			String toolname = b.getValue("name");
-			MStringID id = b.getIDValue("id");
+			WStringID id = b.getIDValue("id");
 			CTToolImpl tool = new CTToolImpl(client, id);
 			tools.put(toolname, tool);
 		}
@@ -272,7 +272,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	}
 
 	@Override
-	public void setParameter(String string, ObjectID id) {
+	public void setParameter(String string, WObjectID id) {
 		setParameter(string, id.toString());
 	}
 
@@ -332,7 +332,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	}
 
 	@Override
-	public ObjectID getID() {
+	public WObjectID getID() {
 		return getServiceObject().getID();
 	}
 

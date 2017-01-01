@@ -10,11 +10,11 @@ import org.collabthings.model.CTValues;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 
-import waazdoh.common.ObjectID;
+import waazdoh.common.WObjectID;
 
 public interface CTRunEnvironment {
 
-	void setParameter(String string, ObjectID id);
+	void setParameter(String string, WObjectID id);
 
 	void setParameter(String string, String value);
 

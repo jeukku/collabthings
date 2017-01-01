@@ -9,8 +9,8 @@ import org.collabthings.model.CTScript;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
+import waazdoh.common.WStringID;
+import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
 
 public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
@@ -93,7 +93,7 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 	}
 
 	@Override
-	public ObjectID getID() {
+	public WObjectID getID() {
 		return o.getID();
 	}
 
@@ -113,15 +113,15 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 
 	@Override
 	public boolean parse(WObject o) {
-		MStringID scriptid = new MStringID(o.getValue(VALUE_SCRIPT));
+		WStringID scriptid = new WStringID(o.getValue(VALUE_SCRIPT));
 		setScript(client.getObjectFactory().getScript(scriptid));
 		setName(o.getValue(VALUE_NAME));
-		e = new CTEnvironmentImpl(client, new MStringID(o.getValue(VALUE_ENV)));
+		e = new CTEnvironmentImpl(client, new WStringID(o.getValue(VALUE_ENV)));
 		return true;
 	}
 
 	@Override
-	public boolean load(MStringID builderid) {
+	public boolean load(WStringID builderid) {
 		o = new ServiceObject(BEANNAME, client.getClient(), this, client.getVersion(), client.getPrefix());
 		return o.load(builderid);
 	}

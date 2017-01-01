@@ -25,8 +25,8 @@ import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
+import waazdoh.common.WStringID;
+import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
 
 /**
@@ -237,7 +237,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 		this.name = content.getValue(VARIABLE_NAME);
 		this.scale = content.getDoubleValue(VARIABLE_SCALE);
 
-		MStringID varmodel = content.getIDValue(VARIABLE_MODEL);
+		WStringID varmodel = content.getIDValue(VARIABLE_MODEL);
 		if (!model.load(varmodel)) {
 			log.info("Loading model failed. Creating it.");
 			createModel();
@@ -254,7 +254,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	}
 
 	@Override
-	public boolean load(MStringID id) {
+	public boolean load(WStringID id) {
 		return so.load(id);
 	}
 
@@ -280,7 +280,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	}
 
 	@Override
-	public ObjectID getID() {
+	public WObjectID getID() {
 		return getServiceObject().getID();
 	}
 

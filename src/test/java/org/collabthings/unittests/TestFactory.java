@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.MStringID;
+import waazdoh.common.WStringID;
 
 public final class TestFactory extends CTTestCase {
 
@@ -123,7 +123,7 @@ public final class TestFactory extends CTTestCase {
 		String publishedchildfactory = bc.getPublished(bookmark);
 		assertNotNull(publishedchildfactory);
 
-		MStringID factoryid = f.getID().getStringID();
+		WStringID factoryid = f.getID().getStringID();
 		CTFactory bf = bc.getObjectFactory().getFactory(factoryid);
 
 		LLog.getLogger(this).info("first " + f.getObject().toYaml());

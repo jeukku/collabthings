@@ -16,8 +16,8 @@ import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
+import waazdoh.common.WStringID;
+import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
 
 public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
@@ -34,8 +34,10 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	private CTTriangleMesh mesh;
 	private String name;
 
-	private int resolutionx = 100, resolutionz = 100;
-	private float sizex = 10000000.0f, sizez = 10000000.0f;
+	private int resolutionx = 100;
+	private int resolutionz = 100;
+	private float sizex = 10000000.0F;
+	private float sizez = 10000000.0F;
 
 	private CTListeners listeners = new CTListeners();
 	private String error;
@@ -48,7 +50,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	}
 
 	@Override
-	public boolean load(MStringID id) {
+	public boolean load(WStringID id) {
 		return o.load(id);
 	}
 
@@ -58,7 +60,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	}
 
 	@Override
-	public ObjectID getID() {
+	public WObjectID getID() {
 		return o.getID();
 	}
 
@@ -79,7 +81,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 
 	@Override
 	public CTTriangleMesh getTriangleMesh() {
-		if (mesh == null) {
+		if (mesh == null || getScript().hashCode() != loadedscadhash) {
 			mesh = new CTTriangleMeshImpl();
 
 			for (int ix = 0; ix < resolutionx; ix++) {
@@ -119,6 +121,11 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	@Override
 	public String getModelType() {
 		return CTModel.HEIGHTMAP;
+	}
+
+	@Override
+	public void setName(String n) {
+		this.name = n;
 	}
 
 	@Override

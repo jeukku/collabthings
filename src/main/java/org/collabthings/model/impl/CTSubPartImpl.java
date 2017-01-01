@@ -15,7 +15,7 @@ import org.collabthings.util.LLog;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.MStringID;
+import waazdoh.common.WStringID;
 import waazdoh.common.WObject;
 
 public final class CTSubPartImpl implements CTSubPart {
@@ -25,7 +25,7 @@ public final class CTSubPartImpl implements CTSubPart {
 	private double angle = 0;
 	private final CTClient client;
 	private Transform transformation;
-	private MStringID partid;
+	private WStringID partid;
 	private String partbookmark;
 	private CTPartImpl parent;
 	private String name;
@@ -213,7 +213,7 @@ public final class CTSubPartImpl implements CTSubPart {
 	public boolean isBookmarkUpdated() {
 		if (partbookmark != null) {
 			String newid = client.getStorage().readStorage(partbookmark);
-			if (newid != null && !new MStringID(newid).equals(partid)) {
+			if (newid != null && !new WStringID(newid).equals(partid)) {
 				return true;
 			} else {
 				return false;
@@ -228,7 +228,7 @@ public final class CTSubPartImpl implements CTSubPart {
 		if (partbookmark != null) {
 			String newid = client.getStorage().readStorage(partbookmark);
 			if (newid != null) {
-				partid = new MStringID(newid);
+				partid = new WStringID(newid);
 				part = null;
 				changed(new CTEvent("bookmark update"));
 			}

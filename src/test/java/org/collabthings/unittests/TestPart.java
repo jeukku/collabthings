@@ -14,7 +14,7 @@ import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.MStringID;
+import waazdoh.common.WStringID;
 import waazdoh.common.WObject;
 import waazdoh.common.vo.ObjectVO;
 
@@ -51,7 +51,7 @@ public final class TestPart extends CTTestCase {
 		//
 		CTClient benv = getNewClient(true);
 		assertNotNull(benv);
-		MStringID bpartid = part.getID().getStringID();
+		WStringID bpartid = part.getID().getStringID();
 		CTPart bpart = benv.getObjectFactory().getPart(bpartid);
 		assertEquals(part.getName(), bpart.getName());
 		waitObject(bpart);
@@ -123,7 +123,7 @@ public final class TestPart extends CTTestCase {
 
 	public void testLoadRandomID() throws IOException, SAXException {
 		CTClient e = getNewClient();
-		assertNull(e.getObjectFactory().getPart(new MStringID()));
+		assertNull(e.getObjectFactory().getPart(new WStringID()));
 	}
 
 	public void testParseFalseBean() throws IOException, SAXException {

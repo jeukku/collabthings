@@ -12,9 +12,11 @@ import org.collabthings.environment.CTScriptRunner;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTModel;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
+import org.collabthings.model.CTTriangleMesh;
 import org.collabthings.model.CTValues;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.model.impl.CTPartImpl;
@@ -25,7 +27,7 @@ import org.xml.sax.SAXException;
 import waazdoh.common.WStringID;
 import waazdoh.common.WTimedFlag;
 
-public final class TestOpenSCAD extends CTTestCase {
+public final class TestHeightmap extends CTTestCase {
 
 	private static final int MAX_RUNTIME = 3000;
 
@@ -34,41 +36,42 @@ public final class TestOpenSCAD extends CTTestCase {
 		assertNotNull(env);
 		//
 		CTPart part = new CTPartImpl(env);
-		CTOpenSCAD scad = part.newSCAD();
-		scad.setName("scad");
-		part.setName("testing scad model");
+		CTHeightmap hm = part.newHeightmap();
+		hm.setName("hm");
+		part.setName("testing hm model");
 
-		scad.setScript(loadATestFile("scad/test.scad"));
+		hm.setScript(loadATestFile("scad/test.scad"));
 
-		CTModel m = scad.getModel();
-		assertNotNull(m);
+		CTTriangleMesh tm = hm.getTriangleMesh();
+		assertNotNull(tm);
 
 		part.publish();
-		
+
 		String partid = part.getID().toString();
 
 		CTClient benv = getNewClient(true);
 		assertNotNull(benv);
 		WStringID bpartid = part.getID().getStringID();
 		CTPart bpart = benv.getObjectFactory().getPart(bpartid);
-		assertNotNull(bpart);
+		CTHeightmap bhm = bpart.getHeightmap();
+		assertNotNull(bhm);
 
-		assertEquals(part.getName(), bpart.getName());
-		waitObject(bpart);
+		assertEquals(part.getName(), bhm.getName());
+		waitObject(bhm);
 
-		CTOpenSCAD bscad = (CTOpenSCAD) bpart.getModel();
-		assertNotNull(bscad);
-		assertEquals(scad.getScript(), bscad.getScript());
+		CTTriangleMesh btm = bhm.getTriangleMesh();
+		assertNotNull(btm);
+		assertEquals(hm.getScript(), bhm.getScript());
 
-		String ascadyaml = scad.getObject().toYaml();
-		String bscadyaml = bscad.getObject().toYaml();
+		String ascadyaml = hm.getObject().toYaml();
+		String bscadyaml = bhm.getObject().toYaml();
 		assertEquals(ascadyaml, bscadyaml);
 
-		assertEquals(part.getObject().toYaml(), bpart.getObject().toYaml());
+		assertEquals(part.getObject().toYaml(), bhm.getObject().toYaml());
 		assertEquals(bpartid, partid);
-		
-		assertEquals(720, bscad.getModel().getTriangleMesh().getVectors().size());
-		assertEquals(240, bscad.getModel().getTriangleMesh().getTriangles().size());
+
+		assertEquals(720, btm.getVectors().size());
+		assertEquals(240, btm.getTriangles().size());
 	}
 
 	public void testGear() throws IOException, SAXException {

@@ -10,8 +10,8 @@ import org.collabthings.model.CTTool;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
+import waazdoh.common.WStringID;
+import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
 
 public final class CTToolImpl implements ServiceObjectData, CTTool {
@@ -35,7 +35,7 @@ public final class CTToolImpl implements ServiceObjectData, CTTool {
 		addScript("draw");
 	}
 
-	public CTToolImpl(final CTClient nclient, final MStringID id) {
+	public CTToolImpl(final CTClient nclient, final WStringID id) {
 		this.client = nclient;
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
 		o.load(id);
@@ -47,7 +47,7 @@ public final class CTToolImpl implements ServiceObjectData, CTTool {
 	}
 
 	@Override
-	public boolean load(MStringID id) {
+	public boolean load(WStringID id) {
 		return o.load(id);
 	}
 
@@ -72,7 +72,7 @@ public final class CTToolImpl implements ServiceObjectData, CTTool {
 	@Override
 	public boolean parse(WObject bean) {
 		setName(bean.getValue(VALUENAME_NAME));
-		MStringID modelid = bean.getIDValue(VALUENAME_MODELID);
+		WStringID modelid = bean.getIDValue(VALUENAME_MODELID);
 		if (modelid != null) {
 			part = newPart();
 			CTPartImpl partimpl = (CTPartImpl) part;
@@ -89,7 +89,7 @@ public final class CTToolImpl implements ServiceObjectData, CTTool {
 	}
 
 	@Override
-	public ObjectID getID() {
+	public WObjectID getID() {
 		return getServiceObject().getID();
 	}
 

@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.MTimedFlag;
+import waazdoh.common.WTimedFlag;
 
 public final class TestSuperheroRobot extends CTTestCase {
 
@@ -33,7 +33,7 @@ public final class TestSuperheroRobot extends CTTestCase {
 		CTToolState ctToolState = new CTToolState("test", rune, new CTToolImpl(e), null);
 		robot.setTool(ctToolState);
 
-		final MTimedFlag flag = new MTimedFlag(3000000);
+		final WTimedFlag flag = new WTimedFlag(3000000);
 
 		new Thread(() -> {
 			try {

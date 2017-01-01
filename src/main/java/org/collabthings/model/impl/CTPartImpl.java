@@ -33,8 +33,8 @@ import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
+import waazdoh.common.WStringID;
+import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
 
 public final class CTPartImpl implements ServiceObjectData, CTPart {
@@ -77,7 +77,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	@Override
-	public boolean load(MStringID id) {
+	public boolean load(WStringID id) {
 		return o.load(id);
 	}
 
@@ -95,7 +95,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				md.addValue("type", model.getModelType());
 			} else if (modeldata != null) {
 				WObject md = b.add("model");
-				MStringID scadid = modeldata.getIDValue(VALUENAME_MODELID);
+				WStringID scadid = modeldata.getIDValue(VALUENAME_MODELID);
 				md.addValue("id", scadid.toString());
 				String type = modeldata.getValue("type");
 				md.addValue("type", type);
@@ -184,7 +184,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	private void parseBuilder(String pbid) {
 		if (pbid != null) {
-			builder = this.env.getObjectFactory().getPartBuilder(new MStringID(pbid));
+			builder = this.env.getObjectFactory().getPartBuilder(new WStringID(pbid));
 		}
 	}
 
@@ -192,15 +192,15 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		if (data != null) {
 			String type = data.getValue("type");
 			if (CTModel.SCAD.equals(type)) {
-				MStringID scadid = data.getIDValue(VALUENAME_MODELID);
+				WStringID scadid = data.getIDValue(VALUENAME_MODELID);
 				CTOpenSCAD nscad = this.env.getObjectFactory().getOpenScad(scadid);
 				model = nscad;
 			} else if (CTModel.HEIGHTMAP.equals(type)) {
-				MStringID scadid = data.getIDValue(VALUENAME_MODELID);
+				WStringID scadid = data.getIDValue(VALUENAME_MODELID);
 				CTHeightmap nhm = this.env.getObjectFactory().getHeightmap(scadid);
 				model = nhm;
 			} else {
-				MStringID modelid = data.getIDValue(VALUENAME_MODELID);
+				WStringID modelid = data.getIDValue(VALUENAME_MODELID);
 				CT3DModelImpl m = new CT3DModelImpl(env);
 				m.load(modelid);
 				model = m;
@@ -400,7 +400,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	@Override
-	public synchronized ObjectID getID() {
+	public synchronized WObjectID getID() {
 		if (getServiceObject() != null) {
 			return getServiceObject().getID();
 		} else {
@@ -412,6 +412,15 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public void resetModel() {
 		model = null;
 		changed(new CTEvent("model reset"));
+	}
+
+	@Override
+	public CTHeightmap getHeightmap() {
+		if (model != null && model.getModelType().equals(CTModel.HEIGHTMAP)) {
+			return (CTHeightmap) model;
+		} else {
+			return null;
+		}
 	}
 
 	@Override

@@ -31,8 +31,8 @@ import org.collabthings.util.ShortHashID;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
+import waazdoh.common.WStringID;
+import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
 
 public class CTRunEnvironmentBuilderImpl implements CTRunEnvironmentBuilder, ServiceObjectData {
@@ -64,19 +64,19 @@ public class CTRunEnvironmentBuilderImpl implements CTRunEnvironmentBuilder, Ser
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
 	}
 
-	public CTRunEnvironmentBuilderImpl(CTClient nclient, MStringID idValue) {
+	public CTRunEnvironmentBuilderImpl(CTClient nclient, WStringID idValue) {
 		this.client = nclient;
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
 		o.load(idValue);
 	}
 
 	@Override
-	public boolean load(MStringID id) {
+	public boolean load(WStringID id) {
 		return o.load(id);
 	}
 
 	public CTFactoryState createFactoryState(String name, String id) {
-		CTFactory f = client.getObjectFactory().getFactory(new MStringID(id));
+		CTFactory f = client.getObjectFactory().getFactory(new WStringID(id));
 		CTFactoryState state = new CTFactoryState(client, env, name, f);
 		return state;
 	}
@@ -98,7 +98,7 @@ public class CTRunEnvironmentBuilderImpl implements CTRunEnvironmentBuilder, Ser
 	}
 
 	@Override
-	public ObjectID getID() {
+	public WObjectID getID() {
 		return this.o.getID();
 	}
 

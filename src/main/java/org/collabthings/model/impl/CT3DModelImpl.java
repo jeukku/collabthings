@@ -39,13 +39,13 @@ import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.client.model.BinaryID;
-import waazdoh.client.model.objects.Binary;
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
+import waazdoh.client.model.WBinaryID;
+import waazdoh.client.model.objects.WBinary;
+import waazdoh.common.WStringID;
+import waazdoh.common.WObjectID;
 import waazdoh.common.WData;
 import waazdoh.common.WObject;
-import waazdoh.common.XML;
+import waazdoh.common.WXML;
 
 public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	private static final String BEANNAME = "model3d";
@@ -60,10 +60,10 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	private final ServiceObject o;
 	private String name = "3dmodel" + getCount();
 
-	private BinaryID binaryid;
+	private WBinaryID binaryid;
 	private final CTClient env;
 	private final LLog log;
-	private final List<Binary> childbinaries = new ArrayList<>();
+	private final List<WBinary> childbinaries = new ArrayList<>();
 	private double scale = 1.0;
 	private Vector3f translation = new Vector3f();
 	private String type;
@@ -87,7 +87,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	}
 
 	@Override
-	public boolean load(MStringID id) {
+	public boolean load(WStringID id) {
 		return o.load(id);
 	}
 
@@ -110,12 +110,12 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 		b.add(PARAM_TRANSLATION, CTMath.getBean(translation));
 		b.addValue(PARAM_TYPE, "" + type);
 		//
-		for (Binary binary : childbinaries) {
+		for (WBinary binary : childbinaries) {
 			b.addToList("binaries", binary.getID().toString());
 		}
 	}
 
-	private BinaryID getBinaryID() {
+	private WBinaryID getBinaryID() {
 		return binaryid;
 	}
 
@@ -127,7 +127,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 		}
 
 		name = bean.getValue("name");
-		binaryid = new BinaryID(bean.getIDValue(PARAM_BINARYID));
+		binaryid = new WBinaryID(bean.getIDValue(PARAM_BINARYID));
 
 		scale = bean.getDoubleValue(PARAM_SCALE);
 		translation = CTMath.parseVector(bean.get(PARAM_TRANSLATION));
@@ -136,7 +136,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 
 		List<String> bchildbinaries = bean.getList("binaries");
 		for (String bchildbinary : bchildbinaries) {
-			BinaryID childbinaryid = new BinaryID(bchildbinary);
+			WBinaryID childbinaryid = new WBinaryID(bchildbinary);
 			addChildBinary(env.getBinarySource().getOrDownload(childbinaryid));
 		}
 		//
@@ -148,7 +148,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	}
 
 	@Override
-	public ObjectID getID() {
+	public WObjectID getID() {
 		return getServiceObject().getID();
 	}
 
@@ -162,7 +162,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	}
 
 	private boolean isBinariesReady() {
-		for (Binary b : childbinaries) {
+		for (WBinary b : childbinaries) {
 			if (!b.isReady()) {
 				return false;
 			}
@@ -171,8 +171,8 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	}
 
 	@Override
-	public Binary getBinary() {
-		if (binaryid != null) {
+	public WBinary getBinary() {
+		if (binaryid != null && binaryid.isId()) {
 			return this.env.getBinarySource().getOrDownload(binaryid);
 		} else {
 			return null;
@@ -190,7 +190,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 		return name;
 	}
 
-	public Binary newBinary() {
+	public WBinary newBinary() {
 		String comment = "CT3DModel";
 		String extension = getType();
 		binaryid = env.getBinarySource().newBinary(comment, extension).getID();
@@ -207,7 +207,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 			getBinary().publish();
 		}
 
-		for (Binary b : childbinaries) {
+		for (WBinary b : childbinaries) {
 			b.publish();
 		}
 	}
@@ -218,7 +218,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 			getBinary().setReady();
 			getBinary().save();
 		}
-		for (Binary b : childbinaries) {
+		for (WBinary b : childbinaries) {
 			b.save();
 		}
 		getServiceObject().save();
@@ -303,7 +303,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 		s = s.replace("http://www.web3d.org", findSpecificationsResources());
 		log.fine("importing converted string " + s);
 		//
-		XML xml = new XML(s);
+		WXML xml = new WXML(s);
 		WData b = new WData(xml);
 		log.fine("importing " + b.toText());
 		if (importX3D(b)) {
@@ -316,7 +316,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 		}
 	}
 
-	private StringBuilder readFile(Reader fr) throws IOException {
+	private static StringBuilder readFile(Reader fr) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		char[] chb = new char[1000];
 		while (true) {
@@ -383,17 +383,17 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 		}
 		//
 		String extensions = surl.substring(surl.lastIndexOf('.') + 1);
-		Binary childbinary = this.env.getBinarySource().newBinary(surl, extensions);
+		WBinary childbinary = this.env.getBinarySource().newBinary(surl, extensions);
 		childbinary.importStream(is);
 		addChildBinary(childbinary);
 		b.setAttribute("url", childbinary.getID().toString());
 	}
 
-	private void addChildBinary(Binary binary) {
+	private void addChildBinary(WBinary binary) {
 		childbinaries.add(binary);
 	}
 
-	public List<Binary> getChildBinaries() {
+	public List<WBinary> getChildBinaries() {
 		return new ArrayList<>(childbinaries);
 	}
 
@@ -431,9 +431,9 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 
 	private InputStream getX3DStream() {
 		if (isReady()) {
-			XML xml;
+			WXML xml;
 			try (InputStreamReader reader = new InputStreamReader(getBinary().getInputStream(), CTClient.CHARSET)) {
-				xml = new XML(reader);
+				xml = new WXML(reader);
 				log.info("getModelStream parsing " + xml);
 				WData b = new WData(xml);
 				// FIXME TODO
@@ -455,7 +455,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	private void convertX3DURLs(WData b) {
 		String surl = b.getAttribute("url");
 		if (surl != null) {
-			Binary cbin = env.getBinarySource().getOrDownload(new BinaryID(surl));
+			WBinary cbin = env.getBinarySource().getOrDownload(new WBinaryID(surl));
 			//
 			String path = cbin.getFile().getAbsolutePath();
 			String stextureurl = path.replace('\\', '/');

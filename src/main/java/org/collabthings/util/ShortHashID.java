@@ -1,12 +1,12 @@
 package org.collabthings.util;
 
-import waazdoh.common.MStringID;
+import waazdoh.common.WStringID;
 
 public class ShortHashID {
 
 	private final String id;
 
-	public ShortHashID(MStringID nid) {
+	public ShortHashID(WStringID nid) {
 		String sid = nid.toString();
 		int hash = sid.hashCode();
 		this.id = Integer.toHexString(hash);

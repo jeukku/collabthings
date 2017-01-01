@@ -51,6 +51,8 @@ public interface CTPart extends CTObject {
 
 	CTHeightmap newHeightmap();
 
+	CTHeightmap getHeightmap();
+
 	CTResourceUsage getResourceUsage();
 
 	void updateResourceUsage();

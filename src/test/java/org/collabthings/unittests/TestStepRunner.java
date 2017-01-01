@@ -4,7 +4,7 @@ import org.collabthings.CTTestCase;
 import org.collabthings.simulation.CTStepRunner;
 
 import waazdoh.client.utils.ConditionWaiter;
-import waazdoh.common.MTimedFlag;
+import waazdoh.common.WTimedFlag;
 
 public final class TestStepRunner extends CTTestCase {
 	class Values {
@@ -16,7 +16,7 @@ public final class TestStepRunner extends CTTestCase {
 	public void testRun() throws InterruptedException {
 		Values v = new Values();
 
-		MTimedFlag f = new MTimedFlag(20000);
+		WTimedFlag f = new WTimedFlag(20000);
 		CTStepRunner runner = new CTStepRunner(0.00002, 0.00001, (double step) -> {
 			v.count++;
 			v.totaltime += step;
@@ -33,7 +33,7 @@ public final class TestStepRunner extends CTTestCase {
 	}
 
 	public void testStop() throws InterruptedException {
-		MTimedFlag f = new MTimedFlag(2000000);
+		WTimedFlag f = new WTimedFlag(2000000);
 		CTStepRunner runner = new CTStepRunner(0.02, 0.01, (double step) -> {
 			return !f.isTriggered();
 		});
@@ -52,7 +52,7 @@ public final class TestStepRunner extends CTTestCase {
 	}
 
 	public void testExceptionInTest() throws InterruptedException {
-		MTimedFlag f = new MTimedFlag(2000000);
+		WTimedFlag f = new WTimedFlag(2000000);
 		CTStepRunner runner = new CTStepRunner(0.02, 0.01, (double step) -> {
 			throw new RuntimeException();
 		});

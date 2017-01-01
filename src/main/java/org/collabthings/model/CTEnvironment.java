@@ -6,7 +6,7 @@ import org.collabthings.util.PrintOut;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.ObjectID;
+import waazdoh.common.WObjectID;
 
 public interface CTEnvironment extends CTObject {
 
@@ -30,7 +30,7 @@ public interface CTEnvironment extends CTObject {
 
 	Set<String> getParameters();
 
-	void setParameter(String string, ObjectID id);
+	void setParameter(String string, WObjectID id);
 
 	void setParameter(String string, String value);
 
@@ -42,7 +42,7 @@ public interface CTEnvironment extends CTObject {
 
 	boolean isReady();
 
-	ObjectID getID();
+	WObjectID getID();
 
 	void deleteScript(String string);
 

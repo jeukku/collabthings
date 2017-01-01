@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.MStringID;
+import waazdoh.common.WStringID;
 
 public final class ITTestBuildABox extends CTTestCase {
 
@@ -162,7 +162,7 @@ public final class ITTestBuildABox extends CTTestCase {
 		CTPart nbox = ((CTFactoryState) runenv.getRunObject("boxfactory")).getPool().getPart(partid);
 		assertNotNull(nbox);
 		//
-		CTPart modelpart = client.getObjectFactory().getPart(new MStringID(partid));
+		CTPart modelpart = client.getObjectFactory().getPart(new WStringID(partid));
 		assertNotNull(modelpart);
 		//
 		assertBuiltBox(nbox, modelpart);

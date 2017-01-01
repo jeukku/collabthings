@@ -11,8 +11,8 @@ import org.collabthings.util.LLog;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
+import waazdoh.common.WStringID;
+import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
 
 /**
@@ -69,7 +69,7 @@ public final class CTScriptImpl implements ServiceObjectData, CTScript {
 	}
 
 	@Override
-	public boolean load(MStringID id) {
+	public boolean load(WStringID id) {
 		return o.load(id);
 	}
 
@@ -118,7 +118,7 @@ public final class CTScriptImpl implements ServiceObjectData, CTScript {
 	}
 
 	@Override
-	public ObjectID getID() {
+	public WObjectID getID() {
 		return getServiceObject().getID();
 	}
 

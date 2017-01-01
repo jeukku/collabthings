@@ -7,7 +7,7 @@ import org.collabthings.CTListener;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.ObjectID;
+import waazdoh.common.WObjectID;
 
 public interface CTModel {
 
@@ -15,7 +15,7 @@ public interface CTModel {
 	String HEIGHTMAP = "heightmap";
 	String BINARY = "binary";
 
-	ObjectID getID();
+	WObjectID getID();
 
 	void publish();
 

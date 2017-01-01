@@ -11,42 +11,42 @@ import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 
-import waazdoh.common.MStringID;
+import waazdoh.common.WStringID;
 
 public interface CTObjectFactory {
 
 	CTPart getPart();
 
-	CTPart getPart(MStringID stringID);
+	CTPart getPart(WStringID stringID);
 
-	CTTool getTool(MStringID mStringID);
+	CTTool getTool(WStringID mStringID);
 
 	CTTool getTool();
 
 	CTFactory getFactory();
 
-	CTFactory getFactory(MStringID stringID);
+	CTFactory getFactory(WStringID stringID);
 
-	CTBinaryModel getModel(MStringID modelid);
+	CTBinaryModel getModel(WStringID modelid);
 
 	CTBinaryModel getModel();
 
-	CTScript getScript(MStringID id);
+	CTScript getScript(WStringID id);
 
 	CTScript getScript();
 
 	void addInfoListener(CTInfo info);
 
-	CTRunEnvironmentBuilder getRuntimeBuilder(MStringID id);
+	CTRunEnvironmentBuilder getRuntimeBuilder(WStringID id);
 
 	CTPartBuilder getPartBuilder();
 
-	CTPartBuilder getPartBuilder(MStringID id);
+	CTPartBuilder getPartBuilder(WStringID id);
 
-	String getType(MStringID id);
+	String getType(WStringID id);
 
-	CTOpenSCAD getOpenScad(MStringID scadid);
+	CTOpenSCAD getOpenScad(WStringID scadid);
 
-	CTHeightmap getHeightmap(MStringID scadid);
+	CTHeightmap getHeightmap(WStringID scadid);
 
 }

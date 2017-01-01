@@ -21,7 +21,7 @@ import org.collabthings.util.PrintOut;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.ObjectID;
+import waazdoh.common.WObjectID;
 
 public class CTRunEnvironmentImpl implements CTRunEnvironment {
 	private Map<String, String> params = new HashMap<>();
@@ -164,7 +164,7 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 	}
 
 	@Override
-	public void setParameter(String key, ObjectID id) {
+	public void setParameter(String key, WObjectID id) {
 		setParameter(key, id.getStringID().toString());
 	}
 

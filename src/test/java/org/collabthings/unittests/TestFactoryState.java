@@ -12,7 +12,7 @@ import org.collabthings.simulation.CTStepRunner;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.MTimedFlag;
+import waazdoh.common.WTimedFlag;
 
 public final class TestFactoryState extends CTTestCase {
 
@@ -82,8 +82,8 @@ public final class TestFactoryState extends CTTestCase {
 		CTFactoryState state = getFactoryState();
 		CTRunEnvironment rune = state.getRunEnvironment();
 
-		MTimedFlag flag = new MTimedFlag(10000);
-		MTimedFlag delay = new MTimedFlag(400);
+		WTimedFlag flag = new WTimedFlag(10000);
+		WTimedFlag delay = new WTimedFlag(400);
 
 		new CTStepRunner(0.1, 0.01, (dtime) -> {
 			rune.step(dtime);

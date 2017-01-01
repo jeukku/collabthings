@@ -42,7 +42,7 @@ import org.eclipse.jetty.util.ArrayUtil;
 
 import difflib.DiffUtils;
 import difflib.Patch;
-import waazdoh.common.MStringID;
+import waazdoh.common.WStringID;
 import waazdoh.common.WObject;
 import waazdoh.common.vo.ObjectVO;
 
@@ -59,12 +59,12 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	private List<CTOpenSCAD> openscads = new ArrayList<>();
 	private List<CTHeightmap> heightmaps = new ArrayList<>();
 
-	private Map<MStringID, CTPartImpl> orgparts = new HashMap<>();
+	private Map<WStringID, CTPartImpl> orgparts = new HashMap<>();
 
 	private LLog log = LLog.getLogger(this);
 
 	private Set<CTInfo> infolisteners = new HashSet<>();
-	private Map<MStringID, MStringID> errorids = new HashMap<>();
+	private Map<WStringID, WStringID> errorids = new HashMap<>();
 	private static Map<String, CTOFID> ids = new HashMap<>();
 
 	public CTObjectFactoryImpl(final CTClient nenv) {
@@ -72,7 +72,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public String getType(MStringID id) {
+	public String getType(WStringID id) {
 		ObjectVO o = client.getService().getObjects().read(id.toString());
 		return o.toObject().getType();
 	}
@@ -88,11 +88,11 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public CTScript getScript(MStringID sid) {
+	public CTScript getScript(WStringID sid) {
 		synchronized (scripts) {
-			MStringID searchid = sid;
+			WStringID searchid = sid;
 
-			MStringID errorid = errorids.get(sid);
+			WStringID errorid = errorids.get(sid);
 			if (errorid != null) {
 				searchid = errorid;
 			}
@@ -135,7 +135,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public CTPartBuilder getPartBuilder(MStringID builderid) {
+	public CTPartBuilder getPartBuilder(WStringID builderid) {
 		synchronized (partbuilders) {
 
 			for (CTPartBuilder builder : partbuilders) {
@@ -177,7 +177,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public CTFactoryImpl getFactory(MStringID factoryid) {
+	public CTFactoryImpl getFactory(WStringID factoryid) {
 		synchronized (factories) {
 
 			for (CTFactoryImpl factory : factories) {
@@ -208,7 +208,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public CTTool getTool(MStringID toolid) {
+	public CTTool getTool(WStringID toolid) {
 		synchronized (tools) {
 			for (CTTool tool : tools) {
 				if (tool.getID().getStringID().equals(toolid)) {
@@ -235,7 +235,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public CTPartImpl getPart(final MStringID orgpartid) {
+	public CTPartImpl getPart(final WStringID orgpartid) {
 		CTOFID partid = CTObjectFactoryImpl.getId(orgpartid.toString());
 
 		synchronized (partid) {
@@ -247,7 +247,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 
 			CTPartImpl part = searchPart(partid.getId(), ps);
 			if (part == null) {
-				MStringID errorid = errorids.get(partid.getId());
+				WStringID errorid = errorids.get(partid.getId());
 				part = searchPart(errorid, ps);
 				if (part != null) {
 					log.info("Found a part with errorid " + errorid + " org:" + partid);
@@ -316,7 +316,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 		return id;
 	}
 
-	private CTPartImpl searchPart(final MStringID partid, ArrayList<CTPartImpl> ps) {
+	private CTPartImpl searchPart(final WStringID partid, ArrayList<CTPartImpl> ps) {
 		synchronized (parts) {
 			if (partid != null) {
 				for (CTPartImpl part : ps) {
@@ -342,7 +342,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public CTBinaryModel getModel(MStringID modelid) {
+	public CTBinaryModel getModel(WStringID modelid) {
 		synchronized (models) {
 			for (CT3DModelImpl model : models) {
 				if (model.getID().getStringID().equals(modelid)) {
@@ -366,7 +366,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public CTOpenSCAD getOpenScad(MStringID scadid) {
+	public CTOpenSCAD getOpenScad(WStringID scadid) {
 		CTOpenSCAD openscad;
 		synchronized (openscads) {
 			openscad = searchOpenScad(scadid);
@@ -375,7 +375,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 				return openscad;
 			}
 
-			MStringID errorid = errorids.get(scadid);
+			WStringID errorid = errorids.get(scadid);
 			openscad = searchOpenScad(errorid);
 			if (openscad != null) {
 				log.info("Found a part with errorid " + errorid + " org:" + scadid);
@@ -403,7 +403,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 		}
 	}
 
-	private CTOpenSCAD searchOpenScad(MStringID scadid) {
+	private CTOpenSCAD searchOpenScad(WStringID scadid) {
 		for (CTOpenSCAD os : openscads) {
 			if (os.getID().getStringID().equals(scadid)) {
 				return os;
@@ -413,7 +413,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public CTHeightmap getHeightmap(MStringID hmid) {
+	public CTHeightmap getHeightmap(WStringID hmid) {
 		synchronized (heightmaps) {
 			for (CTHeightmap os : heightmaps) {
 				if (os.getID().getStringID().equals(hmid)) {
@@ -429,7 +429,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public CTRunEnvironmentBuilder getRuntimeBuilder(MStringID id) {
+	public CTRunEnvironmentBuilder getRuntimeBuilder(WStringID id) {
 		synchronized (runtimebuilders) {
 			for (CTRunEnvironmentBuilder b : runtimebuilders) {
 				if (b.getID().getStringID().equals(id)) {
@@ -452,8 +452,8 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			this.id = string;
 		}
 
-		public MStringID getId() {
-			return new MStringID(this.id);
+		public WStringID getId() {
+			return new WStringID(this.id);
 		}
 
 		@Override
