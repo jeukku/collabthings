@@ -48,7 +48,7 @@ public class CTApp {
 					log.error(this, "runTasks", e);
 				}
 			}
-		});
+		}, "runTasks");
 		t.start();
 	}
 
@@ -70,9 +70,9 @@ public class CTApp {
 
 	public void close() {
 		log.info("Closing app");
+		closed = true;
 		getLClient().stop();
 		binarysource.close();
-		closed = true;
 	}
 
 	public boolean isClosed() {
@@ -102,9 +102,6 @@ public class CTApp {
 	private void runTasks() throws InterruptedException {
 		synchronized (tasks) {
 			while (!isServiceAvailable()) {
-				tasks.wait(100);
-			}
-			while (isClosed()) {
 				tasks.wait(100);
 			}
 
