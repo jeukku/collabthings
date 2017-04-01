@@ -249,6 +249,14 @@
 			<artifactId>osmosis-core</artifactId>
 			<version>0.45</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.bitbucket.fwilhelm/org.jenetics -->
+		<dependency>
+			<groupId>org.bitbucket.fwilhelm</groupId>
+			<artifactId>org.jenetics</artifactId>
+			<version>3.6.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>
