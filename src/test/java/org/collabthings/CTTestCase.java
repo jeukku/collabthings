@@ -73,6 +73,10 @@ public class CTTestCase extends TestCase {
 		clientb = null;
 	}
 
+	protected void disableNetwork() {
+		this.enablenetwork = false;
+	}
+
 	private void startThreadChecker() {
 		new ThreadChecker(() -> {
 			boolean running = false;
@@ -127,8 +131,9 @@ public class CTTestCase extends TestCase {
 	public CTClient getNewEnv(String email, boolean bind) throws MalformedURLException, SAXException {
 		//
 		WPreferences p = new StaticTestPreferences("cttests", email);
+		beanstorage = new FileBeanStorage(p);
 
-		BinarySource binarysource = enablenetwork ? getBinarySource(p, bind) : null;
+		BinarySource binarysource = enablenetwork ? getBinarySource(p, bind) : new StaticBinarySource();
 		CTClient c = new CTClientImpl(p, binarysource, beanstorage, getTestService(email, p, binarysource));
 
 		boolean setsession = c.getClient().setSession(getSession(p));
@@ -183,7 +188,6 @@ public class CTTestCase extends TestCase {
 	}
 
 	public BinarySource getBinarySource(WPreferences p, boolean bind) {
-		beanstorage = new FileBeanStorage(p);
 		if (bind) {
 			p.set(P2PServer.DOWNLOAD_EVERYTHING, true);
 		}
@@ -204,9 +208,9 @@ public class CTTestCase extends TestCase {
 				return client;
 			}
 		}
-		
+
 		log.info("Using static service");
-		
+
 		StaticService mockservice = new StaticService(username);
 		mockservice.getStorageArea()
 				.write(new StorageAreaVO("/public/LOT/settings/ct.javascript.forbiddenwords", "forbiddenword"));

@@ -23,6 +23,7 @@ import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTInfo;
+import org.collabthings.model.CTMapOfPieces;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTScript;
@@ -30,6 +31,7 @@ import org.collabthings.model.CTTool;
 import org.collabthings.model.impl.CT3DModelImpl;
 import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.model.impl.CTHeightmapImpl;
+import org.collabthings.model.impl.CTMapOfPiecesImpl;
 import org.collabthings.model.impl.CTOpenSCADImpl;
 import org.collabthings.model.impl.CTPartBuilderImpl;
 import org.collabthings.model.impl.CTPartImpl;
@@ -42,8 +44,8 @@ import org.eclipse.jetty.util.ArrayUtil;
 
 import difflib.DiffUtils;
 import difflib.Patch;
-import waazdoh.common.WStringID;
 import waazdoh.common.WObject;
+import waazdoh.common.WStringID;
 import waazdoh.common.vo.ObjectVO;
 
 public final class CTObjectFactoryImpl implements CTObjectFactory {
@@ -58,6 +60,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	private List<CTPartBuilder> partbuilders = new ArrayList<>();
 	private List<CTOpenSCAD> openscads = new ArrayList<>();
 	private List<CTHeightmap> heightmaps = new ArrayList<>();
+	private List<CTMapOfPieces> maps = new ArrayList<>();
 
 	private Map<WStringID, CTPartImpl> orgparts = new HashMap<>();
 
@@ -121,6 +124,35 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			}
 
 			return s;
+		}
+	}
+
+	@Override
+	public CTMapOfPieces getMapOfPieces() {
+		CTMapOfPieces map = new CTMapOfPiecesImpl(client);
+		synchronized (maps) {
+			maps.add(map);
+		}
+		return map;
+	}
+
+	@Override
+	public CTMapOfPieces getMapOfPieces(WStringID bmapid) {
+		synchronized (maps) {
+			for (CTMapOfPieces map : maps) {
+				if (map.getID().getStringID().equals(bmapid)) {
+					return map;
+				}
+			}
+
+			CTMapOfPiecesImpl map = new CTMapOfPiecesImpl(client);
+			if (map.load(bmapid)) {
+				maps.add(map);
+				return map;
+			} else {
+				log.info("Failed to load mapifpieces " + bmapid);
+				return null;
+			}
 		}
 	}
 
