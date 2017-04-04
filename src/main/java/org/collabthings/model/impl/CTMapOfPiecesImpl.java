@@ -1,9 +1,10 @@
 package org.collabthings.model.impl;
 
-import java.util.HashSet;
+import java.sql.Types;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.collabthings.CTClient;
 import org.collabthings.model.CTMapOfPieces;
@@ -25,8 +26,8 @@ public class CTMapOfPiecesImpl implements ServiceObjectData, CTMapOfPieces {
 	final private ServiceObject o;
 
 	private String name = "mapofpieces";
-	private CTMapPieceImpl root;
-	private List<CTMapPieceType> types = new LinkedList<>();
+	private Map<String, CTMapPieceImpl> pieces = new HashMap<>();
+	private Map<String, CTMapPieceType> ptypes = new HashMap<>();
 
 	public CTMapOfPiecesImpl(CTClient client) {
 		this.client = client;
@@ -38,41 +39,47 @@ public class CTMapOfPiecesImpl implements ServiceObjectData, CTMapOfPieces {
 	public WObject getObject() {
 		WObject d = o.getBean();
 		d.addValue(VALUE_NAME, name);
+
 		WObject otypes = d.add("types");
-		for (CTMapPieceType t : types) {
+		for (CTMapPieceType t : ptypes.values()) {
 			t.addTo(otypes);
 		}
 
-		Set<String> addedpieces = new HashSet<>();
 		WObject opieces = d.add("pieces");
-		if (root != null) {
-			d.addValue("root", root.getType().getTypeId());
-			root.addTo(opieces, addedpieces);
+		for (CTMapPieceImpl p : pieces.values()) {
+			p.addTo(opieces);
 		}
-
 		return d;
-	}
-
-	@Override
-	public CTMapPieceType addType(CTMapPieceType newtype) {
-		this.types.add(newtype);
-		return newtype;
-	}
-
-	@Override
-	public void setRoot(CTMapPieceType type) {
-		root = new CTMapPieceImpl(type);
-	}
-
-	@Override
-	public CTMapPiece getRoot() {
-		return root;
 	}
 
 	@Override
 	public boolean parse(WObject o) {
 		name = o.getValue(VALUE_NAME);
+
+		WObject otypes = o.get("types");
+		for (String stype : otypes.getChildren()) {
+			CTMapPieceType type = getPieceType(stype);
+			type.parse(otypes.get(stype));
+			ptypes.put(type.getTypeId(), type);
+		}
+
+		WObject opieces = o.get("pieces");
+		for (String ospiece : opieces.getChildren()) {
+			WObject opiece = opieces.get(ospiece);
+			CTMapPieceImpl p = new CTMapPieceImpl(opiece);
+			pieces.put(p.getId(), p);
+		}
+
 		return true;
+	}
+
+	@Override
+	public CTMapPiece addPiece(CTMapPieceType type) {
+		synchronized (pieces) {
+			CTMapPieceImpl e = new CTMapPieceImpl(type);
+			pieces.put(e.getId(), e);
+			return e;
+		}
 	}
 
 	@Override
@@ -110,10 +117,21 @@ public class CTMapOfPiecesImpl implements ServiceObjectData, CTMapOfPieces {
 		return o.load(id);
 	}
 
+	public CTMapPieceType getPieceType(String type) {
+		synchronized (ptypes) {
+			CTMapPieceType t = ptypes.get(type);
+			if (t == null) {
+				t = new CTMapPieceType(type);
+				ptypes.put(type, t);
+			}
+			return t;
+		}
+	}
+
 	private class CTMapPieceImpl implements CTMapPiece {
 
 		private CTMapPieceType type;
-		private List<CTMapPieceImpl> linked = new LinkedList<>();
+		private List<String> linked = new LinkedList<>();
 		private final String id;
 
 		public CTMapPieceImpl(CTMapPieceType type) {
@@ -121,28 +139,39 @@ public class CTMapOfPiecesImpl implements ServiceObjectData, CTMapOfPieces {
 			id = "P" + (pieceidcounter++);
 		}
 
+		public CTMapPieceImpl(WObject opiece) {
+			id = opiece.getValue("id");
+			String stype = opiece.getValue("type");
+			type = getPieceType(stype);
+
+			List<String> olinks = opiece.getList("links");
+			for (String slink : olinks) {
+				linked.add(slink);
+			}
+
+		}
+
 		public CTMapPieceType getType() {
 			return type;
 		}
 
 		@Override
-		public CTMapPiece newLink() {
-			CTMapPiece l = new CTMapPieceImpl(type);
-			return l;
+		public CTMapPiece newLink(CTMapPiece p) {
+			linked.add(p.getId());
+			return p;
 		}
 
-		public void addTo(WObject opieces, Set<String> addedpieces) {
-			if (!addedpieces.contains(this)) {
-				WObject opiece = opieces.add(getId());
+		public void addTo(WObject opieces) {
+			WObject opiece = opieces.add("p");
+			opiece.setAttribute("id", getId());
+			opiece.setAttribute("type", type.getTypeId());
 
-				for (CTMapPieceImpl lp : linked) {
-					opiece.addToList("links", lp.getId());
-					lp.addTo(opieces, addedpieces);
-				}
+			for (String lid : linked) {
+				opiece.addToList("links", lid);
 			}
 		}
 
-		private String getId() {
+		public String getId() {
 			return id;
 		}
 	}
