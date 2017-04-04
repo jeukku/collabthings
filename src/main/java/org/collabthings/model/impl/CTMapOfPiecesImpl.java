@@ -46,7 +46,7 @@ public class CTMapOfPiecesImpl implements ServiceObjectData, CTMapOfPieces {
 		Set<String> addedpieces = new HashSet<>();
 		WObject opieces = d.add("pieces");
 		if (root != null) {
-			d.set("root", root.getType().getTypeId());
+			d.addValue("root", root.getType().getTypeId());
 			root.addTo(opieces, addedpieces);
 		}
 
