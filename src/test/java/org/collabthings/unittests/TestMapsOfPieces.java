@@ -1,6 +1,7 @@
 package org.collabthings.unittests;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
@@ -36,6 +37,7 @@ public final class TestMapsOfPieces extends CTTestCase {
 	public void testAddPiece() throws IOException, SAXException {
 		CTMapPieceType typeAA = map.getPieceType("AA");
 		CTMapPieceType typeBB = map.getPieceType("BB");
+		typeBB.getObject().addValue("test", "" + new Date());
 		CTMapPiece p = map.addPiece(typeAA);
 		assertNotNull(p);
 

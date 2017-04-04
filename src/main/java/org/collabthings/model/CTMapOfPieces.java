@@ -6,27 +6,30 @@ public interface CTMapOfPieces extends CTObject {
 	String MAPOFPIECES = "mapofobjects";
 
 	public static class CTMapPieceType {
-
-		private String type;
+		private WObject o;
 
 		private CTMapPieceType() {
 			// empty
 		}
 
-		public CTMapPieceType(String type2) {
-			this.type = type2;
+		public CTMapPieceType(String type) {
+			o = new WObject(type);
 		}
 
 		public String getTypeId() {
-			return type;
+			return o.getType();
 		}
 
 		public void parse(WObject otype) {
-			// nothing to do
+			o = otype;
 		}
 
 		public void addTo(WObject otypes) {
-			WObject t = otypes.add(getTypeId());
+			otypes.add(getTypeId(), o);
+		}
+
+		public WObject getObject() {
+			return o;
 		}
 	}
 
