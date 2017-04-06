@@ -13,7 +13,6 @@ import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTHeightmap;
-import org.collabthings.model.CTModel;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTTriangleMesh;
@@ -56,7 +55,7 @@ public final class TestHeightmap extends CTTestCase {
 		CTHeightmap bhm = bpart.getHeightmap();
 		assertNotNull(bhm);
 
-		assertEquals(part.getName(), bhm.getName());
+		assertEquals(hm.getName(), bhm.getName());
 		waitObject(bhm);
 
 		CTTriangleMesh btm = bhm.getTriangleMesh();
@@ -67,28 +66,11 @@ public final class TestHeightmap extends CTTestCase {
 		String bscadyaml = bhm.getObject().toYaml();
 		assertEquals(ascadyaml, bscadyaml);
 
-		assertEquals(part.getObject().toYaml(), bhm.getObject().toYaml());
+		assertEquals(hm.getObject().toYaml(), bhm.getObject().toYaml());
 		assertEquals(bpartid, partid);
 
-		assertEquals(720, btm.getVectors().size());
-		assertEquals(240, btm.getTriangles().size());
-	}
-
-	public void testGear() throws IOException, SAXException {
-		CTClient env = getNewClient(true);
-		assertNotNull(env);
-		//
-		CTPart part = new CTPartImpl(env);
-		CTOpenSCAD scad = part.newSCAD();
-		scad.setName("gear");
-		part.setName("testing gear model");
-
-		scad.setScript(loadATestFile("scad/gears_helical.scad"));
-
-		CTModel m = scad.getModel();
-		assertNotNull(m);
-
-		part.publish();
+		assertEquals(tm.getVectors().size(), btm.getVectors().size());
+		assertEquals(tm.getTriangles().size(), btm.getTriangles().size());
 	}
 
 	public void testView() throws FileNotFoundException, IOException {

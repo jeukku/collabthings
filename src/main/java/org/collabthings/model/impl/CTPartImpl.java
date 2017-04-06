@@ -416,7 +416,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	@Override
 	public CTHeightmap getHeightmap() {
-		if (model != null && model.getModelType().equals(CTModel.HEIGHTMAP)) {
+		if (getModel() != null && getModel().getModelType().equals(CTModel.HEIGHTMAP)) {
 			return (CTHeightmap) model;
 		} else {
 			return null;

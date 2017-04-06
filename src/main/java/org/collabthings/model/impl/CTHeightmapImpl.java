@@ -22,6 +22,7 @@ import waazdoh.common.WObject;
 
 public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	private static final String PARAM_SCRIPT = "script";
+	private static final String PARAM_NAME = "name";
 
 	private CTClient client;
 	private ServiceObject o;
@@ -172,7 +173,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	public boolean parse(WObject bean) {
 		WObject content = bean.get("content");
 		scale = content.getDoubleValue("scale");
-		name = content.getValue("name");
+		name = content.getValue(PARAM_NAME);
 
 		script = content.getBase64Value(PARAM_SCRIPT);
 		loadedscadhash = getScript().hashCode();
@@ -189,6 +190,8 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	public WObject getObject() {
 		WObject ob = o.getBean();
 		WObject c = ob.add("content");
+		c.addValue(PARAM_NAME, name);
+
 		c.addValue("scale", scale);
 		if (script != null) {
 			c.setBase64Value("script", script);
