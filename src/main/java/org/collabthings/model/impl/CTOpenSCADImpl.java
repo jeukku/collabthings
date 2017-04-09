@@ -25,9 +25,9 @@ import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.WStringID;
-import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
+import waazdoh.common.WObjectID;
+import waazdoh.common.WStringID;
 
 /**
  * 
@@ -241,9 +241,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 		if (!model.load(varmodel)) {
 			log.info("Loading model failed. Creating it.");
 			createModel();
-		}
-
-		if (!model.getID().getStringID().equals(varmodel)) {
+		} else if (!model.getID().getStringID().equals(varmodel)) {
 			log.info("OpenSCAD loading model with id does not not equal with " + varmodel);
 			log.info("service has "
 					+ this.client.getClient().getObjects().read(varmodel.toString()).toObject().toYaml());

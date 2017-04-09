@@ -83,7 +83,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	@Override
 	public synchronized WObject getObject() {
-		if (storedobject == null) {
+		if (hasChanged()) {
 			WObject org = o.getBean();
 			WObject b = org.add("content");
 			b.addValue(VALUENAME_NAME, getName());
@@ -191,25 +191,45 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private void parseModel(WObject data) {
 		if (data != null) {
 			String type = data.getValue("type");
+			WStringID nmodelid = data.getIDValue(VALUENAME_MODELID);
 			if (CTModel.SCAD.equals(type)) {
-				WStringID scadid = data.getIDValue(VALUENAME_MODELID);
-				CTOpenSCAD nscad = this.env.getObjectFactory().getOpenScad(scadid);
+				CTOpenSCAD nscad = this.env.getObjectFactory().getOpenScad(nmodelid);
 				model = nscad;
 			} else if (CTModel.HEIGHTMAP.equals(type)) {
-				WStringID scadid = data.getIDValue(VALUENAME_MODELID);
-				CTHeightmap nhm = this.env.getObjectFactory().getHeightmap(scadid);
+				CTHeightmap nhm = this.env.getObjectFactory().getHeightmap(nmodelid);
 				model = nhm;
 			} else {
-				WStringID modelid = data.getIDValue(VALUENAME_MODELID);
 				CT3DModelImpl m = new CT3DModelImpl(env);
-				m.load(modelid);
+				m.load(nmodelid);
 				model = m;
 			}
 
 			if (model != null) {
+				if (!model.getID().getStringID().equals(nmodelid)) {
+					setChanged();
+				}
 				model.addChangeListener((e) -> changed(e));
 			}
 		}
+	}
+
+	@Override
+	public boolean hasChanged() {
+		if (storedobject == null) {
+			return true;
+		}
+		
+		for (CTSubPart subpart : subparts) {
+			if(subpart.hasPartChanged()) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	private void setChanged() {
+		this.storedobject = null;
 	}
 
 	private synchronized void addPart(CTSubPartImpl subpart) {

@@ -41,4 +41,6 @@ public interface CTSubPart {
 
 	boolean isBookmarkUpdated();
 
+	boolean hasPartChanged();
+
 }

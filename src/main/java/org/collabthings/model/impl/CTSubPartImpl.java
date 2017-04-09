@@ -118,13 +118,18 @@ public final class CTSubPartImpl implements CTSubPart {
 	private void defaultName() {
 		if (name == null || "null".equals(name)) {
 			if (parent != null) {
-				name = "sub" + parent.getSubParts().size();
+				name = "sub " + getPart().getName() + parent.getSubParts().size();
 			} else {
 				name = "sub";
 			}
 		}
 	}
 
+	@Override
+	public boolean hasPartChanged() {
+		return getPart().hasChanged();
+	}
+	
 	public void getBean(WObject bpart) {
 		if (part != null) {
 			partid = part.getID().getStringID();

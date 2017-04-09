@@ -57,4 +57,6 @@ public interface CTPart extends CTObject {
 
 	void updateResourceUsage();
 
+	boolean hasChanged();
+
 }

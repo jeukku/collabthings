@@ -1,5 +1,6 @@
 package org.collabthings.unittests;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -57,8 +58,8 @@ public final class Test3DModel extends CTTestCase {
 		s.setName("TEST");
 		s.setType("test");
 		String testbinarydatastring = "TESTIBINARYDATA";
-		s.getBinary().add(new String(testbinarydatastring).getBytes(CTClient.CHARSET));
-		s.getBinary().setReady();
+		s.setContent(new String(testbinarydatastring).getBytes(CTClient.CHARSET));
+		s.setReady();
 		s.publish();
 		//
 		CTBinaryModel bs = new CT3DModelImpl(benv);
@@ -67,7 +68,7 @@ public final class Test3DModel extends CTTestCase {
 		//
 		waitObject(bs);
 		//
-		String sdata = readString(bs.getBinary().getInputStream());
+		String sdata = readString(new ByteArrayInputStream(bs.getContent()));
 		assertEquals(testbinarydatastring, sdata);
 	}
 

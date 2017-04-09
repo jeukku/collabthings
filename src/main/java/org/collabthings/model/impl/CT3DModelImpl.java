@@ -41,10 +41,10 @@ import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.client.model.WBinaryID;
 import waazdoh.client.model.objects.WBinary;
-import waazdoh.common.WStringID;
-import waazdoh.common.WObjectID;
 import waazdoh.common.WData;
 import waazdoh.common.WObject;
+import waazdoh.common.WObjectID;
+import waazdoh.common.WStringID;
 import waazdoh.common.WXML;
 
 public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
@@ -170,8 +170,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 		return true;
 	}
 
-	@Override
-	public WBinary getBinary() {
+	private WBinary getBinary() {
 		if (binaryid != null && binaryid.isId()) {
 			return this.env.getBinarySource().getOrDownload(binaryid);
 		} else {
@@ -202,7 +201,6 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	public void publish() {
 		save();
 		//
-		o.publish();
 		if (binaryid != null) {
 			getBinary().publish();
 		}
@@ -210,18 +208,28 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 		for (WBinary b : childbinaries) {
 			b.publish();
 		}
+		o.publish();
+
 	}
 
 	@Override
 	public void save() {
 		if (binaryid != null) {
-			getBinary().setReady();
-			getBinary().save();
+			WBinary bin = getBinary();
+			bin.setReady();
+			bin.save();
+			binaryid = bin.getID();
 		}
 		for (WBinary b : childbinaries) {
 			b.save();
 		}
 		getServiceObject().save();
+	}
+
+	public void setReady() {
+		WBinary bin = getBinary();
+		bin.setReady();
+		binaryid = bin.getID();
 	}
 
 	@Override
@@ -289,8 +297,13 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	private boolean importSTL(Reader fr) throws IOException, SAXException {
 		StringBuilder sb = readFile(fr);
 		newBinary();
-		getBinary().load(new ByteArrayInputStream(sb.toString().getBytes(CTClient.CHARSET)));
-		getBinary().setReady();
+		WBinary bin = getBinary();
+		bin.load(new ByteArrayInputStream(sb.toString().getBytes(CTClient.CHARSET)));
+		bin.setReady();
+		binaryid = bin.getID();
+
+		log.info("imported " + getBinary());
+
 		return true;
 	}
 
@@ -308,9 +321,12 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 		log.fine("importing " + b.toText());
 		if (importX3D(b)) {
 			newBinary();
-			getBinary().load(new ByteArrayInputStream(b.toXML().toString().getBytes(CTClient.CHARSET)));
-			getBinary().setReady();
+			WBinary bin = getBinary();
+			bin.load(new ByteArrayInputStream(b.toXML().toString().getBytes(CTClient.CHARSET)));
+			bin.setReady();
+			binaryid = bin.getID();
 			return true;
+
 		} else {
 			return false;
 		}
@@ -541,4 +557,25 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	public void addChangeListener(CTListener l) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public byte[] getContent() {
+		try {
+			return getBinary().getContent();
+		} catch (IOException e) {
+			log.info("ERROR " + e);
+			return null;
+		}
+	}
+
+	public void setContent(byte[] bytes) {
+		try {
+			WBinary bin = getBinary();
+			bin.importStream(new ByteArrayInputStream(bytes));
+			binaryid = bin.getID();
+		} catch (IOException e) {
+			log.info("ERROR " + e);
+		}
+	}
+
 }

@@ -32,7 +32,7 @@ public final class TestPart extends CTTestCase {
 		CTBinaryModel m = part.newBinaryModel();
 		m.setType("test");
 		String testbinarydatastring = "TESTIBINARYPARTDATA";
-		m.getBinary().add(new String(testbinarydatastring).getBytes(CTClient.CHARSET));
+		m.setContent(new String(testbinarydatastring).getBytes(CTClient.CHARSET));
 		//
 		CTSubPart subpart = part.newSubPart();
 		subpart.getPart();
@@ -155,7 +155,7 @@ public final class TestPart extends CTTestCase {
 		CTBinaryModel bm = p.newBinaryModel();
 		bm.importModel(CTBinaryModel.VALUE_TYPE_X3D, getClass().getResourceAsStream(cubemodelpath));
 		assertNotNull(p.getModel());
-		assertTrue(bm.getBinary().length() > 0);
+		assertTrue(bm.getContent().length > 0);
 	}
 
 	public void testEqualPart() {

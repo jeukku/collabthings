@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.xml.sax.SAXException;
-
 import com.jme3.math.Vector3f;
 
 import waazdoh.client.model.objects.WBinary;
@@ -16,7 +14,7 @@ public interface CTBinaryModel extends CTObject, CTModel {
 	String VALUE_TYPE_STL = "stl";
 	String VALUE_TYPE = "binary";
 
-	WBinary getBinary();
+	// WBinary getBinary();
 
 	void setName(String string);
 
@@ -51,5 +49,9 @@ public interface CTBinaryModel extends CTObject, CTModel {
 
 	@Override
 	CTTriangleMesh getTriangleMesh();
+
+	void setContent(byte[] bytes);
+
+	byte[] getContent();
 
 }
