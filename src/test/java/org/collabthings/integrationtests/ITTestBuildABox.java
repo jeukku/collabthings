@@ -29,6 +29,7 @@ import org.xml.sax.SAXException;
 import com.jme3.math.Vector3f;
 
 import waazdoh.common.WStringID;
+import waazdoh.common.vo.StorageAreaSearchVO;
 
 public final class ITTestBuildABox extends CTTestCase {
 
@@ -263,7 +264,11 @@ public final class ITTestBuildABox extends CTTestCase {
 
 		square.publish();
 
-		List<String> searchValue = client.getService().getStorageArea().searchValue(square.getID().toString());
+		StorageAreaSearchVO searchvo = new StorageAreaSearchVO();
+		searchvo.setSearchTerm(square.getID().toString());
+		
+		List<String> searchValue = client.getService().getStorageArea().searchValue(searchvo);
+		
 		info("createPlateSource square search result " + searchValue);
 		platesource.getEnvironment().setParameter("bmplate", searchValue.get(0));
 		loadScript(platesource.addScript("order"), "platesource_order.js");

@@ -202,7 +202,9 @@ public class CTTestCase extends TestCase {
 
 	private WServiceClient getTestService(String username, WPreferences p, BinarySource source) throws SAXException {
 		if (p.getBoolean(CTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
-			WRestServiceClient client = new WRestServiceClient(p.get(WPreferences.SERVICE_URL, "unknown_service"),
+			String serviceurl = p.get(WPreferences.SERVICE_URL, "unknown_service");
+			log.info("Service URL " + serviceurl);
+			WRestServiceClient client = new WRestServiceClient(serviceurl,
 					beanstorage);
 			if (client.getUsers().requestAppLogin() != null) {
 				return client;
