@@ -73,21 +73,21 @@ function run(runenv, factory, values) {
 			destlocation = factory.getVector("storage");
 			factory.stepWhile(function(step) {
 				var partl = destpartstate.getLocation();
-				var ab = destlocation.getSub(partl);
+				var ab = destlocation.subtract(partl);
 
 				var movedistance = step  * 10;
 				if (ab.length() < movedistance) {
 					return true;
 				} else {
 					ab.normalize();
-					ab.scale(movedistance);
-					destpartstate.setLocation(partl.getAdd(ab));
+					ab.mult(movedistance);
+					destpartstate.setLocation(partl.add(ab));
 					return false;
 				}
 			});
 
 			pool.addPart(poolid, part);
-			destpart.destroy();
+			//destpart.destroy();
 		} else {
 			log.info("Parts are not equal.");
 			pool.addPart("trash", destpart);

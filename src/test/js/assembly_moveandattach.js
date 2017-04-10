@@ -41,18 +41,18 @@ function run(runenv, factory, values) {
 	//
 
 	var normaldestdot = subpart.getNormal().dot(subpart.getLocation());
-	var normalv = subpart.getNormal().copy();
+	var normalv = subpart.getNormal().clone();
 	if (normaldestdot < 0.1) {
 		normaldestdot = 2;
 	}
 
-	normalv.scale(normaldestdot * 2);
+	normalv.mult(normaldestdot * 2);
 
 	log.info("dot " + normaldestdot + " " + normalv);
 
-	var adestination = destpart.getLocation().getAdd(
-			subpart.getLocation().getAdd(normalv));
-	var destination = destpart.getLocation().getAdd(subpart.getLocation());
+	var adestination = destpart.getLocation().add(
+			subpart.getLocation().add(normalv));
+	var destination = destpart.getLocation().add(subpart.getLocation());
 
 	log.info("moveandattach part first destination " + adestination);
 	tool.moveTo(adestination, subpart.getNormal(), subpart.getAngle());
