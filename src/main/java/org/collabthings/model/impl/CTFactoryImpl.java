@@ -310,9 +310,12 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	}
 
 	private Map<String, CTAttachedFactory> getFactoryMap() {
-		if (factories == null && bean != null) {
+		if (factories == null) {
 			factories = new HashMap<String, CTAttachedFactory>();
-
+		}
+		
+		if (factories.isEmpty() && bean != null) {
+		
 			List<WObject> bcfs = getContent().getObjectList("factories");
 			for (WObject bchildfactory : bcfs) {
 				CTFactoryImpl f = new CTFactoryImpl(this.client);
