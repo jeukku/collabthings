@@ -129,18 +129,20 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	public boolean parse(WObject bean) {
 		this.bean = bean;
 		WObject c = getContent();
-		setName(c.getValue(VALUENAME_NAME));
+		if (c != null) {
+			setName(c.getValue(VALUENAME_NAME));
 
-		WObject beansl = c.get(VALUENAME_SPAWNLOCATION);
-		if (beansl != null) {
-			tooluserspawnlocation = CTMath.parseVector(beansl);
+			WObject beansl = c.get(VALUENAME_SPAWNLOCATION);
+			if (beansl != null) {
+				tooluserspawnlocation = CTMath.parseVector(beansl);
+			}
+
+			WObject bbbox = c.get(CTBoundingBox.BEAN_NAME);
+			if (bbbox != null) {
+				bbox.set(bbbox);
+			}
 		}
-
-		WObject bbbox = c.get(CTBoundingBox.BEAN_NAME);
-		if (bbbox != null) {
-			bbox.set(bbbox);
-		}
-
+		
 		return getName() != null;
 	}
 
