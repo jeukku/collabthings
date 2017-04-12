@@ -268,9 +268,9 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 
 		o.modified();
 
-		if (CTBinaryModel.VALUE_TYPE_STL.equals(extension)) {
+		if (CTConstants.VALUE_TYPE_STL.equals(extension)) {
 			return importSTL(fr);
-		} else if (CTBinaryModel.VALUE_TYPE_X3D.equals(extension)) {
+		} else if (org.collabthings.model.impl.CTConstants.VALUE_TYPE_X3D.equals(extension)) {
 			return importX3D(fr);
 		} else {
 			log.info("Unknown extension " + extension);
@@ -425,7 +425,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 					log.info("delete failed " + f.getAbsolutePath());
 				}
 
-				if (getType().equals(CTBinaryModel.VALUE_TYPE_X3D)) {
+				if (getType().equals(org.collabthings.model.impl.CTConstants.VALUE_TYPE_X3D)) {
 					return getX3DFile(f);
 				} else {
 					Files.copy(getBinary().getInputStream(), f.toPath());
@@ -529,7 +529,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	}
 
 	private void createTriangleMesh() {
-		if (CTBinaryModel.VALUE_TYPE_STL.equals(getType())) {
+		if (CTConstants.VALUE_TYPE_STL.equals(getType())) {
 			StlMeshImporter i = new StlMeshImporter();
 			try {
 				i.setFile(getModelFile());
@@ -568,6 +568,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 		}
 	}
 
+	@Override
 	public void setContent(byte[] bytes) {
 		try {
 			WBinary bin = getBinary();

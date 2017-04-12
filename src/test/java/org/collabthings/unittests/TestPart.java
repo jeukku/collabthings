@@ -9,6 +9,7 @@ import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
+import org.collabthings.model.CTValues;
 import org.collabthings.model.impl.CTPartImpl;
 import org.xml.sax.SAXException;
 
@@ -153,7 +154,7 @@ public final class TestPart extends CTTestCase {
 		CTClient e = getNewClient();
 		CTPart p = e.getObjectFactory().getPart();
 		CTBinaryModel bm = p.newBinaryModel();
-		bm.importModel(CTBinaryModel.VALUE_TYPE_X3D, getClass().getResourceAsStream(cubemodelpath));
+		bm.importModel(org.collabthings.model.impl.CTConstants.VALUE_TYPE_X3D, getClass().getResourceAsStream(cubemodelpath));
 		assertNotNull(p.getModel());
 		assertTrue(bm.getContent().length > 0);
 	}

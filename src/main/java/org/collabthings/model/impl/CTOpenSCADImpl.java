@@ -178,7 +178,8 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 			String command = path + " -o " + stlfile;
 			command += " " + tempfile.getAbsolutePath();
 			log.info("Running " + command);
-			Process e = Runtime.getRuntime().exec(command);
+			ProcessBuilder pb = new ProcessBuilder(path, "-o", stlfile.getAbsolutePath(), tempfile.getAbsolutePath());
+			Process e = pb.start();
 
 			readStream(e.getErrorStream());
 			readStream(e.getInputStream());

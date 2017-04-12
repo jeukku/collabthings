@@ -18,11 +18,8 @@ public interface CTOpenSCAD extends CTObject, CTModel {
 
 	boolean isOK();
 
-	String getName();
-
 	CTModel getModel();
 
-	void setName(String string);
-
 	String getScript();
+
 }

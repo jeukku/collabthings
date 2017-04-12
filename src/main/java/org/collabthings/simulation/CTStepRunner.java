@@ -71,13 +71,10 @@ public final class CTStepRunner {
 			if (dt > minstep) {
 				lasttime = now;
 
-				if (dt > maxstep) {
-					dt = maxstep;
-				}
+				dt = maxStep(dt);
 
-				if (totalcount % 10_000 == 0) {
-					printInfo();
-				}
+				testAndprintOut();
+
 				totaltime += dt;
 				totalcount++;
 
@@ -94,6 +91,20 @@ public final class CTStepRunner {
 				}
 				wait(timeout);
 			}
+		}
+	}
+
+	private void testAndprintOut() {
+		if (totalcount % 10_000 == 0) {
+			printInfo();
+		}
+	}
+
+	private double maxStep(double dt) {
+		if (dt > maxstep) {
+			return maxstep;
+		} else {
+			return dt;
 		}
 	}
 

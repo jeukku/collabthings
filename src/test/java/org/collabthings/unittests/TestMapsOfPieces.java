@@ -31,7 +31,8 @@ public final class TestMapsOfPieces extends CTTestCase {
 
 	public void testSetName() throws IOException, SAXException {
 		map.setName("testing mapsofpieces");
-		publishAndCompare();
+		CTMapOfPieces bmap = publishAndCompare();
+		assertEquals(map.getName(), bmap.getName());
 	}
 
 	public void testAddPiece() throws IOException, SAXException {
