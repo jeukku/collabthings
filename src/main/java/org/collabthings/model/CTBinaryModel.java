@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.model;
 
 import java.io.File;
@@ -6,7 +16,6 @@ import java.io.InputStream;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.client.model.objects.WBinary;
 import waazdoh.common.WStringID;
 
 public interface CTBinaryModel extends CTObject, CTModel {
@@ -16,6 +25,7 @@ public interface CTBinaryModel extends CTObject, CTModel {
 
 	// WBinary getBinary();
 
+	@Override
 	void setName(String string);
 
 	@Override
