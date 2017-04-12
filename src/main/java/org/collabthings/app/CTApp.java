@@ -42,7 +42,7 @@ public class CTApp {
 	private boolean closed;
 	private FileBeanStorage beanstorage;
 
-	private List<CTTask> tasks = new LinkedList<CTTask>();
+	private List<CTTask> tasks = new LinkedList<>();
 
 	public CTApp() throws MalformedURLException {
 		preferences = new AppPreferences(CTApp.PREFERENCES_PREFIX);
@@ -57,6 +57,7 @@ public class CTApp {
 					runTasks();
 				} catch (InterruptedException e) {
 					log.error(this, "runTasks", e);
+					Thread.currentThread().interrupt();
 				}
 			}
 		}, "runTasks");
@@ -117,7 +118,7 @@ public class CTApp {
 			}
 
 			while (!isClosed()) {
-				if (tasks.size() > 0) {
+				if (!tasks.isEmpty()) {
 					CTTask task = tasks.remove(0);
 					task.run();
 				} else {
