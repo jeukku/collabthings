@@ -153,7 +153,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 				bbox.set(bbbox);
 			}
 		}
-		
+
 		return getName() != null;
 	}
 
@@ -324,9 +324,9 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 		if (factories == null) {
 			factories = new HashMap<String, CTAttachedFactory>();
 		}
-		
+
 		if (factories.isEmpty() && bean != null) {
-		
+
 			List<WObject> bcfs = getContent().getObjectList("factories");
 			for (WObject bchildfactory : bcfs) {
 				CTFactoryImpl f = new CTFactoryImpl(this.client);
@@ -340,7 +340,8 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 				}
 
 				if (f.load(new WStringID(cfid))) {
-					CTAttachedFactory cf = addFactory(cfname, f);
+					CTAttachedFactory cf = new CTAttachedFactory(f);
+					factories.put(cfname, cf);
 					cf.setBookmark(bookmark);
 					cf.set(bchildfactory.get("orientation"));
 				} else {
