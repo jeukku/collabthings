@@ -47,7 +47,7 @@ import waazdoh.common.WStringID;
  */
 public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	private static final String VARIABLE_NAME = "name";
-	private static final String VARIABlE_SCRIPT = "value";
+	private static final String VARIABLE_SCRIPT = "value";
 	private static final String VARIABLE_SCALE = "scale";
 	private static final String VARIABLE_MODEL = "model";
 	//
@@ -100,11 +100,9 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 
 	@Override
 	public synchronized CTModel getModel() {
-		if (isChanged()) {
-			if (createModel()) {
-				loadedscadhash = getScript().hashCode();
-				changed(new CTEvent("model created"));
-			}
+		if (isChanged() && createModel()) {
+			loadedscadhash = getScript().hashCode();
+			changed(new CTEvent("model created"));
 		}
 
 		return model;
@@ -167,28 +165,29 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	private File createSTL() throws IOException, InterruptedException {
 		String path = client.getPreferences().get(CTClient.PREFERENCES_OPENSCADPATH, "openscad");
 		File tempfile = File.createTempFile("collabthings", ".scad");
-		FileOutputStream fos = new FileOutputStream(tempfile);
-		String s = getScript();
-		byte[] bs = s.getBytes(CTClient.CHARSET);
-		fos.write(bs, 0, bs.length);
-		fos.close();
+		try (FileOutputStream fos = new FileOutputStream(tempfile)) {
+			String s = getScript();
+			byte[] bs = s.getBytes(CTClient.CHARSET);
+			fos.write(bs, 0, bs.length);
+			fos.close();
 
-		log.info("SCAD file " + tempfile);
-		log.info("OpenSCAD " + path);
+			log.info("SCAD file " + tempfile);
+			log.info("OpenSCAD " + path);
 
-		File stlfile = File.createTempFile(getID().toString(), ".stl");
-		String command = path + " -o " + stlfile;
-		command += " " + tempfile.getAbsolutePath();
-		log.info("Running " + command);
-		Process e = Runtime.getRuntime().exec(command);
+			File stlfile = File.createTempFile(getID().toString(), ".stl");
+			String command = path + " -o " + stlfile;
+			command += " " + tempfile.getAbsolutePath();
+			log.info("Running " + command);
+			Process e = Runtime.getRuntime().exec(command);
 
-		readStream(e.getErrorStream());
-		readStream(e.getInputStream());
+			readStream(e.getErrorStream());
+			readStream(e.getInputStream());
 
-		e.waitFor();
+			e.waitFor();
 
-		log.info("Exit value " + e.exitValue());
-		return stlfile;
+			log.info("Exit value " + e.exitValue());
+			return stlfile;
+		}
 	}
 
 	private void readStream(InputStream errorStream) throws UnsupportedEncodingException {
@@ -227,7 +226,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	}
 
 	private void getBean(WObject b) {
-		b.setBase64Value(VARIABlE_SCRIPT, script);
+		b.setBase64Value(VARIABLE_SCRIPT, script);
 		b.addValue(VARIABLE_NAME, name);
 		b.addValue(VARIABLE_SCALE, scale);
 		if (model != null) {
@@ -242,7 +241,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 			content = main;
 		}
 
-		script = content.getBase64Value(VARIABlE_SCRIPT);
+		script = content.getBase64Value(VARIABLE_SCRIPT);
 		loadedscadhash = getScript().hashCode();
 
 		this.name = content.getValue(VARIABLE_NAME);
