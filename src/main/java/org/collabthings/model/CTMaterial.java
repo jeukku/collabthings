@@ -18,4 +18,6 @@ public interface CTMaterial {
 
 	WObject getBean();
 
+	void setColor(int i, double colorvalue);
+
 }

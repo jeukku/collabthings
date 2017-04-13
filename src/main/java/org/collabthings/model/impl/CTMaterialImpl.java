@@ -61,4 +61,9 @@ public class CTMaterialImpl implements CTMaterial {
 	public double[] getColor() {
 		return color.clone();
 	}
+
+	@Override
+	public void setColor(int i, double colorvalue) {
+		color[i] = colorvalue;
+	}
 }
