@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.collabthings.model;
 
+import java.util.List;
+
 import waazdoh.common.WObject;
 
 public interface CTMapOfPieces extends CTObject {
@@ -46,5 +48,9 @@ public interface CTMapOfPieces extends CTObject {
 	CTMapPiece addPiece(CTMapPieceType type);
 
 	CTMapPieceType getPieceType(String tt);
+
+	List<CTMapPiece> getPieces();
+
+	void clonePiecesTo(CTMapOfPieces map);
 
 }

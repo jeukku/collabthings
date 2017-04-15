@@ -93,6 +93,26 @@ public class CTMapOfPiecesImpl implements ServiceObjectData, CTMapOfPieces {
 	}
 
 	@Override
+	public void clonePiecesTo(CTMapOfPieces map) {
+		CTMapOfPiecesImpl i = (CTMapOfPiecesImpl) map;
+		for (String st : ptypes.keySet()) {
+			CTMapPieceType t = ptypes.get(st);
+			i.ptypes.put(st, t);
+		}
+
+		for (CTMapPieceImpl p : pieces.values()) {
+			CTMapPieceImpl npiece = (CTMapPieceImpl) map.addPiece(p.getType());
+			npiece.id = p.id;
+			npiece.linked = new LinkedList<>(p.linked);
+		}
+	}
+
+	@Override
+	public List<CTMapPiece> getPieces() {
+		return new LinkedList<>(pieces.values());
+	}
+
+	@Override
 	public boolean isReady() {
 		return true;
 	}
@@ -142,7 +162,7 @@ public class CTMapOfPiecesImpl implements ServiceObjectData, CTMapOfPieces {
 
 		private CTMapPieceType type;
 		private List<String> linked = new LinkedList<>();
-		private final String id;
+		private String id;
 
 		public CTMapPieceImpl(CTMapPieceType type) {
 			this.type = type;
