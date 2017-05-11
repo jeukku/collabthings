@@ -62,7 +62,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	public CTFactoryImpl(final CTClient nclient) {
 		this.client = nclient;
 		env = new CTEnvironmentImpl(nclient);
-		factories = new HashMap<String, CTAttachedFactory>();
+		factories = new HashMap<>();
 
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
 		addScript("start", new CTScriptImpl(client));
@@ -322,7 +322,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 
 	private Map<String, CTAttachedFactory> getFactoryMap() {
 		if (factories == null) {
-			factories = new HashMap<String, CTAttachedFactory>();
+			factories = new HashMap<>();
 		}
 
 		if (factories.isEmpty() && bean != null) {

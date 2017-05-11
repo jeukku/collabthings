@@ -19,6 +19,7 @@ import org.collabthings.CTStorage;
 
 public class CTBookmarksImpl implements CTBookmarks {
 
+	private static final String BOOKMARKS = "bookmarks/";
 	private static final String BM_VARIABLE = "bm";
 	private static final String DATA_VARIABLE = "_date";
 	private CTStorage storage;
@@ -31,12 +32,12 @@ public class CTBookmarksImpl implements CTBookmarks {
 
 	@Override
 	public List<String> list() {
-		return getStorage().listStorage("bookmarks");
+		return getStorage().listStorage(BOOKMARKS);
 	}
 
 	@Override
 	public List<String> list(String string) {
-		return getStorage().listStorage("bookmarks/" + string);
+		return getStorage().listStorage(BOOKMARKS + string);
 	}
 
 	private CTStorage getStorage() {
@@ -45,12 +46,12 @@ public class CTBookmarksImpl implements CTBookmarks {
 
 	@Override
 	public void addFolder(String string) {
-		getStorage().writeToStorage("bookmarks/" + string, DATA_VARIABLE, "" + new Date());
+		getStorage().writeToStorage(BOOKMARKS + string, DATA_VARIABLE, "" + new Date());
 	}
 
 	@Override
 	public void add(String name, String value) {
-		getStorage().writeToStorage("bookmarks/" + name, BM_VARIABLE, value);
+		getStorage().writeToStorage(BOOKMARKS + name, BM_VARIABLE, value);
 	}
 
 	@Override

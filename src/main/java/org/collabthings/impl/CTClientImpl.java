@@ -32,7 +32,8 @@ import waazdoh.common.client.WServiceClient;
 import waazdoh.common.vo.StorageAreaVO;
 
 public final class CTClientImpl implements CTClient {
-	private final static String PREFIX = "CT";
+	private static final String PUBLISHED = "published/";
+	private static final String PREFIX = "CT";
 	//
 	private final WClient client;
 	private final CTStorage storage;
@@ -43,7 +44,7 @@ public final class CTClientImpl implements CTClient {
 
 	public CTClientImpl(WPreferences p, BinarySource binarysource, BeanStorage beanstorage, WServiceClient service) {
 		client = new WClient(p, binarysource, beanstorage, service);
-		client.addObjectFilter((o) -> CTClient.checkVersion(o.getValue("version")));
+		client.addObjectFilter(o -> CTClient.checkVersion(o.getValue("version")));
 
 		this.factory = new CTObjectFactoryImpl(this);
 		this.storage = new CTStorageImpl(service);
@@ -127,7 +128,7 @@ public final class CTClientImpl implements CTClient {
 	}
 
 	private void createPublishedStorage(String string, CTObject o) {
-		String path = "published/" + string;
+		String path = PUBLISHED + string;
 		path = path.replace("//", "/");
 
 		String id = "" + o.getID();
@@ -140,8 +141,8 @@ public final class CTClientImpl implements CTClient {
 	@Override
 	public String getPublished(String username, String string) {
 		String path = "" + string;
-		if (path.indexOf("published/") < 0) {
-			path = "published/" + string;
+		if (path.indexOf(PUBLISHED) < 0) {
+			path = PUBLISHED + string;
 		}
 
 		path = path.replace("//", "/");
