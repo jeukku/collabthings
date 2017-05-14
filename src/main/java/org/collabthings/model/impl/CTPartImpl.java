@@ -27,6 +27,7 @@ import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTSubPart;
+import org.collabthings.model.CTViewingProperties;
 import org.collabthings.util.LLog;
 
 import com.jme3.math.Vector3f;
@@ -44,6 +45,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private static final String VALUENAME_SHORTNAME = "shortname";
 	private static final String VALUENAME_BUILDERID = "builder";
 	private static final String VALUENAME_RESOURCEUSAGE = "resources";
+	private static final String VALUENAME_VIEWINGPROPERTIES = "view";
 	//
 	private ServiceObject o;
 	private String name = "part";
@@ -63,6 +65,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private List<CTListener> listeners = new ArrayList<>();
 	private boolean ready;
 	private WObject modeldata;
+	private CTViewingProperties viewingproperties;
 
 	private static LLog log = LLog.getLogger("PartImpl");
 
@@ -115,12 +118,34 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				resourceusage.getObject(b.add(VALUENAME_RESOURCEUSAGE));
 			}
 
+			if (viewingproperties != null) {
+				viewingproperties.getObject(b.add(VALUENAME_VIEWINGPROPERTIES));
+			}
+
 			addSubParts(b);
 
 			storedobject = org;
 		}
 
 		return storedobject;
+	}
+
+	@Override
+	public CTViewingProperties getViewingProperties() {
+		if (viewingproperties == null) {
+			viewingproperties = new CTViewingPropertiesImpl();
+			List<CTSubPart> sps = getSubParts();
+			Vector3f lookat = new Vector3f();
+			for (CTSubPart cp : sps) {
+				lookat.addLocal(cp.getLocation());
+			}
+			if (sps.size() > 0) {
+				lookat.multLocal(1.0f / sps.size());
+			}
+			viewingproperties.setLookAt(lookat);
+		}
+
+		return viewingproperties;
 	}
 
 	private synchronized void addSubParts(WObject b) {
@@ -160,6 +185,12 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		if (bresourceusage != null) {
 			getResourceUsage().parse(bresourceusage);
 		}
+
+		WObject oviewingproperties = bean.get(VALUENAME_VIEWINGPROPERTIES);
+		if (oviewingproperties != null) {
+			viewingproperties = new CTViewingPropertiesImpl(oviewingproperties);
+		}
+
 		//
 		subparts.clear();
 
@@ -218,13 +249,13 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		if (storedobject == null) {
 			return true;
 		}
-		
+
 		for (CTSubPart subpart : subparts) {
-			if(subpart.hasPartChanged()) {
+			if (subpart.hasPartChanged()) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -327,12 +358,15 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				builder.save();
 			}
 
-			subparts.parallelStream().forEach(subpart -> subpart.save());
+			subparts.parallelStream().forEach(
+
+					subpart -> subpart.save());
 
 			updateResourceUsage();
 
 			getServiceObject().save();
 		}
+
 	}
 
 	@Override
@@ -348,12 +382,15 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				builder.publish();
 			}
 
-			subparts.parallelStream().forEach(subpart -> subpart.publish());
+			subparts.parallelStream().forEach(
+
+					subpart -> subpart.publish());
 
 			getServiceObject().publish();
 
 			this.env.publish(getName(), this);
 		}
+
 	}
 
 	@Override

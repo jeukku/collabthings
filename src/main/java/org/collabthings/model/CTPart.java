@@ -69,4 +69,6 @@ public interface CTPart extends CTObject {
 
 	boolean hasChanged();
 
+	CTViewingProperties getViewingProperties();
+
 }
