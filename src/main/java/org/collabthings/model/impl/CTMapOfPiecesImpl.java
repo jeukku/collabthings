@@ -41,7 +41,7 @@ public class CTMapOfPiecesImpl implements ServiceObjectData, CTMapOfPieces {
 
 	public CTMapOfPiecesImpl(CTClient client) {
 		this.client = client;
-		o = new ServiceObject(CTMapOfPieces.MAPOFPIECES, client.getClient(), this, client.getVersion(),
+		o = new ServiceObject(CTConstants.MAPOFPIECES, client.getClient(), this, client.getVersion(),
 				client.getPrefix());
 	}
 

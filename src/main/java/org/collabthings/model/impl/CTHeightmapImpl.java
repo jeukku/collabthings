@@ -18,7 +18,6 @@ import org.collabthings.CTClient;
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.model.CTHeightmap;
-import org.collabthings.model.CTModel;
 import org.collabthings.model.CTTriangle;
 import org.collabthings.model.CTTriangleMesh;
 import org.collabthings.util.CTListeners;
@@ -58,7 +57,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 
 	public CTHeightmapImpl(CTClient client) {
 		this.client = client;
-		o = new ServiceObject(CTModel.HEIGHTMAP, client.getClient(), this, client.getVersion(), client.getPrefix());
+		o = new ServiceObject(CTConstants.MODELTYPE_HEIGHTMAP, client.getClient(), this, client.getVersion(), client.getPrefix());
 	}
 
 	@Override
@@ -132,7 +131,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 
 	@Override
 	public String getModelType() {
-		return CTModel.HEIGHTMAP;
+		return CTConstants.MODELTYPE_HEIGHTMAP;
 	}
 
 	@Override

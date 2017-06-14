@@ -15,8 +15,6 @@ import java.util.List;
 import waazdoh.common.WObject;
 
 public interface CTMapOfPieces extends CTObject {
-	String MAPOFPIECES = "mapofobjects";
-
 	public static class CTMapPieceType {
 		private WObject o;
 

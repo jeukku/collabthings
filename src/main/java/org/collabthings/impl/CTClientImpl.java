@@ -22,6 +22,7 @@ import org.collabthings.CTStorage;
 import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.factory.impl.CTObjectFactoryImpl;
 import org.collabthings.model.CTObject;
+import org.collabthings.model.impl.CTConstants;
 import org.collabthings.util.LLog;
 
 import waazdoh.client.BinarySource;
@@ -74,7 +75,7 @@ public final class CTClientImpl implements CTClient {
 
 	@Override
 	public String getVersion() {
-		return CTClientImpl.VERSION;
+		return CTConstants.VERSION;
 	}
 
 	@Override

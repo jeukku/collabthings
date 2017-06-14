@@ -10,6 +10,7 @@ import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.model.CTValues;
+import org.collabthings.model.impl.CTConstants;
 import org.collabthings.model.impl.CTPartImpl;
 import org.xml.sax.SAXException;
 
@@ -33,7 +34,7 @@ public final class TestPart extends CTTestCase {
 		CTBinaryModel m = part.newBinaryModel();
 		m.setType("test");
 		String testbinarydatastring = "TESTIBINARYPARTDATA";
-		m.setContent(new String(testbinarydatastring).getBytes(CTClient.CHARSET));
+		m.setContent(new String(testbinarydatastring).getBytes(CTConstants.CHARSET));
 		//
 		CTSubPart subpart = part.newSubPart();
 		subpart.getPart();

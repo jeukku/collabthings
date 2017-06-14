@@ -21,10 +21,6 @@ import waazdoh.common.WObjectID;
 
 public interface CTModel {
 
-	String SCAD = "openscad";
-	String HEIGHTMAP = "heightmap";
-	String BINARY = "binary";
-
 	WObjectID getID();
 
 	void publish();

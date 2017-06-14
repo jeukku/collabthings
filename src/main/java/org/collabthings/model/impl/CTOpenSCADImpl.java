@@ -79,7 +79,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	 */
 	public CTOpenSCADImpl(final CTClient env) {
 		this.client = env;
-		so = new ServiceObject(CTModel.SCAD, env.getClient(), this, env.getVersion(), env.getPrefix());
+		so = new ServiceObject(CTConstants.MODELTYPE_SCAD, env.getClient(), this, env.getVersion(), env.getPrefix());
 		setName("OpenSCAD" + (CTOpenSCADImpl.namecounter++));
 		StringBuilder b = new StringBuilder();
 		b.append("// created " + new Date() + " by " + env.getService().getUser().getUsername() + "\n");
@@ -145,7 +145,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 
 	@Override
 	public String getModelType() {
-		return CTModel.SCAD;
+		return CTConstants.MODELTYPE_SCAD;
 	}
 
 	private boolean createModel() {
@@ -157,20 +157,20 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 			return true;
 		} catch (IOException | InterruptedException e) {
 			log.error(this, "createModel", e);
-			client.errorEvent(CTClient.ERROR_OPENSCADFAILED, e);
+			client.errorEvent(CTConstants.ERROR_OPENSCADFAILED, e);
 		}
 		return false;
 	}
 
 	private File createSTL() throws IOException, InterruptedException {
-		String spath = client.getPreferences().get(CTClient.PREFERENCES_OPENSCADPATH, "openscad");
+		String spath = client.getPreferences().get(CTConstants.PREFERENCES_OPENSCADPATH, "openscad");
 		File path = new File(spath);
 
 		if (path.isFile()) {
 			File tempfile = File.createTempFile("collabthings", ".scad");
 			try (FileOutputStream fos = new FileOutputStream(tempfile)) {
 				String s = getScript();
-				byte[] bs = s.getBytes(CTClient.CHARSET);
+				byte[] bs = s.getBytes(CTConstants.CHARSET);
 				fos.write(bs, 0, bs.length);
 				fos.close();
 
@@ -200,7 +200,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	}
 
 	private void readStream(InputStream errorStream) throws UnsupportedEncodingException {
-		BufferedReader es = new BufferedReader(new InputStreamReader(errorStream, CTClient.CHARSET));
+		BufferedReader es = new BufferedReader(new InputStreamReader(errorStream, CTConstants.CHARSET));
 
 		new Thread(() -> {
 			try {

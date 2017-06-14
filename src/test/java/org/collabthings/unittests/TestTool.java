@@ -14,6 +14,7 @@ import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
+import org.collabthings.model.impl.CTConstants;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.model.impl.CTToolImpl;
 import org.xml.sax.SAXException;
@@ -47,7 +48,7 @@ public final class TestTool extends CTTestCase {
 		String testbinarydatastring = "TESTIBINARYDATA";
 		CTBinaryModel model = t.getPart().newBinaryModel();
 		model.setType("bin");
-		model.setContent(new String(testbinarydatastring).getBytes(CTClient.CHARSET));
+		model.setContent(new String(testbinarydatastring).getBytes(CTConstants.CHARSET));
 		//
 		t.save();
 		t.publish();

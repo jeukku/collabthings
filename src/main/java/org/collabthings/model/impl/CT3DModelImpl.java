@@ -235,7 +235,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	@Override
 	public boolean importModel(String type, InputStream is) {
 		try {
-			Reader r = new InputStreamReader(is, CTClient.CHARSET);
+			Reader r = new InputStreamReader(is, CTConstants.CHARSET);
 			try {
 				return importModel(r, type);
 			} finally {
@@ -251,7 +251,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	public boolean importModel(File file) throws IOException {
 		log.info("Importing " + file);
 
-		try (Reader fr = new InputStreamReader(new FileInputStream(file), CTClient.CHARSET)) {
+		try (Reader fr = new InputStreamReader(new FileInputStream(file), CTConstants.CHARSET)) {
 			String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
 			log.info("Import model extension " + extension);
 			return importModel(fr, extension);
@@ -298,7 +298,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 		StringBuilder sb = readFile(fr);
 		newBinary();
 		WBinary bin = getBinary();
-		bin.load(new ByteArrayInputStream(sb.toString().getBytes(CTClient.CHARSET)));
+		bin.load(new ByteArrayInputStream(sb.toString().getBytes(CTConstants.CHARSET)));
 		bin.setReady();
 		binaryid = bin.getID();
 
@@ -322,7 +322,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 		if (importX3D(b)) {
 			newBinary();
 			WBinary bin = getBinary();
-			bin.load(new ByteArrayInputStream(b.toXML().toString().getBytes(CTClient.CHARSET)));
+			bin.load(new ByteArrayInputStream(b.toXML().toString().getBytes(CTConstants.CHARSET)));
 			bin.setReady();
 			binaryid = bin.getID();
 			return true;
@@ -448,7 +448,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	private InputStream getX3DStream() {
 		if (isReady()) {
 			WXML xml;
-			try (InputStreamReader reader = new InputStreamReader(getBinary().getInputStream(), CTClient.CHARSET)) {
+			try (InputStreamReader reader = new InputStreamReader(getBinary().getInputStream(), CTConstants.CHARSET)) {
 				xml = new WXML(reader);
 				log.info("getModelStream parsing " + xml);
 				WData b = new WData(xml);
@@ -458,7 +458,7 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 				convertX3DURLs(b);
 				log.info("getModelStream returning " + b.toXML().toString());
 				return new BufferedInputStream(
-						new ByteArrayInputStream(b.toXML().toString().getBytes(CTClient.CHARSET)));
+						new ByteArrayInputStream(b.toXML().toString().getBytes(CTConstants.CHARSET)));
 			} catch (IOException | SAXException e) {
 				log.error(this, "getModelStream", e);
 				return null;

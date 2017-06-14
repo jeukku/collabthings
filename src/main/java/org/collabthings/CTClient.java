@@ -18,6 +18,7 @@ import java.util.StringTokenizer;
 
 import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.model.CTObject;
+import org.collabthings.model.impl.CTConstants;
 
 import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
@@ -25,15 +26,6 @@ import waazdoh.common.WPreferences;
 import waazdoh.common.client.WServiceClient;
 
 public interface CTClient {
-	String VERSION = "0.0.3";
-	String LOWEST_ACCEPTED_VERSION = "0.0.3";
-	String CHARSET = "UTF-8";
-
-	String JAVASCRIPT_FORBIDDENWORDS = "ct.javascript.forbiddenwords";
-	String PREFERENCES_OPENSCADPATH = "software.openscad.path";
-
-	String ERROR_OPENSCADFAILED = "error_openscadfailed";
-
 	CTObjectFactory getObjectFactory();
 
 	String getVersion();
@@ -77,7 +69,7 @@ public interface CTClient {
 	static boolean checkVersion(String v) {
 		if (v != null) {
 			String a = getParsedVersionString(v);
-			String b = getParsedVersionString(LOWEST_ACCEPTED_VERSION);
+			String b = getParsedVersionString(CTConstants.LOWEST_ACCEPTED_VERSION);
 			return a.compareTo(b) >= 0;
 		} else {
 			return false;

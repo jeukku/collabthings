@@ -154,7 +154,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			((CTSubPartImpl) part).getBean(bpart);
 			b.addToList("parts", bpart);
 		}
-	};
+	}
 
 	@Override
 	public synchronized boolean parse(WObject main) {
@@ -223,10 +223,10 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		if (data != null) {
 			String type = data.getValue("type");
 			WStringID nmodelid = data.getIDValue(VALUENAME_MODELID);
-			if (CTModel.SCAD.equals(type)) {
+			if (CTConstants.MODELTYPE_SCAD.equals(type)) {
 				CTOpenSCAD nscad = this.env.getObjectFactory().getOpenScad(nmodelid);
 				model = nscad;
-			} else if (CTModel.HEIGHTMAP.equals(type)) {
+			} else if (CTConstants.MODELTYPE_HEIGHTMAP.equals(type)) {
 				CTHeightmap nhm = this.env.getObjectFactory().getHeightmap(nmodelid);
 				model = nhm;
 			} else {
@@ -473,7 +473,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 	@Override
 	public CTHeightmap getHeightmap() {
-		if (getModel() != null && getModel().getModelType().equals(CTModel.HEIGHTMAP)) {
+		if (getModel() != null && getModel().getModelType().equals(CTConstants.MODELTYPE_HEIGHTMAP)) {
 			return (CTHeightmap) model;
 		} else {
 			return null;

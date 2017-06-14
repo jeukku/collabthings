@@ -25,6 +25,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import org.collabthings.CTClient;
+import org.collabthings.model.impl.CTConstants;
 import org.collabthings.util.LLog;
 
 public class CTJavaScriptLoader implements ScriptLoader {
@@ -47,7 +48,7 @@ public class CTJavaScriptLoader implements ScriptLoader {
 
 	private boolean init(CTClient c) {
 		try {
-			String words = c.getGlobalSetting(CTClient.JAVASCRIPT_FORBIDDENWORDS);
+			String words = c.getGlobalSetting(CTConstants.JAVASCRIPT_FORBIDDENWORDS);
 			if (words != null) {
 				StringTokenizer st = new StringTokenizer(words);
 				while (st.hasMoreTokens()) {
@@ -77,7 +78,7 @@ public class CTJavaScriptLoader implements ScriptLoader {
 
 	private void addLibrary(String name) throws IOException {
 		try (InputStream is = ClassLoader.getSystemResourceAsStream(name)) {
-			BufferedReader r = new BufferedReader(new InputStreamReader(is, CTClient.CHARSET));
+			BufferedReader r = new BufferedReader(new InputStreamReader(is, CTConstants.CHARSET));
 
 			StringBuilder sb = new StringBuilder();
 

@@ -11,6 +11,7 @@ import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.impl.CT3DModelImpl;
+import org.collabthings.model.impl.CTConstants;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
@@ -58,7 +59,7 @@ public final class Test3DModel extends CTTestCase {
 		s.setName("TEST");
 		s.setType("test");
 		String testbinarydatastring = "TESTIBINARYDATA";
-		s.setContent(new String(testbinarydatastring).getBytes(CTClient.CHARSET));
+		s.setContent(new String(testbinarydatastring).getBytes(CTConstants.CHARSET));
 		s.setReady();
 		s.publish();
 		//
