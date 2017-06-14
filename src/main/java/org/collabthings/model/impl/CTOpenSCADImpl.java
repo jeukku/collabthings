@@ -163,31 +163,39 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	}
 
 	private File createSTL() throws IOException, InterruptedException {
-		String path = client.getPreferences().get(CTClient.PREFERENCES_OPENSCADPATH, "openscad");
-		File tempfile = File.createTempFile("collabthings", ".scad");
-		try (FileOutputStream fos = new FileOutputStream(tempfile)) {
-			String s = getScript();
-			byte[] bs = s.getBytes(CTClient.CHARSET);
-			fos.write(bs, 0, bs.length);
-			fos.close();
+		String spath = client.getPreferences().get(CTClient.PREFERENCES_OPENSCADPATH, "openscad");
+		File path = new File(spath);
 
-			log.info("SCAD file " + tempfile);
-			log.info("OpenSCAD " + path);
+		if (path.isFile()) {
+			File tempfile = File.createTempFile("collabthings", ".scad");
+			try (FileOutputStream fos = new FileOutputStream(tempfile)) {
+				String s = getScript();
+				byte[] bs = s.getBytes(CTClient.CHARSET);
+				fos.write(bs, 0, bs.length);
+				fos.close();
 
-			File stlfile = File.createTempFile(getID().toString(), ".stl");
-			String command = path + " -o " + stlfile;
-			command += " " + tempfile.getAbsolutePath();
-			log.info("Running " + command);
-			ProcessBuilder pb = new ProcessBuilder(path, "-o", stlfile.getAbsolutePath(), tempfile.getAbsolutePath());
-			Process e = pb.start();
+				log.info("SCAD file " + tempfile);
+				log.info("OpenSCAD " + path);
 
-			readStream(e.getErrorStream());
-			readStream(e.getInputStream());
+				File stlfile = File.createTempFile(getID().toString(), ".stl");
+				String command = path + " -o " + stlfile;
+				command += " " + tempfile.getAbsolutePath();
+				log.info("Running " + command);
+				ProcessBuilder pb = new ProcessBuilder(path.getAbsolutePath(), "-o", stlfile.getAbsolutePath(),
+						tempfile.getAbsolutePath());
+				Process e = pb.start();
 
-			e.waitFor();
+				readStream(e.getErrorStream());
+				readStream(e.getInputStream());
 
-			log.info("Exit value " + e.exitValue());
-			return stlfile;
+				e.waitFor();
+
+				log.info("Exit value " + e.exitValue());
+				return stlfile;
+			}
+		} else {
+			log.error("openscad doesn't exist");
+			return null;
 		}
 	}
 
