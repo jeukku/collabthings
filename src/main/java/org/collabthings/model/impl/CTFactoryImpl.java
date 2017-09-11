@@ -98,8 +98,9 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 		WObject b = org.add("content");
 		b.addValue(VALUENAME_NAME, getName());
 
-		if (getEnvironment() != null) {
-			b.addValue(VALUENAME_ENVIRONMENTID, getEnvironment().getID());
+		CTEnvironment environment = getEnvironment();
+		if (environment != null) {
+			b.addValue(VALUENAME_ENVIRONMENTID, environment.getID());
 		}
 
 		addVectorBean(b, VALUENAME_SPAWNLOCATION, tooluserspawnlocation);
@@ -172,12 +173,14 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 
 	@Override
 	public Set<String> getScripts() {
-		return getEnvironment().getScripts();
+		CTEnvironment environment = getEnvironment();
+		return environment != null ? environment.getScripts() : null;
 	}
 
 	@Override
 	public CTScript getScript(String string) {
-		return getEnvironment().getScript(string.toLowerCase());
+		CTEnvironment environment = getEnvironment();
+		return environment != null ? environment.getScript(string.toLowerCase()) : null;
 	}
 
 	private ServiceObject getServiceObject() {
@@ -216,7 +219,8 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 
 	@Override
 	public boolean isReady() {
-		if (!getEnvironment().isReady()) {
+		CTEnvironment environment = getEnvironment();
+		if (environment == null || !environment.isReady()) {
 			return false;
 		}
 
@@ -225,8 +229,13 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 
 	@Override
 	public CTScript addScript(String scriptname, CTScript ctScript) {
-		getEnvironment().addScript(scriptname.toLowerCase(), ctScript);
-		return ctScript;
+		CTEnvironment environment = getEnvironment();
+		if (environment != null) {
+			environment.addScript(scriptname.toLowerCase(), ctScript);
+			return ctScript;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -235,7 +244,11 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 			model.save();
 		}
 
-		getEnvironment().save();
+		CTEnvironment environment = getEnvironment();
+		if (environment != null) {
+			environment.save();
+		}
+		
 		getServiceObject().save();
 
 		for (CTAttachedFactory cf : getFactoryMap().values()) {
@@ -244,8 +257,9 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	}
 
 	public CTBinaryModel getModel() {
-		if (model == null && bean != null) {
-			WStringID modelid = getContent().getIDValue(VALUENAME_MODELID);
+		WObject content = getContent();
+		if (model == null && bean != null && content != null) {
+			WStringID modelid = content.getIDValue(VALUENAME_MODELID);
 			if (modelid != null) {
 				model = client.getObjectFactory().getModel(modelid);
 			}
@@ -265,7 +279,11 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 			cf.getFactory().publish();
 		}
 
-		getEnvironment().publish();
+		CTEnvironment environment = getEnvironment();
+		if (environment != null) {
+			environment.publish();
+		}
+
 		getServiceObject().publish();
 
 		client.publish(getName(), this);
@@ -325,9 +343,13 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 			factories = new HashMap<>();
 		}
 
-		if (factories.isEmpty() && bean != null) {
+		if (!factories.isEmpty()) {
+			return factories;
+		}
 
-			List<WObject> bcfs = getContent().getObjectList("factories");
+		WObject content = getContent();
+		if (bean != null && content != null) {
+			List<WObject> bcfs = content.getObjectList("factories");
 			for (WObject bchildfactory : bcfs) {
 				CTFactoryImpl f = new CTFactoryImpl(this.client);
 
@@ -354,14 +376,21 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	}
 
 	public CTTool getTool(String name) {
-		return getEnvironment().getTool(name);
+		CTEnvironment environment = getEnvironment();
+		if (environment != null) {
+			return environment.getTool(name);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public CTEnvironment getEnvironment() {
-		if (env == null && bean != null) {
-			env = new CTEnvironmentImpl(client, getContent().getIDValue(VALUENAME_ENVIRONMENTID));
+		WObject content = getContent();
+		if (env == null && bean != null && content != null) {
+			env = new CTEnvironmentImpl(client, content.getIDValue(VALUENAME_ENVIRONMENTID));
 		}
+
 		return env;
 	}
 
