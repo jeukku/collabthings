@@ -34,14 +34,15 @@ import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.WStringID;
-import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
+import waazdoh.common.WObjectID;
+import waazdoh.common.WStringID;
 
 public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public static final String BEANNAME = "part";
 	private static final String VALUENAME_NAME = "name";
 	private static final String VALUENAME_MODELID = "id";
+	private static final String VALUENAME_MODEL = "model";
 	private static final String VALUENAME_SHORTNAME = "shortname";
 	private static final String VALUENAME_BUILDERID = "builder";
 	private static final String VALUENAME_RESOURCEUSAGE = "resources";
@@ -93,11 +94,11 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			b.addValue(VALUENAME_SHORTNAME, getShortname());
 
 			if (model != null) {
-				WObject md = b.add("model");
+				WObject md = b.add(VALUENAME_MODEL);
 				md.addValue("id", model.getID());
 				md.addValue("type", model.getModelType());
 			} else if (modeldata != null) {
-				WObject md = b.add("model");
+				WObject md = b.add(VALUENAME_MODEL);
 				WStringID scadid = modeldata.getIDValue(VALUENAME_MODELID);
 				md.addValue("id", scadid.toString());
 				String type = modeldata.getValue("type");
@@ -139,7 +140,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			for (CTSubPart cp : sps) {
 				lookat.addLocal(cp.getLocation());
 			}
-			if (sps.size() > 0) {
+			if (!sps.isEmpty()) {
 				lookat.multLocal(1.0f / sps.size());
 			}
 			viewingproperties.setLookAt(lookat);
@@ -170,7 +171,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 		name = bean.getValue(VALUENAME_NAME);
 		shortname = bean.getValue(VALUENAME_SHORTNAME);
 
-		modeldata = bean.get("model");
+		modeldata = bean.get(VALUENAME_MODEL);
 
 		parseBuilder(bean.getValue(VALUENAME_BUILDERID));
 
@@ -239,7 +240,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				if (!model.getID().getStringID().equals(nmodelid)) {
 					setChanged();
 				}
-				model.addChangeListener((e) -> changed(e));
+				model.addChangeListener(this::changed);
 			}
 		}
 	}
@@ -266,7 +267,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private synchronized void addPart(CTSubPartImpl subpart) {
 		getLog().info("addPart " + subpart);
 		subparts.add(subpart);
-		subpart.addChangeListener((e) -> {
+		subpart.addChangeListener(e -> {
 			if (!e.isHandled(this)) {
 				e.addHandled(this);
 				changed(e);
@@ -358,9 +359,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				builder.save();
 			}
 
-			subparts.parallelStream().forEach(
-
-					subpart -> subpart.save());
+			subparts.parallelStream().forEach(CTSubPart::save);
 
 			updateResourceUsage();
 
@@ -382,9 +381,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				builder.publish();
 			}
 
-			subparts.parallelStream().forEach(
-
-					subpart -> subpart.publish());
+			subparts.parallelStream().forEach(CTSubPart::publish);
 
 			getServiceObject().publish();
 
@@ -484,7 +481,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public CTHeightmap newHeightmap() {
 		CTHeightmapImpl map = new CTHeightmapImpl(env);
 		model = map;
-		model.addChangeListener((e) -> changed(e));
+		model.addChangeListener(this::changed);
 
 		storedobject = null;
 		builder = null;
@@ -498,7 +495,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public CTOpenSCAD newSCAD() {
 		CTOpenSCADImpl scad = new CTOpenSCADImpl(env);
 		model = scad;
-		model.addChangeListener((e) -> changed(e));
+		model.addChangeListener(this::changed);
 
 		changed(new CTEvent("new SCAD"));
 		return scad;
@@ -510,7 +507,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 		updateResourceUsage();
 
-		listeners.stream().forEach((l) -> l.event(e));
+		listeners.stream().forEach(l -> l.event(e));
 	}
 
 	@Override
