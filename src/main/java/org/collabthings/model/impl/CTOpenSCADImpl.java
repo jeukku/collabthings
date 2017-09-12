@@ -166,6 +166,8 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 		String spath = client.getPreferences().get(CTConstants.PREFERENCES_OPENSCADPATH, "openscad");
 		File path = new File(spath);
 
+		path = checkUnixOpenscadPaths(path);
+
 		if (path.isFile()) {
 			File tempfile = File.createTempFile("collabthings", ".scad");
 			try (FileOutputStream fos = new FileOutputStream(tempfile)) {
@@ -197,6 +199,18 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 			log.error("openscad doesn't exist");
 			return null;
 		}
+	}
+
+	private File checkUnixOpenscadPaths(final File orgpath) {
+		File path = orgpath;
+		if (!path.isFile()) {
+			path = new File("/usr/bin/openscad");
+		}
+
+		if (!path.isFile()) {
+			path = new File("/usr/local/bin/openscad");
+		}
+		return path;
 	}
 
 	private void readStream(InputStream errorStream) throws UnsupportedEncodingException {
