@@ -72,6 +72,22 @@ public final class TestPart extends CTTestCase {
 				benv.getObjectFactory().getPart(bpart.getID().getStringID()).getObject().toYaml());
 
 		assertEquals(bpart, benv.getObjectFactory().getPart(bpart.getID().getStringID()));
+
+		// TODO this is a mess
+		assertFalse(bsubpart.isBookmarkUpdated());
+		bsubpart.setPartBookmark(benv.getClient().getService().getUser().getUsername() + "/parts/joo");
+		assertFalse(bsubpart.isBookmarkUpdated());
+		benv.getStorage().writeToStorage("parts", "joo", bsubpart.getPart().getID().toString());
+		assertFalse(bsubpart.isBookmarkUpdated());
+
+		bsubpart.getPart().setName("changed");
+		benv.getStorage().writeToStorage("parts", "joo", bsubpart.getPart().getID().toString());
+		assertTrue(bsubpart.isBookmarkUpdated());
+
+		bsubpart.updateBookmark();
+		assertFalse(bsubpart.isBookmarkUpdated());
+
+		assertFalse(part.getObject().toYaml().equals(bpart.getObject().toYaml()));
 	}
 
 	public void testPublishAndSearch() {
@@ -155,7 +171,8 @@ public final class TestPart extends CTTestCase {
 		CTClient e = getNewClient();
 		CTPart p = e.getObjectFactory().getPart();
 		CTBinaryModel bm = p.newBinaryModel();
-		bm.importModel(org.collabthings.model.impl.CTConstants.VALUE_TYPE_X3D, getClass().getResourceAsStream(cubemodelpath));
+		bm.importModel(org.collabthings.model.impl.CTConstants.VALUE_TYPE_X3D,
+				getClass().getResourceAsStream(cubemodelpath));
 		assertNotNull(p.getModel());
 		assertTrue(bm.getContent().length > 0);
 	}
