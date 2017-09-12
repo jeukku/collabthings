@@ -16,7 +16,7 @@ public final class TestClient extends CTTestCase {
 		assertNotNull(c.getService());
 		assertNotNull(c.getClient().getUser(c.getClient().getUserID()));
 
-		StringBuffer sb = new StringBuffer("Shouldn't be empty");
+		StringBuilder sb = new StringBuilder("Shouldn't be empty");
 
 		c.addErrorListener(new CTErrorListener() {
 
