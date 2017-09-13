@@ -15,6 +15,13 @@ public final class TestAppPreferences extends CTTestCase {
 		assertEquals(string, p.get("tested", string));
 	}
 
+	public void testWaazdoh() {
+		AppPreferences p = getPreferences();
+		String value = UUID.randomUUID().toString();
+		System.setProperty("waazdoh.testname", value);
+		assertEquals(value, p.get("testname", "defaultvalue"));
+	}
+
 	public void testDefaultValue() {
 		AppPreferences p = getPreferences();
 		String testvalue = "testvalue_" + UUID.randomUUID();
