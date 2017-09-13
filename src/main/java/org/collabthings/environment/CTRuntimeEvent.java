@@ -14,7 +14,7 @@ package org.collabthings.environment;
 import org.collabthings.model.CTRuntimeObject;
 import org.collabthings.model.CTValues;
 
-public class CTRuntimeEvent {
+final public class CTRuntimeEvent {
 
 	private CTValues values;
 	private String name;

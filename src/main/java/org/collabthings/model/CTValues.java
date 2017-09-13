@@ -14,8 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class CTValues {
+final public class CTValues {
 	private Map<String, Object> values = new HashMap<>();
+	
 	public CTValues(Object... nvalues) {
 		for (int i = 0; i < nvalues.length; i += 2) {
 			put("" + nvalues[i], nvalues[i + 1]);

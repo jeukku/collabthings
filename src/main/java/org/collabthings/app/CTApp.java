@@ -43,25 +43,30 @@ public class CTApp {
 	private FileBeanStorage beanstorage;
 
 	private List<CTTask> tasks = new LinkedList<>();
+	private Thread tasksrunner;
 
 	public CTApp() throws MalformedURLException {
 		preferences = new AppPreferences(CTApp.PREFERENCES_PREFIX);
 		serviceurl = preferences.get(WPreferences.SERVICE_URL, "");
 		beanstorage = new FileBeanStorage(preferences);
 		binarysource = new P2PBinarySource(preferences, beanstorage, true);
+	}
 
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					runTasks();
-				} catch (InterruptedException e) {
-					log.error(this, "runTasks", e);
-					Thread.currentThread().interrupt();
+	private void startTasks() {
+		if (tasksrunner != null) {
+			tasksrunner = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						runTasks();
+					} catch (InterruptedException e) {
+						log.error(this, "runTasks", e);
+						Thread.currentThread().interrupt();
+					}
 				}
-			}
-		}, "runTasks");
-		t.start();
+			}, "runTasks");
+			tasksrunner.start();
+		}
 	}
 
 	public void addClientListener(WClientListener listener) {
@@ -130,6 +135,7 @@ public class CTApp {
 
 	public void addTask(CTTask task) {
 		synchronized (tasks) {
+			startTasks();
 			tasks.add(task);
 		}
 	}
