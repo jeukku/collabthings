@@ -27,9 +27,9 @@ public class LOrientation {
 	private double angle = 0.0;
 
 	public LOrientation(WObject o) {
-		getLocation().set(CTMath.parseVector(o.get(VALUENAME_ORIENTATION_LOCATION)));
-		getNormal().set(CTMath.parseVector(o.get(VALUENAME_ORIENTATION_NORMAL)));
-		setAngle(o.getDoubleValue(VALUENAME_ORIENTATION_ANGLE));
+		this.location.set(CTMath.parseVector(o.get(VALUENAME_ORIENTATION_LOCATION)));
+		this.normal.set(CTMath.parseVector(o.get(VALUENAME_ORIENTATION_NORMAL)));
+		this.angle = o.getDoubleValue(VALUENAME_ORIENTATION_ANGLE);
 	}
 
 	public LOrientation() {
@@ -86,9 +86,9 @@ public class LOrientation {
 	}
 
 	public Transform getTransformation() {
-		Quaternion quaternion = new Quaternion((float) (normal.x * Math.sin(angle / 2)), (float) (normal.y * Math.sin(angle / 2)),
-				(float) (normal.z * Math.sin(angle / 2)), (float) (Math.cos(CTMath.limitAngle(angle / 2))));
-		return new Transform(this.location,
-				quaternion);
+		Quaternion quaternion = new Quaternion((float) (normal.x * Math.sin(angle / 2)),
+				(float) (normal.y * Math.sin(angle / 2)), (float) (normal.z * Math.sin(angle / 2)),
+				(float) (Math.cos(CTMath.limitAngle(angle / 2))));
+		return new Transform(this.location, quaternion);
 	}
 }
