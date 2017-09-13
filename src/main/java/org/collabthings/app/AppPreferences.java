@@ -22,19 +22,24 @@ import waazdoh.common.WPreferences;
 import waazdoh.common.util.PropertiesPreferences;
 
 public final class AppPreferences implements WPreferences {
+	private static final String DEFAULT_PROPERTIESFILE = "properties.ini";
 	private PropertiesPreferences p;
 	private WLogger log = WLogger.getLogger(this);
 	private Properties defaults;
 
 	public AppPreferences(String prefix) {
-		init(prefix);
+		init(prefix, DEFAULT_PROPERTIESFILE);
+	}
+
+	public AppPreferences(String prefix, String properties) {
+		init(prefix, properties);
 	}
 
 	public AppPreferences() {
-		init(null);
+		init(null, DEFAULT_PROPERTIESFILE);
 	}
 
-	private void init(final String nprefix) {
+	private void init(final String nprefix, String properties) {
 		String propertyprefix = System.getProperty("waazdoh.prefix");
 		String prefix = nprefix;
 		if (prefix == null || propertyprefix != null) {
@@ -46,17 +51,17 @@ public final class AppPreferences implements WPreferences {
 		}
 
 		p = new PropertiesPreferences(prefix);
-		defaults = getDefaultValues();
+		defaults = getDefaultValues(properties);
 	}
 
-	private Properties getDefaultValues() {
+	private Properties getDefaultValues(String name) {
 		Properties properties = new Properties();
 		try {
-			InputStream is = ClassLoader.getSystemResourceAsStream("properties.ini");
+			InputStream is = ClassLoader.getSystemResourceAsStream(name);
 			if (is != null) {
 				properties.load(is);
 			} else {
-				properties.load(new FileReader("properties.ini"));
+				properties.load(new FileReader(name));
 			}
 		} catch (IOException e) {
 			WLogger.getLogger(this).error(e);
@@ -78,8 +83,6 @@ public final class AppPreferences implements WPreferences {
 		String value = p.get(name, defaultvalue);
 		if (System.getProperty("waazdoh." + name) != null) {
 			value = System.getProperty("waazdoh." + name);
-		} else if (value == null) {
-			value = defaultvalue;
 		}
 
 		String parsed = parse(name, value);
