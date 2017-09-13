@@ -13,6 +13,7 @@ public final class TestAppPreferences extends CTTestCase {
 		String string = "" + new Date();
 		p.set("tested", string);
 		assertEquals(string, p.get("tested", string));
+		assertTrue(p.getNames().size() > 0);
 	}
 
 	public void testWaazdoh() {
