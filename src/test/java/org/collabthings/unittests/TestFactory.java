@@ -61,6 +61,7 @@ public final class TestFactory extends CTTestCase {
 		CTScript bscript = bfact.getScript("test");
 		assertNotNull(bscript);
 		assertEquals(ctScript.getScript(), bscript.getScript());
+		assertEquals(2, bfact.getScripts().size());
 		//
 		assertEquals(bfact.getBoundingBox().getA(), f.getBoundingBox().getA());
 		assertEquals(bfact.getBoundingBox().getB(), f.getBoundingBox().getB());
