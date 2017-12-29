@@ -13,14 +13,14 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8
+		<project.reporting.outputEncoding>UTF-
 		</project.reporting.outputEncoding>
 	</properties>
 
 	<distributionManagement>
 		<repository>
 			<id>waazdoh-ssh-repository</id>
-			<url>sftp://maven.waazdoh.com/opt/maven/repository</url>
+			<url>sftp://maven@maven.waazdoh.com/opt/maven/repository</url>
 		</repository>
 	</distributionManagement>
 
