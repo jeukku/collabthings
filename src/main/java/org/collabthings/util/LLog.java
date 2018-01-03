@@ -11,8 +11,6 @@
 
 package org.collabthings.util;
 
-import java.net.URISyntaxException;
-
 import org.apache.log4j.Logger;
 
 public class LLog {

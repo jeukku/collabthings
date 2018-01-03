@@ -23,7 +23,7 @@ import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 
-import waazdoh.common.WStringID;
+import waazdoh.datamodel.WStringID;
 
 public interface CTObjectFactory {
 

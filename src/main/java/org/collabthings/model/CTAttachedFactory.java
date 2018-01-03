@@ -15,7 +15,7 @@ import org.collabthings.math.LOrientation;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.WObject;
+import waazdoh.datamodel.WObject;
 
 public class CTAttachedFactory {
 	private CTFactory factory;

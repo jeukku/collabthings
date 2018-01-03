@@ -22,8 +22,8 @@ import org.collabthings.model.impl.CTConstants;
 
 import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
-import waazdoh.common.WPreferences;
-import waazdoh.common.client.WServiceClient;
+import waazdoh.client.WServiceClient;
+import waazdoh.client.utils.WPreferences;
 
 public interface CTClient {
 	CTObjectFactory getObjectFactory();
@@ -34,6 +34,8 @@ public interface CTClient {
 
 	WClient getClient();
 
+	WServiceClient getService();
+
 	BinarySource getBinarySource();
 
 	void stop();
@@ -43,8 +45,6 @@ public interface CTClient {
 	WPreferences getPreferences();
 
 	String getGlobalSetting(String name);
-
-	WServiceClient getService();
 
 	CTStorage getStorage();
 

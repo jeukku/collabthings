@@ -4,7 +4,7 @@ import org.collabthings.CTTestCase;
 import org.collabthings.simulation.CTStepRunner;
 
 import waazdoh.client.utils.ConditionWaiter;
-import waazdoh.common.WTimedFlag;
+import waazdoh.client.utils.WTimedFlag;
 
 public final class TestStepRunner extends CTTestCase {
 	class Values {

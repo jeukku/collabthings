@@ -32,7 +32,7 @@ import org.collabthings.util.PrintOut;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.WObjectID;
+import waazdoh.datamodel.WObjectID;
 
 public class CTRunEnvironmentImpl implements CTRunEnvironment {
 	private Map<String, String> params = new HashMap<>();

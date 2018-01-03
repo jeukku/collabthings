@@ -16,9 +16,9 @@ import java.util.List;
 import org.collabthings.CTStorage;
 import org.collabthings.util.LLog;
 
-import waazdoh.common.client.WServiceClient;
-import waazdoh.common.vo.StorageAreaVO;
-import waazdoh.common.vo.UserVO;
+import waazdoh.client.WServiceClient;
+import waazdoh.datamodel.StorageAreaVO;
+import waazdoh.datamodel.UserVO;
 
 public class CTStorageImpl implements CTStorage {
 

@@ -9,16 +9,15 @@ import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
-import org.collabthings.model.CTValues;
 import org.collabthings.model.impl.CTConstants;
 import org.collabthings.model.impl.CTPartImpl;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.WStringID;
-import waazdoh.common.WObject;
-import waazdoh.common.vo.ObjectVO;
+import waazdoh.datamodel.ObjectVO;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WStringID;
 
 public final class TestPart extends CTTestCase {
 

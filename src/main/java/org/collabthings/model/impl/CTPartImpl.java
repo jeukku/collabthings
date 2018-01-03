@@ -34,9 +34,9 @@ import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.WObject;
-import waazdoh.common.WObjectID;
-import waazdoh.common.WStringID;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WObjectID;
+import waazdoh.datamodel.WStringID;
 
 public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public static final String BEANNAME = "part";

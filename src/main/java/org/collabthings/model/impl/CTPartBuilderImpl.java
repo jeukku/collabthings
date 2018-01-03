@@ -20,9 +20,9 @@ import org.collabthings.model.CTScript;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.WStringID;
-import waazdoh.common.WObjectID;
-import waazdoh.common.WObject;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WObjectID;
+import waazdoh.datamodel.WStringID;
 
 public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 	public static final String BEANNAME = "partbuilder";

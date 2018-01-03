@@ -17,11 +17,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.commons.io.IOUtils;
-import org.collabthings.CTClient;
 import org.collabthings.model.CTTriangle;
 import org.collabthings.model.CTTriangleMesh;
 import org.collabthings.model.impl.CTTriangleMeshImpl;

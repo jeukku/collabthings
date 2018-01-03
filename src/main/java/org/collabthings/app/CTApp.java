@@ -23,13 +23,14 @@ import org.collabthings.model.CTPart;
 import org.collabthings.util.CTTask;
 import org.collabthings.util.LLog;
 
+import waazdoh.client.BeanStorage;
+import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
 import waazdoh.client.WClientListener;
+import waazdoh.client.ipfs.IPFSBinarySource;
+import waazdoh.client.ipfs.IPFSServiceClient;
 import waazdoh.client.storage.local.FileBeanStorage;
-import waazdoh.common.BeanStorage;
-import waazdoh.common.WPreferences;
-import waazdoh.common.client.WRestServiceClient;
-import waazdoh.cp2p.P2PBinarySource;
+import waazdoh.client.utils.WPreferences;
 
 public class CTApp {
 	private static final String PREFERENCES_PREFIX = "ct";
@@ -38,7 +39,7 @@ public class CTApp {
 	private LLog log = LLog.getLogger(this);
 	private AppPreferences preferences;
 	private String serviceurl;
-	private P2PBinarySource binarysource;
+	private BinarySource binarysource;
 	private boolean closed;
 	private FileBeanStorage beanstorage;
 
@@ -49,7 +50,7 @@ public class CTApp {
 		preferences = new AppPreferences(CTApp.PREFERENCES_PREFIX);
 		serviceurl = preferences.get(WPreferences.SERVICE_URL, "");
 		beanstorage = new FileBeanStorage(preferences);
-		binarysource = new P2PBinarySource(preferences, beanstorage, true);
+		binarysource = new IPFSBinarySource(preferences, beanstorage);
 	}
 
 	private void startTasks() {
@@ -75,8 +76,7 @@ public class CTApp {
 
 	public synchronized CTClient getLClient() {
 		if (client == null) {
-			client = new CTClientImpl(preferences, binarysource, beanstorage,
-					new WRestServiceClient(serviceurl, beanstorage));
+			client = new CTClientImpl(preferences, binarysource, beanstorage, new IPFSServiceClient(preferences));
 		}
 		return client;
 	}

@@ -4,7 +4,7 @@ import org.collabthings.model.CTMaterial;
 import org.collabthings.model.impl.CTMaterialImpl;
 
 import junit.framework.TestCase;
-import waazdoh.common.WObject;
+import waazdoh.datamodel.WObject;
 
 public class TestMaterial extends TestCase {
 

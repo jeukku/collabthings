@@ -11,7 +11,7 @@
 
 package org.collabthings.util;
 
-import waazdoh.common.WStringID;
+import waazdoh.datamodel.WStringID;
 
 public class ShortHashID {
 

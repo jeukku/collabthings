@@ -39,7 +39,7 @@ import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 
 import waazdoh.client.utils.ConditionWaiter;
-import waazdoh.common.WStringID;
+import waazdoh.datamodel.WStringID;
 
 public class CTFactoryState implements CTRuntimeObject {
 	private static final long DEFAULT_WAIT = 100;

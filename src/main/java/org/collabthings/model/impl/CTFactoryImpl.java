@@ -32,10 +32,10 @@ import com.jme3.math.Vector3f;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.WStringID;
-import waazdoh.common.WObjectID;
-import waazdoh.common.WLogger;
-import waazdoh.common.WObject;
+import waazdoh.client.utils.WLogger;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WObjectID;
+import waazdoh.datamodel.WStringID;
 
 public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	public static final String BEANNAME = "factory";

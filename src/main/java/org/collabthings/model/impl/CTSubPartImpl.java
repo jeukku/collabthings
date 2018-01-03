@@ -26,8 +26,8 @@ import org.collabthings.util.LLog;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.WStringID;
-import waazdoh.common.WObject;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WStringID;
 
 public final class CTSubPartImpl implements CTSubPart {
 	private CTPart part;

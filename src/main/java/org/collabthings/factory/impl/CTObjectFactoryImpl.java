@@ -44,9 +44,9 @@ import org.eclipse.jetty.util.ArrayUtil;
 
 import difflib.DiffUtils;
 import difflib.Patch;
-import waazdoh.common.WObject;
-import waazdoh.common.WStringID;
-import waazdoh.common.vo.ObjectVO;
+import waazdoh.datamodel.ObjectVO;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WStringID;
 
 public final class CTObjectFactoryImpl implements CTObjectFactory {
 

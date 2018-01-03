@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.collabthings.model;
 
-import waazdoh.common.WObject;
+import waazdoh.datamodel.WObject;
 
 public interface CTMaterial {
 

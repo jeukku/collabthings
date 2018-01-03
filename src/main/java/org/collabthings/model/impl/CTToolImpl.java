@@ -21,9 +21,9 @@ import org.collabthings.model.CTTool;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
-import waazdoh.common.WStringID;
-import waazdoh.common.WObjectID;
-import waazdoh.common.WObject;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WObjectID;
+import waazdoh.datamodel.WStringID;
 
 public final class CTToolImpl implements ServiceObjectData, CTTool {
 	private static final String BEANNAME = "tool";

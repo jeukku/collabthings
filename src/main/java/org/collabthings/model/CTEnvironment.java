@@ -16,7 +16,7 @@ import org.collabthings.util.PrintOut;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.WObjectID;
+import waazdoh.datamodel.WObjectID;
 
 public interface CTEnvironment extends CTObject {
 

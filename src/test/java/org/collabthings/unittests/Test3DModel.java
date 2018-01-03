@@ -17,9 +17,9 @@ import org.xml.sax.SAXException;
 import com.jme3.math.Vector3f;
 
 import waazdoh.client.utils.ConditionWaiter;
-import waazdoh.common.WStringID;
-import waazdoh.common.WData;
-import waazdoh.common.WXML;
+import waazdoh.datamodel.WData;
+import waazdoh.datamodel.WStringID;
+import waazdoh.datamodel.WXML;
 
 public final class Test3DModel extends CTTestCase {
 

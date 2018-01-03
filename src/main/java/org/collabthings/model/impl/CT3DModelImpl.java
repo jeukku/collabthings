@@ -42,11 +42,11 @@ import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
 import waazdoh.client.model.WBinaryID;
 import waazdoh.client.model.objects.WBinary;
-import waazdoh.common.WData;
-import waazdoh.common.WObject;
-import waazdoh.common.WObjectID;
-import waazdoh.common.WStringID;
-import waazdoh.common.WXML;
+import waazdoh.datamodel.WData;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WObjectID;
+import waazdoh.datamodel.WStringID;
+import waazdoh.datamodel.WXML;
 
 public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	private static final String BEANNAME = "model3d";

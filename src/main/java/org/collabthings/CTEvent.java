@@ -14,8 +14,6 @@ package org.collabthings;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.collabthings.model.CTObject;
-
 public class CTEvent {
 	private List<Object> os = new LinkedList<>();
 	private String info;

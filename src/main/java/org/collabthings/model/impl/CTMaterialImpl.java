@@ -15,7 +15,7 @@ import java.util.StringTokenizer;
 
 import org.collabthings.model.CTMaterial;
 
-import waazdoh.common.WObject;
+import waazdoh.datamodel.WObject;
 
 public class CTMaterialImpl implements CTMaterial {
 

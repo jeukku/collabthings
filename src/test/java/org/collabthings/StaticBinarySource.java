@@ -8,7 +8,6 @@ import waazdoh.client.ReportingService;
 import waazdoh.client.WClient;
 import waazdoh.client.model.WBinaryID;
 import waazdoh.client.model.objects.WBinary;
-import waazdoh.cp2p.messaging.MMessageHandler;
 
 public class StaticBinarySource implements BinarySource {
 
@@ -90,12 +89,6 @@ public class StaticBinarySource implements BinarySource {
 
 	@Override
 	public void published(WBinaryID id) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addMessageHandler(String messagename, MMessageHandler handler) {
 		// TODO Auto-generated method stub
 
 	}

@@ -1,6 +1,5 @@
 package org.collabthings;
 
-import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,8 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,18 +20,12 @@ import com.jme3.math.Vector3f;
 
 import junit.framework.TestCase;
 import waazdoh.client.BinarySource;
+import waazdoh.client.ipfs.IPFSRunner;
+import waazdoh.client.ipfs.IPFSServiceClient;
 import waazdoh.client.storage.local.FileBeanStorage;
 import waazdoh.client.utils.ConditionWaiter;
-import waazdoh.client.utils.ThreadChecker;
-import waazdoh.common.WPreferences;
-import waazdoh.common.client.WRestServiceClient;
-import waazdoh.common.client.WServiceClient;
-import waazdoh.common.testing.StaticService;
-import waazdoh.common.testing.StaticTestPreferences;
-import waazdoh.common.vo.AppLoginVO;
-import waazdoh.common.vo.StorageAreaVO;
-import waazdoh.cp2p.P2PBinarySource;
-import waazdoh.cp2p.P2PServer;
+import waazdoh.client.utils.StaticTestPreferences;
+import waazdoh.client.utils.WPreferences;
 
 public class CTTestCase extends TestCase {
 	private static final int DEFAULT_WAITTIME = 100;
@@ -77,19 +68,6 @@ public class CTTestCase extends TestCase {
 		this.enablenetwork = false;
 	}
 
-	private void startThreadChecker() {
-		new ThreadChecker(() -> {
-			boolean running = false;
-			for (CTClient e : clients) {
-				if (e.isRunning()) {
-					running = true;
-				}
-			}
-
-			return running;
-		});
-	}
-
 	@Override
 	protected void setUp() throws Exception {
 		log.info("**************** SETUP TEST " + getName() + " ************** ");
@@ -128,95 +106,31 @@ public class CTTestCase extends TestCase {
 		}
 	}
 
-	public CTClient getNewEnv(String email, boolean bind) throws MalformedURLException, SAXException {
+	public CTClient getNewEnv(String username, boolean bind) throws MalformedURLException, SAXException {
 		//
-		WPreferences p = new StaticTestPreferences("cttests", email);
+		WPreferences p = new StaticTestPreferences("cttests", username);
 		beanstorage = new FileBeanStorage(p);
 
-		BinarySource binarysource = enablenetwork ? getBinarySource(p, bind) : new StaticBinarySource();
-		CTClient c = new CTClientImpl(p, binarysource, beanstorage, getTestService(email, p, binarysource));
+		String ipfspath = p.get(IPFSServiceClient.IPFS_LOCALPATH, WPreferences.LOCAL_PATH_DEFAULT + "." + username + "/ipfs");
+		IPFSRunner runner = new IPFSRunner(p, username);
 
-		boolean setsession = c.getClient().setSession(getSession(p));
-		if (setsession) {
-			clients.add(c);
-
-			if (binarysource != null) {
-				ConditionWaiter.wait(() -> {
-					return binarysource.isReady();
-				}, 1000);
-			}
-
+		if (runner.run()) {
+			BinarySource binarysource = enablenetwork ? getBinarySource(p, bind) : new StaticBinarySource();
+			CTClient c = new CTClientImpl(p, binarysource, beanstorage, new IPFSServiceClient(p));
 			return c;
 		} else {
-			AppLoginVO applogin = c.getClient().requestAppLogin();
-			String apploginid = applogin.getId();
-			String url = applogin.getUrl();
-			String apploginurl = url + (url.charAt(url.length() - 1) == '/' ? "" : "/") + apploginid;
-			log.info("applogin url " + apploginurl);
-
-			try {
-				Desktop.getDesktop().browse(new URI(apploginurl + "?username=" + email));
-			} catch (IOException | URISyntaxException e) {
-				log.error(this, "getAppLogin failed to open browser " + url, e);
-			}
-
-			ConditionWaiter.wait(() -> {
-				AppLoginVO al = c.getClient().checkAppLogin(apploginid);
-				if (al.getSessionid() == null) {
-					doWait(4000);
-				}
-				return al.getSessionid() != null;
-			}, 1000000);
-
-			applogin = c.getClient().checkAppLogin(applogin.getId());
-
-			if (applogin != null && applogin.getSessionid() != null) {
-				p.set(WPreferences.PREFERENCES_SESSION, applogin.getSessionid());
-
-				if (binarysource != null) {
-					ConditionWaiter.wait(() -> {
-						return binarysource.isReady();
-					}, 1000);
-				}
-
-				return c;
-			} else {
-				return null;
-			}
+			return null;
 		}
-
 	}
 
 	public BinarySource getBinarySource(WPreferences p, boolean bind) {
-		if (bind) {
-			p.set(P2PServer.DOWNLOAD_EVERYTHING, true);
-		}
-		P2PBinarySource testsource = new P2PBinarySource(p, beanstorage, bind);
+		BinarySource testsource = new StaticBinarySource();
 
 		return testsource;
 	}
 
 	private String getSession(WPreferences p) {
 		return p.get(WPreferences.PREFERENCES_SESSION, "");
-	}
-
-	private WServiceClient getTestService(String username, WPreferences p, BinarySource source) throws SAXException {
-		if (p.getBoolean(CTTestCase.PREFERENCES_RUNAGAINSTSERVICE, false)) {
-			String serviceurl = p.get(WPreferences.SERVICE_URL, "unknown_service");
-			log.info("Service URL " + serviceurl);
-			WRestServiceClient client = new WRestServiceClient(serviceurl,
-					beanstorage);
-			if (client.getUsers().requestAppLogin() != null) {
-				return client;
-			}
-		}
-
-		log.info("Using static service");
-
-		StaticService mockservice = new StaticService(username);
-		mockservice.getStorageArea()
-				.write(new StorageAreaVO("/public/LOT/settings/ct.javascript.forbiddenwords", "forbiddenword"));
-		return mockservice;
 	}
 
 	public void testTrue() {
