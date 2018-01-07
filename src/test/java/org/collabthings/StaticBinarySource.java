@@ -1,18 +1,19 @@
 package org.collabthings;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import waazdoh.client.BinarySource;
 import waazdoh.client.ReportingService;
 import waazdoh.client.WClient;
-import waazdoh.client.model.WBinaryID;
 import waazdoh.client.model.objects.WBinary;
+import waazdoh.datamodel.WStringID;
 
 public class StaticBinarySource implements BinarySource {
 
 	private WClient client;
-	private Map<WBinaryID, WBinary> bins = new HashMap<>();
+	private Map<WStringID, WBinary> bins = new HashMap<>();
 
 	@Override
 	public void close() {
@@ -25,24 +26,20 @@ public class StaticBinarySource implements BinarySource {
 	}
 
 	@Override
-	public void setClient(WClient client) {
-		this.client = client;
-	}
-
-	@Override
-	public WClient getClient() {
-		return client;
-	}
-
-	@Override
-	public WBinary get(WBinaryID streamid) {
-		return bins.get(streamid);
-	}
-
-	@Override
-	public WBinary getOrDownload(WBinaryID binaryid) {
+	public byte[] readData(String ipfsid) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String writeData(InputStream inputStream) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WBinary get(WStringID streamid) {
+		return bins.get(streamid);
 	}
 
 	@Override
@@ -82,13 +79,7 @@ public class StaticBinarySource implements BinarySource {
 	}
 
 	@Override
-	public void startClosing() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void published(WBinaryID id) {
+	public void published(WStringID id) {
 		// TODO Auto-generated method stub
 
 	}
@@ -98,5 +89,4 @@ public class StaticBinarySource implements BinarySource {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

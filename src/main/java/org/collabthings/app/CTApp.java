@@ -24,13 +24,10 @@ import org.collabthings.util.CTTask;
 import org.collabthings.util.LLog;
 
 import waazdoh.client.BeanStorage;
-import waazdoh.client.BinarySource;
 import waazdoh.client.WClient;
 import waazdoh.client.WClientListener;
-import waazdoh.client.ipfs.IPFSBinarySource;
 import waazdoh.client.ipfs.IPFSServiceClient;
 import waazdoh.client.storage.local.FileBeanStorage;
-import waazdoh.client.utils.WPreferences;
 
 public class CTApp {
 	private static final String PREFERENCES_PREFIX = "ct";
@@ -38,8 +35,6 @@ public class CTApp {
 	//
 	private LLog log = LLog.getLogger(this);
 	private AppPreferences preferences;
-	private String serviceurl;
-	private BinarySource binarysource;
 	private boolean closed;
 	private FileBeanStorage beanstorage;
 
@@ -48,9 +43,7 @@ public class CTApp {
 
 	public CTApp() throws MalformedURLException {
 		preferences = new AppPreferences(CTApp.PREFERENCES_PREFIX);
-		serviceurl = preferences.get(WPreferences.SERVICE_URL, "");
 		beanstorage = new FileBeanStorage(preferences);
-		binarysource = new IPFSBinarySource(preferences, beanstorage);
 	}
 
 	private void startTasks() {
@@ -76,7 +69,7 @@ public class CTApp {
 
 	public synchronized CTClient getLClient() {
 		if (client == null) {
-			client = new CTClientImpl(preferences, binarysource, beanstorage, new IPFSServiceClient(preferences));
+			client = new CTClientImpl(preferences, beanstorage, new IPFSServiceClient(preferences));
 		}
 		return client;
 	}
@@ -89,7 +82,6 @@ public class CTApp {
 		log.info("Closing app");
 		closed = true;
 		getLClient().stop();
-		binarysource.close();
 	}
 
 	public boolean isClosed() {

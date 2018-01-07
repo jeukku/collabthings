@@ -57,6 +57,12 @@ public final class TestPart extends CTTestCase {
 		assertEquals(part.getName(), bpart.getName());
 		waitObject(bpart);
 		//
+
+		log.info(((CTBinaryModel) bpart.getModel()).getObject().toText());
+
+		assertEquals(part.getObject().toText(), bpart.getObject().toText());
+
+		assertEquals(m.getObject().toText(), ((CTBinaryModel) bpart.getModel()).getObject().toText());
 		assertEquals(m, bpart.getModel());
 		//
 		CTSubPart bsubpart = bpart.getSubParts().get(0);

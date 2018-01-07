@@ -64,7 +64,8 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 		env = new CTEnvironmentImpl(nclient);
 		factories = new HashMap<>();
 
-		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
+		o = new ServiceObject(BEANNAME, client.getClient().getUserID(), client.getClient().getObjects(), this,
+				client.getVersion(), client.getPrefix());
 		addScript("start", new CTScriptImpl(client));
 		setBoundingBox(new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
 	}
@@ -75,7 +76,8 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 		name = null;
 		factories = null;
 
-		o = new ServiceObject(BEANNAME, client.getClient(), this, client.getVersion(), client.getPrefix());
+		o = new ServiceObject(BEANNAME, client.getClient().getUserID(), client.getClient().getObjects(), this,
+				client.getVersion(), client.getPrefix());
 		return o.load(id);
 	}
 
@@ -248,7 +250,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 		if (environment != null) {
 			environment.save();
 		}
-		
+
 		getServiceObject().save();
 
 		for (CTAttachedFactory cf : getFactoryMap().values()) {

@@ -36,8 +36,6 @@ public interface CTClient {
 
 	WServiceClient getService();
 
-	BinarySource getBinarySource();
-
 	void stop();
 
 	boolean isRunning();
@@ -57,6 +55,8 @@ public interface CTClient {
 	void errorEvent(String error, Exception e);
 
 	CTBookmarks getBookmarks();
+
+	BinarySource getBinarySource();
 
 	void addErrorListener(CTErrorListener listener);
 
@@ -84,5 +84,4 @@ public interface CTClient {
 		}
 		return s;
 	}
-
 }

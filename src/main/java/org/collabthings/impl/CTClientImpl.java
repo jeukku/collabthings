@@ -43,8 +43,8 @@ public final class CTClientImpl implements CTClient {
 	private CTBookmarks bookmarks;
 	private Set<CTErrorListener> errorlisteners = new HashSet<>();
 
-	public CTClientImpl(WPreferences p, BinarySource binarysource, BeanStorage beanstorage, WServiceClient service) {
-		client = new WClient(p, binarysource, beanstorage, service);
+	public CTClientImpl(WPreferences p, BeanStorage beanstorage, WServiceClient service) {
+		client = new WClient(p, service);
 		client.addObjectFilter(o -> CTClient.checkVersion(o.getValue("version")));
 
 		this.factory = new CTObjectFactoryImpl(this);
