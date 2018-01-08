@@ -69,7 +69,9 @@ public class CTApp {
 
 	public synchronized CTClient getLClient() {
 		if (client == null) {
-			client = new CTClientImpl(preferences, beanstorage, new IPFSServiceClient(preferences));
+			IPFSServiceClient service = new IPFSServiceClient(preferences);
+			service.getObjects().addBeanStorage(beanstorage);
+			client = new CTClientImpl(preferences, beanstorage, service);
 		}
 		return client;
 	}

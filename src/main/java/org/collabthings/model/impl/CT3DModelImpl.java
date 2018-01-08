@@ -106,7 +106,11 @@ public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 
 	public void getBean(WObject b) {
 		b.addValue(PARAM_NAME, name);
-		b.addValue(PARAM_BINARYID, "" + getBinary().getID());
+		
+		if (getBinary() != null) {
+			b.addValue(PARAM_BINARYID, "" + getBinary().getID());
+		}
+		
 		b.addValue(PARAM_SCALE, scale);
 		b.add(PARAM_TRANSLATION, CTMath.getBean(translation));
 		b.addValue(PARAM_TYPE, "" + type);

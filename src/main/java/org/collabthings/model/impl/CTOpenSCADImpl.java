@@ -196,7 +196,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 				return stlfile;
 			}
 		} else {
-			log.error("openscad doesn't exist");
+			log.error("openscad doesn't exist (" + path.getAbsolutePath() + ")(" + spath + ")");
 			return null;
 		}
 	}
@@ -273,6 +273,9 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 		WStringID varmodel = content.getIDValue(VARIABLE_MODEL);
 		if (!model.load(varmodel)) {
 			log.info("Loading model failed. Creating it.");
+			
+			loadedscadhash = 0;
+			
 			createModel();
 		} else if (!model.getID().getStringID().equals(varmodel)) {
 			log.info("OpenSCAD loading model with id does not not equal with " + varmodel);
@@ -322,12 +325,19 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 
 	@Override
 	public void publish() {
+		save();
+		
 		getModel().publish();
 		getServiceObject().publish();
 	}
 
 	@Override
 	public void save() {
+		if(getModel()!=null) {
+			getModel().save();
+		}
+		
+		log.info("saving openscad " + getID());
 		getServiceObject().save();
 	}
 
