@@ -215,13 +215,14 @@
 		<dependency>
 			<groupId>org.jmonkeyengine</groupId>
 			<artifactId>jme3-core</artifactId>
-			<version>3.1.0-HEAD-SNAPSHOT</version>
+			<version>3.2.0-stable</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.jmonkeyengine/jme3-lwjgl -->
 		<dependency>
 			<groupId>org.jmonkeyengine</groupId>
 			<artifactId>jme3-lwjgl</artifactId>
-			<version>3.1.0-HEAD-SNAPSHOT</version>
+			<version>3.2.0-stable</version>
 		</dependency>
 
 		<dependency>
@@ -286,5 +287,9 @@
 			<url>https://jitpack.io</url>
 		</repository>
 
+		<repository>
+			<id>jmonkeyengine</id>
+			<url>https://dl.bintray.com/jmonkeyengine/org.jmonkeyengine/</url>
+		</repository>
 	</repositories>
 </project>
