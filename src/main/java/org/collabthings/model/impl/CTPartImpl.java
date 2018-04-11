@@ -465,6 +465,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	@Override
 	public void resetModel() {
 		model = null;
+		modeldata = null;
 		changed(new CTEvent("model reset"));
 	}
 
