@@ -28,6 +28,7 @@ import waazdoh.client.WClient;
 import waazdoh.client.WClientListener;
 import waazdoh.client.ipfs.IPFSServiceClient;
 import waazdoh.client.storage.local.FileBeanStorage;
+import waazdoh.client.utils.WPreferences;
 
 public class CTApp {
 	private static final String PREFERENCES_PREFIX = "ct";
@@ -132,5 +133,9 @@ public class CTApp {
 			startTasks();
 			tasks.add(task);
 		}
+	}
+
+	public WPreferences getPreferences() {
+		return preferences;
 	}
 }
