@@ -23,7 +23,7 @@ import com.jme3.math.Vector3f;
 
 import junit.framework.TestCase;
 import waazdoh.client.BinarySource;
-import waazdoh.client.ipfs.IPFSRunner;
+import waazdoh.client.env.IPFSRunner;
 import waazdoh.client.ipfs.IPFSServiceClient;
 import waazdoh.client.storage.local.FileBeanStorage;
 import waazdoh.client.utils.ConditionWaiter;
