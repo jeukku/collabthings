@@ -1,18 +1,21 @@
 package org.collabthings;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.collabthings.model.impl.CTConstants;
 import org.collabthings.util.LLog;
-
-import com.google.common.hash.HashCode;
+import org.collabthings.util.ShortHashID;
+import org.eclipse.jetty.util.security.Credential.MD5;
 
 import waazdoh.client.BeanStorage;
 import waazdoh.client.utils.WPreferences;
 import waazdoh.common.service.ObjectsService;
 import waazdoh.datamodel.ObjectVO;
 import waazdoh.datamodel.ReturnVO;
+import waazdoh.datamodel.WBytesHash;
 
 public class StaticObjectsService implements ObjectsService {
 
@@ -58,8 +61,13 @@ public class StaticObjectsService implements ObjectsService {
 	}
 
 	private String getHash(String testdata) {
-		HashCode h = HashCode.fromBytes(testdata.getBytes());
-		return "" + h.asLong();
+		try {
+			WBytesHash h = new WBytesHash(testdata.getBytes(CTConstants.CHARSET));
+			return "" + h.toString();
+		} catch (UnsupportedEncodingException e) {
+			log.error(this, "getHash", e);
+			return null;
+		}
 	}
 
 	@Override
