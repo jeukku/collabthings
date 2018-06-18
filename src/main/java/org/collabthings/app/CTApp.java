@@ -48,7 +48,7 @@ public class CTApp {
 	}
 
 	private void startTasks() {
-		if (tasksrunner != null) {
+		if (tasksrunner == null) {
 			tasksrunner = new Thread(new Runnable() {
 				@Override
 				public void run() {
