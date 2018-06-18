@@ -89,7 +89,7 @@ public class CTTestCase extends TestCase {
 
 	protected void createTwoClients() {
 		clientb = getNewClient(true);
-		clienta = getNewClient();
+		clienta = getNewClient(true);
 		assertNotNull(clienta);
 		assertNotNull(clientb);
 
@@ -119,7 +119,9 @@ public class CTTestCase extends TestCase {
 		WPreferences p = new StaticTestPreferences("cttests", username);
 		beanstorage = new FileBeanStorage(p);
 
-		p.set(IPFSServiceClient.IPFS_LOCALPATH, p.get(WPreferences.LOCAL_PATH, "") + "ipfs");
+		//p.set(IPFSServiceClient.IPFS_LOCALPATH, p.get(WPreferences.LOCAL_PATH, "") + "ipfs");
+		p.set(IPFSServiceClient.IPFS_LOCALPATH, System.getProperty("user.home") + "/.ipfs");
+
 		new File(p.get(IPFSServiceClient.IPFS_LOCALPATH, "")).mkdirs();
 
 		if (!bind) {
