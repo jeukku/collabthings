@@ -23,6 +23,7 @@ import com.jme3.math.Vector3f;
 
 import junit.framework.TestCase;
 import waazdoh.client.BinarySource;
+import waazdoh.client.WServiceClient;
 import waazdoh.client.env.IPFSRunner;
 import waazdoh.client.ipfs.IPFSServiceClient;
 import waazdoh.client.storage.local.FileBeanStorage;
@@ -102,9 +103,7 @@ public class CTTestCase extends TestCase {
 		return getNewClient(false);
 	}
 
-	public CTClient getNewClient(boolean forcebind) {
-		// do not bind if the first one.
-		boolean bind = usercounter > 0 || forcebind ? true : false;
+	public CTClient getNewClient(boolean bind) {
 
 		String username = "test_username_" + (usercounter) + "@localhost";
 		usercounter++;
@@ -117,38 +116,36 @@ public class CTTestCase extends TestCase {
 	}
 
 	public CTClient getNewEnv(String username, boolean bind) throws MalformedURLException, SAXException {
-		//
 		WPreferences p = new StaticTestPreferences("cttests", username);
 		beanstorage = new FileBeanStorage(p);
 
 		p.set(IPFSServiceClient.IPFS_LOCALPATH, p.get(WPreferences.LOCAL_PATH, "") + "ipfs");
 		new File(p.get(IPFSServiceClient.IPFS_LOCALPATH, "")).mkdirs();
 
-		IPFSRunner runner = new IPFSRunner(p, username);
-		runners.add(runner);
-
-		if (runner.run()) {
-			IPFSServiceClient ipfs = new IPFSServiceClient(p);
-
-			/*
-			 * try { for (IPFSServiceClient ipfsclient : ipfsclients) { //
-			 * ipfs.connect(ipfsclient.getAddrs()); } } catch (IOException e) {
-			 * log.error(this, "", e); }
-			 */
-
-			ipfsclients.add(ipfs);
-
-			CTClient c = new CTClientImpl(p, beanstorage, ipfs);
+		if (!bind) {
+			CTClient c = new CTClientImpl(p, beanstorage, new CTTestServiceClient(username, p));
 			return c;
 		} else {
-			return null;
+			IPFSRunner runner = new IPFSRunner(p, username);
+			runners.add(runner);
+
+			if (runner.run()) {
+				IPFSServiceClient ipfs = new IPFSServiceClient(p);
+
+				/*
+				 * try { for (IPFSServiceClient ipfsclient : ipfsclients) { //
+				 * ipfs.connect(ipfsclient.getAddrs()); } } catch (IOException e) {
+				 * log.error(this, "", e); }
+				 */
+
+				ipfsclients.add(ipfs);
+
+				CTClient c = new CTClientImpl(p, beanstorage, ipfs);
+				return c;
+			} else {
+				return null;
+			}
 		}
-	}
-
-	public BinarySource getBinarySource(WPreferences p, boolean bind) {
-		BinarySource testsource = new StaticBinarySource();
-
-		return testsource;
 	}
 
 	private String getSession(WPreferences p) {
@@ -168,7 +165,7 @@ public class CTTestCase extends TestCase {
 				throw new RuntimeException("Giving up");
 			}
 		}
-		
+
 		log.info("waitobject done " + obj);
 	}
 
