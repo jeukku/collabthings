@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.collabthings.util.LLog;
 
+import com.google.common.hash.HashCode;
+
 import waazdoh.client.BeanStorage;
 import waazdoh.client.utils.WPreferences;
 import waazdoh.common.service.ObjectsService;
@@ -51,12 +53,13 @@ public class StaticObjectsService implements ObjectsService {
 		objectsmap.put(hash, ret);
 
 		log.info("wrote object with hash " + hash);
-		
+
 		return ret;
 	}
 
 	private String getHash(String testdata) {
-		return "" + testdata.hashCode();
+		HashCode h = HashCode.fromBytes(testdata.getBytes());
+		return "" + h.asLong();
 	}
 
 	@Override
