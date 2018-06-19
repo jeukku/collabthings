@@ -34,7 +34,8 @@ public final class TestFactory extends CTTestCase {
 	}
 
 	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ScriptException {
-		CTClient env = getNewClient(true);
+		boolean bind = true;
+		CTClient env = getNewClient(bind);
 		assertNotNull(env);
 		//
 		CTFactory f = env.getObjectFactory().getFactory();
@@ -52,7 +53,7 @@ public final class TestFactory extends CTTestCase {
 		f.save();
 		f.publish();
 		//
-		CTClient benv = getNewClient(true);
+		CTClient benv = getNewClient(bind);
 		assertNotNull(benv);
 		CTFactory bfact = benv.getObjectFactory().getFactory(f.getID().getStringID());
 		assertEquals(bfact.getName(), f.getName());
