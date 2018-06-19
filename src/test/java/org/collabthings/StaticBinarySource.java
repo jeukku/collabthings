@@ -39,15 +39,19 @@ public class StaticBinarySource implements BinarySource {
 
 	@Override
 	public WBinary get(WStringID streamid) {
-		WBinary b = binaries.get(streamid);
-		if (b == null) {
-			b = newBinary("", "");
-			if (b.load(streamid)) {
-				binaries.put(streamid, b);
-				return b;
+		if (streamid != null) {
+			WBinary b = binaries.get(streamid);
+			if (b == null) {
+				b = newBinary("", "");
+				if (b.load(streamid)) {
+					binaries.put(streamid, b);
+					return b;
+				}
 			}
+			return b;
+		} else {
+			return null;
 		}
-		return b;
 	}
 
 	@Override
