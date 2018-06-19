@@ -56,6 +56,7 @@ public class StaticObjectsService implements ObjectsService {
 		objectsmap.put(hash, ret);
 
 		log.info("wrote object with hash " + hash);
+		log.info("content : " + testdata);
 
 		return ret;
 	}
