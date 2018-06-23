@@ -3,6 +3,7 @@ package org.collabthings.unittests;
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
 import org.collabthings.application.CTApplicationRunner;
+import org.collabthings.application.lines.EnvSetApplicationLine;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTRunEnvironmentImpl;
 import org.collabthings.model.CTApplication;
@@ -51,11 +52,7 @@ public final class TestApplication extends CTTestCase {
 
 	private CTApplication getWorkingAppExample(CTClient env) {
 		CTApplication app = env.getObjectFactory().getApplication();
-		ApplicationLine setline = new ApplicationLine();
-		setline.put("a", "env");
-		setline.put("action", "set");
-		setline.put("testvalue", SCRIPT_ENV_TEST_VALUE);
-
+		ApplicationLine setline = new EnvSetApplicationLine("testvalue", SCRIPT_ENV_TEST_VALUE);
 		app.addApplicationLine(setline);
 		return app;
 	}
@@ -77,7 +74,7 @@ public final class TestApplication extends CTTestCase {
 
 	public void testRuntimeEnvironmentParameters() {
 		CTClient client = getNewClient();
-		CTApplication s = getApplication(client, "content:\n env:\n  set:\n   'test': 'testvalue'");
+		CTApplication s = getApplication(client, "lines:\n  - { a: env, action: set, key: 'test', value: 'testvalue' }");
 
 		assertNotNull(s);
 		CTEnvironment env = new CTEnvironmentImpl(client);
