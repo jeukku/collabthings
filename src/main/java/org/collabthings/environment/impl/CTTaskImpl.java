@@ -11,19 +11,19 @@
 
 package org.collabthings.environment.impl;
 
+import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTEnvironmentTask;
-import org.collabthings.environment.CTScriptRunner;
-import org.collabthings.model.CTValues;
+import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.util.LLog;
 
 import waazdoh.client.utils.ConditionWaiter;
 
 public final class CTTaskImpl implements CTEnvironmentTask {
-	private CTScriptRunner s;
-	private CTValues values;
+	private CTApplicationRunner s;
+	private CTRunEnvironment values;
 	private boolean isrun;
 
-	public CTTaskImpl(CTScriptRunner s2, CTValues values2) {
+	public CTTaskImpl(CTApplicationRunner s2, CTRunEnvironment values2) {
 		this.s = s2;
 		this.values = values2;
 		//

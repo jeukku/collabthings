@@ -16,6 +16,7 @@ public class CTApplicationRunner {
 	private LLog log = LLog.getLogger(this);
 	private CTApplication app;
 	private Map<String, CTInstructionHandler> handlers = new HashMap<>();
+	private String error;
 
 	public CTApplicationRunner(CTApplication app) {
 		this.app = app;
@@ -29,12 +30,14 @@ public class CTApplicationRunner {
 		handlers.put("set", new CTSetHandler());
 	}
 
-	public void run(CTRunEnvironment rune) {
+	public boolean run(CTRunEnvironment rune) {
 		List<ApplicationLine> content = app.getContent();
 
 		for (ApplicationLine s : content) {
 			handle(rune, s);
 		}
+
+		return error == null;
 	}
 
 	public void handle(CTRunEnvironment rune, ApplicationLine line) {
@@ -46,8 +49,13 @@ public class CTApplicationRunner {
 		if (h != null) {
 			h.handle(line, rune);
 		} else {
+			this.error = "" + "Instruction \"" + name + "\" not implemented";
 			throw new RuntimeException("Instruction \"" + name + "\" not implemented");
 		}
+	}
+
+	public String getError() {
+		return this.error;
 	}
 
 }
