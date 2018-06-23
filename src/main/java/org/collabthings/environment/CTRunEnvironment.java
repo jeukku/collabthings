@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.collabthings.CTClient;
 import org.collabthings.model.CTEnvironment;
+import org.collabthings.model.CTObject;
 import org.collabthings.model.CTRuntimeObject;
 import org.collabthings.model.CTValues;
 import org.collabthings.util.LLog;
@@ -57,6 +58,12 @@ public interface CTRunEnvironment {
 
 	boolean isRunning();
 
+	Set<String> getObjectNames();
+
+	void addObject(String string, CTObject o);
+
+	CTObject getObject(String string);
+
 	Set<CTRuntimeObject> getRunObjects();
 
 	void addRunObject(String string, CTRuntimeObject runo);
@@ -64,5 +71,7 @@ public interface CTRunEnvironment {
 	CTRuntimeObject getRunObject(String string);
 
 	void recordEvent(CTRuntimeObject runo, String string, CTValues callvalues);
+
+	void resetValue(String dest);
 
 }

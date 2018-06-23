@@ -180,7 +180,7 @@ public class CTTestCase extends TestCase {
 	}
 
 	protected String loadATestScript(String string) throws IOException {
-		String path = "src/test/js/" + string;
+		String path = "src/test/yml/" + string;
 		return loadTextFile(path);
 	}
 

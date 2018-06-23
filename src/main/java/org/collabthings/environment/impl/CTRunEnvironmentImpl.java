@@ -25,6 +25,7 @@ import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.environment.CTScriptRunner;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.model.CTEnvironment;
+import org.collabthings.model.CTObject;
 import org.collabthings.model.CTRuntimeObject;
 import org.collabthings.model.CTValues;
 import org.collabthings.util.LLog;
@@ -38,7 +39,8 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 	private Map<String, String> params = new HashMap<>();
 	private List<CTEnvironmentTask> tasks = new ArrayList<>();
 	private List<CTEnvironmentTask> runningtasks = new ArrayList<>();
-	private Map<String, CTRuntimeObject> objects = new HashMap<>();
+	private Map<String, CTRuntimeObject> runobjects = new HashMap<>();
+	private Map<String, CTObject> objects = new HashMap<>();
 
 	private CTClient client;
 	//
@@ -94,8 +96,8 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 		}
 
 		po.append("objects:");
-		for (String p : objects.keySet()) {
-			CTRuntimeObject o = objects.get(p);
+		for (String p : runobjects.keySet()) {
+			CTRuntimeObject o = runobjects.get(p);
 			po.append(1, p + " -> " + o.printOut());
 		}
 
@@ -175,6 +177,12 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 	}
 
 	@Override
+	public void resetValue(String key) {
+		params.remove(key);
+		objects.remove(key);
+	}
+
+	@Override
 	public void setParameter(String key, WObjectID id) {
 		setParameter(key, id.getStringID().toString());
 	}
@@ -192,6 +200,21 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 	@Override
 	public void setParameter(String key, String value) {
 		params.put(key, value);
+	}
+
+	@Override
+	public void addObject(String string, CTObject o) {
+		objects.put(string, o);
+	}
+
+	@Override
+	public CTObject getObject(String string) {
+		return objects.get(string);
+	}
+
+	@Override
+	public Set<String> getObjectNames() {
+		return objects.keySet();
 	}
 
 	@Override
@@ -245,12 +268,12 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 
 	@Override
 	public void addRunObject(String string, CTRuntimeObject runtimeo) {
-		this.objects.put(string, runtimeo);
+		this.runobjects.put(string, runtimeo);
 	}
 
 	@Override
 	public Set<CTRuntimeObject> getRunObjects() {
-		return new HashSet<>(this.objects.values());
+		return new HashSet<>(this.runobjects.values());
 	}
 
 	@Override
@@ -268,7 +291,7 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 	public void step(double dtime) {
 		checkTasks();
 		//
-		for (CTRuntimeObject o : this.objects.values()) {
+		for (CTRuntimeObject o : this.runobjects.values()) {
 			o.step(dtime);
 		}
 	}
@@ -276,7 +299,7 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 	@Override
 	public void stop() {
 		stopped = true;
-		for (CTRuntimeObject o : this.objects.values()) {
+		for (CTRuntimeObject o : this.runobjects.values()) {
 			o.stop();
 		}
 	}

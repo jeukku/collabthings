@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.collabthings.CTClient;
 import org.collabthings.factory.CTObjectFactory;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTInfo;
@@ -29,6 +30,7 @@ import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.impl.CT3DModelImpl;
+import org.collabthings.model.impl.CTApplicationImpl;
 import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.model.impl.CTHeightmapImpl;
 import org.collabthings.model.impl.CTMapOfPiecesImpl;
@@ -56,6 +58,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	private List<CTFactoryImpl> factories = new ArrayList<>();
 	private List<CT3DModelImpl> models = new ArrayList<>();
 	private List<CTScriptImpl> scripts = new ArrayList<>();
+	private List<CTApplicationImpl> applications = new ArrayList<>();
 	private List<CTRunEnvironmentBuilder> runtimebuilders = new ArrayList<>();
 	private List<CTPartBuilder> partbuilders = new ArrayList<>();
 	private List<CTOpenSCAD> openscads = new ArrayList<>();
@@ -83,6 +86,45 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	@Override
 	public void addInfoListener(CTInfo info) {
 		infolisteners.add(info);
+	}
+
+	@Override
+	public CTApplication getApplication() {
+		return new CTApplicationImpl(client);
+	}
+
+	@Override
+	public CTApplication getApplication(WStringID appid) {
+		// TODO Auto-generated method stub
+		synchronized (applications) {
+			for (CTApplication builder : applications) {
+				if (builder.getID().getStringID().equals(appid)) {
+					return builder;
+				}
+			}
+
+			CTApplicationImpl app = new CTApplicationImpl(client);
+			if (app.load(appid)) {
+				applications.add(app);
+
+				if (!app.getID().getStringID().equals(appid)) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("Loaded partbuilder doesn't have the id requested. Requested:" + app + " result:"
+							+ app.getID());
+					WObject oservice = client.getService().getObjects().read(appid.toString()).toObject();
+					WObject loadedo = app.getObject();
+					diff(sb, oservice, loadedo);
+
+					log.info(sb.toString());
+				}
+
+				return app;
+			} else {
+				log.info("Failed to load application " + appid);
+				return null;
+			}
+
+		}
 	}
 
 	@Override

@@ -12,7 +12,9 @@ package org.collabthings.model;
 
 public interface CTPartBuilder extends CTObject {
 
-	void setScript(CTScript s);
+	void setApplication(CTApplication a);
+
+	CTApplication getApplication();
 
 	boolean run(CTPart p);
 
@@ -21,7 +23,5 @@ public interface CTPartBuilder extends CTObject {
 	String getName();
 
 	void setName(String string);
-
-	CTScript getScript();
 
 }

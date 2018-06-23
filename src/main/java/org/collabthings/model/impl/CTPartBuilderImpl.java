@@ -12,11 +12,14 @@
 package org.collabthings.model.impl;
 
 import org.collabthings.CTClient;
-import org.collabthings.environment.impl.CTScriptInvoker;
+import org.collabthings.application.CTApplicationRunner;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.impl.CTRunEnvironmentImpl;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
-import org.collabthings.model.CTScript;
+import org.collabthings.util.LLog;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -32,7 +35,7 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 	private static final String VALUE_ENV = "env";
 
 	private CTClient client;
-	private CTScript script;
+	private CTApplication application;
 	private String error;
 
 	private ServiceObject o;
@@ -45,15 +48,22 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 		this.client = client;
 		o = new ServiceObject(BEANNAME, client.getClient(), this, client.getVersion(), client.getPrefix());
 		e = new CTEnvironmentImpl(client);
-		script = new CTScriptImpl(client);
+		application = new CTApplicationImpl(client);
 	}
 
 	@Override
 	public boolean run(CTPart p) {
-		CTScriptInvoker inv = new CTScriptInvoker(script);
-		boolean ret = inv.run("run", e, p);
-		error = inv.getError();
-		return ret;
+		try {
+			CTApplicationRunner runner = new CTApplicationRunner(application);
+			CTRunEnvironment rune = new CTRunEnvironmentImpl(this.client, e);
+			rune.addObject("part", p);
+			runner.run(rune);
+			return true;
+		} catch (RuntimeException e) {
+			LLog.getLogger(this).error("running partbuilder " + getName() + " got " + e);
+			LLog.getLogger(this).error(this, "run", e);
+			return false;
+		}
 	}
 
 	@Override
@@ -72,8 +82,13 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 	}
 
 	@Override
-	public CTScript getScript() {
-		return this.script;
+	public void setApplication(CTApplication a) {
+		this.application = a;
+	}
+
+	@Override
+	public CTApplication getApplication() {
+		return this.application;
 	}
 
 	@Override
@@ -82,15 +97,10 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 	}
 
 	@Override
-	public void setScript(CTScript s) {
-		this.script = s;
-	}
-
-	@Override
 	public void publish() {
 		save();
 
-		script.publish();
+		application.publish();
 		e.publish();
 		o.publish();
 		client.publish(getName(), this);
@@ -98,7 +108,7 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 
 	@Override
 	public void save() {
-		script.save();
+		application.save();
 		e.save();
 		o.save();
 	}
@@ -112,8 +122,8 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 	public WObject getObject() {
 		WObject content = o.getBean();
 
-		if (script != null) {
-			content.addValue(VALUE_SCRIPT, this.script.getID());
+		if (application != null) {
+			content.addValue(VALUE_SCRIPT, this.application.getID());
 		}
 
 		content.addValue(VALUE_NAME, getName());
@@ -125,7 +135,7 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 	@Override
 	public boolean parse(WObject o) {
 		WStringID scriptid = new WStringID(o.getValue(VALUE_SCRIPT));
-		setScript(client.getObjectFactory().getScript(scriptid));
+		setApplication(client.getObjectFactory().getApplication(scriptid));
 		setName(o.getValue(VALUE_NAME));
 		e = new CTEnvironmentImpl(client, new WStringID(o.getValue(VALUE_ENV)));
 		return true;

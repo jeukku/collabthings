@@ -1,0 +1,7 @@
+lines:
+    - { a: log, msg: "Partbuilder running $part;" }
+    - { a: set, action: call, dest: sub1, source: part, method: newSubPart }
+    - { a: log, msg: "Subpart $sub1" }
+    - { a: set, action: call, dest: partname, source: part, method: getName }
+    - { a: log, msg: "Partbuilder done $part; name $partname;" }
+

@@ -11,6 +11,7 @@
 
 package org.collabthings.factory;
 
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTHeightmap;
@@ -64,5 +65,9 @@ public interface CTObjectFactory {
 	CTMapOfPieces getMapOfPieces();
 
 	CTMapOfPieces getMapOfPieces(WStringID bmapid);
+
+	CTApplication getApplication();
+
+	CTApplication getApplication(WStringID appid);
 
 }

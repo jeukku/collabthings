@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
-import org.collabthings.model.CTScript;
 
 public final class TestPartBuilder extends CTTestCase {
 
@@ -20,10 +20,10 @@ public final class TestPartBuilder extends CTTestCase {
 		String name = "PartBuilderTest";
 		pba.setName(name);
 
-		String stext = loadATestScript("partbuilder/test.js");
-		CTScript s = client.getObjectFactory().getScript();
+		String stext = loadATestScript("partbuilder/test.yml");
+		CTApplication s = client.getObjectFactory().getApplication();
 		s.setScript(stext);
-		pba.setScript(s);
+		pba.setApplication(s);
 
 		pba.publish();
 
@@ -31,7 +31,11 @@ public final class TestPartBuilder extends CTTestCase {
 		clientb = getNewClient();
 
 		CTPartBuilder pbb = clientb.getObjectFactory().getPartBuilder(pba.getID().getStringID());
-		assertEquals(pba.getObject().toYaml(), pbb.getObject().toYaml());
+		log.info("pba " + pba.getApplication().getObject().toText());
+		log.info("pbb " + pbb.getApplication().getObject().toText());
+		
+		assertEquals(pba.getApplication().getObject().toText(), pbb.getApplication().getObject().toText());
+		assertEquals(pba.getObject().toText(), pbb.getObject().toText());
 
 		CTPart p = clientb.getObjectFactory().getPart();
 		boolean success = pbb.run(p);
