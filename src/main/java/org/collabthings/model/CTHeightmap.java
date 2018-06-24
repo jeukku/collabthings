@@ -14,7 +14,7 @@ public interface CTHeightmap extends CTModel, CTObject {
 
 	String getApplication();
 
-	void setApplication(String sscripttext);
+	void setApplication(String sapplicationtext);
 
 	boolean isOK();
 

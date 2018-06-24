@@ -51,15 +51,15 @@ public class CTRunEnvironmentBuilderImpl implements CTRunEnvironmentBuilder, Ser
 	public CTRunEnvironmentBuilderImpl(CTClient nclient) {
 		this.client = nclient;
 		env = new CTEnvironmentImpl(nclient);
-		CTApplication initscript = nclient.getObjectFactory().getApplication();
-		initscript.setApplication("function run() {}\nfunction info() {}\n");
+		CTApplication initapplication = nclient.getObjectFactory().getApplication();
+		initapplication.setApplication("function run() {}\nfunction info() {}\n");
 
 		CResourcesReader r = new CResourcesReader("templates/runenvbuilder.js");
 		if (r.isSuccess()) {
-			initscript.setApplication(r.getText());
+			initapplication.setApplication(r.getText());
 		}
 
-		env.addApplication("init", initscript);
+		env.addApplication("init", initapplication);
 
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
 	}

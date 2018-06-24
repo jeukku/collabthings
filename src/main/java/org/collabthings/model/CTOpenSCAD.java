@@ -14,7 +14,7 @@ public interface CTOpenSCAD extends CTObject, CTModel {
 
 	String getError();
 
-	void setApplication(String nscript);
+	void setApplication(String napplication);
 
 	boolean isOK();
 

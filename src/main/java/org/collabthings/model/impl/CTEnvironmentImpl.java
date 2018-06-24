@@ -233,9 +233,9 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	}
 
 	@Override
-	public void addApplication(String scriptname, CTApplication ctApplication) {
+	public void addApplication(String applicationname, CTApplication ctApplication) {
 		synchronized (getApplicationsSet()) {
-			getApplicationsSet().put(scriptname, ctApplication);
+			getApplicationsSet().put(applicationname, ctApplication);
 		}
 	}
 

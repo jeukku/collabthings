@@ -57,9 +57,9 @@ public final class TestFactory extends CTTestCase {
 		assertEquals(bfact.getName(), f.getName());
 		waitObject(bfact);
 		//
-		CTApplication bscript = bfact.getApplication("test");
-		assertNotNull(bscript);
-		assertEquals(ctApplication.getObject().toText(), bscript.getObject().toText());
+		CTApplication bapplication = bfact.getApplication("test");
+		assertNotNull(bapplication);
+		assertEquals(ctApplication.getObject().toText(), bapplication.getObject().toText());
 		assertEquals(2, bfact.getApplications().size());
 		//
 		assertEquals(bfact.getBoundingBox().getA(), f.getBoundingBox().getA());
@@ -108,7 +108,7 @@ public final class TestFactory extends CTTestCase {
 		childf.setName(childfactoryid);
 
 		childf.setName(childfactoryname);
-		childf.addApplication("testscript");
+		childf.addApplication("testapplication");
 		LLog.getLogger(this).info("publishing first " + f.getObject().toYaml());
 
 		f.publish();
@@ -143,7 +143,7 @@ public final class TestFactory extends CTTestCase {
 		CTFactory childf = f.addFactory(childfactoryid).getFactory();
 		String childfactoryname = "some child factory";
 		childf.setName(childfactoryname);
-		childf.addApplication("testscript");
+		childf.addApplication("testapplication");
 		f.publish();
 		//
 		CTClient bc = getNewClient();
@@ -184,8 +184,8 @@ public final class TestFactory extends CTTestCase {
 	public void testAddGetApplication() {
 		CTClient c = getNewClient();
 		CTTool tool = c.getObjectFactory().getTool();
-		CTApplication s = tool.addApplication("testscript");
+		CTApplication s = tool.addApplication("testapplication");
 		assertNotNull(s);
-		assertNotNull(tool.getApplication("testscript"));
+		assertNotNull(tool.getApplication("testapplication"));
 	}
 }

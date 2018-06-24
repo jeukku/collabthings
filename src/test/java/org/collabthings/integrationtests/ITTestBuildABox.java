@@ -1,5 +1,7 @@
 package org.collabthings.integrationtests;
 
+import static org.junit.Assert.assertNotEquals;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -39,8 +41,8 @@ public final class ITTestBuildABox extends CTTestCase {
 	private LLog log = LLog.getLogger(this);
 	private CTPart square;
 
-	public synchronized void testBoxLine() throws NoSuchMethodException, IOException, SAXException, ApplicationException,
-			CTToolException, InterruptedException {
+	public synchronized void testBoxLine() throws NoSuchMethodException, IOException, SAXException,
+			ApplicationException, CTToolException, InterruptedException {
 		CTClient client = getNewClient();
 		info("client " + client);
 
@@ -58,7 +60,8 @@ public final class ITTestBuildABox extends CTTestCase {
 		info("line of boxes " + line);
 		//
 		CTRunEnvironmentBuilder builder = new CTRunEnvironmentBuilderImpl(client);
-		builder.getEnvironment().addApplication("init", loadApplication(new CTApplicationImpl(client), "linefactory_runenv_init.js"));
+		builder.getEnvironment().addApplication("init",
+				loadApplication(new CTApplicationImpl(client), "linefactory_runenv_init.js"));
 		builder.getEnvironment().addApplication("addorder",
 				loadApplication(new CTApplicationImpl(client), "linefactory_runenv_order.js"));
 		builder.getEnvironment().setParameter("partid", line.getID());
@@ -143,7 +146,8 @@ public final class ITTestBuildABox extends CTTestCase {
 
 		CTRunEnvironmentBuilder builder = new CTRunEnvironmentBuilderImpl(client);
 
-		builder.getEnvironment().addApplication("init", loadApplication(new CTApplicationImpl(client), "boxfactory_runenv_init.js"));
+		builder.getEnvironment().addApplication("init",
+				loadApplication(new CTApplicationImpl(client), "boxfactory_runenv_init.js"));
 		builder.getEnvironment().addApplication("addorder",
 				loadApplication(new CTApplicationImpl(client), "boxfactory_runenv_order.js"));
 
@@ -232,7 +236,7 @@ public final class ITTestBuildABox extends CTTestCase {
 		// Create a tool to pick up plates
 		CTTool tool = getPickupTool(client);
 		factory.getEnvironment().addTool("pickuptool", tool);
-		// scripts
+		// applications
 
 		loadApplication(factory.addApplication("moveandattach"), "assembly_moveandattach.js");
 		loadApplication(factory.addApplication("build"), "assembly_build.js");
@@ -265,9 +269,9 @@ public final class ITTestBuildABox extends CTTestCase {
 
 		StorageAreaSearchVO searchvo = new StorageAreaSearchVO();
 		searchvo.setSearchTerm(square.getID().toString());
-		
+
 		List<String> searchValue = client.getService().getStorageArea().searchValue(searchvo);
-		
+
 		info("createPlateSource square search result " + searchValue);
 		platesource.getEnvironment().setParameter("bmplate", searchValue.get(0));
 		loadApplication(platesource.addApplication("order"), "platesource_order.js");
@@ -317,11 +321,12 @@ public final class ITTestBuildABox extends CTTestCase {
 		return box;
 	}
 
-	private CTApplication loadApplication(CTApplication cts, String scriptname) throws IOException {
-		String s = loadATestApplication(scriptname);
+	private CTApplication loadApplication(CTApplication cts, String applicationname) throws IOException {
+		String s = loadATestApplication(applicationname);
 		cts.setApplication(s);
-		cts.setName(scriptname);
-		assertNotNull(cts.getApplication());
+		cts.setName(applicationname);
+		assertNotNull(cts.getLines());
+		assertNotEquals(0, cts.getLines());
 		return cts;
 	}
 }

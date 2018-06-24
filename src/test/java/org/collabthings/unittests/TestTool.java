@@ -56,9 +56,9 @@ public final class TestTool extends CTTestCase {
 		assertEquals(btool.getName(), t.getName());
 		waitObject(btool);
 		//
-		CTApplication bscript = btool.getApplication("test");
-		assertNotNull(bscript);
-		assertEquals(ctApplication.getObject().toText(), bscript.getObject().toText());
+		CTApplication bapplication = btool.getApplication("test");
+		assertNotNull(bapplication);
+		assertEquals(ctApplication.getObject().toText(), bapplication.getObject().toText());
 	}
 
 	public void testNullPart() throws IOException, SAXException {
@@ -97,7 +97,7 @@ public final class TestTool extends CTTestCase {
 	public void testAddGetApplication() {
 		CTClient c = getNewClient();
 		CTTool tool = c.getObjectFactory().getTool();
-		tool.addApplication("testscript");
-		assertNotNull(tool.getApplication("testscript"));
+		tool.addApplication("testapplication");
+		assertNotNull(tool.getApplication("testapplication"));
 	}
 }

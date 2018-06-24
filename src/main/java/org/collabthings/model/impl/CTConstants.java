@@ -31,7 +31,7 @@ public enum CTConstants {
 	public static final String MODELTYPE_BINARY = "binary";
 	
 	// preferences
-	public static final String JAVASCRIPT_FORBIDDENWORDS = "ct.javascript.forbiddenwords";
+	public static final String JAVASCRIPT_FORBIDDENWORDS = "ct.javaapplication.forbiddenwords";
 	public static final String PREFERENCES_OPENSCADPATH = "software.openscad.path";
 	public static final String ERROR_OPENSCADFAILED = "error_openscadfailed";
 

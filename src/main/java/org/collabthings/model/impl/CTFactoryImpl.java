@@ -230,10 +230,10 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	}
 
 	@Override
-	public CTApplication addApplication(String scriptname, CTApplication ctApplication) {
+	public CTApplication addApplication(String applicationname, CTApplication ctApplication) {
 		CTEnvironment environment = getEnvironment();
 		if (environment != null) {
-			environment.addApplication(scriptname.toLowerCase(), ctApplication);
+			environment.addApplication(applicationname.toLowerCase(), ctApplication);
 			return ctApplication;
 		} else {
 			return null;

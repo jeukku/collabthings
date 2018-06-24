@@ -27,9 +27,9 @@ public final class TestEnvironment extends CTTestCase {
 		//
 		CTEnvironmentImpl newe = new CTEnvironmentImpl(c, orge.getServiceObject().getID().getStringID());
 
-		CTApplication loadedscript = newe.getApplication("test");
-		assertNotNull(loadedscript);
-		assertEquals(ctApplication.getObject().toYaml(), loadedscript.getObject().toYaml());
+		CTApplication loadedapplication = newe.getApplication("test");
+		assertNotNull(loadedapplication);
+		assertEquals(ctApplication.getObject().toYaml(), loadedapplication.getObject().toYaml());
 	}
 
 	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ApplicationException {
@@ -43,7 +43,7 @@ public final class TestEnvironment extends CTTestCase {
 		CTApplicationImpl ctApplication = new CTApplicationImpl(c);
 		e.addApplication("test", ctApplication);
 		//
-		e.addApplication("testscript", ctApplication);
+		e.addApplication("testapplication", ctApplication);
 		//
 		e.save();
 		e.publish();
@@ -61,16 +61,16 @@ public final class TestEnvironment extends CTTestCase {
 		CTEnvironmentImpl env = new CTEnvironmentImpl(c);
 		assertNull(env.getApplication("FAIL"));
 		//
-		String scriptname = "testscript";
-		env.addApplication(scriptname, new CTApplicationImpl(c));
-		assertNotNull(env.getApplication(scriptname));
+		String applicationname = "testapplication";
+		env.addApplication(applicationname, new CTApplicationImpl(c));
+		assertNotNull(env.getApplication(applicationname));
 
-		env.renameApplication("testscript", "testscript2");
-		assertNull(env.getApplication("testscript"));
-		assertNotNull(env.getApplication("testscript2"));
+		env.renameApplication("testapplication", "testapplication2");
+		assertNull(env.getApplication("testapplication"));
+		assertNotNull(env.getApplication("testapplication2"));
 
-		env.deleteApplication("testscript2");
-		assertNull(env.getApplication("testscript2"));
+		env.deleteApplication("testapplication2");
+		assertNull(env.getApplication("testapplication2"));
 	}
 
 	public void testAddGetParameter() {

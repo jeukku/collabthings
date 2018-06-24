@@ -11,6 +11,7 @@
 
 package org.collabthings.model.impl;
 
+import org.apache.commons.logging.Log;
 import org.collabthings.CTClient;
 import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTRunEnvironment;
@@ -30,7 +31,7 @@ import waazdoh.datamodel.WStringID;
 public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 	public static final String BEANNAME = "partbuilder";
 
-	private static final String VALUE_SCRIPT = "script";
+	private static final String VALUE_APPLICATION = "application";
 	private static final String VALUE_NAME = "name";
 	private static final String VALUE_ENV = "env";
 
@@ -123,7 +124,7 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 		WObject content = o.getBean();
 
 		if (application != null) {
-			content.addValue(VALUE_SCRIPT, this.application.getID());
+			content.addValue(VALUE_APPLICATION, this.application.getID());
 		}
 
 		content.addValue(VALUE_NAME, getName());
@@ -134,8 +135,13 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 
 	@Override
 	public boolean parse(WObject o) {
-		WStringID scriptid = new WStringID(o.getValue(VALUE_SCRIPT));
-		setApplication(client.getObjectFactory().getApplication(scriptid));
+		String valueapplication = o.getValue(VALUE_APPLICATION);
+		if (valueapplication != null) {
+			WStringID applicationid = new WStringID(valueapplication);
+			setApplication(client.getObjectFactory().getApplication(applicationid));
+		} else if (o.getValue("script") != null) {
+			LLog.getLogger(this).error("not loading script with id " + o.getValue("script"));
+		}
 		setName(o.getValue(VALUE_NAME));
 		e = new CTEnvironmentImpl(client, new WStringID(o.getValue(VALUE_ENV)));
 		return true;

@@ -327,11 +327,11 @@ public class CTFactoryState implements CTRuntimeObject {
 	}
 
 	public CTEnvironmentTask addTask(String task, CTValues values) throws CTRuntimeError {
-		CTApplicationRunner script = getApplication(task);
-		if (script != null) {
-			return runenv.addTask(script, values);
+		CTApplicationRunner application = getApplication(task);
+		if (application != null) {
+			return runenv.addTask(application, values);
 		} else {
-			String message = "addTaks failed. No script called " + task;
+			String message = "addTaks failed. No application called " + task;
 			log.info(message);
 			throw new CTRuntimeError(message);
 		}
@@ -376,12 +376,12 @@ public class CTFactoryState implements CTRuntimeObject {
 	}
 
 	private CTApplicationRunner getApplication(String string) {
-		CTApplication script = runenv.getEnvironment().getApplication(string);
-		if (script == null) {
-			script = getFactory().getApplication(string);
+		CTApplication application = runenv.getEnvironment().getApplication(string);
+		if (application == null) {
+			application = getFactory().getApplication(string);
 		}
 
-		return pool.getApplication(script);
+		return pool.getApplication(application);
 	}
 
 	public CTFactory getFactory() {

@@ -52,7 +52,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	private static final String VARIABLE_MODEL = "model";
 	//
 	private ServiceObject so;
-	private String script;
+	private String application;
 
 	//
 	private LLog log = LLog.getLogger(this);
@@ -72,7 +72,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	private CTListeners listeners = new CTListeners();
 
 	/**
-	 * Creates a new script with random ID.
+	 * Creates a new application with random ID.
 	 * 
 	 * @param env
 	 * @param nmodel
@@ -88,7 +88,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 		b.append("  rotate_extrude()\n");
 		b.append("    translate([1000, 0])\n");
 		b.append("      square(400);\n");
-		script = b.toString();
+		application = b.toString();
 
 		model = new CT3DModelImpl(env);
 	}
@@ -249,7 +249,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	}
 
 	private void getBean(WObject b) {
-		b.setBase64Value(VARIABLE_SCRIPT, script);
+		b.setBase64Value(VARIABLE_SCRIPT, application);
 		b.addValue(VARIABLE_NAME, name);
 		b.addValue(VARIABLE_SCALE, scale);
 		if (model != null) {
@@ -264,7 +264,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 			content = main;
 		}
 
-		script = content.getBase64Value(VARIABLE_SCRIPT);
+		application = content.getBase64Value(VARIABLE_SCRIPT);
 		loadedscadhash = getApplication().hashCode();
 
 		this.name = content.getValue(VARIABLE_NAME);
@@ -284,7 +284,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 			log.info("model now " + model.getObject().toYaml());
 			createModel();
 		}
-		return name != null && script != null;
+		return name != null && application != null;
 	}
 
 	@Override
@@ -293,10 +293,10 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	}
 
 	@Override
-	public void setApplication(final String nscript) {
-		this.script = nscript;
+	public void setApplication(final String napplication) {
+		this.application = napplication;
 		error = null;
-		changed(new CTEvent("script set"));
+		changed(new CTEvent("application set"));
 		so.modified();
 	}
 
@@ -343,7 +343,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 
 	@Override
 	public String getApplication() {
-		return script;
+		return application;
 	}
 
 	@Override

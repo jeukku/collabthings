@@ -79,23 +79,23 @@ public class CTToolState implements CTRuntimeObject {
 		return factory.getParameter(name);
 	}
 
-	public void call(final String scriptname, final CTValues values) throws CTToolException {
+	public void call(final String applicationname, final CTValues values) throws CTToolException {
 
 		CTValues callvalues = values != null ? values.copy() : new CTValues();
 
 		callvalues.put("tool", this);
 
-		CTApplicationRunner script = pool.getApplication(tool.getApplication(scriptname));
+		CTApplicationRunner application = pool.getApplication(tool.getApplication(applicationname));
 		// TODO shouldn't be hard coded like this
-		if (!"draw".equals(scriptname)) {
-			this.env.recordEvent(this, "calling " + scriptname + " " + script, callvalues);
-			events.add(new CTRuntimeEvent(this, "" + scriptname, callvalues));
+		if (!"draw".equals(applicationname)) {
+			this.env.recordEvent(this, "calling " + applicationname + " " + application, callvalues);
+			events.add(new CTRuntimeEvent(this, "" + applicationname, callvalues));
 		}
 
-		if (script != null) {
-			script.run(env, callvalues);
+		if (application != null) {
+			application.run(env, callvalues);
 		} else {
-			throw new CTToolException("Application called '" + scriptname + "' does not exist in " + this);
+			throw new CTToolException("Application called '" + applicationname + "' does not exist in " + this);
 		}
 	}
 

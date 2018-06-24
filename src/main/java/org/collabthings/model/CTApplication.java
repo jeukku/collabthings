@@ -10,7 +10,7 @@ public interface CTApplication extends CTObject {
 
 	String getInfo();
 
-	List<ApplicationLine> getContent();
+	List<ApplicationLine> getLines();
 
 	boolean isOK();
 

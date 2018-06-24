@@ -34,15 +34,15 @@ public final class TestRunEnvBuilder extends CTTestCase {
 		f.publish();
 
 		b.getEnvironment().setParameter("factoryid", f.getID());
-		CTApplicationImpl taskscript = new CTApplicationImpl(c);
+		CTApplicationImpl taskapplication = new CTApplicationImpl(c);
 		// TODO create a task
 
-		b.getEnvironment().addApplication("taskscript", taskscript);
-		CTApplicationImpl initscript = new CTApplicationImpl(c);
+		b.getEnvironment().addApplication("taskapplication", taskapplication);
+		CTApplicationImpl initapplication = new CTApplicationImpl(c);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("function run(eb) { ");
-		sb.append("var task = eb.getEnvironment().getApplication(\"taskscript\");");
+		sb.append("var task = eb.getEnvironment().getApplication(\"taskapplication\");");
 		sb.append("var state = eb.createFactoryState(\"f\", eb.getEnvironment().getParameter(\"factoryid\"));");
 		sb.append("state.getRunEnvironment().getEnvironment().addApplication(\"task\", task);");
 		sb.append("state.addTask(\"task\", null);");
@@ -51,8 +51,8 @@ public final class TestRunEnvBuilder extends CTTestCase {
 
 		sb.append("function info() { return 'info'; }");
 
-		initscript.setApplication(sb.toString());
-		b.getEnvironment().addApplication("init", initscript);
+		initapplication.setApplication(sb.toString());
+		b.getEnvironment().addApplication("init", initapplication);
 
 		b.publish();
 

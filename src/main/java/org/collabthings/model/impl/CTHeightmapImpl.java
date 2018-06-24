@@ -31,7 +31,7 @@ import waazdoh.datamodel.WObjectID;
 import waazdoh.datamodel.WStringID;
 
 public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
-	private static final String PARAM_SCRIPT = "script";
+	private static final String PARAM_SCRIPT = "application";
 	private static final String PARAM_NAME = "name";
 
 	private CTClient client;
@@ -41,7 +41,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	private Vector3f tr;
 	private boolean disabled = false;
 	private CTListeners changelisteners = new CTListeners();
-	private String script;
+	private String application;
 	private CTTriangleMesh mesh;
 	private String name;
 
@@ -185,7 +185,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 		scale = content.getDoubleValue("scale");
 		name = content.getValue(PARAM_NAME);
 
-		script = content.getBase64Value(PARAM_SCRIPT);
+		application = content.getBase64Value(PARAM_SCRIPT);
 		loadedscadhash = getApplication().hashCode();
 
 		resolutionx = content.getIntValue("resolutionx");
@@ -203,8 +203,8 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 		c.addValue(PARAM_NAME, name);
 
 		c.addValue("scale", scale);
-		if (script != null) {
-			c.setBase64Value("script", script);
+		if (application != null) {
+			c.setBase64Value("application", application);
 		}
 
 		c.addValue("resolutionx", resolutionx);
@@ -214,10 +214,10 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	}
 
 	@Override
-	public void setApplication(final String nscript) {
-		this.script = nscript;
+	public void setApplication(final String napplication) {
+		this.application = napplication;
 		error = null;
-		changed(new CTEvent("script set"));
+		changed(new CTEvent("application set"));
 	}
 
 	@Override
@@ -231,7 +231,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 
 	@Override
 	public String getApplication() {
-		return script;
+		return application;
 	}
 
 	@Override

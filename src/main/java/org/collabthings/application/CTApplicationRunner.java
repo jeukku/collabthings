@@ -32,7 +32,7 @@ public class CTApplicationRunner {
 	}
 
 	public boolean run(CTRunEnvironment rune, CTValues values) {
-		List<ApplicationLine> content = app.getContent();
+		List<ApplicationLine> content = app.getLines();
 
 		for (ApplicationLine s : content) {
 			handle(rune, s, values);

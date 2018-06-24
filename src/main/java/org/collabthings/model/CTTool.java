@@ -20,7 +20,7 @@ public interface CTTool extends CTObject {
 
 	CTPart newPart();
 
-	CTApplication getApplication(String scriptname);
+	CTApplication getApplication(String applicationname);
 
 	CTApplication addApplication(String string);
 

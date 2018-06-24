@@ -58,10 +58,10 @@ public final class TestApplication extends CTTestCase {
 		return app;
 	}
 
-	private CTApplication getApplication(CTClient env, String script) {
+	private CTApplication getApplication(CTClient env, String application) {
 		try {
 			CTApplication s = env.getObjectFactory().getApplication();
-			s.setApplication(script);
+			s.setApplication(application);
 			if (s.isOK()) {
 				return s;
 			} else {

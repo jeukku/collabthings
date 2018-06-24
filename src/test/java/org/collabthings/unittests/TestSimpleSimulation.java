@@ -193,11 +193,11 @@ public class TestSimpleSimulation extends CTTestCase {
 
 		CTToolState toolstate = factorystate.addTool("tool", new CTToolImpl(client));
 		//
-		CTApplicationImpl script = new CTApplicationImpl(client);
-		String nscript = "function info(){} function run(e, factory) { factory.newPart(); factory.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0), 6); } ";
-		script.setApplication(nscript);
-		assertTrue(script.isOK());
-		CTApplicationRunner runner = new CTApplicationRunner(script);
+		CTApplicationImpl application = new CTApplicationImpl(client);
+		String napplication = "function info(){} function run(e, factory) { factory.newPart(); factory.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0), 6); } ";
+		application.setApplication(napplication);
+		assertTrue(application.isOK());
+		CTApplicationRunner runner = new CTApplicationRunner(application);
 		rune.addTask(runner);
 		CTSimulation s = new CTSimpleSimulation(rune);
 
@@ -214,10 +214,10 @@ public class TestSimpleSimulation extends CTTestCase {
 		CTEnvironment env = new CTEnvironmentImpl(client);
 
 		CTFactoryImpl f = new CTFactoryImpl(client);
-		CTApplicationImpl startscript = new CTApplicationImpl(client);
-		f.addApplication("start", startscript);
+		CTApplicationImpl startapplication = new CTApplicationImpl(client);
+		f.addApplication("start", startapplication);
 
-		CTApplicationImpl taskscript = new CTApplicationImpl(client);
+		CTApplicationImpl taskapplication = new CTApplicationImpl(client);
 
 		ApplicationLine toolline = new ApplicationLine();
 		toolline.put("a", "factory");
@@ -231,20 +231,20 @@ public class TestSimpleSimulation extends CTTestCase {
 		toolline2.put("name", "tooltest");
 		toolline2.put("source", "factorytool");
 
-		taskscript.addApplicationLine(toolline);
+		taskapplication.addApplicationLine(toolline);
 
-		assertTrue(taskscript.isOK());
-		f.addApplication("factorytest", taskscript);
+		assertTrue(taskapplication.isOK());
+		f.addApplication("factorytest", taskapplication);
 
 		CTFactoryState factorystate = new CTFactoryState(client, env, "testfactory", f);
 		CTRunEnvironment rune = factorystate.getRunEnvironment();
 		//
 		CTToolImpl tool = new CTToolImpl(client);
-		CTApplicationImpl testscript = new CTApplicationImpl(client);
-		tool.addApplication("tooltest", testscript);
-		String testscriptvalue = "testvalue" + Math.random();
-		testscript.setApplication("function info() {} function run(e, runo, values) { e.setParameter('testfromtool', '"
-				+ testscriptvalue + "'); }");
+		CTApplicationImpl testapplication = new CTApplicationImpl(client);
+		tool.addApplication("tooltest", testapplication);
+		String testapplicationvalue = "testvalue" + Math.random();
+		testapplication.setApplication("function info() {} function run(e, runo, values) { e.setParameter('testfromtool', '"
+				+ testapplicationvalue + "'); }");
 		//
 		CTToolState toolstate = factorystate.addTool("tool", tool);
 		assertNotNull(toolstate);
@@ -256,6 +256,6 @@ public class TestSimpleSimulation extends CTTestCase {
 		assertTrue(s.run(MAX_SIMUALTION_RUNTIME));
 		//
 		assertNotNull(rune.getParameter("testfromtool"));
-		assertEquals(testscriptvalue, rune.getParameter("testfromtool"));
+		assertEquals(testapplicationvalue, rune.getParameter("testfromtool"));
 	}
 }

@@ -49,14 +49,14 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 	private List<ApplicationLine> lines;
 
 	/**
-	 * Creates a new script with random ID.
+	 * Creates a new application with random ID.
 	 * 
 	 * @param env
 	 */
 	public CTApplicationImpl(final CTClient env) {
 		this.client = env;
 		o = new ServiceObject(BEANNAME, env.getClient(), this, env.getVersion(), env.getPrefix());
-		setName("script" + CTApplicationImpl.namecounter);
+		setName("application" + CTApplicationImpl.namecounter);
 		CTApplicationImpl.namecounter++;
 		lines = new LinkedList<>();
 		ApplicationLine logline = new ApplicationLine();
@@ -82,7 +82,7 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 	}
 
 	@Override
-	public List<ApplicationLine> getContent() {
+	public List<ApplicationLine> getLines() {
 		return lines;
 	}
 
@@ -107,9 +107,9 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 	}
 
 	@Override
-	public void setApplication(final String nscript) {
+	public void setApplication(final String napplication) {
 		WObject o = new WObject();
-		o.parse(nscript);
+		o.parse(napplication);
 		parseLines(o.getList(PARAM_LINES));
 	}
 
@@ -150,7 +150,7 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 
 	/**
 	 * 
-	 * @return Return value of info -function in the script.
+	 * @return Return value of info -function in the application.
 	 * @throws NoSuchMethodException
 	 * @throws ApplicationException
 	 */

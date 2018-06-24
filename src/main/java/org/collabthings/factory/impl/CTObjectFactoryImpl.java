@@ -113,7 +113,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			if (!s.getID().getStringID().equals(searchid)) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(
-						"Loaded script doesn't have the id requested. Requested:" + searchid + " result:" + s.getID());
+						"Loaded application doesn't have the id requested. Requested:" + searchid + " result:" + s.getID());
 				WObject oservice = client.getService().getObjects().read(searchid.toString()).toObject();
 				WObject loadedo = s.getObject();
 				diff(sb, oservice, loadedo);

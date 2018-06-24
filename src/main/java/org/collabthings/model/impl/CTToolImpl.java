@@ -132,8 +132,8 @@ public final class CTToolImpl implements ServiceObjectData, CTTool {
 		return addApplication(string, new CTApplicationImpl(client));
 	}
 
-	public CTApplication addApplication(String scriptname, CTApplication ctApplication) {
-		env.addApplication(scriptname.toLowerCase(Locale.ENGLISH), ctApplication);
+	public CTApplication addApplication(String applicationname, CTApplication ctApplication) {
+		env.addApplication(applicationname.toLowerCase(Locale.ENGLISH), ctApplication);
 		return ctApplication;
 	}
 
