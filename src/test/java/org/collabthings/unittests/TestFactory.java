@@ -2,16 +2,15 @@ package org.collabthings.unittests;
 
 import java.io.IOException;
 
-import javax.script.ScriptException;
-
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTAttachedFactory;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTFactory;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.util.LLog;
+import org.omg.CORBA.portable.ApplicationException;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
@@ -33,7 +32,7 @@ public final class TestFactory extends CTTestCase {
 		assertEquals(f, env.getObjectFactory().getFactory(f.getID().getStringID()));
 	}
 
-	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ScriptException {
+	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ApplicationException {
 		boolean bind = true;
 		CTClient env = getNewClient(bind);
 		assertNotNull(env);
@@ -42,8 +41,7 @@ public final class TestFactory extends CTTestCase {
 		f.setName("testing changing name");
 		f.save();
 		//
-		CTScript ctScript = f.addScript("test");
-		ctScript.setScript("function info() { return \"testing tool script\"; }");
+		CTApplication ctApplication = f.addApplication("test");
 		// model
 		f.setModel(env.getObjectFactory().getModel());
 		//
@@ -59,10 +57,10 @@ public final class TestFactory extends CTTestCase {
 		assertEquals(bfact.getName(), f.getName());
 		waitObject(bfact);
 		//
-		CTScript bscript = bfact.getScript("test");
+		CTApplication bscript = bfact.getApplication("test");
 		assertNotNull(bscript);
-		assertEquals(ctScript.getScript(), bscript.getScript());
-		assertEquals(2, bfact.getScripts().size());
+		assertEquals(ctApplication.getObject().toText(), bscript.getObject().toText());
+		assertEquals(2, bfact.getApplications().size());
 		//
 		assertEquals(bfact.getBoundingBox().getA(), f.getBoundingBox().getA());
 		assertEquals(bfact.getBoundingBox().getB(), f.getBoundingBox().getB());
@@ -110,7 +108,7 @@ public final class TestFactory extends CTTestCase {
 		childf.setName(childfactoryid);
 
 		childf.setName(childfactoryname);
-		childf.addScript("testscript");
+		childf.addApplication("testscript");
 		LLog.getLogger(this).info("publishing first " + f.getObject().toYaml());
 
 		f.publish();
@@ -145,7 +143,7 @@ public final class TestFactory extends CTTestCase {
 		CTFactory childf = f.addFactory(childfactoryid).getFactory();
 		String childfactoryname = "some child factory";
 		childf.setName(childfactoryname);
-		childf.addScript("testscript");
+		childf.addApplication("testscript");
 		f.publish();
 		//
 		CTClient bc = getNewClient();
@@ -177,17 +175,17 @@ public final class TestFactory extends CTTestCase {
 		assertSame(va, f.getBoundingBox().getA());
 	}
 
-	public void testCallUnknownScript() throws IOException, SAXException {
+	public void testCallUnknownApplication() throws IOException, SAXException {
 		CTClient e = getNewClient();
 		CTFactory factory = e.getObjectFactory().getFactory();
-		assertNull(factory.getScript("FAIL"));
+		assertNull(factory.getApplication("FAIL"));
 	}
 
-	public void testAddGetScript() {
+	public void testAddGetApplication() {
 		CTClient c = getNewClient();
 		CTTool tool = c.getObjectFactory().getTool();
-		CTScript s = tool.addScript("testscript");
+		CTApplication s = tool.addApplication("testscript");
 		assertNotNull(s);
-		assertNotNull(tool.getScript("testscript"));
+		assertNotNull(tool.getApplication("testscript"));
 	}
 }

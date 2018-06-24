@@ -12,6 +12,7 @@
 package org.collabthings.environment.impl;
 
 import org.collabthings.CTToolException;
+import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.math.LOrientation;
@@ -84,7 +85,7 @@ public class CTToolState implements CTRuntimeObject {
 
 		callvalues.put("tool", this);
 
-		CTScriptRunnerImpl script = pool.getScript(tool.getScript(scriptname));
+		CTApplicationRunner script = pool.getApplication(tool.getApplication(scriptname));
 		// TODO shouldn't be hard coded like this
 		if (!"draw".equals(scriptname)) {
 			this.env.recordEvent(this, "calling " + scriptname + " " + script, callvalues);
@@ -92,9 +93,9 @@ public class CTToolState implements CTRuntimeObject {
 		}
 
 		if (script != null) {
-			script.run(callvalues);
+			script.run(env, callvalues);
 		} else {
-			throw new CTToolException("Script called '" + scriptname + "' does not exist in " + this);
+			throw new CTToolException("Application called '" + scriptname + "' does not exist in " + this);
 		}
 	}
 

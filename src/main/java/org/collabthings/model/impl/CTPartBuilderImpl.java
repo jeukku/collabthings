@@ -57,7 +57,7 @@ public class CTPartBuilderImpl implements CTPartBuilder, ServiceObjectData {
 			CTApplicationRunner runner = new CTApplicationRunner(application);
 			CTRunEnvironment rune = new CTRunEnvironmentImpl(this.client, e);
 			rune.addObject("part", p);
-			runner.run(rune);
+			runner.run(rune, null);
 			return true;
 		} catch (RuntimeException e) {
 			LLog.getLogger(this).error("running partbuilder " + getName() + " got " + e);

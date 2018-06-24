@@ -16,17 +16,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTRuntimeObject;
-import org.collabthings.model.CTScript;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 
 public class CTPool {
 	private static final int MAX_WAIT_TIME = 100000;
 	private final Map<String, List<CTPart>> parts = new HashMap<>();
-	private final Map<CTScript, CTScriptRunnerImpl> scriptrunners = new HashMap<>();
+	private final Map<CTApplication, CTApplicationRunner> apprunners = new HashMap<>();
 	private final CTRuntimeObject runtimeobject;
 	private final CTRunEnvironment runenv;
 
@@ -125,12 +126,13 @@ public class CTPool {
 		return p;
 	}
 
-	public CTScriptRunnerImpl getScript(CTScript script) {
-		CTScriptRunnerImpl runner = scriptrunners.get(script);
-		if (runner == null && script != null) {
-			runner = new CTScriptRunnerImpl(script, this.runenv, this.runtimeobject);
-			scriptrunners.put(script, runner);
+	public CTApplicationRunner getApplication(CTApplication app) {
+		CTApplicationRunner runner = apprunners.get(app);
+		if (runner == null && app != null) {
+			runner = new CTApplicationRunner(app);
+			apprunners.put(app, runner);
 		}
 		return runner;
 	}
+
 }

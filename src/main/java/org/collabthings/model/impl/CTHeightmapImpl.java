@@ -92,7 +92,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 
 	@Override
 	public CTTriangleMesh getTriangleMesh() {
-		if (mesh == null || getScript().hashCode() != loadedscadhash) {
+		if (mesh == null || getApplication().hashCode() != loadedscadhash) {
 			mesh = new CTTriangleMeshImpl();
 
 			for (int ix = 0; ix < resolutionx; ix++) {
@@ -186,7 +186,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 		name = content.getValue(PARAM_NAME);
 
 		script = content.getBase64Value(PARAM_SCRIPT);
-		loadedscadhash = getScript().hashCode();
+		loadedscadhash = getApplication().hashCode();
 
 		resolutionx = content.getIntValue("resolutionx");
 		resolutionz = content.getIntValue("resolutionz");
@@ -214,7 +214,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	}
 
 	@Override
-	public void setScript(final String nscript) {
+	public void setApplication(final String nscript) {
 		this.script = nscript;
 		error = null;
 		changed(new CTEvent("script set"));
@@ -230,7 +230,7 @@ public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	}
 
 	@Override
-	public String getScript() {
+	public String getApplication() {
 		return script;
 	}
 

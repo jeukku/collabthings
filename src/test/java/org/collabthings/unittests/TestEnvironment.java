@@ -2,13 +2,12 @@ package org.collabthings.unittests;
 
 import java.io.IOException;
 
-import javax.script.ScriptException;
-
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
-import org.collabthings.model.CTScript;
+import org.collabthings.model.CTApplication;
+import org.collabthings.model.impl.CTApplicationImpl;
 import org.collabthings.model.impl.CTEnvironmentImpl;
-import org.collabthings.model.impl.CTScriptImpl;
+import org.omg.CORBA.portable.ApplicationException;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
@@ -21,19 +20,19 @@ public final class TestEnvironment extends CTTestCase {
 		//
 		CTEnvironmentImpl orge = new CTEnvironmentImpl(c);
 
-		CTScriptImpl ctScript = new CTScriptImpl(c);
-		orge.addScript("test", ctScript);
+		CTApplicationImpl ctApplication = new CTApplicationImpl(c);
+		orge.addApplication("test", ctApplication);
 		orge.save();
 		orge.publish();
 		//
 		CTEnvironmentImpl newe = new CTEnvironmentImpl(c, orge.getServiceObject().getID().getStringID());
 
-		CTScript loadedscript = newe.getScript("test");
+		CTApplication loadedscript = newe.getApplication("test");
 		assertNotNull(loadedscript);
-		assertEquals(ctScript.getObject().toYaml(), loadedscript.getObject().toYaml());
+		assertEquals(ctApplication.getObject().toYaml(), loadedscript.getObject().toYaml());
 	}
 
-	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ScriptException {
+	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ApplicationException {
 		CTClient c = getNewClient();
 		assertNotNull(c);
 		//
@@ -41,11 +40,10 @@ public final class TestEnvironment extends CTTestCase {
 		String paramname = "testparam";
 		e.setParameter(paramname, "testvalue");
 		//
-		CTScriptImpl ctScript = new CTScriptImpl(c);
-		e.addScript("test", ctScript);
-		ctScript.setScript("function info() { return \"testing tool script\"; }");
+		CTApplicationImpl ctApplication = new CTApplicationImpl(c);
+		e.addApplication("test", ctApplication);
 		//
-		e.addScript("testscript", ctScript);
+		e.addApplication("testscript", ctApplication);
 		//
 		e.save();
 		e.publish();
@@ -58,21 +56,21 @@ public final class TestEnvironment extends CTTestCase {
 		assertEquals(e.getParameter(paramname), benv.getParameter(paramname));
 	}
 
-	public void testAddGetScript() throws IOException, SAXException {
+	public void testAddGetApplication() throws IOException, SAXException {
 		CTClient c = getNewClient();
 		CTEnvironmentImpl env = new CTEnvironmentImpl(c);
-		assertNull(env.getScript("FAIL"));
+		assertNull(env.getApplication("FAIL"));
 		//
 		String scriptname = "testscript";
-		env.addScript(scriptname, new CTScriptImpl(c));
-		assertNotNull(env.getScript(scriptname));
+		env.addApplication(scriptname, new CTApplicationImpl(c));
+		assertNotNull(env.getApplication(scriptname));
 
-		env.renameScript("testscript", "testscript2");
-		assertNull(env.getScript("testscript"));
-		assertNotNull(env.getScript("testscript2"));
+		env.renameApplication("testscript", "testscript2");
+		assertNull(env.getApplication("testscript"));
+		assertNotNull(env.getApplication("testscript2"));
 
-		env.deleteScript("testscript2");
-		assertNull(env.getScript("testscript2"));
+		env.deleteApplication("testscript2");
+		assertNull(env.getApplication("testscript2"));
 	}
 
 	public void testAddGetParameter() {

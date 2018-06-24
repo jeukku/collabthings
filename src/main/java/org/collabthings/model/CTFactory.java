@@ -18,19 +18,19 @@ import com.jme3.math.Vector3f;
 
 public interface CTFactory extends CTObject {
 
-	CTScript getScript(String string);
-
 	CTEnvironment getEnvironment();
 
 	String getName();
 
 	void setName(String string);
 
-	CTScript addScript(String string, CTScript ctScript);
+	CTApplication addApplication(String string, CTApplication ctApplication);
 
-	CTScript addScript(String string);
+	CTApplication addApplication(String string);
 
-	Set<String> getScripts();
+	CTApplication getApplication(String string);
+
+	Set<String> getApplications();
 
 	CTAttachedFactory addFactory(String string);
 

@@ -2,21 +2,20 @@ package org.collabthings.unittests;
 
 import java.io.IOException;
 
-import javax.script.ScriptException;
-
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
 import org.collabthings.CTToolException;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTRunEnvironmentImpl;
 import org.collabthings.environment.impl.CTToolState;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTEnvironment;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.impl.CTConstants;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.model.impl.CTToolImpl;
+import org.omg.CORBA.portable.ApplicationException;
 import org.xml.sax.SAXException;
 
 public final class TestTool extends CTTestCase {
@@ -34,15 +33,14 @@ public final class TestTool extends CTTestCase {
 		assertEquals(t, env.getObjectFactory().getTool(t.getID().getStringID()));
 	}
 
-	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ScriptException {
+	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ApplicationException {
 		createTwoClients();
 		//
 		CTTool t = clienta.getObjectFactory().getTool();
 		t.setName("testing changing name");
 		t.save();
 		//
-		CTScript ctScript = t.addScript("test");
-		ctScript.setScript("function info() { return \"testing tool script\"; }");
+		CTApplication ctApplication = t.addApplication("test");
 		//
 		t.newPart();
 		String testbinarydatastring = "TESTIBINARYDATA";
@@ -58,9 +56,9 @@ public final class TestTool extends CTTestCase {
 		assertEquals(btool.getName(), t.getName());
 		waitObject(btool);
 		//
-		CTScript bscript = btool.getScript("test");
+		CTApplication bscript = btool.getApplication("test");
 		assertNotNull(bscript);
-		assertEquals(ctScript.getScript(), bscript.getScript());
+		assertEquals(ctApplication.getObject().toText(), bscript.getObject().toText());
 	}
 
 	public void testNullPart() throws IOException, SAXException {
@@ -73,13 +71,13 @@ public final class TestTool extends CTTestCase {
 		assertTrue(b.toString().indexOf("CTTool") >= 0);
 	}
 
-	public void testGetUnknownScript() throws IOException, SAXException {
+	public void testGetUnknownApplication() throws IOException, SAXException {
 		CTClient e = getNewClient();
 		CTTool tool = e.getObjectFactory().getTool();
-		assertNull(tool.getScript("FAIL"));
+		assertNull(tool.getApplication("FAIL"));
 	}
 
-	public void testCallUnknownScript() {
+	public void testCallUnknownApplication() {
 		CTClient c = getNewClient();
 		CTTool tool = c.getObjectFactory().getTool();
 		CTEnvironment env = new CTEnvironmentImpl(c);
@@ -96,10 +94,10 @@ public final class TestTool extends CTTestCase {
 		assertTrue(ecaught);
 	}
 
-	public void testAddGetScript() {
+	public void testAddGetApplication() {
 		CTClient c = getNewClient();
 		CTTool tool = c.getObjectFactory().getTool();
-		tool.addScript("testscript");
-		assertNotNull(tool.getScript("testscript"));
+		tool.addApplication("testscript");
+		assertNotNull(tool.getApplication("testscript"));
 	}
 }

@@ -16,12 +16,12 @@ public interface CTTool extends CTObject {
 
 	void setName(String string);
 
-	CTScript getScript(String scriptname);
-
-	CTScript addScript(String string);
-
 	CTPart getPart();
 
 	CTPart newPart();
+
+	CTApplication getApplication(String scriptname);
+
+	CTApplication addApplication(String string);
 
 }

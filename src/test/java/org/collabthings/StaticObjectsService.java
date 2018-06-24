@@ -7,8 +7,6 @@ import java.util.Map;
 
 import org.collabthings.model.impl.CTConstants;
 import org.collabthings.util.LLog;
-import org.collabthings.util.ShortHashID;
-import org.eclipse.jetty.util.security.Credential.MD5;
 
 import waazdoh.client.BeanStorage;
 import waazdoh.client.utils.WPreferences;

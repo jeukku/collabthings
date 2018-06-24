@@ -20,7 +20,6 @@ import org.collabthings.model.CTMapOfPieces;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 
@@ -44,9 +43,9 @@ public interface CTObjectFactory {
 
 	CTBinaryModel getModel();
 
-	CTScript getScript(WStringID id);
+	CTApplication getApplication(WStringID id);
 
-	CTScript getScript();
+	CTApplication getApplication();
 
 	void addInfoListener(CTInfo info);
 
@@ -65,9 +64,5 @@ public interface CTObjectFactory {
 	CTMapOfPieces getMapOfPieces();
 
 	CTMapOfPieces getMapOfPieces(WStringID bmapid);
-
-	CTApplication getApplication();
-
-	CTApplication getApplication(WStringID appid);
 
 }

@@ -4,26 +4,25 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import javax.script.ScriptException;
-
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
 import org.collabthings.CTToolException;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTAttachedFactory;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.model.CTTool;
-import org.collabthings.model.impl.CTScriptImpl;
+import org.collabthings.model.impl.CTApplicationImpl;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.simulation.CTSimulation;
 import org.collabthings.util.LLog;
+import org.omg.CORBA.portable.ApplicationException;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
@@ -40,7 +39,7 @@ public final class ITTestBuildABox extends CTTestCase {
 	private LLog log = LLog.getLogger(this);
 	private CTPart square;
 
-	public synchronized void testBoxLine() throws NoSuchMethodException, IOException, SAXException, ScriptException,
+	public synchronized void testBoxLine() throws NoSuchMethodException, IOException, SAXException, ApplicationException,
 			CTToolException, InterruptedException {
 		CTClient client = getNewClient();
 		info("client " + client);
@@ -59,9 +58,9 @@ public final class ITTestBuildABox extends CTTestCase {
 		info("line of boxes " + line);
 		//
 		CTRunEnvironmentBuilder builder = new CTRunEnvironmentBuilderImpl(client);
-		builder.getEnvironment().addScript("init", loadScript(new CTScriptImpl(client), "linefactory_runenv_init.js"));
-		builder.getEnvironment().addScript("addorder",
-				loadScript(new CTScriptImpl(client), "linefactory_runenv_order.js"));
+		builder.getEnvironment().addApplication("init", loadApplication(new CTApplicationImpl(client), "linefactory_runenv_init.js"));
+		builder.getEnvironment().addApplication("addorder",
+				loadApplication(new CTApplicationImpl(client), "linefactory_runenv_order.js"));
 		builder.getEnvironment().setParameter("partid", line.getID());
 
 		builder.setName("boxsetfactorybuilder");
@@ -109,13 +108,13 @@ public final class ITTestBuildABox extends CTTestCase {
 		return line;
 	}
 
-	public void testBuildABox() throws NoSuchMethodException, ScriptException, IOException {
+	public void testBuildABox() throws NoSuchMethodException, ApplicationException, IOException {
 		CTRunEnvironment runenv = testBox();
 		assertNotNull(runenv);
 	}
 
 	private CTFactory setupFactoryThatUsesBoxes(CTFactory factory, CTClient client)
-			throws IOException, NoSuchMethodException, ScriptException {
+			throws IOException, NoSuchMethodException, ApplicationException {
 		createAssemblyFactory(factory, client);
 		info("factory that uses boxes " + factory);
 
@@ -133,7 +132,7 @@ public final class ITTestBuildABox extends CTTestCase {
 		return factory;
 	}
 
-	public CTRunEnvironment testBox() throws NoSuchMethodException, ScriptException, IOException {
+	public CTRunEnvironment testBox() throws NoSuchMethodException, ApplicationException, IOException {
 		CTClient client = getNewClient();
 		assertNotNull(client);
 
@@ -144,9 +143,9 @@ public final class ITTestBuildABox extends CTTestCase {
 
 		CTRunEnvironmentBuilder builder = new CTRunEnvironmentBuilderImpl(client);
 
-		builder.getEnvironment().addScript("init", loadScript(new CTScriptImpl(client), "boxfactory_runenv_init.js"));
-		builder.getEnvironment().addScript("addorder",
-				loadScript(new CTScriptImpl(client), "boxfactory_runenv_order.js"));
+		builder.getEnvironment().addApplication("init", loadApplication(new CTApplicationImpl(client), "boxfactory_runenv_init.js"));
+		builder.getEnvironment().addApplication("addorder",
+				loadApplication(new CTApplicationImpl(client), "boxfactory_runenv_order.js"));
 
 		info("publishing builder");
 		builder.publish();
@@ -172,7 +171,7 @@ public final class ITTestBuildABox extends CTTestCase {
 	}
 
 	private CTFactory createBoxFactory(CTFactory boxfactory, CTClient client)
-			throws NoSuchMethodException, ScriptException, IOException {
+			throws NoSuchMethodException, ApplicationException, IOException {
 		createAssemblyFactory(boxfactory, client);
 		boxfactory.setName("boxfactory");
 		info("Boxfactory " + boxfactory);
@@ -218,7 +217,7 @@ public final class ITTestBuildABox extends CTTestCase {
 			this.square = client.getObjectFactory().getPart();
 			square.setName("square");
 			CTOpenSCAD scad = square.newSCAD();
-			scad.setScript(loadATestFile("scad/square.scad"));
+			scad.setApplication(loadATestFile("scad/square.scad"));
 			scad.setScale(0.2);
 
 			square.setBoundingBox(new Vector3f(-1, 0, -1), new Vector3f(1, 0.1f, 1));
@@ -229,16 +228,16 @@ public final class ITTestBuildABox extends CTTestCase {
 	}
 
 	private CTFactory createAssemblyFactory(CTFactory factory, CTClient client)
-			throws IOException, NoSuchMethodException, ScriptException {
+			throws IOException, NoSuchMethodException, ApplicationException {
 		// Create a tool to pick up plates
 		CTTool tool = getPickupTool(client);
 		factory.getEnvironment().addTool("pickuptool", tool);
 		// scripts
 
-		loadScript(factory.addScript("moveandattach"), "assembly_moveandattach.js");
-		loadScript(factory.addScript("build"), "assembly_build.js");
-		loadScript(factory.addScript("order"), "assembly_order.js");
-		loadScript(factory.addScript("start"), "assembly_start.js");
+		loadApplication(factory.addApplication("moveandattach"), "assembly_moveandattach.js");
+		loadApplication(factory.addApplication("build"), "assembly_build.js");
+		loadApplication(factory.addApplication("order"), "assembly_order.js");
+		loadApplication(factory.addApplication("start"), "assembly_start.js");
 		return factory;
 	}
 
@@ -259,7 +258,7 @@ public final class ITTestBuildABox extends CTTestCase {
 	}
 
 	private CTFactory createPlateSource(CTFactory platesource, CTClient client, CTPart square)
-			throws NoSuchMethodException, ScriptException, IOException {
+			throws NoSuchMethodException, ApplicationException, IOException {
 		platesource.setName("platesource");
 
 		square.publish();
@@ -271,8 +270,8 @@ public final class ITTestBuildABox extends CTTestCase {
 		
 		info("createPlateSource square search result " + searchValue);
 		platesource.getEnvironment().setParameter("bmplate", searchValue.get(0));
-		loadScript(platesource.addScript("order"), "platesource_order.js");
-		loadScript(platesource.addScript("build"), "platesource_build.js");
+		loadApplication(platesource.addApplication("order"), "platesource_order.js");
+		loadApplication(platesource.addApplication("build"), "platesource_build.js");
 
 		return platesource;
 	}
@@ -281,11 +280,11 @@ public final class ITTestBuildABox extends CTTestCase {
 		log.info("dt:" + (System.currentTimeMillis() - starttime) + " " + string);
 	}
 
-	private CTTool getPickupTool(CTClient client) throws IOException, NoSuchMethodException, ScriptException {
+	private CTTool getPickupTool(CTClient client) throws IOException, NoSuchMethodException, ApplicationException {
 		CTTool tool = client.getObjectFactory().getTool();
-		loadScript(tool.addScript("pickup"), "assembly_pickup.js");
-		loadScript(tool.addScript("attach"), "assembly_attach.js");
-		loadScript(tool.addScript("draw"), "assembly_drawtool.js");
+		loadApplication(tool.addApplication("pickup"), "assembly_pickup.js");
+		loadApplication(tool.addApplication("attach"), "assembly_attach.js");
+		loadApplication(tool.addApplication("draw"), "assembly_drawtool.js");
 		return tool;
 	}
 
@@ -294,7 +293,7 @@ public final class ITTestBuildABox extends CTTestCase {
 
 		box = env.getObjectFactory().getPart();
 		CTOpenSCAD scad = box.newSCAD();
-		scad.setScript(loadATestFile("scad/cube.scad"));
+		scad.setApplication(loadATestFile("scad/cube.scad"));
 		scad.setScale(2);
 
 		box.setName("BOX");
@@ -318,11 +317,11 @@ public final class ITTestBuildABox extends CTTestCase {
 		return box;
 	}
 
-	private CTScript loadScript(CTScript cts, String scriptname) throws IOException {
-		String s = loadATestScript(scriptname);
-		cts.setScript(s);
+	private CTApplication loadApplication(CTApplication cts, String scriptname) throws IOException {
+		String s = loadATestApplication(scriptname);
+		cts.setApplication(s);
 		cts.setName(scriptname);
-		assertNotNull(cts.getScript());
+		assertNotNull(cts.getApplication());
 		return cts;
 	}
 }

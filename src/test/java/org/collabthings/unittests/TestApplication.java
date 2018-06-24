@@ -37,7 +37,7 @@ public final class TestApplication extends CTTestCase {
 		CTRunEnvironmentImpl runenv = new CTRunEnvironmentImpl(client, env);
 
 		CTApplicationRunner runner = new CTApplicationRunner(bs);
-		runner.run(runenv);
+		runner.run(runenv, null);
 
 		assertEquals(SCRIPT_ENV_TEST_VALUE, runenv.getParameter("testvalue"));
 	}
@@ -54,7 +54,8 @@ public final class TestApplication extends CTTestCase {
 		ApplicationLine setline = new ApplicationLine();
 		setline.put("a", "env");
 		setline.put("action", "set");
-		setline.put("testvalue", SCRIPT_ENV_TEST_VALUE);
+		setline.put("key", "testvalue");
+		setline.put("value", SCRIPT_ENV_TEST_VALUE);
 
 		app.addApplicationLine(setline);
 		return app;
@@ -63,7 +64,7 @@ public final class TestApplication extends CTTestCase {
 	private CTApplication getApplication(CTClient env, String script) {
 		try {
 			CTApplication s = env.getObjectFactory().getApplication();
-			s.setScript(script);
+			s.setApplication(script);
 			if (s.isOK()) {
 				return s;
 			} else {
@@ -77,14 +78,14 @@ public final class TestApplication extends CTTestCase {
 
 	public void testRuntimeEnvironmentParameters() {
 		CTClient client = getNewClient();
-		CTApplication s = getApplication(client, "content:\n env:\n  set:\n   'test': 'testvalue'");
+		CTApplication s = getApplication(client, "lines:\n - { a: env, action: set, key: 'test', value: 'testvalue' }");
 
 		assertNotNull(s);
 		CTEnvironment env = new CTEnvironmentImpl(client);
 		CTRunEnvironment e = new CTRunEnvironmentImpl(client, env);
 		CTApplicationRunner runner = new CTApplicationRunner(s);
 
-		runner.run(e);
+		runner.run(e, null);
 		assertEquals("testvalue", e.getParameter("test"));
 	}
 

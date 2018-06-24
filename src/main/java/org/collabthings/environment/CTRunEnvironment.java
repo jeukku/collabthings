@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.collabthings.CTClient;
+import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTRuntimeObject;
@@ -36,9 +37,9 @@ public interface CTRunEnvironment {
 
 	List<CTEnvironmentTask> getTasks();
 
-	CTEnvironmentTask addTask(CTScriptRunner s, CTValues values);
+	CTEnvironmentTask addTask(CTApplicationRunner s, CTValues values);
 
-	CTEnvironmentTask addTask(CTScriptRunner s);
+	CTEnvironmentTask addTask(CTApplicationRunner s);
 
 	CTClient getClient();
 

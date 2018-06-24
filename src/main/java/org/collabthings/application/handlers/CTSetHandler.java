@@ -6,16 +6,15 @@ import java.lang.reflect.Method;
 import org.collabthings.application.CTInstructionHandler;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.model.CTObject;
+import org.collabthings.model.CTValues;
 import org.collabthings.model.impl.CTApplicationImpl.ApplicationLine;
-
-import waazdoh.datamodel.WObject;
 
 public class CTSetHandler implements CTInstructionHandler {
 
 	private static final String ACTION_CALL = "call";
 
 	@Override
-	public void handle(ApplicationLine instruction, CTRunEnvironment rune) {
+	public void handle(ApplicationLine instruction, CTRunEnvironment rune, CTValues values) {
 		String action = instruction.get("action");
 		if (ACTION_CALL.equals(action)) {
 			String dest = instruction.get("dest");

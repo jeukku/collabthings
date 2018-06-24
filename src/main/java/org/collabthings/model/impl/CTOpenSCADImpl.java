@@ -101,7 +101,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	@Override
 	public synchronized CTModel getModel() {
 		if (isChanged() && createModel()) {
-			loadedscadhash = getScript().hashCode();
+			loadedscadhash = getApplication().hashCode();
 			changed(new CTEvent("model created"));
 		}
 
@@ -113,7 +113,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	}
 
 	private boolean isChanged() {
-		return loadedscadhash != getScript().hashCode();
+		return loadedscadhash != getApplication().hashCode();
 	}
 
 	@Override
@@ -139,7 +139,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 			b.append("\n");
 		});
 
-		setScript(b.toString());
+		setApplication(b.toString());
 		return true;
 	}
 
@@ -171,7 +171,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 		if (path.isFile()) {
 			File tempfile = File.createTempFile("collabthings", ".scad");
 			try (FileOutputStream fos = new FileOutputStream(tempfile)) {
-				String s = getScript();
+				String s = getApplication();
 				byte[] bs = s.getBytes(CTConstants.CHARSET);
 				fos.write(bs, 0, bs.length);
 				fos.close();
@@ -265,7 +265,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 		}
 
 		script = content.getBase64Value(VARIABLE_SCRIPT);
-		loadedscadhash = getScript().hashCode();
+		loadedscadhash = getApplication().hashCode();
 
 		this.name = content.getValue(VARIABLE_NAME);
 		this.scale = content.getDoubleValue(VARIABLE_SCALE);
@@ -293,7 +293,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	}
 
 	@Override
-	public void setScript(final String nscript) {
+	public void setApplication(final String nscript) {
 		this.script = nscript;
 		error = null;
 		changed(new CTEvent("script set"));
@@ -342,7 +342,7 @@ public final class CTOpenSCADImpl implements ServiceObjectData, CTOpenSCAD {
 	}
 
 	@Override
-	public String getScript() {
+	public String getApplication() {
 		return script;
 	}
 

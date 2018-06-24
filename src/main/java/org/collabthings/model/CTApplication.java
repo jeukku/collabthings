@@ -6,7 +6,7 @@ import org.collabthings.model.impl.CTApplicationImpl.ApplicationLine;
 
 public interface CTApplication extends CTObject {
 
-	void setScript(String stext);
+	void setApplication(String stext);
 
 	String getInfo();
 

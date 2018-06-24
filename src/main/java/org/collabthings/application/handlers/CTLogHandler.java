@@ -2,6 +2,7 @@ package org.collabthings.application.handlers;
 
 import org.collabthings.application.CTInstructionHandler;
 import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.model.CTValues;
 import org.collabthings.model.impl.CTApplicationImpl.ApplicationLine;
 import org.collabthings.util.LLog;
 
@@ -10,7 +11,7 @@ public class CTLogHandler implements CTInstructionHandler {
 	public static final String MSG = "msg";
 
 	@Override
-	public void handle(ApplicationLine instruction, CTRunEnvironment rune) {
+	public void handle(ApplicationLine instruction, CTRunEnvironment rune, CTValues values) {
 		String msg = instruction.get(MSG);
 
 		for (String n : rune.getObjectNames()) {
