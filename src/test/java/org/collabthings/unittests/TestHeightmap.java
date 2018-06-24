@@ -10,6 +10,7 @@ import org.collabthings.CTTestCase;
 import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTHeightmap;
@@ -85,21 +86,17 @@ public final class TestHeightmap extends CTTestCase {
 
 		Map<String, String> map = new HashMap<String, String>();
 
+		CTApplication app = client.getObjectFactory().getApplication();
 		CTRunEnvironment runenv = fs.getRunEnvironment();
-		runenv.addTask(new CTApplicationRunner() {
+		runenv.addTask(new CTApplicationRunner(app) {
 
 			@Override
-			public boolean run(CTValues values) {
+			public boolean run(CTRunEnvironment rune, CTValues values) {
 				map.put("run", "true");
 				new WTimedFlag(1000).waitTimer();
 				return true;
 			}
 
-			@Override
-			public String getError() {
-				// TODO Auto-generated method stub
-				return null;
-			}
 		});
 
 		CTSimulation simulation = new CTSimpleSimulation(runenv);
