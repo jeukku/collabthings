@@ -7,26 +7,27 @@ import java.util.Map;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
-import org.collabthings.environment.CTScriptRunner;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.environment.impl.CTPartState;
 import org.collabthings.environment.impl.CTRunEnvironmentImpl;
 import org.collabthings.environment.impl.CTRuntimeError;
-import org.collabthings.environment.impl.CTScriptRunnerImpl;
 import org.collabthings.environment.impl.CTToolState;
 import org.collabthings.environment.impl.ReallySimpleSuperheroRobot;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTAttachedFactory;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTValues;
+import org.collabthings.model.impl.CTApplicationImpl;
+import org.collabthings.model.impl.CTApplicationImpl.ApplicationLine;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.model.impl.CTFactoryImpl;
-import org.collabthings.model.impl.CTScriptImpl;
 import org.collabthings.model.impl.CTToolImpl;
 import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.simulation.CTSimulation;
@@ -70,7 +71,7 @@ public class TestSimpleSimulation extends CTTestCase {
 		CTPartState f2part = f2s.newPart();
 		f2part.getPart().setName("p2");
 		CTOpenSCAD scad2 = f2part.getPart().newSCAD();
-		scad2.setScript(loadATestFile("scad/test.scad"));
+		scad2.setApplication(loadATestFile("scad/test.scad"));
 		scad2.setScale(0.03);
 
 		CTFactoryState f21s = f2s.getFactory("f21");
@@ -78,7 +79,7 @@ public class TestSimpleSimulation extends CTTestCase {
 		p21s.getPart().setName("p21");
 
 		CTOpenSCAD scad21 = p21s.getPart().newSCAD();
-		scad21.setScript(loadATestFile("scad/test.scad"));
+		scad21.setApplication(loadATestFile("scad/test.scad"));
 		scad21.setScale(0.04);
 
 		CTRunEnvironment runenv = f1s.getRunEnvironment();
@@ -104,10 +105,10 @@ public class TestSimpleSimulation extends CTTestCase {
 			}
 		});
 
-		runenv.addTask(new CTScriptRunner() {
+		runenv.addTask(new CTApplicationRunner(new CTApplicationImpl(client)) {
 
 			@Override
-			public boolean run(CTValues values) {
+			public boolean run(CTRunEnvironment rune, CTValues values) {
 				valuesmap.put(name, values.get(name));
 
 				long st = System.currentTimeMillis();
@@ -142,33 +143,32 @@ public class TestSimpleSimulation extends CTTestCase {
 		assertEquals(value, valuesmap.get("testvaluename"));
 	}
 
-	public void testFailingScript() throws IOException, SAXException {
+	public void testFailingApplication() throws IOException, SAXException {
 		CTClient client = getNewClient();
 
-		CTScriptImpl s = new CTScriptImpl(client);
-		s.setScript("function test() {}");
+		CTApplicationImpl s = new CTApplicationImpl(client);
+		s.setApplication("function test() {}");
 
 		CTEnvironment env = new CTEnvironmentImpl(client);
 		CTRunEnvironment runenv = new CTRunEnvironmentImpl(client, env);
 
-		CTScriptRunner runner = new CTScriptRunnerImpl(s, runenv, null);
+		CTApplicationRunner runner = new CTApplicationRunner(s);
 		runenv.addTask(runner);
 		CTSimulation simulation = new CTSimpleSimulation(runenv);
 		assertFalse(simulation.run(MAX_SIMUALTION_RUNTIME));
 	}
 
-	public void testSimpleScript() throws IOException, SAXException {
+	public void testSimpleApplication() throws IOException, SAXException {
 		CTClient client = getNewClient();
 
 		CTEnvironment env = new CTEnvironmentImpl(client);
 		String testvalue = "testvalue" + System.currentTimeMillis();
 		//
-		CTScriptImpl s = new CTScriptImpl(client);
-		s.setScript(
-				"function info() {} function run(env, params) { env.setParameter('testparam', '" + testvalue + "'); }");
+		CTApplication app = new CTApplicationImpl(client);
+		app.setApplication("lines:\n - { a: env, action: set, key: 'testparam', value: '" + testvalue + "' }");
 
 		CTRunEnvironment runenv = new CTRunEnvironmentImpl(client, env);
-		CTScriptRunner runner = new CTScriptRunnerImpl(s, runenv, null);
+		CTApplicationRunner runner = new CTApplicationRunner(app);
 		runenv.addTask(runner);
 		CTSimulation simulation = new CTSimpleSimulation(runenv);
 		assertTrue(simulation.run(MAX_SIMUALTION_RUNTIME));
@@ -193,11 +193,11 @@ public class TestSimpleSimulation extends CTTestCase {
 
 		CTToolState toolstate = factorystate.addTool("tool", new CTToolImpl(client));
 		//
-		CTScriptImpl script = new CTScriptImpl(client);
+		CTApplicationImpl script = new CTApplicationImpl(client);
 		String nscript = "function info(){} function run(e, factory) { factory.newPart(); factory.getTool('tool').moveTo(e.getVector(10,0,0), e.getVector(0,1,0), 6); } ";
-		script.setScript(nscript);
+		script.setApplication(nscript);
 		assertTrue(script.isOK());
-		CTScriptRunner runner = new CTScriptRunnerImpl(script, rune, factorystate);
+		CTApplicationRunner runner = new CTApplicationRunner(script);
 		rune.addTask(runner);
 		CTSimulation s = new CTSimpleSimulation(rune);
 
@@ -214,24 +214,36 @@ public class TestSimpleSimulation extends CTTestCase {
 		CTEnvironment env = new CTEnvironmentImpl(client);
 
 		CTFactoryImpl f = new CTFactoryImpl(client);
-		CTScriptImpl startscript = new CTScriptImpl(client);
-		f.addScript("start", startscript);
+		CTApplicationImpl startscript = new CTApplicationImpl(client);
+		f.addApplication("start", startscript);
 
-		CTScriptImpl taskscript = new CTScriptImpl(client);
-		String nscript = "function info(){} function run(e, factory, values) { "
-				+ "e.log().info('calling tooltest'); factory.getTool('tool').call('tooltest', values); } ";
-		taskscript.setScript(nscript);
+		CTApplicationImpl taskscript = new CTApplicationImpl(client);
+
+		ApplicationLine toolline = new ApplicationLine();
+		toolline.put("a", "factory");
+		toolline.put("action", "get");
+		toolline.put("dest", "factorytool");
+		toolline.put("name", "tool");
+
+		ApplicationLine toolline2 = new ApplicationLine();
+		toolline2.put("a", "tool");
+		toolline2.put("action", "call");
+		toolline2.put("name", "tooltest");
+		toolline2.put("source", "factorytool");
+
+		taskscript.addApplicationLine(toolline);
+
 		assertTrue(taskscript.isOK());
-		f.addScript("factorytest", taskscript);
+		f.addApplication("factorytest", taskscript);
 
 		CTFactoryState factorystate = new CTFactoryState(client, env, "testfactory", f);
 		CTRunEnvironment rune = factorystate.getRunEnvironment();
 		//
 		CTToolImpl tool = new CTToolImpl(client);
-		CTScriptImpl testscript = new CTScriptImpl(client);
-		tool.addScript("tooltest", testscript);
+		CTApplicationImpl testscript = new CTApplicationImpl(client);
+		tool.addApplication("tooltest", testscript);
 		String testscriptvalue = "testvalue" + Math.random();
-		testscript.setScript("function info() {} function run(e, runo, values) { e.setParameter('testfromtool', '"
+		testscript.setApplication("function info() {} function run(e, runo, values) { e.setParameter('testfromtool', '"
 				+ testscriptvalue + "'); }");
 		//
 		CTToolState toolstate = factorystate.addTool("tool", tool);

@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTRunEnvironment;
-import org.collabthings.environment.CTScriptRunner;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
@@ -39,7 +39,7 @@ public final class TestHeightmap extends CTTestCase {
 		hm.setName("hm");
 		part.setName("testing hm model");
 
-		hm.setScript(loadATestFile("scad/test.scad"));
+		hm.setApplication(loadATestFile("scad/test.scad"));
 
 		CTTriangleMesh tm = hm.getTriangleMesh();
 		assertNotNull(tm);
@@ -60,7 +60,7 @@ public final class TestHeightmap extends CTTestCase {
 
 		CTTriangleMesh btm = bhm.getTriangleMesh();
 		assertNotNull(btm);
-		assertEquals(hm.getScript(), bhm.getScript());
+		assertEquals(hm.getApplication(), bhm.getApplication());
 
 		String ascadyaml = hm.getObject().toYaml();
 		String bscadyaml = bhm.getObject().toYaml();
@@ -81,12 +81,12 @@ public final class TestHeightmap extends CTTestCase {
 		CTFactory f = client.getObjectFactory().getFactory();
 		CTFactoryState fs = new CTFactoryState(client, env, "test", f);
 		CTOpenSCAD scad = fs.newPart().getPart().newSCAD();
-		scad.setScript(loadATestFile("scad/test.scad"));
+		scad.setApplication(loadATestFile("scad/test.scad"));
 
 		Map<String, String> map = new HashMap<String, String>();
 
 		CTRunEnvironment runenv = fs.getRunEnvironment();
-		runenv.addTask(new CTScriptRunner() {
+		runenv.addTask(new CTApplicationRunner() {
 
 			@Override
 			public boolean run(CTValues values) {

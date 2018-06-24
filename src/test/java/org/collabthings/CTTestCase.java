@@ -22,8 +22,6 @@ import org.xml.sax.SAXException;
 import com.jme3.math.Vector3f;
 
 import junit.framework.TestCase;
-import waazdoh.client.BinarySource;
-import waazdoh.client.WServiceClient;
 import waazdoh.client.env.IPFSRunner;
 import waazdoh.client.ipfs.IPFSServiceClient;
 import waazdoh.client.storage.local.FileBeanStorage;
@@ -179,7 +177,7 @@ public class CTTestCase extends TestCase {
 		}
 	}
 
-	protected String loadATestScript(String string) throws IOException {
+	protected String loadATestApplication(String string) throws IOException {
 		String path = "src/test/yml/" + string;
 		return loadTextFile(path);
 	}

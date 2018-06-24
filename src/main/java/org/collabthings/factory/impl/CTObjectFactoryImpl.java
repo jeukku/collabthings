@@ -27,7 +27,6 @@ import org.collabthings.model.CTInfo;
 import org.collabthings.model.CTMapOfPieces;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPartBuilder;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.impl.CT3DModelImpl;
 import org.collabthings.model.impl.CTApplicationImpl;
@@ -37,7 +36,6 @@ import org.collabthings.model.impl.CTMapOfPiecesImpl;
 import org.collabthings.model.impl.CTOpenSCADImpl;
 import org.collabthings.model.impl.CTPartBuilderImpl;
 import org.collabthings.model.impl.CTPartImpl;
-import org.collabthings.model.impl.CTScriptImpl;
 import org.collabthings.model.impl.CTToolImpl;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
@@ -57,7 +55,6 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	private List<CTToolImpl> tools = new ArrayList<>();
 	private List<CTFactoryImpl> factories = new ArrayList<>();
 	private List<CT3DModelImpl> models = new ArrayList<>();
-	private List<CTScriptImpl> scripts = new ArrayList<>();
 	private List<CTApplicationImpl> applications = new ArrayList<>();
 	private List<CTRunEnvironmentBuilder> runtimebuilders = new ArrayList<>();
 	private List<CTPartBuilder> partbuilders = new ArrayList<>();
@@ -94,47 +91,8 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	}
 
 	@Override
-	public CTApplication getApplication(WStringID appid) {
-		// TODO Auto-generated method stub
+	public CTApplication getApplication(WStringID sid) {
 		synchronized (applications) {
-			for (CTApplication builder : applications) {
-				if (builder.getID().getStringID().equals(appid)) {
-					return builder;
-				}
-			}
-
-			CTApplicationImpl app = new CTApplicationImpl(client);
-			if (app.load(appid)) {
-				applications.add(app);
-
-				if (!app.getID().getStringID().equals(appid)) {
-					StringBuilder sb = new StringBuilder();
-					sb.append("Loaded partbuilder doesn't have the id requested. Requested:" + app + " result:"
-							+ app.getID());
-					WObject oservice = client.getService().getObjects().read(appid.toString()).toObject();
-					WObject loadedo = app.getObject();
-					diff(sb, oservice, loadedo);
-
-					log.info(sb.toString());
-				}
-
-				return app;
-			} else {
-				log.info("Failed to load application " + appid);
-				return null;
-			}
-
-		}
-	}
-
-	@Override
-	public CTScript getScript() {
-		return new CTScriptImpl(client);
-	}
-
-	@Override
-	public CTScript getScript(WStringID sid) {
-		synchronized (scripts) {
 			WStringID searchid = sid;
 
 			WStringID errorid = errorids.get(sid);
@@ -142,15 +100,15 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 				searchid = errorid;
 			}
 
-			for (CTScriptImpl s : scripts) {
+			for (CTApplicationImpl s : applications) {
 				if (s.getID().getStringID().equals(searchid)) {
 					return s;
 				}
 			}
 
-			CTScriptImpl s = new CTScriptImpl(client);
+			CTApplicationImpl s = new CTApplicationImpl(client);
 			s.load(searchid);
-			scripts.add(s);
+			applications.add(s);
 
 			if (!s.getID().getStringID().equals(searchid)) {
 				StringBuilder sb = new StringBuilder();

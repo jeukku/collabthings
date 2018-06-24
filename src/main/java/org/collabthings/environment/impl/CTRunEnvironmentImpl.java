@@ -19,10 +19,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.collabthings.CTClient;
+import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
-import org.collabthings.environment.CTScriptRunner;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTObject;
@@ -218,12 +218,12 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 	}
 
 	@Override
-	public CTEnvironmentTask addTask(CTScriptRunner s) {
+	public CTEnvironmentTask addTask(CTApplicationRunner s) {
 		return addTask(s, new CTValues());
 	}
 
 	@Override
-	public CTEnvironmentTask addTask(final CTScriptRunner s, final CTValues values) {
+	public CTEnvironmentTask addTask(final CTApplicationRunner s, final CTValues values) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("addTask " + s + "\n");
 		if (values != null) {
@@ -237,7 +237,7 @@ public class CTRunEnvironmentImpl implements CTRunEnvironment {
 
 		log.info(sb.toString());
 		//
-		CTTaskImpl task = new CTTaskImpl(s, values);
+		CTTaskImpl task = new CTTaskImpl(s, this, values);
 		synchronized (tasks) {
 			tasks.add(task);
 		}

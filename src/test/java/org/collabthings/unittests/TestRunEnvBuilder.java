@@ -4,7 +4,7 @@ import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.model.CTFactory;
-import org.collabthings.model.impl.CTScriptImpl;
+import org.collabthings.model.impl.CTApplicationImpl;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 
@@ -34,25 +34,25 @@ public final class TestRunEnvBuilder extends CTTestCase {
 		f.publish();
 
 		b.getEnvironment().setParameter("factoryid", f.getID());
-		CTScriptImpl taskscript = new CTScriptImpl(c);
+		CTApplicationImpl taskscript = new CTApplicationImpl(c);
 		// TODO create a task
 
-		b.getEnvironment().addScript("taskscript", taskscript);
-		CTScriptImpl initscript = new CTScriptImpl(c);
+		b.getEnvironment().addApplication("taskscript", taskscript);
+		CTApplicationImpl initscript = new CTApplicationImpl(c);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("function run(eb) { ");
-		sb.append("var task = eb.getEnvironment().getScript(\"taskscript\");");
+		sb.append("var task = eb.getEnvironment().getApplication(\"taskscript\");");
 		sb.append("var state = eb.createFactoryState(\"f\", eb.getEnvironment().getParameter(\"factoryid\"));");
-		sb.append("state.getRunEnvironment().getEnvironment().addScript(\"task\", task);");
+		sb.append("state.getRunEnvironment().getEnvironment().addApplication(\"task\", task);");
 		sb.append("state.addTask(\"task\", null);");
 		sb.append("return state.getRunEnvironment();");
 		sb.append("}");
 
 		sb.append("function info() { return 'info'; }");
 
-		initscript.setScript(sb.toString());
-		b.getEnvironment().addScript("init", initscript);
+		initscript.setApplication(sb.toString());
+		b.getEnvironment().addApplication("init", initscript);
 
 		b.publish();
 

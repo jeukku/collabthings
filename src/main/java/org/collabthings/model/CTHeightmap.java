@@ -12,9 +12,9 @@ package org.collabthings.model;
 
 public interface CTHeightmap extends CTModel, CTObject {
 
-	String getScript();
+	String getApplication();
 
-	void setScript(String sscripttext);
+	void setApplication(String sscripttext);
 
 	boolean isOK();
 

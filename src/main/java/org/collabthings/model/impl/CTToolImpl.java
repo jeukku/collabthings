@@ -14,9 +14,9 @@ package org.collabthings.model.impl;
 import java.util.Locale;
 
 import org.collabthings.CTClient;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTPart;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 
 import waazdoh.client.ServiceObject;
@@ -43,7 +43,7 @@ public final class CTToolImpl implements ServiceObjectData, CTTool {
 		this.client = nclient;
 		env = new CTEnvironmentImpl(nclient);
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
-		addScript("draw");
+		addApplication("draw");
 	}
 
 	public CTToolImpl(final CTClient nclient, final WStringID id) {
@@ -76,8 +76,8 @@ public final class CTToolImpl implements ServiceObjectData, CTTool {
 	}
 
 	@Override
-	public CTScript getScript(String string) {
-		return env.getScript(string.toLowerCase(Locale.ENGLISH));
+	public CTApplication getApplication(String string) {
+		return env.getApplication(string.toLowerCase(Locale.ENGLISH));
 	}
 
 	@Override
@@ -128,13 +128,13 @@ public final class CTToolImpl implements ServiceObjectData, CTTool {
 	}
 
 	@Override
-	public CTScript addScript(String string) {
-		return addScript(string, new CTScriptImpl(client));
+	public CTApplication addApplication(String string) {
+		return addApplication(string, new CTApplicationImpl(client));
 	}
 
-	public CTScript addScript(String scriptname, CTScript ctScript) {
-		env.addScript(scriptname.toLowerCase(Locale.ENGLISH), ctScript);
-		return ctScript;
+	public CTApplication addApplication(String scriptname, CTApplication ctApplication) {
+		env.addApplication(scriptname.toLowerCase(Locale.ENGLISH), ctApplication);
+		return ctApplication;
 	}
 
 	@Override

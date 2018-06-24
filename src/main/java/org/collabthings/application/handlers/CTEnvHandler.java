@@ -2,6 +2,7 @@ package org.collabthings.application.handlers;
 
 import org.collabthings.application.CTInstructionHandler;
 import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.model.CTValues;
 import org.collabthings.model.impl.CTApplicationImpl.ApplicationLine;
 import org.collabthings.util.LLog;
 
@@ -9,11 +10,11 @@ public class CTEnvHandler implements CTInstructionHandler {
 	private LLog log = LLog.getLogger(this);
 
 	@Override
-	public void handle(ApplicationLine instruction, CTRunEnvironment env) {
-		String action = instruction.get("action");
+	public void handle(ApplicationLine line, CTRunEnvironment env, CTValues values) {
+		String action = line.get("action");
 		if ("set".equals(action)) {
-			String key = instruction.get("key");
-			String value = instruction.get("value");
+			String key = line.get("key");
+			String value = line.get("value");
 			log.info("setting env value " + key + " -> " + value);
 			env.setParameter(key, value);
 		} else {

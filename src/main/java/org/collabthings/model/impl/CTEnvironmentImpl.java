@@ -18,8 +18,8 @@ import java.util.Set;
 
 import org.collabthings.CTClient;
 import org.collabthings.math.CTMath;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTEnvironment;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
@@ -34,7 +34,7 @@ import waazdoh.datamodel.WStringID;
 
 public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	private static final String BEANNAME = "env";
-	private static final String VALUENAME_SCRIPTS = "scripts";
+	private static final String VALUENAME_APPLICATIONS = "applications";
 	private static final String VALUENAME_TOOLS = "tools";
 	private static final String VALUENAME_PARAMS = "params";
 	private static final String VALUENAME_VPARAMS = "vparams";
@@ -44,7 +44,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	private CTClient client;
 	private ServiceObject o;
 	//
-	private Map<String, CTScript> scripts;
+	private Map<String, CTApplication> applications;
 	private Map<String, CTTool> tools = new HashMap<>();
 	private Map<String, String> parameters = new HashMap<>();
 	private Map<String, Vector3f> vparameters = new HashMap<>();
@@ -55,7 +55,6 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 
 	public CTEnvironmentImpl(CTClient nclient) {
 		this.client = nclient;
-		scripts = new HashMap<>();
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
 	}
 
@@ -91,7 +90,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 
 		b.addValue(VALUENAME_NAME, getName());
 
-		getScriptsBean(b);
+		getApplicationsBean(b);
 		getToolsBean(b);
 		getParametersBean(b);
 		getVectorParametersBean(b);
@@ -110,18 +109,18 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 		}
 	}
 
-	private void getScriptsBean(WObject b) {
-		synchronized (getScriptsSet()) {
-			Set<String> scriptnames = getScriptsSet().keySet();
-			for (String string : scriptnames) {
-				CTScript s = getScript(string);
+	private void getApplicationsBean(WObject b) {
+		synchronized (getApplicationsSet()) {
+			Set<String> applicationnames = getApplicationsSet().keySet();
+			for (String string : applicationnames) {
+				CTApplication s = getApplication(string);
 				if (s != null) {
 					WObject so = new WObject();
 					so.addValue(VALUENAME_NAME, string);
 					so.addValue("id", s.getID().toString());
-					b.addToList(VALUENAME_SCRIPTS, so);
+					b.addToList(VALUENAME_APPLICATIONS, so);
 				} else {
-					log().warning("script \"" + string + "\" null");
+					log().warning("application \"" + string + "\" null");
 				}
 			}
 		}
@@ -156,31 +155,30 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 		parseTools(bean);
 		parseParameters(bean);
 		parseVParameters(bean);
-		parseScripts(bean);
+		parseApplications(bean);
 
 		name = bean.getValue(VALUENAME_NAME);
 
 		return true;
 	}
 
-	private Map<String, CTScript> getScriptsSet() {
-		if (scripts == null) {
-			parseScripts(bean);
+	private Map<String, CTApplication> getApplicationsSet() {
+		if (applications == null) {
+			parseApplications(bean);
 		}
-
-		return scripts;
+		return applications;
 	}
 
-	private void parseScripts(WObject bean) {
-		scripts = new HashMap<>();
+	private void parseApplications(WObject bean2) {
+		applications = new HashMap<>();
 		if (bean != null) {
-			List<WObject> sbeans = bean.getObjectList(VALUENAME_SCRIPTS);
+			List<WObject> sbeans = bean.getObjectList(VALUENAME_APPLICATIONS);
 			for (WObject sbean : sbeans) {
-				String scriptname = sbean.getValue(VALUENAME_NAME);
+				String appname = sbean.getValue(VALUENAME_NAME);
 				WStringID id = sbean.getIDValue("id");
-				CTScriptImpl script = new CTScriptImpl(client);
-				script.load(id);
-				getScriptsSet().put(scriptname, script);
+				CTApplicationImpl app = new CTApplicationImpl(client);
+				app.load(id);
+				getApplicationsSet().put(appname, app);
 			}
 		}
 	}
@@ -220,38 +218,38 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	}
 
 	@Override
-	public void renameScript(String oldname, String newname) {
-		synchronized (getScriptsSet()) {
-			CTScript s = getScriptsSet().remove(oldname);
-			getScriptsSet().put(newname, s);
+	public void renameApplication(String oldname, String newname) {
+		synchronized (getApplicationsSet()) {
+			CTApplication s = getApplicationsSet().remove(oldname);
+			getApplicationsSet().put(newname, s);
 		}
 	}
 
 	@Override
-	public void deleteScript(String string) {
-		synchronized (getScriptsSet()) {
-			getScriptsSet().remove(string);
+	public void deleteApplication(String string) {
+		synchronized (getApplicationsSet()) {
+			getApplicationsSet().remove(string);
 		}
 	}
 
 	@Override
-	public void addScript(String scriptname, CTScript ctScript) {
-		synchronized (getScriptsSet()) {
-			getScriptsSet().put(scriptname, ctScript);
+	public void addApplication(String scriptname, CTApplication ctApplication) {
+		synchronized (getApplicationsSet()) {
+			getApplicationsSet().put(scriptname, ctApplication);
 		}
 	}
 
 	@Override
-	public CTScript getScript(String string) {
-		synchronized (getScriptsSet()) {
-			return getScriptsSet().get(string);
+	public CTApplication getApplication(String string) {
+		synchronized (getApplicationsSet()) {
+			return getApplicationsSet().get(string);
 		}
 	}
 
 	@Override
-	public Set<String> getScripts() {
-		synchronized (getScriptsSet()) {
-			return this.getScriptsSet().keySet();
+	public Set<String> getApplications() {
+		synchronized (getApplicationsSet()) {
+			return this.getApplicationsSet().keySet();
 		}
 	}
 
@@ -317,7 +315,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 
 	@Override
 	public void save() {
-		for (CTScript s : getScriptsSet().values()) {
+		for (CTApplication s : getApplicationsSet().values()) {
 			s.save();
 		}
 
@@ -330,7 +328,7 @@ public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 
 	@Override
 	public void publish() {
-		for (CTScript s : getScriptsSet().values()) {
+		for (CTApplication s : getApplicationsSet().values()) {
 			s.publish();
 		}
 

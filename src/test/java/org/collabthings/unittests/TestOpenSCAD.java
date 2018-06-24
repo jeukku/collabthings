@@ -7,15 +7,17 @@ import java.util.Map;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTRunEnvironment;
-import org.collabthings.environment.CTScriptRunner;
 import org.collabthings.environment.impl.CTFactoryState;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTModel;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTValues;
+import org.collabthings.model.impl.CTApplicationImpl;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.model.impl.CTPartImpl;
 import org.collabthings.simulation.CTSimpleSimulation;
@@ -38,13 +40,13 @@ public final class TestOpenSCAD extends CTTestCase {
 		scad.setName("scad");
 		part.setName("testing scad model");
 
-		scad.setScript(loadATestFile("scad/test.scad"));
+		scad.setApplication(loadATestFile("scad/test.scad"));
 
 		CTModel m = scad.getModel();
 		assertNotNull(m);
 
 		part.publish();
-		
+
 		String partid = part.getID().toString();
 
 		CTClient benv = getNewClient(true);
@@ -58,7 +60,7 @@ public final class TestOpenSCAD extends CTTestCase {
 
 		CTOpenSCAD bscad = (CTOpenSCAD) bpart.getModel();
 		assertNotNull(bscad);
-		assertEquals(scad.getScript(), bscad.getScript());
+		assertEquals(scad.getApplication(), bscad.getApplication());
 
 		String ascadyaml = scad.getObject().toYaml();
 		String bscadyaml = bscad.getObject().toYaml();
@@ -66,7 +68,7 @@ public final class TestOpenSCAD extends CTTestCase {
 
 		assertEquals(part.getObject().toYaml(), bpart.getObject().toYaml());
 		assertEquals(bpartid, partid);
-		
+
 		assertEquals(720, bscad.getModel().getTriangleMesh().getVectors().size());
 		assertEquals(240, bscad.getModel().getTriangleMesh().getTriangles().size());
 	}
@@ -80,7 +82,7 @@ public final class TestOpenSCAD extends CTTestCase {
 		scad.setName("gear");
 		part.setName("testing gear model");
 
-		scad.setScript(loadATestFile("scad/gears_helical.scad"));
+		scad.setApplication(loadATestFile("scad/gears_helical.scad"));
 
 		CTModel m = scad.getModel();
 		assertNotNull(m);
@@ -96,24 +98,19 @@ public final class TestOpenSCAD extends CTTestCase {
 		CTFactory f = client.getObjectFactory().getFactory();
 		CTFactoryState fs = new CTFactoryState(client, env, "test", f);
 		CTOpenSCAD scad = fs.newPart().getPart().newSCAD();
-		scad.setScript(loadATestFile("scad/test.scad"));
+		scad.setApplication(loadATestFile("scad/test.scad"));
 
 		Map<String, String> map = new HashMap<String, String>();
 
 		CTRunEnvironment runenv = fs.getRunEnvironment();
-		runenv.addTask(new CTScriptRunner() {
+		CTApplication app = new CTApplicationImpl(client);
 
+		runenv.addTask(new CTApplicationRunner(app) {
 			@Override
-			public boolean run(CTValues values) {
+			public boolean run(CTRunEnvironment rune, CTValues values) {
 				map.put("run", "true");
 				new WTimedFlag(1000).waitTimer();
 				return true;
-			}
-
-			@Override
-			public String getError() {
-				// TODO Auto-generated method stub
-				return null;
 			}
 		});
 

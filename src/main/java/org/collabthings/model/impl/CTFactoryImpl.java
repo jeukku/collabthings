@@ -19,12 +19,12 @@ import java.util.Set;
 
 import org.collabthings.CTClient;
 import org.collabthings.math.CTMath;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTAttachedFactory;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.util.PrintOut;
 
@@ -66,7 +66,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 
 		o = new ServiceObject(BEANNAME, client.getClient().getUserID(), client.getClient().getObjects(), this,
 				client.getVersion(), client.getPrefix());
-		addScript("start", new CTScriptImpl(client));
+		addApplication("start", new CTApplicationImpl(client));
 		setBoundingBox(new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
 	}
 
@@ -169,20 +169,14 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	}
 
 	@Override
-	public CTScript addScript(String string) {
-		return addScript(string, new CTScriptImpl(client));
+	public CTApplication addApplication(String string) {
+		return addApplication(string, new CTApplicationImpl(client));
 	}
 
 	@Override
-	public Set<String> getScripts() {
+	public Set<String> getApplications() {
 		CTEnvironment environment = getEnvironment();
-		return environment != null ? environment.getScripts() : null;
-	}
-
-	@Override
-	public CTScript getScript(String string) {
-		CTEnvironment environment = getEnvironment();
-		return environment != null ? environment.getScript(string.toLowerCase()) : null;
+		return environment != null ? environment.getApplications() : null;
 	}
 
 	private ServiceObject getServiceObject() {
@@ -230,11 +224,17 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	}
 
 	@Override
-	public CTScript addScript(String scriptname, CTScript ctScript) {
+	public CTApplication getApplication(String string) {
+		CTEnvironment environment = getEnvironment();
+		return environment != null ? environment.getApplication(string.toLowerCase()) : null;
+	}
+
+	@Override
+	public CTApplication addApplication(String scriptname, CTApplication ctApplication) {
 		CTEnvironment environment = getEnvironment();
 		if (environment != null) {
-			environment.addScript(scriptname.toLowerCase(), ctScript);
-			return ctScript;
+			environment.addApplication(scriptname.toLowerCase(), ctApplication);
+			return ctApplication;
 		} else {
 			return null;
 		}

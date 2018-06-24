@@ -11,28 +11,31 @@
 
 package org.collabthings.environment.impl;
 
+import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTEnvironmentTask;
-import org.collabthings.environment.CTScriptRunner;
+import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.model.CTValues;
 import org.collabthings.util.LLog;
 
 import waazdoh.client.utils.ConditionWaiter;
 
 public final class CTTaskImpl implements CTEnvironmentTask {
-	private CTScriptRunner s;
-	private CTValues values;
+	private CTApplicationRunner s;
+	private CTRunEnvironment runenv;
 	private boolean isrun;
+	private CTValues values;
 
-	public CTTaskImpl(CTScriptRunner s2, CTValues values2) {
+	public CTTaskImpl(CTApplicationRunner s2, CTRunEnvironment runenv, CTValues values) {
 		this.s = s2;
-		this.values = values2;
+		this.runenv = runenv;
+		this.values = values;
 		//
 		LLog.getLogger(this).info("CTTask " + s.toString());
 	}
 
 	@Override
 	public boolean run() {
-		boolean ret = s.run(values);
+		boolean ret = s.run(runenv, values);
 		isrun = true;
 		LLog.getLogger(this).info("Task done " + ret);
 		return ret;
@@ -49,7 +52,7 @@ public final class CTTaskImpl implements CTEnvironmentTask {
 
 	@Override
 	public String toString() {
-		return "CTTask[" + this.s + "][" + values + "]";
+		return "CTTask[" + this.s + "][" + runenv + "]";
 	}
 
 	public boolean isRun() {

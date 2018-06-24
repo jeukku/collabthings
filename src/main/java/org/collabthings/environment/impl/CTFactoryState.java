@@ -20,16 +20,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.collabthings.CTClient;
+import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.math.LOrientation;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTAttachedFactory;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTRuntimeObject;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.CTValues;
 import org.collabthings.util.LLog;
@@ -326,7 +327,7 @@ public class CTFactoryState implements CTRuntimeObject {
 	}
 
 	public CTEnvironmentTask addTask(String task, CTValues values) throws CTRuntimeError {
-		CTScriptRunnerImpl script = getScript(task);
+		CTApplicationRunner script = getApplication(task);
 		if (script != null) {
 			return runenv.addTask(script, values);
 		} else {
@@ -341,13 +342,13 @@ public class CTFactoryState implements CTRuntimeObject {
 	}
 
 	public boolean call(String string, CTValues values) {
-		CTScriptRunnerImpl s = getScript(string);
+		CTApplicationRunner s = getApplication(string);
 		getLog().info("calling " + string + " " + s);
 		if (s != null) {
 			addEvent(string, values);
-			return s.run(values);
+			return s.run(runenv, values);
 		} else {
-			getLog().info("Script \"" + string + "\" doesn't exist");
+			getLog().info("Application \"" + string + "\" doesn't exist");
 			getLog().info(runenv.printOut().toText());
 			getLog().info(getFactory().printOut().toText());
 			return false;
@@ -374,13 +375,13 @@ public class CTFactoryState implements CTRuntimeObject {
 		return param;
 	}
 
-	private CTScriptRunnerImpl getScript(String string) {
-		CTScript script = runenv.getEnvironment().getScript(string);
+	private CTApplicationRunner getApplication(String string) {
+		CTApplication script = runenv.getEnvironment().getApplication(string);
 		if (script == null) {
-			script = getFactory().getScript(string);
+			script = getFactory().getApplication(string);
 		}
 
-		return pool.getScript(script);
+		return pool.getApplication(script);
 	}
 
 	public CTFactory getFactory() {

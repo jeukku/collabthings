@@ -20,13 +20,15 @@ import waazdoh.datamodel.WObjectID;
 
 public interface CTEnvironment extends CTObject {
 
-	CTScript getScript(String string);
+	Set<String> getApplications();
 
-	Set<String> getScripts();
+	void renameApplication(String oldname, String newname);
 
-	void addScript(String scriptname, CTScript script);
+	void addApplication(String lowerCase, CTApplication ctApplication);
 
-	void renameScript(String oldname, String newname);
+	void deleteApplication(String string);
+
+	CTApplication getApplication(String string);
 
 	void addTool(String string, CTTool partsource);
 
@@ -53,8 +55,6 @@ public interface CTEnvironment extends CTObject {
 	boolean isReady();
 
 	WObjectID getID();
-
-	void deleteScript(String string);
 
 	PrintOut printOut();
 

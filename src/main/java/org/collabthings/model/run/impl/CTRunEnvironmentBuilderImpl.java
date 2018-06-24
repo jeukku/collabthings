@@ -14,14 +14,14 @@ package org.collabthings.model.run.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.script.ScriptException;
-
 import org.collabthings.CTClient;
+import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
+import org.collabthings.environment.impl.CTRunEnvironmentImpl;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.util.CResourcesReader;
@@ -51,15 +51,15 @@ public class CTRunEnvironmentBuilderImpl implements CTRunEnvironmentBuilder, Ser
 	public CTRunEnvironmentBuilderImpl(CTClient nclient) {
 		this.client = nclient;
 		env = new CTEnvironmentImpl(nclient);
-		CTScript initscript = nclient.getObjectFactory().getScript();
-		initscript.setScript("function run() {}\nfunction info() {}\n");
+		CTApplication initscript = nclient.getObjectFactory().getApplication();
+		initscript.setApplication("function run() {}\nfunction info() {}\n");
 
 		CResourcesReader r = new CResourcesReader("templates/runenvbuilder.js");
 		if (r.isSuccess()) {
-			initscript.setScript(r.getText());
+			initscript.setApplication(r.getText());
 		}
 
-		env.addScript("init", initscript);
+		env.addApplication("init", initscript);
 
 		o = new ServiceObject(BEANNAME, nclient.getClient(), this, nclient.getVersion(), nclient.getPrefix());
 	}
@@ -83,13 +83,11 @@ public class CTRunEnvironmentBuilderImpl implements CTRunEnvironmentBuilder, Ser
 
 	@Override
 	public CTRunEnvironment getRunEnvironment() {
-		CTScript s = getEnvironment().getScript("init");
-		try {
-			return (CTRunEnvironment) s.getInvocable().invokeFunction("run", this);
-		} catch (NoSuchMethodException | ScriptException e) {
-			getLogger().error(this, "getRunEnvironment", e);
-			return null;
-		}
+		CTApplication s = getEnvironment().getApplication("init");
+		CTApplicationRunner runner = new CTApplicationRunner(s);
+		CTRunEnvironmentImpl runenv = new CTRunEnvironmentImpl(client, env);
+		runner.run(runenv, null);
+		return runenv;
 	}
 
 	@Override

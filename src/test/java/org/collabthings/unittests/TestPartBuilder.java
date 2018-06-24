@@ -20,9 +20,9 @@ public final class TestPartBuilder extends CTTestCase {
 		String name = "PartBuilderTest";
 		pba.setName(name);
 
-		String stext = loadATestScript("partbuilder/test.yml");
+		String stext = loadATestApplication("partbuilder/test.yml");
 		CTApplication s = client.getObjectFactory().getApplication();
-		s.setScript(stext);
+		s.setApplication(stext);
 		pba.setApplication(s);
 
 		pba.publish();

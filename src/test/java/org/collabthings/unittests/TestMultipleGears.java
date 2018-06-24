@@ -69,7 +69,7 @@ public final class TestMultipleGears extends CTTestCase {
 			CTOpenSCAD scad = gear.newSCAD();
 			scad.setName("simplegear");
 			gear.setName("testing simplegear model");
-			scad.setScript(f);
+			scad.setApplication(f);
 
 			gearcontent.put(name, gear);
 		}

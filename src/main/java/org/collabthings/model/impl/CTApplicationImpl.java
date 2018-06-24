@@ -16,12 +16,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.script.ScriptException;
-
 import org.collabthings.CTClient;
 import org.collabthings.application.handlers.CTLogHandler;
 import org.collabthings.model.CTApplication;
 import org.collabthings.util.LLog;
+import org.omg.CORBA.portable.ApplicationException;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;
@@ -108,7 +107,7 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 	}
 
 	@Override
-	public void setScript(final String nscript) {
+	public void setApplication(final String nscript) {
 		WObject o = new WObject();
 		o.parse(nscript);
 		parseLines(o.getList(PARAM_LINES));
@@ -153,7 +152,7 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 	 * 
 	 * @return Return value of info -function in the script.
 	 * @throws NoSuchMethodException
-	 * @throws ScriptException
+	 * @throws ApplicationException
 	 */
 	@Override
 	public String getInfo() {
@@ -162,7 +161,7 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 
 	@Override
 	public String toString() {
-		return "CTScript[" + this.name + "][" + info + "]";
+		return "CTApplication[" + this.name + "][" + info + "]";
 	}
 
 	@Override
