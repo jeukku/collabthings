@@ -10,7 +10,6 @@ import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTTool;
 import org.collabthings.util.LLog;
-import org.omg.CORBA.portable.ApplicationException;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
@@ -32,7 +31,7 @@ public final class TestFactory extends CTTestCase {
 		assertEquals(f, env.getObjectFactory().getFactory(f.getID().getStringID()));
 	}
 
-	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ApplicationException {
+	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException {
 		boolean bind = true;
 		CTClient env = getNewClient(bind);
 		assertNotNull(env);

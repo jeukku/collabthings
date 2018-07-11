@@ -24,7 +24,6 @@ import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.simulation.CTSimulation;
 import org.collabthings.util.LLog;
-import org.omg.CORBA.portable.ApplicationException;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
@@ -41,8 +40,8 @@ public final class ITTestBuildABox extends CTTestCase {
 	private LLog log = LLog.getLogger(this);
 	private CTPart square;
 
-	public synchronized void testBoxLine() throws NoSuchMethodException, IOException, SAXException,
-			ApplicationException, CTToolException, InterruptedException {
+	public synchronized void testBoxLine()
+			throws NoSuchMethodException, IOException, SAXException, CTToolException, InterruptedException {
 		CTClient client = getNewClient();
 		info("client " + client);
 
@@ -111,13 +110,13 @@ public final class ITTestBuildABox extends CTTestCase {
 		return line;
 	}
 
-	public void testBuildABox() throws NoSuchMethodException, ApplicationException, IOException {
+	public void testBuildABox() throws NoSuchMethodException, IOException {
 		CTRunEnvironment runenv = testBox();
 		assertNotNull(runenv);
 	}
 
 	private CTFactory setupFactoryThatUsesBoxes(CTFactory factory, CTClient client)
-			throws IOException, NoSuchMethodException, ApplicationException {
+			throws IOException, NoSuchMethodException {
 		createAssemblyFactory(factory, client);
 		info("factory that uses boxes " + factory);
 
@@ -135,7 +134,7 @@ public final class ITTestBuildABox extends CTTestCase {
 		return factory;
 	}
 
-	public CTRunEnvironment testBox() throws NoSuchMethodException, ApplicationException, IOException {
+	public CTRunEnvironment testBox() throws NoSuchMethodException, IOException {
 		CTClient client = getNewClient();
 		assertNotNull(client);
 
@@ -175,7 +174,7 @@ public final class ITTestBuildABox extends CTTestCase {
 	}
 
 	private CTFactory createBoxFactory(CTFactory boxfactory, CTClient client)
-			throws NoSuchMethodException, ApplicationException, IOException {
+			throws NoSuchMethodException, IOException {
 		createAssemblyFactory(boxfactory, client);
 		boxfactory.setName("boxfactory");
 		info("Boxfactory " + boxfactory);
@@ -232,7 +231,7 @@ public final class ITTestBuildABox extends CTTestCase {
 	}
 
 	private CTFactory createAssemblyFactory(CTFactory factory, CTClient client)
-			throws IOException, NoSuchMethodException, ApplicationException {
+			throws IOException, NoSuchMethodException {
 		// Create a tool to pick up plates
 		CTTool tool = getPickupTool(client);
 		factory.getEnvironment().addTool("pickuptool", tool);
@@ -262,7 +261,7 @@ public final class ITTestBuildABox extends CTTestCase {
 	}
 
 	private CTFactory createPlateSource(CTFactory platesource, CTClient client, CTPart square)
-			throws NoSuchMethodException, ApplicationException, IOException {
+			throws NoSuchMethodException, IOException {
 		platesource.setName("platesource");
 
 		square.publish();
@@ -284,7 +283,7 @@ public final class ITTestBuildABox extends CTTestCase {
 		log.info("dt:" + (System.currentTimeMillis() - starttime) + " " + string);
 	}
 
-	private CTTool getPickupTool(CTClient client) throws IOException, NoSuchMethodException, ApplicationException {
+	private CTTool getPickupTool(CTClient client) throws IOException, NoSuchMethodException {
 		CTTool tool = client.getObjectFactory().getTool();
 		loadApplication(tool.addApplication("pickup"), "assembly_pickup.js");
 		loadApplication(tool.addApplication("attach"), "assembly_attach.js");

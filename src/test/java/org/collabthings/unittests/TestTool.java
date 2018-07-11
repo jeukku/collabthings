@@ -15,7 +15,6 @@ import org.collabthings.model.CTTool;
 import org.collabthings.model.impl.CTConstants;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.model.impl.CTToolImpl;
-import org.omg.CORBA.portable.ApplicationException;
 import org.xml.sax.SAXException;
 
 public final class TestTool extends CTTestCase {
@@ -33,7 +32,7 @@ public final class TestTool extends CTTestCase {
 		assertEquals(t, env.getObjectFactory().getTool(t.getID().getStringID()));
 	}
 
-	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ApplicationException {
+	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException {
 		createTwoClients();
 		//
 		CTTool t = clienta.getObjectFactory().getTool();

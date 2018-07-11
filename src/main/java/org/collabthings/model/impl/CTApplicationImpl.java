@@ -20,7 +20,6 @@ import org.collabthings.CTClient;
 import org.collabthings.application.handlers.CTLogHandler;
 import org.collabthings.model.CTApplication;
 import org.collabthings.util.LLog;
-import org.omg.CORBA.portable.ApplicationException;
 
 import waazdoh.client.ServiceObject;
 import waazdoh.client.ServiceObjectData;

@@ -7,7 +7,6 @@ import org.collabthings.CTTestCase;
 import org.collabthings.model.CTApplication;
 import org.collabthings.model.impl.CTApplicationImpl;
 import org.collabthings.model.impl.CTEnvironmentImpl;
-import org.omg.CORBA.portable.ApplicationException;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
@@ -32,7 +31,7 @@ public final class TestEnvironment extends CTTestCase {
 		assertEquals(ctApplication.getObject().toYaml(), loadedapplication.getObject().toYaml());
 	}
 
-	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException, ApplicationException {
+	public void testSaveAndLoad() throws IOException, SAXException, NoSuchMethodException {
 		CTClient c = getNewClient();
 		assertNotNull(c);
 		//
