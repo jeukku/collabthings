@@ -11,7 +11,6 @@
 
 package org.collabthings.model.impl;
 
-import org.apache.commons.logging.Log;
 import org.collabthings.CTClient;
 import org.collabthings.application.CTApplicationRunner;
 import org.collabthings.environment.CTRunEnvironment;

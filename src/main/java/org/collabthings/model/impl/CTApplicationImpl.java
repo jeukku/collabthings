@@ -150,8 +150,6 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 	/**
 	 * 
 	 * @return Return value of info -function in the application.
-	 * @throws NoSuchMethodException
-	 * @throws ApplicationException
 	 */
 	@Override
 	public String getInfo() {
