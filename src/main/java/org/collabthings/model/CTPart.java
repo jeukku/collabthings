@@ -71,4 +71,8 @@ public interface CTPart extends CTObject {
 
 	CTViewingProperties getViewingProperties();
 
+	CTVectorGroup getVectorGroup(String string);
+
+	CTVectorGroup addVectorGroup(String string);
+
 }

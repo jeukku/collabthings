@@ -229,4 +229,20 @@ public final class TestPart extends CTTestCase {
 		assertReallyClose(4.0, res1);
 		assertReallyClose(2.0, res2);
 	}
+
+	public void testVectors() {
+		CTClient client = getNewClient();
+		CTPart parta = client.getObjectFactory().getPart();
+		parta.addVectorGroup("test").addVector().set(1, 1, 1);
+		parta.publish();
+
+		CTClient clientb = getNewClient();
+		CTPart partb = clientb.getObjectFactory().getPart(parta.getID().getStringID());
+		assertNotNull(partb);
+		assertEquals(parta.getObject().toText(), partb.getObject().toText());
+
+		assertNotNull(partb.getVectorGroup("test"));
+		assertEquals(1, partb.getVectorGroup("test").size());
+		assertEquals(parta.getVectorGroup("test").get(0), partb.getVectorGroup("test").get(0));
+	}
 }

@@ -14,7 +14,9 @@ package org.collabthings.model.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTEvent;
@@ -27,6 +29,7 @@ import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTSubPart;
+import org.collabthings.model.CTVectorGroup;
 import org.collabthings.model.CTViewingProperties;
 import org.collabthings.util.LLog;
 
@@ -47,6 +50,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private static final String VALUENAME_BUILDERID = "builder";
 	private static final String VALUENAME_RESOURCEUSAGE = "resources";
 	private static final String VALUENAME_VIEWINGPROPERTIES = "view";
+	private static final String VALUENAME_VECTORGROUPS = "vgs";
 	//
 	private ServiceObject o;
 	private String name = "part";
@@ -67,6 +71,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private boolean ready;
 	private WObject modeldata;
 	private CTViewingProperties viewingproperties;
+	private Map<String, CTVectorGroup> vectorgroups;
 
 	private static LLog log = LLog.getLogger("PartImpl");
 
@@ -124,6 +129,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			}
 
 			addSubParts(b);
+			addVectorGroups(b);
 
 			storedobject = org;
 		}
@@ -154,6 +160,16 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			WObject bpart = new WObject("part");
 			((CTSubPartImpl) part).getBean(bpart);
 			b.addToList("parts", bpart);
+		}
+	}
+
+	private synchronized void addVectorGroups(WObject b) {
+		if (vectorgroups != null) {
+			WObject bvg = b.add(VALUENAME_VECTORGROUPS);
+			for (String name : vectorgroups.keySet()) {
+				CTVectorGroup vg = vectorgroups.get(name);
+				vg.addTo(bvg.add(name));
+			}
 		}
 	}
 
@@ -203,6 +219,15 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 				addPart(subpart);
 			}
 		}
+
+		WObject bvgs = bean.get(VALUENAME_VECTORGROUPS);
+		if (bvgs != null) {
+			vectorgroups = new HashMap<>();
+			for (String vgname : bvgs.getChildren()) {
+				addVectorGroup(vgname).parse(bvgs.get(vgname));
+			}
+		}
+
 		//
 		if (getName() != null) {
 			storedobject = null;
@@ -522,6 +547,29 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			resourceusage = new CTResourceUsage();
 		}
 		return resourceusage;
+	}
+
+	@Override
+	public CTVectorGroup addVectorGroup(String string) {
+		if (vectorgroups == null) {
+			vectorgroups = new HashMap<>();
+		}
+
+		CTVectorGroup vg = getVectorGroup(string);
+		if (vg == null) {
+			vg = new CTVectorGroup();
+			vectorgroups.put(string, vg);
+		}
+
+		return vg;
+	}
+
+	@Override
+	public CTVectorGroup getVectorGroup(String string) {
+		if (vectorgroups == null) {
+			return null;
+		}
+		return vectorgroups.get(string);
 	}
 
 	@Override
