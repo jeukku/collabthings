@@ -23,4 +23,14 @@ public class CTLogHandler implements CTInstructionHandler {
 
 		LLog.getLogger(this).info("APP LOG " + msg);
 	}
+
+	public final static class LogApplicationLine extends ApplicationLine {
+
+		public LogApplicationLine(String message) {
+			put(ApplicationLine.ACTION, "log");
+			put(CTLogHandler.MSG, message);
+		}
+
+	}
+
 }

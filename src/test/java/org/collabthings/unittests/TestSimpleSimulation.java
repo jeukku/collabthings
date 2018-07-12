@@ -7,7 +7,9 @@ import java.util.Map;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.application.CTApplicationLines;
 import org.collabthings.application.CTApplicationRunner;
+import org.collabthings.application.handlers.CTSetHandler.SetCallApplicationLine;
 import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
@@ -219,17 +221,9 @@ public class TestSimpleSimulation extends CTTestCase {
 
 		CTApplicationImpl taskapplication = new CTApplicationImpl(client);
 
-		ApplicationLine toolline = new ApplicationLine();
-		toolline.put("a", "factory");
-		toolline.put("action", "get");
-		toolline.put("dest", "factorytool");
-		toolline.put("name", "tool");
-
-		ApplicationLine toolline2 = new ApplicationLine();
-		toolline2.put("a", "tool");
-		toolline2.put("action", "call");
-		toolline2.put("name", "tooltest");
-		toolline2.put("source", "factorytool");
+		ApplicationLine toolline = CTApplicationLines.factoryGet("factory", "factorytool", "tool");
+		
+		SetCallApplicationLine toolline2 = CTApplicationLines.call("tooltest", "factorytool", "FAIL");
 
 		taskapplication.addLine(toolline);
 
@@ -243,8 +237,9 @@ public class TestSimpleSimulation extends CTTestCase {
 		CTApplicationImpl testapplication = new CTApplicationImpl(client);
 		tool.addApplication("tooltest", testapplication);
 		String testapplicationvalue = "testvalue" + Math.random();
-		testapplication.setApplication("function info() {} function run(e, runo, values) { e.setParameter('testfromtool', '"
-				+ testapplicationvalue + "'); }");
+		testapplication
+				.setApplication("function info() {} function run(e, runo, values) { e.setParameter('testfromtool', '"
+						+ testapplicationvalue + "'); }");
 		//
 		CTToolState toolstate = factorystate.addTool("tool", tool);
 		assertNotNull(toolstate);

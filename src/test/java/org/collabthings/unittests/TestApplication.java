@@ -3,7 +3,7 @@ package org.collabthings.unittests;
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
 import org.collabthings.application.CTApplicationRunner;
-import org.collabthings.application.lines.EnvSetApplicationLine;
+import org.collabthings.application.handlers.CTEnvHandler.EnvSetApplicationLine;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTRunEnvironmentImpl;
 import org.collabthings.model.CTApplication;

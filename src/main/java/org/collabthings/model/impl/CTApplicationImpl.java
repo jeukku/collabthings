@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.collabthings.CTClient;
-import org.collabthings.application.handlers.CTLogHandler;
+import org.collabthings.application.handlers.CTLogHandler.LogApplicationLine;
 import org.collabthings.model.CTApplication;
 import org.collabthings.util.LLog;
 
@@ -58,9 +58,7 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 		setName("application" + CTApplicationImpl.namecounter);
 		CTApplicationImpl.namecounter++;
 		lines = new LinkedList<>();
-		ApplicationLine logline = new ApplicationLine();
-		logline.put(ApplicationLine.ACTION, "log");
-		logline.put(CTLogHandler.MSG, "Running " + getName());
+		ApplicationLine logline = new LogApplicationLine("Running " + getName());
 		lines.add(logline);
 	}
 

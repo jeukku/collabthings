@@ -75,4 +75,6 @@ public interface CTPart extends CTObject {
 
 	CTVectorGroup addVectorGroup(String string);
 
+	CTConnector addSubpartConnector(String string);
+
 }

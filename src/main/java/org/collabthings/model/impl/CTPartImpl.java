@@ -22,6 +22,7 @@ import org.collabthings.CTClient;
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.model.CTBoundingBox;
+import org.collabthings.model.CTConnector;
 import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTMaterial;
 import org.collabthings.model.CTModel;
@@ -570,6 +571,12 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			return null;
 		}
 		return vectorgroups.get(string);
+	}
+
+	@Override
+	public CTConnector addSubpartConnector(String string) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

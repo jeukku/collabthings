@@ -21,4 +21,16 @@ public class CTEnvHandler implements CTInstructionHandler {
 			throw new RuntimeException("unknown action " + action);
 		}
 	}
+
+	public final static class EnvSetApplicationLine extends ApplicationLine {
+
+		public EnvSetApplicationLine(String string, String value) {
+			put(ApplicationLine.ACTION, "env");
+			put("action", "set");
+			put("key", string);
+			put("value", value);
+		}
+
+	}
+
 }

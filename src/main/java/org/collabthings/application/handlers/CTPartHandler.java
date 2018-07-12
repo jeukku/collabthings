@@ -4,16 +4,21 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.collabthings.application.CTInstructionHandler;
+import org.collabthings.application.handlers.lines.CTVectorApplicationLine;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTValues;
 import org.collabthings.model.impl.CTApplicationImpl.ApplicationLine;
 
 // this should ne removed. Calling methods with a name is too dangerous.
-public class CTSetHandler implements CTInstructionHandler {
+public class CTPartHandler implements CTInstructionHandler {
 
 	private static final String PARAM_ACTION = "action";
 	private static final String ACTION_CALL = "call";
+
+	public static CTPartApplicationLine part() {
+		return new CTPartApplicationLine();
+	}
 
 	@Override
 	public void handle(ApplicationLine instruction, CTRunEnvironment rune, CTValues values) {
@@ -51,6 +56,23 @@ public class CTSetHandler implements CTInstructionHandler {
 			put("dest", dest);
 			put("source", source);
 			put("method", method);
+		}
+	}
+
+	public static class CTPartApplicationLine extends ApplicationLine {
+		public static CTPartGetSubApplicationLine getSub(String name) {
+			return new CTPartGetSubApplicationLine(name);
+		}
+	}
+
+	public static class CTPartGetSubApplicationLine extends ApplicationLine {
+
+		public CTPartGetSubApplicationLine(String name) {
+			// TODO Auto-generated constructor stub
+		}
+
+		public CTVectorApplicationLine location() {
+			return new CTVectorApplicationLine();
 		}
 	}
 }
