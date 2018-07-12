@@ -54,7 +54,7 @@ public final class TestApplication extends CTTestCase {
 		CTApplication app = env.getObjectFactory().getApplication();
 		ApplicationLine setline = new EnvSetApplicationLine("testvalue", SCRIPT_ENV_TEST_VALUE);
 
-		app.addApplicationLine(setline);
+		app.addLine(setline);
 		return app;
 	}
 

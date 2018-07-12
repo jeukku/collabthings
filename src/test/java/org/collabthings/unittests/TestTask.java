@@ -36,7 +36,7 @@ public final class TestTask extends CTTestCase {
 		CTApplication app = new CTApplicationImpl(c);
 		ApplicationLine applicationLine = new ApplicationLine();
 		applicationLine.put("a", "FAIL");
-		app.addApplicationLine(applicationLine);
+		app.addLine(applicationLine);
 		CTTaskImpl t = new CTTaskImpl(new CTApplicationRunner(app), runenv, null);
 		try {
 			assertFalse(t.run());

@@ -231,7 +231,7 @@ public class TestSimpleSimulation extends CTTestCase {
 		toolline2.put("name", "tooltest");
 		toolline2.put("source", "factorytool");
 
-		taskapplication.addApplicationLine(toolline);
+		taskapplication.addLine(toolline);
 
 		assertTrue(taskapplication.isOK());
 		f.addApplication("factorytest", taskapplication);

@@ -14,6 +14,6 @@ public interface CTApplication extends CTObject {
 
 	boolean isOK();
 
-	void addApplicationLine(ApplicationLine setline);
+	void addLine(ApplicationLine setline);
 
 }

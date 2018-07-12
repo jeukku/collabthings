@@ -86,7 +86,7 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 	}
 
 	@Override
-	public void addApplicationLine(ApplicationLine line) {
+	public void addLine(ApplicationLine line) {
 		lines.add(line);
 	}
 
