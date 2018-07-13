@@ -90,7 +90,7 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 
 	@Override
 	public boolean parse(final WObject bean) {
-		List<Map> lineslist = bean.getList(PARAM_LINES);
+		List<WObject> lineslist = bean.getObjectList(PARAM_LINES);
 		lines.clear();
 		parseLines(lineslist);
 
@@ -107,11 +107,11 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 	public void setApplication(final String napplication) {
 		WObject o = new WObject();
 		o.parse(napplication);
-		parseLines(o.getList(PARAM_LINES));
+		parseLines(o.getObjectList(PARAM_LINES));
 	}
 
-	private void parseLines(List<Map> list) {
-		for (Map wo : list) {
+	private void parseLines(List<WObject> list) {
+		for (WObject wo : list) {
 			this.lines.add(new ApplicationLine(wo));
 		}
 	}
@@ -168,14 +168,25 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 		public static final String ACTION = "a";
 
 		private Map<String, String> values = new HashMap<>();
+		private List<ApplicationLine> lines;
 
 		public ApplicationLine() {
 			//
 		}
 
-		public ApplicationLine(Map wo) {
-			for (Object key : wo.keySet()) {
-				values.put("" + key, "" + wo.get(key));
+		public ApplicationLine(WObject wo) {
+			for (String key : wo.getChildren()) {
+				if (!key.equals("_l")) {
+					values.put("" + key, "" + wo.getValue(key));
+				}
+			}
+
+			List<WObject> wolines = wo.getObjectList("_l");
+			if (wolines != null) {
+				lines = new LinkedList<>();
+				for (WObject woline : wolines) {
+					lines.add(new ApplicationLine(woline));
+				}
 			}
 		}
 
@@ -188,11 +199,25 @@ public final class CTApplicationImpl implements ServiceObjectData, CTApplication
 			for (String key : values.keySet()) {
 				wo.addValue(key, values.get(key));
 			}
+
+			if (lines != null) {
+				for (ApplicationLine l : lines) {
+					wo.addToList("_l", l.getWObject());
+				}
+			}
+
 			return wo;
 		}
 
 		public String get(String key) {
 			return values.get(key);
+		}
+
+		public void addLine(ApplicationLine line) {
+			if (lines == null) {
+				lines = new LinkedList<>();
+			}
+			lines.add(line);
 		}
 
 	}
