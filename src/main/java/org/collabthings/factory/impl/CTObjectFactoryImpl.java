@@ -356,7 +356,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 		String ayaml = loadedo.toYaml();
 		String byaml = oservice.toYaml();
 
-		Patch diff = DiffUtils.diff(ArrayUtil.asMutableList(ayaml.split("\n")),
+		Patch<String> diff = DiffUtils.diff(ArrayUtil.asMutableList(ayaml.split("\n")),
 				ArrayUtil.asMutableList(byaml.split("\n")));
 		diff.getDeltas().forEach(d -> {
 			sb.append("\nDiff " + d.getOriginal() + "\n\t" + d.getRevised());
