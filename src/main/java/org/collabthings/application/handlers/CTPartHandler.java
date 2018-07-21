@@ -16,7 +16,7 @@ public class CTPartHandler implements CTInstructionHandler {
 	private static final String PARAM_ACTION = "action";
 	private static final String ACTION_CALL = "call";
 
-	public static CTPartApplicationLine part() {
+	public CTPartApplicationLine part() {
 		return new CTPartApplicationLine();
 	}
 
@@ -60,7 +60,7 @@ public class CTPartHandler implements CTInstructionHandler {
 	}
 
 	public static class CTPartApplicationLine extends ApplicationLine {
-		public static CTPartGetSubApplicationLine getSub(String name) {
+		public CTPartGetSubApplicationLine getSub(String name) {
 			return new CTPartGetSubApplicationLine(name);
 		}
 	}

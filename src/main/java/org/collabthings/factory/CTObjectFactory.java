@@ -13,6 +13,7 @@ package org.collabthings.factory;
 
 import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTBinaryModel;
+import org.collabthings.model.CTConnector;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTInfo;
@@ -64,5 +65,9 @@ public interface CTObjectFactory {
 	CTMapOfPieces getMapOfPieces();
 
 	CTMapOfPieces getMapOfPieces(WStringID bmapid);
+
+	CTConnector getConnector(WStringID wStringID);
+
+	CTConnector getConnector();
 
 }

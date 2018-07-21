@@ -77,4 +77,6 @@ public interface CTPart extends CTObject {
 
 	CTConnector addSubpartConnector(String string);
 
+	CTConnector addSubpartConnector(String string, CTConnector c);
+
 }

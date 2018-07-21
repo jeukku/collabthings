@@ -52,6 +52,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private static final String VALUENAME_RESOURCEUSAGE = "resources";
 	private static final String VALUENAME_VIEWINGPROPERTIES = "view";
 	private static final String VALUENAME_VECTORGROUPS = "vgs";
+	private static final String VALUENAME_CONNECTORS = null;
 	//
 	private ServiceObject o;
 	private String name = "part";
@@ -60,6 +61,8 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	private CTClient env;
 
 	private List<CTSubPart> subparts = new ArrayList<>();
+	private Map<String, CTConnector> connectors = new HashMap<>();
+
 	private CTBoundingBox boundingbox = new CTBoundingBox(new Vector3f(), new Vector3f());
 	private CTMaterial material = new CTMaterialImpl();
 
@@ -131,6 +134,7 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 			addSubParts(b);
 			addVectorGroups(b);
+			addConnectors(b);
 
 			storedobject = org;
 		}
@@ -170,6 +174,16 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			for (String name : vectorgroups.keySet()) {
 				CTVectorGroup vg = vectorgroups.get(name);
 				vg.addTo(bvg.add(name));
+			}
+		}
+	}
+
+	private synchronized void addConnectors(WObject b) {
+		if (connectors != null) {
+			WObject bcs = b.add(VALUENAME_CONNECTORS);
+			for (String name : connectors.keySet()) {
+				CTConnector c = connectors.get(name);
+				bcs.addValue(name, c.getID());
 			}
 		}
 	}
@@ -229,6 +243,14 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			}
 		}
 
+		WObject bcs = bean.get(VALUENAME_CONNECTORS);
+		if (bcs != null) {
+			connectors = new HashMap<>();
+			for (String cname : bcs.getChildren()) {
+				String idvalue = bcs.getValue(cname);
+				addSubpartConnector(cname, env.getObjectFactory().getConnector(new WStringID(idvalue)));
+			}
+		}
 		//
 		if (getName() != null) {
 			storedobject = null;
@@ -387,6 +409,12 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 
 			subparts.parallelStream().forEach(CTSubPart::save);
 
+			if (connectors != null) {
+				for (CTConnector c : connectors.values()) {
+					c.save();
+				}
+			}
+
 			updateResourceUsage();
 
 			getServiceObject().save();
@@ -408,6 +436,12 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 			}
 
 			subparts.parallelStream().forEach(CTSubPart::publish);
+
+			if (connectors != null) {
+				for (CTConnector c : connectors.values()) {
+					c.publish();
+				}
+			}
 
 			getServiceObject().publish();
 
@@ -574,9 +608,31 @@ public final class CTPartImpl implements ServiceObjectData, CTPart {
 	}
 
 	@Override
+	public CTConnector addSubpartConnector(String string, CTConnector c) {
+		if (connectors == null) {
+			connectors = new HashMap<>();
+		}
+
+		if (connectors.get(string) == null) {
+			if (connectors.get(string) == null) {
+				connectors.put(string, c);
+			}
+		}
+
+		return connectors.get(string);
+	}
+
+	@Override
 	public CTConnector addSubpartConnector(String string) {
-		// TODO Auto-generated method stub
-		return null;
+		if (connectors == null) {
+			connectors = new HashMap<>();
+		}
+
+		if (connectors.get(string) == null) {
+			CTConnector c = env.getObjectFactory().getConnector();
+			connectors.put(string, c);
+		}
+		return connectors.get(string);
 	}
 
 	@Override

@@ -22,6 +22,7 @@ import org.collabthings.CTClient;
 import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTBinaryModel;
+import org.collabthings.model.CTConnector;
 import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTInfo;
 import org.collabthings.model.CTMapOfPieces;
@@ -30,6 +31,7 @@ import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.impl.CT3DModelImpl;
 import org.collabthings.model.impl.CTApplicationImpl;
+import org.collabthings.model.impl.CTConnectorImpl;
 import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.model.impl.CTHeightmapImpl;
 import org.collabthings.model.impl.CTMapOfPiecesImpl;
@@ -61,6 +63,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 	private List<CTOpenSCAD> openscads = new ArrayList<>();
 	private List<CTHeightmap> heightmaps = new ArrayList<>();
 	private List<CTMapOfPieces> maps = new ArrayList<>();
+	private List<CTConnector> connectors = new ArrayList<>();
 
 	private Map<WStringID, CTPartImpl> orgparts = new HashMap<>();
 
@@ -112,8 +115,8 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 
 			if (!s.getID().getStringID().equals(searchid)) {
 				StringBuilder sb = new StringBuilder();
-				sb.append(
-						"Loaded application doesn't have the id requested. Requested:" + searchid + " result:" + s.getID());
+				sb.append("Loaded application doesn't have the id requested. Requested:" + searchid + " result:"
+						+ s.getID());
 				WObject oservice = client.getService().getObjects().read(searchid.toString()).toObject();
 				WObject loadedo = s.getObject();
 				diff(sb, oservice, loadedo);
@@ -251,6 +254,30 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 			CTToolImpl tool = new CTToolImpl(client, toolid);
 			tools.add(tool);
 			return tool;
+		}
+	}
+
+	@Override
+	public CTConnector getConnector() {
+		CTConnector c = new CTConnectorImpl(client);
+		synchronized (connectors) {
+			connectors.add(c);
+		}
+		return c;
+	}
+
+	@Override
+	public CTConnector getConnector(WStringID connectorid) {
+		synchronized (connectors) {
+			for (CTConnector connector : connectors) {
+				if (connector.getID().getStringID().equals(connectorid)) {
+					return connector;
+				}
+			}
+
+			CTConnectorImpl connector = new CTConnectorImpl(client, connectorid);
+			connectors.add(connector);
+			return connector;
 		}
 	}
 

@@ -26,6 +26,6 @@ public class CTApplicationLines {
 	}
 
 	public final static CTPartApplicationLine part() {
-		return CTPartHandler.part();
+		return new CTPartHandler().part();
 	}
 }

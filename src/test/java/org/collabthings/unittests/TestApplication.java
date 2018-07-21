@@ -15,6 +15,7 @@ public final class TestApplication extends CTTestCase {
 
 	private static final String THIS_SHOULD_WORK = "this should work.";
 	private static final String SCRIPT_ENV_TEST_VALUE = "testvalue " + Math.random();
+	private static final String SCRIPT_ENV_TEST_VALUE2 = "testvalue2 " + Math.random();
 	private static final String FAILING_SCRIPT = "FAIL";
 
 	public void testSaveAndLoad() {
