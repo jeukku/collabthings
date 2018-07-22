@@ -11,7 +11,8 @@
 
 package org.collabthings.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LLog {
 	private Logger log;
@@ -19,7 +20,7 @@ public class LLog {
 	private int maxinfolength = 40;
 
 	LLog(Object o) {
-		log = Logger.getLogger("" + o);
+		log = LoggerFactory.getLogger("" + o);
 		setInfo("" + o);
 	}
 

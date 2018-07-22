@@ -146,8 +146,8 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.9</source>
-					<target>1.9</target>
+					<source>9</source>
+					<target>9</target>
 				</configuration>
 				<version>3.7.0</version>
 			</plugin>
@@ -203,12 +203,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.web3j</groupId>
-			<artifactId>core</artifactId>
-			<version>3.4.0</version>
-		</dependency>
-
-		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>
@@ -251,13 +245,18 @@
 			<version>0.4.0-SNAPSHOT</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.11.0</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.6</version>
 		</dependency>
 
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.9</version>
+		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/org.openstreetmap.osmosis/osmosis-core -->
 		<dependency>
 			<groupId>org.openstreetmap.osmosis</groupId>
