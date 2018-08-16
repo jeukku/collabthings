@@ -240,12 +240,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.collabthings</groupId>
-			<artifactId>collabthings-register</artifactId>
-			<version>0.4.0-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.6</version>
