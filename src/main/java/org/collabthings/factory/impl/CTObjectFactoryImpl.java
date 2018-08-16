@@ -12,6 +12,7 @@
 package org.collabthings.factory.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -42,7 +43,6 @@ import org.collabthings.model.impl.CTToolImpl;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 import org.collabthings.util.LLog;
-import org.eclipse.jetty.util.ArrayUtil;
 
 import difflib.DiffUtils;
 import difflib.Patch;
@@ -356,8 +356,7 @@ public final class CTObjectFactoryImpl implements CTObjectFactory {
 		String ayaml = loadedo.toYaml();
 		String byaml = oservice.toYaml();
 
-		Patch<String> diff = DiffUtils.diff(ArrayUtil.asMutableList(ayaml.split("\n")),
-				ArrayUtil.asMutableList(byaml.split("\n")));
+		Patch<String> diff = DiffUtils.diff(Arrays.asList(ayaml.split("\n")), Arrays.asList(byaml.split("\n")));
 		diff.getDeltas().forEach(d -> {
 			sb.append("\nDiff " + d.getOriginal() + "\n\t" + d.getRevised());
 		});
