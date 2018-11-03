@@ -21,8 +21,8 @@ public class TestSBMQ extends CTTestCase {
 		SBMQ mq = new SBMQ();
 
 		Set<SBMessage> messages = new HashSet<>();
-		
-		int timeout = getWaitTime()*2;
+
+		int timeout = getWaitTime() * 2;
 		WTimedFlag flag = new WTimedFlag(timeout);
 
 		mq.getStream(new SBMQFilter("test", "test", (f, m) -> {
@@ -39,12 +39,13 @@ public class TestSBMQ extends CTTestCase {
 
 		SBMessage m = messages.iterator().next();
 		assertNotNull(m);
-		assertNotNull(m.getProgress());
 		assertNotNull(m.getHash());
 		assertNotNull(m.getPrevious());
-		assertNotNull(m.getType());
+		assertNotNull(m.getContent());
+		assertNotNull(m.getContent().getText());
+		assertEquals("collabthings", m.getContent().getType());
 		assertNotEquals(0, m.getSequence());
-		
+
 		mq.close();
 	}
 

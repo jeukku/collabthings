@@ -97,4 +97,9 @@ public class SBMessage {
 	class SBMessageProgress {
 
 	}
+
+	@Override
+	public String toString() {
+		return "SBMessage type:" + type;
+	}
 }
