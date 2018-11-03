@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.collabthings.CTTestCase;
 import org.collabthings.sbmq.SBMQ;
+import org.collabthings.sbmq.SBMQConfig;
 import org.collabthings.sbmq.SBMQFilter;
 import org.collabthings.sbmq.message.SBMessage;
 
@@ -18,7 +19,9 @@ public class TestSBMQ extends CTTestCase {
 	private int counter;
 
 	public void testMessage() {
-		SBMQ mq = new SBMQ();
+		SBMQConfig config = getConfig();
+
+		SBMQ mq = new SBMQ(config);
 
 		Set<SBMessage> messages = new HashSet<>();
 
@@ -49,10 +52,16 @@ public class TestSBMQ extends CTTestCase {
 		mq.close();
 	}
 
+	private SBMQConfig getConfig() {
+		SBMQConfig config = new SBMQConfig();
+		//config.setHome("./tmp/testhome");
+		return config;
+	}
+
 	public void test1000Messages() {
 		counter = 0;
 
-		SBMQ mq = new SBMQ();
+		SBMQ mq = new SBMQ(getConfig());
 
 		WTimedFlag flag = new WTimedFlag(getWaitTime());
 

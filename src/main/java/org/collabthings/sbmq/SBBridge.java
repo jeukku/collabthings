@@ -11,8 +11,11 @@ import waazdoh.client.utils.WLogger;
 public class SBBridge {
 	private WLogger logger = WLogger.getLogger(this);
 	private boolean closed = false;
+	private SBMQConfig config;
 
-	public SBBridge() {
+	public SBBridge(SBMQConfig config) {
+		this.config = config;
+
 		runCmd("status").consume((f, message) -> {
 			logger.info("got status message " + message);
 			f.close();
@@ -28,7 +31,13 @@ public class SBBridge {
 			path += ":" + sbotpath;
 			logger.info("env " + path);
 
-			ProcessBuilder pb = new ProcessBuilder("bash", "-c", "PATH=" + path + " && sbot " + params);
+			String cmd = "PATH=" + path;
+			cmd += " HOME=" + config.getHome();
+			cmd += " && sbot " + params;
+
+			logger.info("running " + cmd);
+			
+			ProcessBuilder pb = new ProcessBuilder("bash", "-c", cmd);
 			logger.info("running " + pb.command());
 			Process p = pb.start();
 
