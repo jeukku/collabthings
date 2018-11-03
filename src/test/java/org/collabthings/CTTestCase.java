@@ -228,7 +228,7 @@ public class CTTestCase extends TestCase {
 		return sb.toString();
 	}
 
-	private int getWaitTime() {
+	protected int getWaitTime() {
 		return 40000;
 	}
 
