@@ -149,15 +149,19 @@ public class TestSimpleSimulation extends CTTestCase {
 		CTClient client = getNewClient();
 
 		CTApplicationImpl s = new CTApplicationImpl(client);
-		s.setApplication("function test() {}");
 
+		try {
+			s.setApplication("function test() {}");
+		} catch (ClassCastException e) {
+			// ok
+		}
 		CTEnvironment env = new CTEnvironmentImpl(client);
 		CTRunEnvironment runenv = new CTRunEnvironmentImpl(client, env);
 
 		CTApplicationRunner runner = new CTApplicationRunner(s);
 		runenv.addTask(runner);
 		CTSimulation simulation = new CTSimpleSimulation(runenv);
-		assertFalse(simulation.run(MAX_SIMUALTION_RUNTIME));
+		assertTrue(simulation.run(MAX_SIMUALTION_RUNTIME));
 	}
 
 	public void testSimpleApplication() throws IOException, SAXException {
@@ -222,7 +226,7 @@ public class TestSimpleSimulation extends CTTestCase {
 		CTApplicationImpl taskapplication = new CTApplicationImpl(client);
 
 		ApplicationLine toolline = CTApplicationLines.factoryGet("factory", "factorytool", "tool");
-		
+
 		SetCallApplicationLine toolline2 = CTApplicationLines.call("tooltest", "factorytool", "FAIL");
 
 		taskapplication.addLine(toolline);

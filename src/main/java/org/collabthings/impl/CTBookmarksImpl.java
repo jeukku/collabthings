@@ -28,6 +28,8 @@ public class CTBookmarksImpl implements CTBookmarks {
 	public CTBookmarksImpl(CTClientImpl nclient) {
 		this.storage = nclient.getStorage();
 		this.username = nclient.getClient().getService().getUser().getUsername();
+		
+		
 	}
 
 	@Override
