@@ -8,12 +8,12 @@ import java.util.Map;
 import org.collabthings.model.impl.CTConstants;
 import org.collabthings.util.LLog;
 
-import waazdoh.client.BeanStorage;
-import waazdoh.client.utils.WPreferences;
-import waazdoh.common.service.ObjectsService;
-import waazdoh.datamodel.ObjectVO;
-import waazdoh.datamodel.ReturnVO;
-import waazdoh.datamodel.WBytesHash;
+import collabthings.common.service.ObjectsService;
+import collabthings.core.BeanStorage;
+import collabthings.core.utils.WPreferences;
+import collabthings.datamodel.ObjectVO;
+import collabthings.datamodel.ReturnVO;
+import collabthings.datamodel.WBytesHash;
 
 public class StaticObjectsService implements ObjectsService {
 

@@ -21,11 +21,11 @@ import org.collabthings.application.handlers.CTLogHandler.LogApplicationLine;
 import org.collabthings.model.CTApplication;
 import org.collabthings.util.LLog;
 
-import waazdoh.client.ServiceObject;
-import waazdoh.client.ServiceObjectData;
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WObjectID;
-import waazdoh.datamodel.WStringID;
+import collabthings.core.ServiceObject;
+import collabthings.core.ServiceObjectData;
+import collabthings.datamodel.WObject;
+import collabthings.datamodel.WObjectID;
+import collabthings.datamodel.WStringID;
 
 /**
  * 

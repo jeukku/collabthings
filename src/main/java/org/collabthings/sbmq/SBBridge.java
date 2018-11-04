@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
-import waazdoh.client.utils.WLogger;
+import collabthings.core.utils.WLogger;
 
 public class SBBridge {
 	private WLogger logger = WLogger.getLogger(this);

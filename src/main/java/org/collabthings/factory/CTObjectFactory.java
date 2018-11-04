@@ -24,7 +24,7 @@ import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 
-import waazdoh.datamodel.WStringID;
+import collabthings.datamodel.WStringID;
 
 public interface CTObjectFactory {
 

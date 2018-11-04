@@ -2,13 +2,13 @@ package org.collabthings;
 
 import java.util.UUID;
 
-import waazdoh.client.BinarySource;
-import waazdoh.client.WServiceClient;
-import waazdoh.client.utils.WPreferences;
-import waazdoh.common.service.ObjectsService;
-import waazdoh.common.service.StorageAreaService;
-import waazdoh.common.service.UsersService;
-import waazdoh.datamodel.UserVO;
+import collabthings.common.service.ObjectsService;
+import collabthings.common.service.StorageAreaService;
+import collabthings.common.service.UsersService;
+import collabthings.core.BinarySource;
+import collabthings.core.WServiceClient;
+import collabthings.core.utils.WPreferences;
+import collabthings.datamodel.UserVO;
 
 public class CTTestServiceClient implements WServiceClient {
 

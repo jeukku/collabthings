@@ -21,13 +21,13 @@ import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
 
+import collabthings.core.env.IPFSRunner;
+import collabthings.core.ipfs.IPFSServiceClient;
+import collabthings.core.storage.local.FileBeanStorage;
+import collabthings.core.utils.ConditionWaiter;
+import collabthings.core.utils.StaticTestPreferences;
+import collabthings.core.utils.WPreferences;
 import junit.framework.TestCase;
-import waazdoh.client.env.IPFSRunner;
-import waazdoh.client.ipfs.IPFSServiceClient;
-import waazdoh.client.storage.local.FileBeanStorage;
-import waazdoh.client.utils.ConditionWaiter;
-import waazdoh.client.utils.StaticTestPreferences;
-import waazdoh.client.utils.WPreferences;
 
 public class CTTestCase extends TestCase {
 	private static final int DEFAULT_WAITTIME = 100;

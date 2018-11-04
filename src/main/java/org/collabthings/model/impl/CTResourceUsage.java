@@ -18,7 +18,7 @@ import java.util.Map;
 
 import org.collabthings.model.CTSubPart;
 
-import waazdoh.datamodel.WObject;
+import collabthings.datamodel.WObject;
 
 public class CTResourceUsage {
 

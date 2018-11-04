@@ -1,7 +1,7 @@
 package org.collabthings.model;
 
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WObjectID;
+import collabthings.datamodel.WObject;
+import collabthings.datamodel.WObjectID;
 
 public interface CTConnector {
 

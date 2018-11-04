@@ -24,8 +24,8 @@ import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.simulation.CTSimulation;
 import org.xml.sax.SAXException;
 
-import waazdoh.client.utils.WTimedFlag;
-import waazdoh.datamodel.WStringID;
+import collabthings.core.utils.WTimedFlag;
+import collabthings.datamodel.WStringID;
 
 public final class TestHeightmap extends CTTestCase {
 

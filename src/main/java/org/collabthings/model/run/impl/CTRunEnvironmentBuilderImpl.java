@@ -29,11 +29,11 @@ import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 import org.collabthings.util.ShortHashID;
 
-import waazdoh.client.ServiceObject;
-import waazdoh.client.ServiceObjectData;
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WObjectID;
-import waazdoh.datamodel.WStringID;
+import collabthings.core.ServiceObject;
+import collabthings.core.ServiceObjectData;
+import collabthings.datamodel.WObject;
+import collabthings.datamodel.WObjectID;
+import collabthings.datamodel.WStringID;
 
 public class CTRunEnvironmentBuilderImpl implements CTRunEnvironmentBuilder, ServiceObjectData {
 	private static final String BEANNAME = "runenvbuilder";

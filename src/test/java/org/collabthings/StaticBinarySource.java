@@ -8,11 +8,11 @@ import java.util.Map;
 
 import org.collabthings.util.LLog;
 
-import waazdoh.client.BinarySource;
-import waazdoh.client.ReportingService;
-import waazdoh.client.WServiceClient;
-import waazdoh.client.model.objects.WBinary;
-import waazdoh.datamodel.WStringID;
+import collabthings.core.BinarySource;
+import collabthings.core.ReportingService;
+import collabthings.core.WServiceClient;
+import collabthings.core.model.objects.WBinary;
+import collabthings.datamodel.WStringID;
 
 public class StaticBinarySource implements BinarySource {
 	private static Map<String, byte[]> arrays = new HashMap<>();

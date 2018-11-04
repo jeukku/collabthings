@@ -44,11 +44,11 @@ import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 import org.collabthings.util.LLog;
 
+import collabthings.datamodel.ObjectVO;
+import collabthings.datamodel.WObject;
+import collabthings.datamodel.WStringID;
 import difflib.DiffUtils;
 import difflib.Patch;
-import waazdoh.datamodel.ObjectVO;
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WStringID;
 
 public final class CTObjectFactoryImpl implements CTObjectFactory {
 

@@ -3,10 +3,10 @@ package org.collabthings;
 import java.util.LinkedList;
 import java.util.List;
 
-import waazdoh.common.service.UsersService;
-import waazdoh.datamodel.ProfileVO;
-import waazdoh.datamodel.ReturnVO;
-import waazdoh.datamodel.UserVO;
+import collabthings.common.service.UsersService;
+import collabthings.datamodel.ProfileVO;
+import collabthings.datamodel.ReturnVO;
+import collabthings.datamodel.UserVO;
 
 public class StaticUsersService implements UsersService {
 	private static List<UserVO> users = new LinkedList<>();

@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
-import waazdoh.client.utils.WLogger;
+import collabthings.core.utils.WLogger;
 
 public class SBFuture {
 

@@ -20,7 +20,7 @@ import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.util.LLog;
 
-import waazdoh.client.utils.ConditionWaiter;
+import collabthings.core.utils.ConditionWaiter;
 
 public class CTSimpleSimulation implements CTSimulation, RunEnvironmentListener {
 	private static final double MAX_STEP = 0.002;

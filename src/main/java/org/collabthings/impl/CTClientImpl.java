@@ -25,12 +25,12 @@ import org.collabthings.model.CTObject;
 import org.collabthings.model.impl.CTConstants;
 import org.collabthings.util.LLog;
 
-import waazdoh.client.BeanStorage;
-import waazdoh.client.BinarySource;
-import waazdoh.client.WClient;
-import waazdoh.client.WServiceClient;
-import waazdoh.client.utils.WPreferences;
-import waazdoh.datamodel.StorageAreaVO;
+import collabthings.core.BeanStorage;
+import collabthings.core.BinarySource;
+import collabthings.core.WClient;
+import collabthings.core.WServiceClient;
+import collabthings.core.utils.WPreferences;
+import collabthings.datamodel.StorageAreaVO;
 
 public final class CTClientImpl implements CTClient {
 	private static final String PUBLISHED = "published/";

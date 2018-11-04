@@ -20,11 +20,11 @@ import org.collabthings.CTClient;
 import org.collabthings.model.CTMapOfPieces;
 import org.collabthings.model.CTMapPiece;
 
-import waazdoh.client.ServiceObject;
-import waazdoh.client.ServiceObjectData;
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WObjectID;
-import waazdoh.datamodel.WStringID;
+import collabthings.core.ServiceObject;
+import collabthings.core.ServiceObjectData;
+import collabthings.datamodel.WObject;
+import collabthings.datamodel.WObjectID;
+import collabthings.datamodel.WStringID;
 
 public class CTMapOfPiecesImpl implements ServiceObjectData, CTMapOfPieces {
 

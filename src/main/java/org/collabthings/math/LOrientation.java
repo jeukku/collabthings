@@ -15,7 +15,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 
-import waazdoh.datamodel.WObject;
+import collabthings.datamodel.WObject;
 
 public class LOrientation {
 	private static final String VALUENAME_ORIENTATION_LOCATION = "location";

@@ -20,10 +20,10 @@ import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.impl.CTConstants;
 
-import waazdoh.client.BinarySource;
-import waazdoh.client.WClient;
-import waazdoh.client.WServiceClient;
-import waazdoh.client.utils.WPreferences;
+import collabthings.core.BinarySource;
+import collabthings.core.WClient;
+import collabthings.core.WServiceClient;
+import collabthings.core.utils.WPreferences;
 
 public interface CTClient {
 	CTObjectFactory getObjectFactory();

@@ -39,8 +39,8 @@ import org.collabthings.util.PrintOut;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 
-import waazdoh.client.utils.ConditionWaiter;
-import waazdoh.datamodel.WStringID;
+import collabthings.core.utils.ConditionWaiter;
+import collabthings.datamodel.WStringID;
 
 public class CTFactoryState implements CTRuntimeObject {
 	private static final long DEFAULT_WAIT = 100;

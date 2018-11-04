@@ -17,7 +17,7 @@ import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.model.CTValues;
 import org.collabthings.util.LLog;
 
-import waazdoh.client.utils.ConditionWaiter;
+import collabthings.core.utils.ConditionWaiter;
 
 public final class CTTaskImpl implements CTEnvironmentTask {
 	private CTApplicationRunner s;

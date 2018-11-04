@@ -8,7 +8,7 @@ import org.collabthings.CTTestCase;
 import org.collabthings.app.CTApp;
 import org.xml.sax.SAXException;
 
-import waazdoh.client.utils.WTimedFlag;
+import collabthings.core.utils.WTimedFlag;
 
 public final class TestCTApp extends CTTestCase {
 

@@ -30,12 +30,12 @@ import org.collabthings.util.PrintOut;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.client.ServiceObject;
-import waazdoh.client.ServiceObjectData;
-import waazdoh.client.utils.WLogger;
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WObjectID;
-import waazdoh.datamodel.WStringID;
+import collabthings.core.ServiceObject;
+import collabthings.core.ServiceObjectData;
+import collabthings.core.utils.WLogger;
+import collabthings.datamodel.WObject;
+import collabthings.datamodel.WObjectID;
+import collabthings.datamodel.WStringID;
 
 public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	public static final String BEANNAME = "factory";

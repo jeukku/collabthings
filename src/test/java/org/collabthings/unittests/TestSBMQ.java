@@ -11,9 +11,9 @@ import org.collabthings.sbmq.SBMQConfig;
 import org.collabthings.sbmq.SBMQFilter;
 import org.collabthings.sbmq.message.SBMessage;
 
-import waazdoh.client.utils.ConditionWaiter;
-import waazdoh.client.utils.WLogger;
-import waazdoh.client.utils.WTimedFlag;
+import collabthings.core.utils.ConditionWaiter;
+import collabthings.core.utils.WLogger;
+import collabthings.core.utils.WTimedFlag;
 
 public class TestSBMQ extends CTTestCase {
 	private int counter;

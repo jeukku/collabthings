@@ -16,7 +16,7 @@ import org.collabthings.model.CTViewingProperties;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.datamodel.WObject;
+import collabthings.datamodel.WObject;
 
 public class CTViewingPropertiesImpl implements CTViewingProperties {
 

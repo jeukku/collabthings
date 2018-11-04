@@ -17,7 +17,7 @@ import org.collabthings.CTListener;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.datamodel.WObjectID;
+import collabthings.datamodel.WObjectID;
 
 public interface CTModel {
 

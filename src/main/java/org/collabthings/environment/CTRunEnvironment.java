@@ -23,7 +23,7 @@ import org.collabthings.model.CTValues;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 
-import waazdoh.datamodel.WObjectID;
+import collabthings.datamodel.WObjectID;
 
 public interface CTRunEnvironment {
 

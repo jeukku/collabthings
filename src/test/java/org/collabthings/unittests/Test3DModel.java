@@ -16,10 +16,10 @@ import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.client.utils.ConditionWaiter;
-import waazdoh.datamodel.WData;
-import waazdoh.datamodel.WStringID;
-import waazdoh.datamodel.WXML;
+import collabthings.core.utils.ConditionWaiter;
+import collabthings.datamodel.WData;
+import collabthings.datamodel.WStringID;
+import collabthings.datamodel.WXML;
 
 public final class Test3DModel extends CTTestCase {
 

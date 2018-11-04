@@ -17,9 +17,9 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Set;
 
-import waazdoh.client.utils.PropertiesPreferences;
-import waazdoh.client.utils.WLogger;
-import waazdoh.client.utils.WPreferences;
+import collabthings.core.utils.PropertiesPreferences;
+import collabthings.core.utils.WLogger;
+import collabthings.core.utils.WPreferences;
 
 public final class AppPreferences implements WPreferences {
 	private static final String DEFAULT_PROPERTIESFILE = "properties.ini";

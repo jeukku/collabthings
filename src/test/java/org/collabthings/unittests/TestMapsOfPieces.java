@@ -10,7 +10,7 @@ import org.collabthings.model.CTMapOfPieces.CTMapPieceType;
 import org.collabthings.model.CTMapPiece;
 import org.xml.sax.SAXException;
 
-import waazdoh.datamodel.WStringID;
+import collabthings.datamodel.WStringID;
 
 public final class TestMapsOfPieces extends CTTestCase {
 

@@ -28,8 +28,8 @@ import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.datamodel.StorageAreaSearchVO;
-import waazdoh.datamodel.WStringID;
+import collabthings.datamodel.StorageAreaSearchVO;
+import collabthings.datamodel.WStringID;
 
 public final class ITTestBuildABox extends CTTestCase {
 

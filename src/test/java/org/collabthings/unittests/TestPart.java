@@ -15,9 +15,9 @@ import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.datamodel.ObjectVO;
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WStringID;
+import collabthings.datamodel.ObjectVO;
+import collabthings.datamodel.WObject;
+import collabthings.datamodel.WStringID;
 
 public final class TestPart extends CTTestCase {
 

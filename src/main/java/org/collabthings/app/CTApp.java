@@ -23,12 +23,12 @@ import org.collabthings.model.CTPart;
 import org.collabthings.util.CTTask;
 import org.collabthings.util.LLog;
 
-import waazdoh.client.BeanStorage;
-import waazdoh.client.WClient;
-import waazdoh.client.WClientListener;
-import waazdoh.client.ipfs.IPFSServiceClient;
-import waazdoh.client.storage.local.FileBeanStorage;
-import waazdoh.client.utils.WPreferences;
+import collabthings.core.BeanStorage;
+import collabthings.core.WClient;
+import collabthings.core.WClientListener;
+import collabthings.core.ipfs.IPFSServiceClient;
+import collabthings.core.storage.local.FileBeanStorage;
+import collabthings.core.utils.WPreferences;
 
 public class CTApp {
 	private static final String PREFERENCES_PREFIX = "ct";

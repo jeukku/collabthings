@@ -3,10 +3,10 @@ package org.collabthings;
 import java.util.LinkedList;
 import java.util.List;
 
-import waazdoh.common.service.StorageAreaService;
-import waazdoh.datamodel.ReturnVO;
-import waazdoh.datamodel.StorageAreaSearchVO;
-import waazdoh.datamodel.StorageAreaVO;
+import collabthings.common.service.StorageAreaService;
+import collabthings.datamodel.ReturnVO;
+import collabthings.datamodel.StorageAreaSearchVO;
+import collabthings.datamodel.StorageAreaVO;
 
 public class StaticStorageAreaService implements StorageAreaService {
 

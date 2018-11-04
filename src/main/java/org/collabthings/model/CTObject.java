@@ -10,9 +10,9 @@
  ******************************************************************************/
 package org.collabthings.model;
 
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WObjectID;
-import waazdoh.datamodel.WStringID;
+import collabthings.datamodel.WObject;
+import collabthings.datamodel.WObjectID;
+import collabthings.datamodel.WStringID;
 
 public interface CTObject {
 

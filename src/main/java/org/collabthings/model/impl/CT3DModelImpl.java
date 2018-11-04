@@ -39,14 +39,14 @@ import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.client.ServiceObject;
-import waazdoh.client.ServiceObjectData;
-import waazdoh.client.model.objects.WBinary;
-import waazdoh.datamodel.WData;
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WObjectID;
-import waazdoh.datamodel.WStringID;
-import waazdoh.datamodel.WXML;
+import collabthings.core.ServiceObject;
+import collabthings.core.ServiceObjectData;
+import collabthings.core.model.objects.WBinary;
+import collabthings.datamodel.WData;
+import collabthings.datamodel.WObject;
+import collabthings.datamodel.WObjectID;
+import collabthings.datamodel.WStringID;
+import collabthings.datamodel.WXML;
 
 public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	private static final String BEANNAME = "model3d";

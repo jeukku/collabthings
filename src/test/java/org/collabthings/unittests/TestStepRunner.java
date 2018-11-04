@@ -3,8 +3,8 @@ package org.collabthings.unittests;
 import org.collabthings.CTTestCase;
 import org.collabthings.simulation.CTStepRunner;
 
-import waazdoh.client.utils.ConditionWaiter;
-import waazdoh.client.utils.WTimedFlag;
+import collabthings.core.utils.ConditionWaiter;
+import collabthings.core.utils.WTimedFlag;
 
 public final class TestStepRunner extends CTTestCase {
 	class Values {
