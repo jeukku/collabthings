@@ -9,6 +9,8 @@ import java.util.List;
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
 import org.collabthings.CTToolException;
+import org.collabthings.datamodel.StorageAreaSearchVO;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.model.CTApplication;
@@ -27,9 +29,6 @@ import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.datamodel.StorageAreaSearchVO;
-import collabthings.datamodel.WStringID;
 
 public final class ITTestBuildABox extends CTTestCase {
 

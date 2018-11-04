@@ -11,9 +11,9 @@
 
 package org.collabthings.math;
 
-import com.jme3.math.Vector3f;
+import org.collabthings.datamodel.WObject;
 
-import collabthings.datamodel.WObject;
+import com.jme3.math.Vector3f;
 
 public class CTMath {
 

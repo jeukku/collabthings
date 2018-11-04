@@ -12,12 +12,11 @@
 package org.collabthings.environment.impl;
 
 import org.collabthings.application.CTApplicationRunner;
+import org.collabthings.core.utils.ConditionWaiter;
 import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.model.CTValues;
 import org.collabthings.util.LLog;
-
-import collabthings.core.utils.ConditionWaiter;
 
 public final class CTTaskImpl implements CTEnvironmentTask {
 	private CTApplicationRunner s;

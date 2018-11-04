@@ -14,11 +14,10 @@ package org.collabthings.impl;
 import java.util.List;
 
 import org.collabthings.CTStorage;
+import org.collabthings.core.WServiceClient;
+import org.collabthings.datamodel.StorageAreaVO;
+import org.collabthings.datamodel.UserVO;
 import org.collabthings.util.LLog;
-
-import collabthings.core.WServiceClient;
-import collabthings.datamodel.StorageAreaVO;
-import collabthings.datamodel.UserVO;
 
 public class CTStorageImpl implements CTStorage {
 

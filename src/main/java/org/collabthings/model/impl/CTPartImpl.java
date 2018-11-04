@@ -21,6 +21,11 @@ import java.util.Map;
 import org.collabthings.CTClient;
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
+import org.collabthings.core.ServiceObject;
+import org.collabthings.core.ServiceObjectData;
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WObjectID;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTConnector;
 import org.collabthings.model.CTHeightmap;
@@ -35,12 +40,6 @@ import org.collabthings.model.CTViewingProperties;
 import org.collabthings.util.LLog;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.core.ServiceObject;
-import collabthings.core.ServiceObjectData;
-import collabthings.datamodel.WObject;
-import collabthings.datamodel.WObjectID;
-import collabthings.datamodel.WStringID;
 
 public final class CTPartImpl implements ServiceObjectData, CTPart {
 	public static final String BEANNAME = "part";

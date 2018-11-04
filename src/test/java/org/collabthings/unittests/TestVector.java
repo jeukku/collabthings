@@ -1,11 +1,10 @@
 package org.collabthings.unittests;
 
 import org.collabthings.CTTestCase;
+import org.collabthings.datamodel.WObject;
 import org.collabthings.math.CTMath;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.datamodel.WObject;
 
 public final class TestVector extends CTTestCase {
 

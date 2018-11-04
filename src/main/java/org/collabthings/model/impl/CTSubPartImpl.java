@@ -17,6 +17,8 @@ import java.util.List;
 import org.collabthings.CTClient;
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.math.CTMath;
 import org.collabthings.math.LOrientation;
 import org.collabthings.model.CTPart;
@@ -25,9 +27,6 @@ import org.collabthings.util.LLog;
 
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
-
-import collabthings.datamodel.WObject;
-import collabthings.datamodel.WStringID;
 
 public final class CTSubPartImpl implements CTSubPart {
 	private CTPart part;

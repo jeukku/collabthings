@@ -5,15 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.collabthings.common.service.ObjectsService;
+import org.collabthings.core.BeanStorage;
+import org.collabthings.core.utils.WPreferences;
+import org.collabthings.datamodel.ObjectVO;
+import org.collabthings.datamodel.ReturnVO;
+import org.collabthings.datamodel.WBytesHash;
 import org.collabthings.model.impl.CTConstants;
 import org.collabthings.util.LLog;
-
-import collabthings.common.service.ObjectsService;
-import collabthings.core.BeanStorage;
-import collabthings.core.utils.WPreferences;
-import collabthings.datamodel.ObjectVO;
-import collabthings.datamodel.ReturnVO;
-import collabthings.datamodel.WBytesHash;
 
 public class StaticObjectsService implements ObjectsService {
 

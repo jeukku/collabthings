@@ -17,9 +17,9 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Set;
 
-import collabthings.core.utils.PropertiesPreferences;
-import collabthings.core.utils.WLogger;
-import collabthings.core.utils.WPreferences;
+import org.collabthings.core.utils.PropertiesPreferences;
+import org.collabthings.core.utils.WLogger;
+import org.collabthings.core.utils.WPreferences;
 
 public final class AppPreferences implements WPreferences {
 	private static final String DEFAULT_PROPERTIESFILE = "properties.ini";

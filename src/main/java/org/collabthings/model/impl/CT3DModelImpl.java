@@ -30,6 +30,14 @@ import java.util.StringTokenizer;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTListener;
+import org.collabthings.core.ServiceObject;
+import org.collabthings.core.ServiceObjectData;
+import org.collabthings.core.model.objects.WBinary;
+import org.collabthings.datamodel.WData;
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WObjectID;
+import org.collabthings.datamodel.WStringID;
+import org.collabthings.datamodel.WXML;
 import org.collabthings.math.CTMath;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTTriangleMesh;
@@ -38,15 +46,6 @@ import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.core.ServiceObject;
-import collabthings.core.ServiceObjectData;
-import collabthings.core.model.objects.WBinary;
-import collabthings.datamodel.WData;
-import collabthings.datamodel.WObject;
-import collabthings.datamodel.WObjectID;
-import collabthings.datamodel.WStringID;
-import collabthings.datamodel.WXML;
 
 public class CT3DModelImpl implements CTBinaryModel, ServiceObjectData {
 	private static final String BEANNAME = "model3d";

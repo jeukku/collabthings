@@ -6,14 +6,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.collabthings.CTTestCase;
+import org.collabthings.core.utils.ConditionWaiter;
+import org.collabthings.core.utils.WLogger;
+import org.collabthings.core.utils.WTimedFlag;
 import org.collabthings.sbmq.SBMQ;
 import org.collabthings.sbmq.SBMQConfig;
 import org.collabthings.sbmq.SBMQFilter;
 import org.collabthings.sbmq.message.SBMessage;
-
-import collabthings.core.utils.ConditionWaiter;
-import collabthings.core.utils.WLogger;
-import collabthings.core.utils.WTimedFlag;
 
 public class TestSBMQ extends CTTestCase {
 	private int counter;

@@ -16,9 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.collabthings.datamodel.WObject;
 import org.collabthings.model.CTSubPart;
-
-import collabthings.datamodel.WObject;
 
 public class CTResourceUsage {
 

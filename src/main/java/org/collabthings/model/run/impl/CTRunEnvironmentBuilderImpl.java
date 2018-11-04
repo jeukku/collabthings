@@ -16,6 +16,11 @@ import java.util.Map;
 
 import org.collabthings.CTClient;
 import org.collabthings.application.CTApplicationRunner;
+import org.collabthings.core.ServiceObject;
+import org.collabthings.core.ServiceObjectData;
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WObjectID;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.environment.impl.CTRunEnvironmentImpl;
@@ -28,12 +33,6 @@ import org.collabthings.util.CResourcesReader;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 import org.collabthings.util.ShortHashID;
-
-import collabthings.core.ServiceObject;
-import collabthings.core.ServiceObjectData;
-import collabthings.datamodel.WObject;
-import collabthings.datamodel.WObjectID;
-import collabthings.datamodel.WStringID;
 
 public class CTRunEnvironmentBuilderImpl implements CTRunEnvironmentBuilder, ServiceObjectData {
 	private static final String BEANNAME = "runenvbuilder";

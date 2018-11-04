@@ -11,6 +11,7 @@
 
 package org.collabthings.factory;
 
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTConnector;
@@ -23,8 +24,6 @@ import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
-
-import collabthings.datamodel.WStringID;
 
 public interface CTObjectFactory {
 

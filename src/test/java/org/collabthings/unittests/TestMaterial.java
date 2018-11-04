@@ -1,9 +1,9 @@
 package org.collabthings.unittests;
 
+import org.collabthings.datamodel.WObject;
 import org.collabthings.model.CTMaterial;
 import org.collabthings.model.impl.CTMaterialImpl;
 
-import collabthings.datamodel.WObject;
 import junit.framework.TestCase;
 
 public class TestMaterial extends TestCase {

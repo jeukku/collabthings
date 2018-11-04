@@ -12,11 +12,10 @@ package org.collabthings.model;
 
 import java.util.Set;
 
+import org.collabthings.datamodel.WObjectID;
 import org.collabthings.util.PrintOut;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.datamodel.WObjectID;
 
 public interface CTEnvironment extends CTObject {
 

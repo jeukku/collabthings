@@ -20,6 +20,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.collabthings.CTClient;
+import org.collabthings.datamodel.ObjectVO;
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTBinaryModel;
@@ -44,9 +47,6 @@ import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 import org.collabthings.util.LLog;
 
-import collabthings.datamodel.ObjectVO;
-import collabthings.datamodel.WObject;
-import collabthings.datamodel.WStringID;
 import difflib.DiffUtils;
 import difflib.Patch;
 

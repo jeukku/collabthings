@@ -14,10 +14,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.collabthings.CTListener;
+import org.collabthings.datamodel.WObjectID;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.datamodel.WObjectID;
 
 public interface CTModel {
 

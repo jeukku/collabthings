@@ -13,7 +13,7 @@ package org.collabthings;
 
 import java.util.List;
 
-import collabthings.datamodel.UserVO;
+import org.collabthings.datamodel.UserVO;
 
 public interface CTStorage {
 	void writeToStorage(String path, String name, String data);

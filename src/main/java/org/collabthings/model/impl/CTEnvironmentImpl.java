@@ -17,6 +17,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.collabthings.CTClient;
+import org.collabthings.core.ServiceObject;
+import org.collabthings.core.ServiceObjectData;
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WObjectID;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.math.CTMath;
 import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTEnvironment;
@@ -25,12 +30,6 @@ import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.core.ServiceObject;
-import collabthings.core.ServiceObjectData;
-import collabthings.datamodel.WObject;
-import collabthings.datamodel.WObjectID;
-import collabthings.datamodel.WStringID;
 
 public class CTEnvironmentImpl implements CTEnvironment, ServiceObjectData {
 	private static final String BEANNAME = "env";

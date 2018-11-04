@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.collabthings.model;
 
-import collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WObject;
 
 public interface CTMaterial {
 

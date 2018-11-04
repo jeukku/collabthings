@@ -14,6 +14,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.collabthings.core.env.IPFSRunner;
+import org.collabthings.core.ipfs.IPFSServiceClient;
+import org.collabthings.core.storage.local.FileBeanStorage;
+import org.collabthings.core.utils.ConditionWaiter;
+import org.collabthings.core.utils.StaticTestPreferences;
+import org.collabthings.core.utils.WPreferences;
 import org.collabthings.impl.CTClientImpl;
 import org.collabthings.model.CTObject;
 import org.collabthings.util.LLog;
@@ -21,12 +27,6 @@ import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
 
-import collabthings.core.env.IPFSRunner;
-import collabthings.core.ipfs.IPFSServiceClient;
-import collabthings.core.storage.local.FileBeanStorage;
-import collabthings.core.utils.ConditionWaiter;
-import collabthings.core.utils.StaticTestPreferences;
-import collabthings.core.utils.WPreferences;
 import junit.framework.TestCase;
 
 public class CTTestCase extends TestCase {

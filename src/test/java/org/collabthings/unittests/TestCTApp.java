@@ -6,9 +6,8 @@ import java.net.MalformedURLException;
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
 import org.collabthings.app.CTApp;
+import org.collabthings.core.utils.WTimedFlag;
 import org.xml.sax.SAXException;
-
-import collabthings.core.utils.WTimedFlag;
 
 public final class TestCTApp extends CTTestCase {
 

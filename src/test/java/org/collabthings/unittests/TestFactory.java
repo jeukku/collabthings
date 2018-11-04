@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTAttachedFactory;
 import org.collabthings.model.CTBoundingBox;
@@ -13,8 +14,6 @@ import org.collabthings.util.LLog;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.datamodel.WStringID;
 
 public final class TestFactory extends CTTestCase {
 

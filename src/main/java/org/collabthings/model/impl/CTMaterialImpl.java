@@ -13,9 +13,8 @@ package org.collabthings.model.impl;
 
 import java.util.StringTokenizer;
 
+import org.collabthings.datamodel.WObject;
 import org.collabthings.model.CTMaterial;
-
-import collabthings.datamodel.WObject;
 
 public class CTMaterialImpl implements CTMaterial {
 

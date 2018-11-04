@@ -14,13 +14,12 @@ package org.collabthings.simulation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.collabthings.core.utils.ConditionWaiter;
 import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.util.LLog;
-
-import collabthings.core.utils.ConditionWaiter;
 
 public class CTSimpleSimulation implements CTSimulation, RunEnvironmentListener {
 	private static final double MAX_STEP = 0.002;

@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.datamodel.ObjectVO;
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTPart;
@@ -14,10 +17,6 @@ import org.collabthings.model.impl.CTPartImpl;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.datamodel.ObjectVO;
-import collabthings.datamodel.WObject;
-import collabthings.datamodel.WStringID;
 
 public final class TestPart extends CTTestCase {
 

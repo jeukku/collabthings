@@ -8,6 +8,8 @@ import java.util.Map;
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
 import org.collabthings.application.CTApplicationRunner;
+import org.collabthings.core.utils.WTimedFlag;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.model.CTApplication;
@@ -23,9 +25,6 @@ import org.collabthings.model.impl.CTPartImpl;
 import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.simulation.CTSimulation;
 import org.xml.sax.SAXException;
-
-import collabthings.core.utils.WTimedFlag;
-import collabthings.datamodel.WStringID;
 
 public final class TestHeightmap extends CTTestCase {
 

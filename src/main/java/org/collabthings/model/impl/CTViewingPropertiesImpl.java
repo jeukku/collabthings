@@ -11,12 +11,11 @@
 
 package org.collabthings.model.impl;
 
+import org.collabthings.datamodel.WObject;
 import org.collabthings.math.CTMath;
 import org.collabthings.model.CTViewingProperties;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.datamodel.WObject;
 
 public class CTViewingPropertiesImpl implements CTViewingProperties {
 

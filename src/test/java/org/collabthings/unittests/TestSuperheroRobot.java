@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.core.utils.WTimedFlag;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.environment.impl.CTRunEnvironmentImpl;
@@ -17,8 +18,6 @@ import org.collabthings.model.impl.CTToolImpl;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.core.utils.WTimedFlag;
 
 public final class TestSuperheroRobot extends CTTestCase {
 

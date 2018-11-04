@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.collabthings.CTClient;
 import org.collabthings.application.CTApplicationRunner;
+import org.collabthings.datamodel.WObjectID;
 import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
@@ -32,8 +33,6 @@ import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.datamodel.WObjectID;
 
 public class CTRunEnvironmentImpl implements CTRunEnvironment {
 	private Map<String, String> params = new HashMap<>();

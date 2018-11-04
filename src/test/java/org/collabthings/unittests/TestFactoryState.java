@@ -2,6 +2,7 @@ package org.collabthings.unittests;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.core.utils.WTimedFlag;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.environment.impl.CTPartState;
@@ -11,8 +12,6 @@ import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.simulation.CTStepRunner;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.core.utils.WTimedFlag;
 
 public final class TestFactoryState extends CTTestCase {
 

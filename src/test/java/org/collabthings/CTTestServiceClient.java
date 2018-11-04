@@ -2,13 +2,13 @@ package org.collabthings;
 
 import java.util.UUID;
 
-import collabthings.common.service.ObjectsService;
-import collabthings.common.service.StorageAreaService;
-import collabthings.common.service.UsersService;
-import collabthings.core.BinarySource;
-import collabthings.core.WServiceClient;
-import collabthings.core.utils.WPreferences;
-import collabthings.datamodel.UserVO;
+import org.collabthings.common.service.ObjectsService;
+import org.collabthings.common.service.StorageAreaService;
+import org.collabthings.common.service.UsersService;
+import org.collabthings.core.BinarySource;
+import org.collabthings.core.WServiceClient;
+import org.collabthings.core.utils.WPreferences;
+import org.collabthings.datamodel.UserVO;
 
 public class CTTestServiceClient implements WServiceClient {
 

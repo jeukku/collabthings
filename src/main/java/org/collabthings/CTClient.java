@@ -16,14 +16,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+import org.collabthings.core.BinarySource;
+import org.collabthings.core.WClient;
+import org.collabthings.core.WServiceClient;
+import org.collabthings.core.utils.WPreferences;
 import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.impl.CTConstants;
-
-import collabthings.core.BinarySource;
-import collabthings.core.WClient;
-import collabthings.core.WServiceClient;
-import collabthings.core.utils.WPreferences;
 
 public interface CTClient {
 	CTObjectFactory getObjectFactory();

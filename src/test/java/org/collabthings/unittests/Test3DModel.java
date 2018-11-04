@@ -9,17 +9,16 @@ import java.io.InputStreamReader;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.core.utils.ConditionWaiter;
+import org.collabthings.datamodel.WData;
+import org.collabthings.datamodel.WStringID;
+import org.collabthings.datamodel.WXML;
 import org.collabthings.model.CTBinaryModel;
 import org.collabthings.model.impl.CT3DModelImpl;
 import org.collabthings.model.impl.CTConstants;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.core.utils.ConditionWaiter;
-import collabthings.datamodel.WData;
-import collabthings.datamodel.WStringID;
-import collabthings.datamodel.WXML;
 
 public final class Test3DModel extends CTTestCase {
 

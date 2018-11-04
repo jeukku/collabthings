@@ -6,13 +6,12 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.collabthings.core.BinarySource;
+import org.collabthings.core.ReportingService;
+import org.collabthings.core.WServiceClient;
+import org.collabthings.core.model.objects.WBinary;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.util.LLog;
-
-import collabthings.core.BinarySource;
-import collabthings.core.ReportingService;
-import collabthings.core.WServiceClient;
-import collabthings.core.model.objects.WBinary;
-import collabthings.datamodel.WStringID;
 
 public class StaticBinarySource implements BinarySource {
 	private static Map<String, byte[]> arrays = new HashMap<>();

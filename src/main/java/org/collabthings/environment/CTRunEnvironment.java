@@ -16,14 +16,13 @@ import java.util.Set;
 
 import org.collabthings.CTClient;
 import org.collabthings.application.CTApplicationRunner;
+import org.collabthings.datamodel.WObjectID;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTRuntimeObject;
 import org.collabthings.model.CTValues;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
-
-import collabthings.datamodel.WObjectID;
 
 public interface CTRunEnvironment {
 

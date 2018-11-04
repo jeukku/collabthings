@@ -5,12 +5,11 @@ import java.util.Date;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.model.CTMapOfPieces;
 import org.collabthings.model.CTMapOfPieces.CTMapPieceType;
 import org.collabthings.model.CTMapPiece;
 import org.xml.sax.SAXException;
-
-import collabthings.datamodel.WStringID;
 
 public final class TestMapsOfPieces extends CTTestCase {
 

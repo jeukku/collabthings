@@ -17,14 +17,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.collabthings.CTClient;
+import org.collabthings.core.ServiceObject;
+import org.collabthings.core.ServiceObjectData;
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WObjectID;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.model.CTMapOfPieces;
 import org.collabthings.model.CTMapPiece;
-
-import collabthings.core.ServiceObject;
-import collabthings.core.ServiceObjectData;
-import collabthings.datamodel.WObject;
-import collabthings.datamodel.WObjectID;
-import collabthings.datamodel.WStringID;
 
 public class CTMapOfPiecesImpl implements ServiceObjectData, CTMapOfPieces {
 

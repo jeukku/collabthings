@@ -12,7 +12,7 @@ package org.collabthings.model;
 
 import java.util.List;
 
-import collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WObject;
 
 public interface CTMapOfPieces extends CTObject {
 	public static class CTMapPieceType {

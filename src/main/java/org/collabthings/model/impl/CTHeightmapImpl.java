@@ -17,18 +17,17 @@ import java.io.IOException;
 import org.collabthings.CTClient;
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
+import org.collabthings.core.ServiceObject;
+import org.collabthings.core.ServiceObjectData;
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WObjectID;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTTriangle;
 import org.collabthings.model.CTTriangleMesh;
 import org.collabthings.util.CTListeners;
 
 import com.jme3.math.Vector3f;
-
-import collabthings.core.ServiceObject;
-import collabthings.core.ServiceObjectData;
-import collabthings.datamodel.WObject;
-import collabthings.datamodel.WObjectID;
-import collabthings.datamodel.WStringID;
 
 public class CTHeightmapImpl implements CTHeightmap, ServiceObjectData {
 	private static final String PARAM_SCRIPT = "application";

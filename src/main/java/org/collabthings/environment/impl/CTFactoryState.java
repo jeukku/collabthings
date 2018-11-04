@@ -21,6 +21,8 @@ import java.util.Set;
 
 import org.collabthings.CTClient;
 import org.collabthings.application.CTApplicationRunner;
+import org.collabthings.core.utils.ConditionWaiter;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
@@ -38,9 +40,6 @@ import org.collabthings.util.PrintOut;
 
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
-
-import collabthings.core.utils.ConditionWaiter;
-import collabthings.datamodel.WStringID;
 
 public class CTFactoryState implements CTRuntimeObject {
 	private static final long DEFAULT_WAIT = 100;

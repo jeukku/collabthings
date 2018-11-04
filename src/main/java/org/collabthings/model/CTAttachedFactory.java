@@ -10,12 +10,11 @@
  ******************************************************************************/
 package org.collabthings.model;
 
+import org.collabthings.datamodel.WObject;
 import org.collabthings.math.LOrientation;
 
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
-
-import collabthings.datamodel.WObject;
 
 public class CTAttachedFactory {
 	private CTFactory factory;

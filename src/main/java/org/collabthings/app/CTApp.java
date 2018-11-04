@@ -16,19 +16,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.collabthings.CTClient;
+import org.collabthings.core.BeanStorage;
+import org.collabthings.core.WClient;
+import org.collabthings.core.WClientListener;
+import org.collabthings.core.ipfs.IPFSServiceClient;
+import org.collabthings.core.storage.local.FileBeanStorage;
+import org.collabthings.core.utils.WPreferences;
 import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.impl.CTClientImpl;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTPart;
 import org.collabthings.util.CTTask;
 import org.collabthings.util.LLog;
-
-import collabthings.core.BeanStorage;
-import collabthings.core.WClient;
-import collabthings.core.WClientListener;
-import collabthings.core.ipfs.IPFSServiceClient;
-import collabthings.core.storage.local.FileBeanStorage;
-import collabthings.core.utils.WPreferences;
 
 public class CTApp {
 	private static final String PREFERENCES_PREFIX = "ct";

@@ -1,10 +1,9 @@
 package org.collabthings.unittests;
 
 import org.collabthings.CTTestCase;
+import org.collabthings.core.utils.ConditionWaiter;
+import org.collabthings.core.utils.WTimedFlag;
 import org.collabthings.simulation.CTStepRunner;
-
-import collabthings.core.utils.ConditionWaiter;
-import collabthings.core.utils.WTimedFlag;
 
 public final class TestStepRunner extends CTTestCase {
 	class Values {
