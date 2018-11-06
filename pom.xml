@@ -21,7 +21,7 @@
 	<distributionManagement>
 		<repository>
 			<id>waazdoh-ssh-repository</id>
-			<url>sftp://maven@maven.waazdoh.com/opt/maven/repository</url>
+			<url>sftp://maven@maven.collabthings.org/opt/maven/repository</url>
 		</repository>
 	</distributionManagement>
 
@@ -274,7 +274,7 @@
 		<repository>
 			<id>waazdoh</id>
 			<name>waazdoh</name>
-			<url>https://maven.waazdoh.com/repository</url>
+			<url>https://maven.collabthings.org/repository</url>
 		</repository>
 
 		<repository>
