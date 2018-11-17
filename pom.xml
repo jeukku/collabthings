@@ -14,7 +14,7 @@
 
 	<packaging>jar</packaging>
 
-	<name>Collabthings Client</name>
+	<name>Collabthings Parts</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -177,13 +177,6 @@
 			</plugin>
 		</plugins>
 
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh</artifactId>
-				<version>3.2.0</version>
-			</extension>
-		</extensions>
 	</build>
 
 	<dependencies>
