@@ -1,7 +1,6 @@
 package org.collabthings;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,13 +9,10 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
-import org.collabthings.core.env.IPFSRunner;
-import org.collabthings.core.ipfs.IPFSServiceClient;
 import org.collabthings.core.storage.local.FileBeanStorage;
+import org.collabthings.core.test.TestEnv;
 import org.collabthings.core.utils.ConditionWaiter;
 import org.collabthings.core.utils.StaticTestPreferences;
 import org.collabthings.core.utils.WPreferences;
@@ -30,16 +26,14 @@ import com.jme3.math.Vector3f;
 import junit.framework.TestCase;
 
 public class CTTestCase extends TestCase {
+	private TestEnv env = new TestEnv();
+
 	private static final int DEFAULT_WAITTIME = 100;
 	private static final int MAX_OBJECT_WAITTIME = 60000;
-	private static final String PREFERENCES_RUNAGAINSTSERVICE = "ct.test.useservice";
 	//
 	public static final double ACCEPTED_DIFFERENCE = 0.000001;
 
 	protected String cubemodelpath = "/models/cube.x3d";
-
-	private List<IPFSRunner> runners = new LinkedList<>();
-	private List<IPFSServiceClient> ipfsclients = new LinkedList<>();
 
 	//
 	private Set<CTClient> clients = new HashSet<CTClient>();
@@ -55,11 +49,7 @@ public class CTTestCase extends TestCase {
 	protected void tearDown() throws Exception {
 		log.info("**************** STOP TEST " + getName() + " ************** ");
 
-		// startThreadChecker();
-
-		for (IPFSRunner ipfsRunner : runners) {
-			ipfsRunner.stop();
-		}
+		env.end();
 
 		StaticTestPreferences.clearPorts();
 		for (CTClient e : clients) {
@@ -81,6 +71,8 @@ public class CTTestCase extends TestCase {
 	protected void setUp() throws Exception {
 		log.info("**************** SETUP TEST " + getName() + " ************** ");
 		super.setUp();
+
+		env.init();
 
 		starttime = System.currentTimeMillis();
 	}
@@ -117,39 +109,8 @@ public class CTTestCase extends TestCase {
 		WPreferences p = new StaticTestPreferences("cttests", username);
 		beanstorage = new FileBeanStorage(p);
 
-		//p.set(IPFSServiceClient.IPFS_LOCALPATH, p.get(WPreferences.LOCAL_PATH, "") + "ipfs");
-		p.set(IPFSServiceClient.IPFS_LOCALPATH, System.getProperty("user.home") + "/.ipfs");
-
-		new File(p.get(IPFSServiceClient.IPFS_LOCALPATH, "")).mkdirs();
-
-		if (!bind) {
-			CTClient c = new CTClientImpl(p, beanstorage, new CTTestServiceClient(username, p));
-			return c;
-		} else {
-			IPFSRunner runner = new IPFSRunner(p, username);
-			runners.add(runner);
-
-			if (runner.run()) {
-				IPFSServiceClient ipfs = new IPFSServiceClient(p);
-
-				/*
-				 * try { for (IPFSServiceClient ipfsclient : ipfsclients) { //
-				 * ipfs.connect(ipfsclient.getAddrs()); } } catch (IOException e) {
-				 * log.error(this, "", e); }
-				 */
-
-				ipfsclients.add(ipfs);
-
-				CTClient c = new CTClientImpl(p, beanstorage, ipfs);
-				return c;
-			} else {
-				return null;
-			}
-		}
-	}
-
-	private String getSession(WPreferences p) {
-		return p.get(WPreferences.PREFERENCES_SESSION, "");
+		CTClient c = new CTClientImpl(p, beanstorage, env.getClient(bind).getService());
+		return c;
 	}
 
 	public void testTrue() {

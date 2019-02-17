@@ -7,10 +7,12 @@ import java.util.Map;
 
 import org.collabthings.common.service.ObjectsService;
 import org.collabthings.core.BeanStorage;
+import org.collabthings.core.WClient.Filter;
 import org.collabthings.core.utils.WPreferences;
 import org.collabthings.datamodel.ObjectVO;
 import org.collabthings.datamodel.ReturnVO;
 import org.collabthings.datamodel.WBytesHash;
+import org.collabthings.datamodel.WObject;
 import org.collabthings.model.impl.CTConstants;
 import org.collabthings.util.LLog;
 
@@ -85,4 +87,15 @@ public class StaticObjectsService implements ObjectsService {
 
 	}
 
+	@Override
+	public void addFilter(Filter f) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean filter(WObject wo) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

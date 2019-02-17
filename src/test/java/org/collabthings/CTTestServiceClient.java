@@ -20,7 +20,7 @@ public class CTTestServiceClient implements WServiceClient {
 	private final String username;
 	private BinarySource binarysource;
 
-	public CTTestServiceClient(String username, WPreferences p) {
+	private CTTestServiceClient(String username, WPreferences p) {
 		this.p = p;
 		this.username = username;
 	}
