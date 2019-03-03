@@ -1,7 +1,7 @@
 package org.collabthings.unittests;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
@@ -14,7 +14,7 @@ public final class TestBookmarks extends CTTestCase {
 		String listname = "test" + System.currentTimeMillis();
 
 		e.getBookmarks().addFolder(listname);
-		List<String> bookmarks = e.getBookmarks().list();
+		Map<String, String> bookmarks = e.getBookmarks().list();
 		assertNotNull(bookmarks);
 		assertTrue(bookmarks.size() > 0);
 
@@ -22,7 +22,7 @@ public final class TestBookmarks extends CTTestCase {
 		e.getBookmarks().add(listname + "/testbm", testvalue);
 		assertEquals(testvalue, e.getBookmarks().get(listname + "/testbm"));
 
-		List<String> testlist = e.getBookmarks().list(listname);
+		Map<String, String> testlist = e.getBookmarks().list(listname);
 		assertNotNull(testlist);
 		assertEquals(2, testlist.size()); // testbm and _date
 

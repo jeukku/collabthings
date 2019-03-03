@@ -79,13 +79,14 @@ public final class TestPart extends CTTestCase {
 
 		// TODO this is a mess
 		assertFalse(bsubpart.isBookmarkUpdated());
-		bsubpart.setPartBookmark(benv.getClient().getService().getUser().getUsername() + "/parts/joo");
+		String bookmark = "/parts/joo" + System.currentTimeMillis();
+		bsubpart.setPartBookmark(benv.getClient().getService().getUser().getUserid() + bookmark);
 		assertFalse(bsubpart.isBookmarkUpdated());
-		benv.getStorage().writeToStorage("parts", "joo", bsubpart.getPart().getID().toString());
+		benv.getStorage().write(bookmark, bsubpart.getPart().getID().toString());
 		assertFalse(bsubpart.isBookmarkUpdated());
 
 		bsubpart.getPart().setName("changed");
-		benv.getStorage().writeToStorage("parts", "joo", bsubpart.getPart().getID().toString());
+		benv.getStorage().write(bookmark, bsubpart.getPart().getID().toString());
 		assertTrue(bsubpart.isBookmarkUpdated());
 
 		bsubpart.updateBookmark();

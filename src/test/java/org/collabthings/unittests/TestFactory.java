@@ -1,9 +1,14 @@
 package org.collabthings.unittests;
 
+import static org.junit.Assert.assertNotEquals;
+
 import java.io.IOException;
 
 import org.collabthings.CTClient;
 import org.collabthings.CTTestCase;
+import org.collabthings.core.utils.ConditionWaiter;
+import org.collabthings.core.utils.WTimedFlag;
+import org.collabthings.datamodel.WObjectID;
 import org.collabthings.datamodel.WStringID;
 import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTAttachedFactory;
@@ -11,6 +16,7 @@ import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTTool;
 import org.collabthings.util.LLog;
+import org.springframework.beans.factory.Aware;
 import org.xml.sax.SAXException;
 
 import com.jme3.math.Vector3f;
@@ -93,12 +99,15 @@ public final class TestFactory extends CTTestCase {
 
 	public void testBookmarkChildFactory() {
 		CTClient c = getNewClient();
+		CTClient bc = getNewClient();
+		bc.getService().getUsers().follow(c.getService().getUser().getUserid());
+
 		CTFactory f = c.getObjectFactory().getFactory();
 		String childfactoryid = "testchildfactory";
 		CTAttachedFactory addFactory = f.addFactory(childfactoryid);
 
-		String childfactoryname = "some child factory";
-		String bookmark = c.getService().getUser().getUsername() + "/factory/" + childfactoryname + "/latest";
+		String childfactoryname = "some_child_factory";
+		String bookmark = c.getService().getUser().getUserid() + "/published/factory/" + childfactoryname + "/latest";
 
 		addFactory.setBookmark(bookmark);
 
@@ -111,15 +120,22 @@ public final class TestFactory extends CTTestCase {
 
 		f.publish();
 
-		childf.setToolUserSpawnLocation(new Vector3f(1, 1, 1));
-		childf.publish();
-
-		CTClient bc = getNewClient();
 		String clientausername = c.getService().getUser().getUsername();
 		assertNotNull(clientausername);
 
-		String publishedchildfactory = bc.getPublished(bookmark);
+		ConditionWaiter cw = ConditionWaiter.wait(() -> {
+			return false;
+		}, 4000);
+
+		String c1bookmarkread = c.getStorage().read(bookmark);
+		log.info("c1bookmarkread " + c1bookmarkread);
+
+		String publishedchildfactory = bc.getStorage().read(bookmark);
 		assertNotNull(publishedchildfactory);
+		log.info("c2bookmarkread " + publishedchildfactory);
+
+		assertEquals(c1bookmarkread, publishedchildfactory);
+		assertEquals(childf.getID().toString(), publishedchildfactory);
 
 		WStringID factoryid = f.getID().getStringID();
 		CTFactory bf = bc.getObjectFactory().getFactory(factoryid);
@@ -131,6 +147,31 @@ public final class TestFactory extends CTTestCase {
 		CTFactory bchildf = bf.getFactory(childfactoryid).getFactory();
 		assertNotNull(bchildf);
 		assertEquals(childfactoryname, bchildf.getName());
+
+		LLog.getLogger(this).info("first child " + childf.getObject().toYaml());
+		LLog.getLogger(this).info("second child " + bchildf.getObject().toYaml());
+		assertEquals(childf.getObject().toYaml(), bchildf.getObject().toYaml());
+		assertEquals(childf.getObject().toYaml(), bchildf.getObject().toYaml());
+
+		childf.setToolUserSpawnLocation(new Vector3f(1, 1, 1));
+		childf.publish();
+		assertNotEquals(childf.getObject().toYaml(), bchildf.getObject().toYaml());
+
+		WObjectID achildfid = childf.getID();
+		assertNotEquals(achildfid, bchildf.getID());
+		
+		f.publish();
+		ConditionWaiter.wait(() -> {
+			return false;
+		}, 4000);
+
+		factoryid = f.getID().getStringID();
+		bf = bc.getObjectFactory().getFactory(factoryid);
+		CTAttachedFactory battachedfactory = bf.getFactory(childfactoryid);
+		bchildf = battachedfactory.getFactory();
+		
+		assertEquals(f.getObject().toYaml(), bf.getObject().toYaml());
+		
 		assertEquals(childf.getObject().toYaml(), bchildf.getObject().toYaml());
 	}
 

@@ -398,7 +398,7 @@ public class CTFactoryState implements CTRuntimeObject {
 	}
 
 	public String readStorage(String path) {
-		return runenv.getClient().getStorage().readStorage(path);
+		return runenv.getClient().getStorage().read(path);
 	}
 
 	public CTPartState newPart() {

@@ -11,18 +11,18 @@
 
 package org.collabthings;
 
-import java.util.List;
+import java.util.Map;
 
 public interface CTBookmarks {
 
 	void addFolder(String string);
 
-	List<String> list();
+	Map<String, String> list();
 
 	void add(String string, String string2);
 
 	String get(String string);
 
-	List<String> list(String string);
+	Map<String, String> list(String string);
 
 }

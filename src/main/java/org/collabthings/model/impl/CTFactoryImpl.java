@@ -42,6 +42,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 	private static final String VALUENAME_MODELID = "model3did";
 	private static final String VALUENAME_ENVIRONMENTID = "environmentid";
 	private static final String VALUENAME_SPAWNLOCATION = "toolspawn";
+	private static final String VALUENAME_FACTORIES = "factories";
 	//
 	private static int counter = 0;
 	//
@@ -119,12 +120,12 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 				bchildfactory.addValue("name", cname);
 				if (cf.getBookmark() != null) {
 					bchildfactory.addValue("bookmark", cf.getBookmark());
-				} else {
-					bchildfactory.addValue("id", cf.getFactory().getID().toString());
 				}
+
+				bchildfactory.addValue("id", cf.getFactory().getID().toString());
 				bchildfactory.add("orientation", cf.getOrientation().getBean());
 
-				b.addToList("factories", bchildfactory);
+				b.addToList(VALUENAME_FACTORIES, bchildfactory);
 			}
 		}
 		//
@@ -350,7 +351,7 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 
 		WObject content = getContent();
 		if (bean != null && content != null) {
-			List<WObject> bcfs = content.getObjectList("factories");
+			List<WObject> bcfs = content.getObjectList(VALUENAME_FACTORIES);
 			for (WObject bchildfactory : bcfs) {
 				CTFactoryImpl f = new CTFactoryImpl(this.client);
 
@@ -358,8 +359,11 @@ public final class CTFactoryImpl implements ServiceObjectData, CTFactory {
 				String cfid = bchildfactory.getValue("id");
 				String bookmark = bchildfactory.getValue("bookmark");
 
-				if (cfid == null) {
-					cfid = client.getPublished(bookmark);
+				if (bookmark != null) {
+					String bookmarkcfid = client.getStorage().read(bookmark);
+					if (bookmarkcfid != null) {
+						cfid = bookmarkcfid;
+					}
 				}
 
 				if (f.load(new WStringID(cfid))) {

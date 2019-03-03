@@ -16,7 +16,7 @@ public final class TestRunEnvBuilder extends CTTestCase {
 		b.setName("testnameeb");
 
 		String value = "" + Math.random();
-		c.getStorage().writeToStorage("test", "test", value);
+		c.getStorage().write("test/test", value);
 		assertEquals(value, b.readStorage("self/test/test"));
 		assertEquals(value, b.readStorage(c.getClient().getService().getUser().getUsername() + "/test/test"));
 	}

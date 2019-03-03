@@ -18,13 +18,12 @@ import java.util.Set;
 import org.collabthings.CTBookmarks;
 import org.collabthings.CTClient;
 import org.collabthings.CTErrorListener;
-import org.collabthings.CTStorage;
+import org.collabthings.common.service.StorageAreaService;
 import org.collabthings.core.BeanStorage;
 import org.collabthings.core.BinarySource;
 import org.collabthings.core.WClient;
 import org.collabthings.core.WServiceClient;
 import org.collabthings.core.utils.WPreferences;
-import org.collabthings.datamodel.StorageAreaVO;
 import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.factory.impl.CTObjectFactoryImpl;
 import org.collabthings.model.CTObject;
@@ -36,7 +35,6 @@ public final class CTClientImpl implements CTClient {
 	private static final String PREFIX = "CT";
 	//
 	private final WClient client;
-	private final CTStorage storage;
 	private final CTObjectFactory factory;
 	private LLog log = LLog.getLogger(this);
 	private CTBookmarks bookmarks;
@@ -47,7 +45,6 @@ public final class CTClientImpl implements CTClient {
 		client.addObjectFilter(o -> CTClient.checkVersion(o.getValue("version")));
 
 		this.factory = new CTObjectFactoryImpl(this);
-		this.storage = new CTStorageImpl(service);
 
 		p.set("date", "" + new Date());
 	}
@@ -68,8 +65,8 @@ public final class CTClientImpl implements CTClient {
 	}
 
 	@Override
-	public CTStorage getStorage() {
-		return storage;
+	public StorageAreaService getStorage() {
+		return client.getService().getStorageArea();
 	}
 
 	@Override
@@ -135,32 +132,7 @@ public final class CTClientImpl implements CTClient {
 
 		log.info("writing " + path + " value:" + id);
 
-		client.getService().getStorageArea().write(new StorageAreaVO(path, id));
-	}
-
-	@Override
-	public String getPublished(String username, String string) {
-		String path = "" + string;
-		if (path.indexOf(PUBLISHED) < 0) {
-			path = PUBLISHED + string;
-		}
-
-		path = path.replace("//", "/");
-		log.info("reading " + username + " path:" + path);
-		return client.getService().getStorageArea().read(new StorageAreaVO(username, path, null)).getData();
-	}
-
-	@Override
-	public String getPublished(String value) {
-		String path = "" + value;
-		if (path.indexOf('/') == 0) {
-			path = path.substring(1);
-		}
-
-		String username = path.substring(0, path.indexOf('/'));
-		path = path.substring(path.indexOf('/'));
-
-		return getPublished(username, path);
+		client.getService().getStorageArea().write(path, id);
 	}
 
 	@Override

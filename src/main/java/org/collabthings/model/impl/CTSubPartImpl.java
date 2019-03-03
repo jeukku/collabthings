@@ -139,7 +139,7 @@ public final class CTSubPartImpl implements CTSubPart {
 	public boolean hasPartChanged() {
 		return getPart().hasChanged();
 	}
-	
+
 	public void getBean(WObject bpart) {
 		if (part != null) {
 			partid = part.getID().getStringID();
@@ -227,7 +227,7 @@ public final class CTSubPartImpl implements CTSubPart {
 	@Override
 	public boolean isBookmarkUpdated() {
 		if (partbookmark != null) {
-			String newid = client.getStorage().readStorage(partbookmark);
+			String newid = client.getStorage().read(partbookmark);
 			if (newid != null && !new WStringID(newid).equals(partid)) {
 				return true;
 			} else {
@@ -241,7 +241,7 @@ public final class CTSubPartImpl implements CTSubPart {
 	@Override
 	public void updateBookmark() {
 		if (partbookmark != null) {
-			String newid = client.getStorage().readStorage(partbookmark);
+			String newid = client.getStorage().read(partbookmark);
 			if (newid != null) {
 				partid = new WStringID(newid);
 				part = null;

@@ -12,52 +12,48 @@
 package org.collabthings.impl;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
 
 import org.collabthings.CTBookmarks;
-import org.collabthings.CTStorage;
+import org.collabthings.common.service.StorageAreaService;
 
 public class CTBookmarksImpl implements CTBookmarks {
 
-	private static final String BOOKMARKS = "bookmarks/";
+	private static final String BOOKMARKS = "/bookmarks/";
 	private static final String BM_VARIABLE = "bm";
 	private static final String DATA_VARIABLE = "_date";
-	private CTStorage storage;
-	private String username;
+	private StorageAreaService storage;
 
 	public CTBookmarksImpl(CTClientImpl nclient) {
 		this.storage = nclient.getStorage();
-		this.username = nclient.getClient().getService().getUser().getUsername();
-		
-		
 	}
 
 	@Override
-	public List<String> list() {
-		return getStorage().listStorage(BOOKMARKS);
+	public Map<String, String> list() {
+		return getStorage().getList(BOOKMARKS);
 	}
 
 	@Override
-	public List<String> list(String string) {
-		return getStorage().listStorage(BOOKMARKS + string);
+	public Map<String, String> list(String string) {
+		return getStorage().getList(BOOKMARKS + string);
 	}
 
-	private CTStorage getStorage() {
+	private StorageAreaService getStorage() {
 		return storage;
 	}
 
 	@Override
 	public void addFolder(String string) {
-		getStorage().writeToStorage(BOOKMARKS + string, DATA_VARIABLE, "" + new Date());
+		getStorage().write(BOOKMARKS + string + "/" + DATA_VARIABLE, "" + new Date());
 	}
 
 	@Override
 	public void add(String name, String value) {
-		getStorage().writeToStorage(BOOKMARKS + name, BM_VARIABLE, value);
+		getStorage().write(BOOKMARKS + name + "/" + BM_VARIABLE, value);
 	}
 
 	@Override
 	public String get(String string) {
-		return getStorage().readStorage(this.username + "/bookmarks/" + string + "/" + BM_VARIABLE);
+		return getStorage().read(BOOKMARKS + string + "/" + BM_VARIABLE);
 	}
 }

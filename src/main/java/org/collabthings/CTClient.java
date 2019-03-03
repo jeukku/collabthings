@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+import org.collabthings.common.service.StorageAreaService;
 import org.collabthings.core.BinarySource;
 import org.collabthings.core.WClient;
 import org.collabthings.core.WServiceClient;
@@ -43,13 +44,9 @@ public interface CTClient {
 
 	String getGlobalSetting(String name);
 
-	CTStorage getStorage();
+	StorageAreaService getStorage();
 
 	void publish(String string, CTObject o);
-
-	String getPublished(String username, String string);
-
-	String getPublished(String value);
 
 	void errorEvent(String error, Exception e);
 

@@ -188,7 +188,7 @@ public class CTRunEnvironmentBuilderImpl implements CTRunEnvironmentBuilder, Ser
 		}
 
 		String npath = path.substring(path.indexOf('/') + 1);
-		String value = client.getStorage().readStorage(this.client.getService().getUser(username), npath);
+		String value = client.getStorage().read(this.client.getService().getUser(username).getUserid(), npath);
 
 		addStorageRead(path, value);
 
